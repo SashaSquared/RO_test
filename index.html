@@ -46,7 +46,6 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    overflow-y: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -744,6 +743,44 @@
     font-size: 0.9rem; color: var(--muted); font-style: italic;
   }
 
+  /* ============ МОДАЛКА ПРИНУДИТЕЛЬНОЙ СМЕНЫ ПАРОЛЯ ============ */
+  .modal-back {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn .18s ease;
+  }
+  .modal-back.hidden { display: none !important; }
+  .modal {
+    width: 100%; max-width: 460px;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.8);
+    position: relative;
+  }
+  .modal .modal-emblem {
+    width: 56px; height: 56px;
+    margin: 0 auto 14px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), 0 8px 24px rgba(245, 158, 11, 0.35);
+  }
+  .modal .modal-emblem svg { width: 28px; height: 28px; color: #fff; }
+  .modal h2 {
+    text-align: center; font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .modal .modal-sub {
+    text-align: center; color: var(--muted);
+    font-size: 0.84rem; margin-bottom: 20px; line-height: 1.5;
+  }
+  .modal .form-group { margin-bottom: 12px; }
+
   @media (max-width: 600px) {
     .tablet-body { padding: 14px; }
     .app-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -947,7 +984,7 @@
               <option value="ОК">ОК — Отдел кадров</option>
               <option value="СМП" selected>СМП — Скорая медицинская помощь</option>
               <option value="ИТ">ИТ — Интенсивная терапия</option>
-              <option value="ПСЭС">ПСЭС — Психолого-санитарная служба</option>
+              <option value="ПСЭС">ПСЭС</option>
               <option value="Инст ПСЭС">Инст ПСЭС — Инструктор ПСЭС</option>
               <option value="Инст СМП">Инст СМП — Инструктор СМП</option>
               <option value="Инст ИТ">Инст ИТ — Инструктор ИТ</option>
@@ -1053,7 +1090,7 @@
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div class="toggle-row" style="border:none;background:transparent;padding:0;">
             <span style="color:var(--muted)">Версия планшета</span>
-            <span style="color:var(--text);font-weight:600">2.3</span>
+            <span style="color:var(--text);font-weight:600">2.4</span>
           </div>
           <div class="toggle-row" style="border:none;background:transparent;padding:0;">
             <span style="color:var(--muted)">Сервер (Apps Script)</span>
@@ -1097,13 +1134,46 @@
   </div>
 </div>
 
+<!-- ============ МОДАЛКА ПРИНУДИТЕЛЬНОЙ СМЕНЫ ПАРОЛЯ ============ -->
+<div class="modal-back hidden" id="forcePasswordModal">
+  <div class="modal">
+    <div class="modal-emblem">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <h2>Смените пароль</h2>
+    <p class="modal-sub">
+      Вы вошли с временным паролем. Пока вы его не смените, доступ к планшету закрыт.
+    </p>
+
+    <form id="forcePasswordForm">
+      <div class="form-group">
+        <label for="fpNew1">Новый пароль</label>
+        <input type="password" id="fpNew1" required autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label for="fpNew2">Повторите новый пароль</label>
+        <input type="password" id="fpNew2" required autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-block" id="fpSubmit">Сменить пароль и продолжить</button>
+      <div class="notification" id="fpNotification"></div>
+    </form>
+  </div>
+</div>
+
 <script>
 (function () {
   "use strict";
 
-  const API_URL = "https://hospital-api.asdulgok.workers.dev";
+  const API_URL = "https://hospital-api.asdulkok.workers.dev";
+  const API_URL_ACTUAL = "https://hospital-api.asdulgok.workers.dev";
 
-  // ▼ Все отделы (для учётных записей)
+  // Хэш SHA-256 от "12345"
+  const TEMP_PASSWORD_HASH = "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5";
+
   const DEPARTMENTS = [
     "Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС",
     "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"
@@ -1115,14 +1185,13 @@
     "ОК": "Отдел кадров",
     "СМП": "Скорая медицинская помощь",
     "ИТ": "Интенсивная терапия",
-    "ПСЭС": "Психолого-санитарная служба",
+    "ПСЭС": "ПСЭС",
     "Инст ПСЭС": "Инструктор ПСЭС",
     "Инст СМП":  "Инструктор СМП",
     "Инст ИТ":   "Инструктор ИТ",
     "Инст ОК":   "Инструктор ОК"
   };
 
-  // ▼ Рабочие столы — БЕЗ инструкторских (инструкторы сидят на столах базовых отделов)
   const DESK_DEPARTMENTS = [
     "Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС"
   ];
@@ -1167,7 +1236,8 @@
     editingUserRow: null,
     myBookings: [],
     reminderTimers: {},
-    reminderDone: {}
+    reminderDone: {},
+    forcePasswordChange: false
   };
 
   const $ = (id) => document.getElementById(id);
@@ -1248,6 +1318,13 @@
   const toastsToggle = $("toastsToggle");
   const soundToggle = $("soundToggle");
   const testToastBtn = $("testToastBtn");
+
+  const forcePasswordModal = $("forcePasswordModal");
+  const forcePasswordForm = $("forcePasswordForm");
+  const fpNew1 = $("fpNew1");
+  const fpNew2 = $("fpNew2");
+  const fpSubmit = $("fpSubmit");
+  const fpNotification = $("fpNotification");
 
   /* Часы */
   function tickClock() {
@@ -1407,7 +1484,7 @@
 
   /* Сеть */
   async function apiPost(payload) {
-    const res = await fetch(API_URL, {
+    const res = await fetch(API_URL_ACTUAL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
@@ -1561,7 +1638,6 @@
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="19" x2="13" y2="19"/></svg>',
       frame: "apps/weekly-reports.html"
     },
-    // ▼ НОВОЕ: недельные отчёты ПСЭС
     weeklyReportsPses: {
       label: "Недельные отчёты ПСЭС",
       sub: "Сдача · топ · должники",
@@ -1571,7 +1647,6 @@
     }
   };
 
-  // ▼ Инструкторские отделы ведут на стол своего базового отдела
   function getAppsForDesk() {
     const rawDept = state.activeDesk || (state.user && state.user.department) || "—";
 
@@ -1591,7 +1666,6 @@
     }
 
     if (dept === "ПСЭС") {
-      // ▼ ДОБАВЛЕНА плитка недельных отчётов ПСЭС
       base.splice(base.length - 1, 0, "calculatorPses", "examPses", "weeklyReportsPses");
     }
 
@@ -2182,6 +2256,14 @@
       setNetworkStatus(true);
       ensureAudioCtx();
 
+      // Если вошли с паролем 12345 — требуем смену
+      if (hash === TEMP_PASSWORD_HASH) {
+        state.forcePasswordChange = true;
+        forcePasswordModal.classList.remove("hidden");
+        setTimeout(() => fpNew1.focus(), 100);
+        return;
+      }
+
       await loadSchedule();
       await loadVacations();
       await refreshMyBookings();
@@ -2201,6 +2283,70 @@
     } finally {
       authSubmit.disabled = false;
       authSubmit.textContent = original;
+    }
+  }
+
+  /* Принудительная смена пароля */
+  async function handleForcePasswordChange(e) {
+    e.preventDefault();
+    if (!state.user) return;
+
+    const newPass1 = fpNew1.value;
+    const newPass2 = fpNew2.value;
+
+    if (!newPass1 || !newPass2) { notify(fpNotification, "Заполните все поля", "error"); return; }
+    if (newPass1.length < 4) { notify(fpNotification, "Пароль слишком короткий (мин. 4)", "error"); return; }
+    if (newPass1 !== newPass2) { notify(fpNotification, "Пароли не совпадают", "error"); return; }
+    if (newPass1 === "12345") { notify(fpNotification, "Нельзя оставить пароль 12345", "error"); return; }
+
+    fpSubmit.disabled = true;
+    const original = fpSubmit.textContent;
+    fpSubmit.textContent = "Меняем…";
+
+    try {
+      const oldHash = state.user.hash;
+      const newHash = await sha256Hex(newPass1);
+      const data = await apiPost({
+        action: "changePassword",
+        login: state.user.login,
+        hash: state.user.hash,
+        oldHash: oldHash,
+        newHash: newHash
+      });
+
+      if (!data.success) {
+        notify(fpNotification, data.message || "Не удалось сменить пароль", "error");
+        return;
+      }
+
+      state.user.hash = newHash;
+      saveSession(state.user);
+      state.forcePasswordChange = false;
+
+      notify(fpNotification, "Пароль изменён", "success");
+
+      // Пускаем в планшет сразу
+      await loadSchedule();
+      await loadVacations();
+      await refreshMyBookings();
+      forcePasswordModal.classList.add("hidden");
+      fpNew1.value = "";
+      fpNew2.value = "";
+      showScreen("desk");
+      renderDesk();
+      scheduleCheckTickBookings();
+
+      showToast({
+        type: "success",
+        title: "Пароль изменён",
+        text: "Добро пожаловать, " + state.user.login
+      });
+    } catch (err) {
+      console.error(err);
+      notify(fpNotification, "Ошибка сети", "error");
+    } finally {
+      fpSubmit.disabled = false;
+      fpSubmit.textContent = original;
     }
   }
 
@@ -2662,6 +2808,7 @@
     passwordForm.addEventListener("submit", handleChangePassword);
     profileForm.addEventListener("submit", handleProfileSave);
     registerForm.addEventListener("submit", handleRegisterUser);
+    forcePasswordForm.addEventListener("submit", handleForcePasswordChange);
 
     document.querySelectorAll("[data-back]").forEach((b) => {
       b.addEventListener("click", () => { showScreen("desk"); renderDesk(); });
@@ -2716,27 +2863,39 @@
       state.notifiedKeys = {};
       state.myBookings = [];
       state.reminderTimers = {};
+      state.forcePasswordChange = false;
       applySessionToUI();
       userChip.classList.add("hidden");
       deskSwitcher.classList.remove("visible");
       showScreen("auth");
       authForm.reset();
+      forcePasswordModal.classList.add("hidden");
     });
 
     const session = loadSession();
     if (session) {
-      state.user = session;
-      state.activeDesk = session.department || "Руководство";
-      applySessionToUI();
-      showScreen("desk");
-      setNetworkStatus(true);
-      loadSchedule()
-        .then(() => loadVacations())
-        .then(() => refreshMyBookings())
-        .then(() => {
-          renderDesk();
-          scheduleCheckTickBookings();
-        });
+      // Проверка: если в сессии временный пароль — принудительно требуем смену
+      if (session.hash === TEMP_PASSWORD_HASH) {
+        state.user = session;
+        state.activeDesk = session.department || "Руководство";
+        applySessionToUI();
+        showScreen("auth");
+        forcePasswordModal.classList.remove("hidden");
+        setTimeout(() => fpNew1.focus(), 100);
+      } else {
+        state.user = session;
+        state.activeDesk = session.department || "Руководство";
+        applySessionToUI();
+        showScreen("desk");
+        setNetworkStatus(true);
+        loadSchedule()
+          .then(() => loadVacations())
+          .then(() => refreshMyBookings())
+          .then(() => {
+            renderDesk();
+            scheduleCheckTickBookings();
+          });
+      }
     } else {
       showScreen("auth");
     }

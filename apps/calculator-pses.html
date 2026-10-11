@@ -41,6 +41,12 @@
 
   html, body { height: 100%; }
 
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: var(--bg);
@@ -52,6 +58,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   .tablet {
@@ -264,7 +272,7 @@
   .act-note { display: block; font-size: 0.7rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
 
   /* ============================================================
-     ПЕРЕКЛЮЧАТЕЛЬ ОБЕДА — СДЕЛАН ЯРКИМ И ЗАМЕТНЫМ
+     ПЕРЕКЛЮЧАТЕЛЬ ОБЕДА
      ============================================================ */
   .lunch-toggle-wrap {
     display: flex;
@@ -951,7 +959,6 @@
       <div id="mainBodiWarn"></div>
     </div>
 
-    <!-- ПЕРЕКЛЮЧАТЕЛЬ ОБЕДА — СДЕЛАН ЯРКИМ -->
     <div class="lunch-toggle-wrap">
       <button type="button" class="lunch-toggle" id="lunchToggle">
         <span class="toggle-emoji">🍽</span>
@@ -1175,9 +1182,6 @@
    СПРАВОЧНИК ПЕРСОНАЛА
    ============================================================ */
 
-// ═══════════════════════════════════════════════════════════════
-// ИЗМЕНЕНО: обновлён URL Google Apps Script (новая БД)
-// ═══════════════════════════════════════════════════════════════
 const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
 let STAFF = [];
@@ -1391,7 +1395,6 @@ const draftBadge     = $('draftBadge');
 let showLunch = false;
 let extras = [];
 
-/* Автодополнение */
 attachAutocomplete(fullname, $('acName'), filterByName, s => {
   fullname.value = s.name || '';
   staticId.value = s.passport || '';

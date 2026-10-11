@@ -69,7 +69,7 @@
     flex-direction: column;
   }
 
-  .tablet-body { flex: 1; }
+  .tablet-body { flex: 1; padding-bottom: 90px; }
 
   .page-title {
     text-align: center;
@@ -728,44 +728,6 @@
     min-height: 140px;
   }
 
-  /* ============================================================
-     КНОПКА СОХРАНЕНИЯ В НЕДЕЛЬНЫЙ ОТЧЁТ
-     ============================================================ */
-  .save-actions {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    justify-content: center;
-    margin: 14px 0 4px;
-  }
-  .save-week-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 10px 16px;
-    font-family: inherit; font-size: 0.86rem; font-weight: 600;
-    color: #fff;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border: none; border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.05s, opacity 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
-  }
-  .save-week-btn:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5); }
-  .save-week-btn:active:not(:disabled) { transform: scale(0.98); }
-  .save-week-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-  .save-week-btn svg { width: 15px; height: 15px; }
-  .save-week-btn .spin {
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  .save-week-hint {
-    width: 100%;
-    text-align: center;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
   /* Bottom bar */
   .bottombar {
     position: sticky;
@@ -830,6 +792,25 @@
     background: var(--good) !important;
     color: #0d1520 !important;
     box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.35);
+  }
+
+  /* Кнопка сохранения в нижней панели */
+  .save-week-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+  .save-week-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5);
+    color: #fff !important;
+  }
+  .save-week-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .save-week-btn .spin {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
   /* Draft badge */
@@ -1182,24 +1163,20 @@
       </h2>
       <div id="visualReport"></div>
       <textarea id="out" rows="18" readonly placeholder="Нажми «Сформировать», чтобы получить текст отчёта..."></textarea>
-
-      <div class="save-actions" id="saveActions">
-        <button type="button" class="save-week-btn" id="saveWeekBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-            <polyline points="17 21 17 13 7 13 7 21"/>
-            <polyline points="7 3 7 8 15 8"/>
-          </svg>
-          Записать в недельный отчёт
-        </button>
-        <div class="save-week-hint" id="saveWeekHint">Укажите имя сотрудника, чтобы сохранить</div>
-      </div>
     </div>
 
     <div class="bottombar">
       <div class="bottombar-inner">
         <div class="bottombar-buttons">
           <button class="btn" onclick="generateReport()">📄 Сформировать отчёт</button>
+          <button class="btn save-week-btn" id="saveWeekBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Записать в отчёт
+          </button>
           <button class="btn btn-ghost" id="copyBtn" onclick="copyReport()">📋 Копировать</button>
           <button class="btn btn-danger" onclick="resetForm()">🔄 Сбросить</button>
         </div>
@@ -1441,6 +1418,7 @@ const subInfo        = $('subInfo');
 const extrasList     = $('extrasList');
 const extraTotal     = $('extraTotal');
 const draftBadge     = $('draftBadge');
+const saveWeekBtn    = $('saveWeekBtn');
 
 let showLunch = false;
 let extras = [];
@@ -1905,16 +1883,6 @@ function toggleMode(){
   applyLunchVisibility();
 }
 
-function updateSaveHint(){
-  const saveHint = document.getElementById("saveWeekHint");
-  if (!saveHint) return;
-  const canSave = fullname.value.trim() !== "";
-  const r = calc();
-  saveHint.textContent = canSave
-    ? "Баллы: " + r.total
-    : "Укажите имя сотрудника, чтобы сохранить";
-}
-
 function updateAll(){
   toggleMode();
   const r = calc();
@@ -1941,8 +1909,14 @@ function updateAll(){
   renderRequirements(r);
   renderDashboard(r);
   updateBottomSummary(r);
-  updateSaveHint();
+  updateSaveButtonState();
   debounceSave();
+}
+
+function updateSaveButtonState(){
+  if (!saveWeekBtn) return;
+  const canSave = fullname.value.trim() !== "";
+  saveWeekBtn.disabled = !canSave;
 }
 
 function renderRequirements(r){
@@ -2165,13 +2139,11 @@ async function saveToWeeklyReport() {
 
   const dept = String(staffItem.department || "").trim();
 
-  // Проверка 1: только ПСЭС и Инст ПСЭС
   if (!ALLOWED_DEPTS.includes(dept)) {
     notifyParent("Ошибка", "Можно записывать отчёты только для отдела ПСЭС и Инст ПСЭС", "alert");
     return;
   }
 
-  // Проверка 2: role user не может записывать Инст ПСЭС
   if (getCalcRole() === "user" && dept === "Инст ПСЭС") {
     notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов ПСЭС", "alert");
     return;
@@ -2186,7 +2158,7 @@ async function saveToWeeklyReport() {
   const r = calc();
   const points = r.total || 0;
 
-  const btn = document.getElementById("saveWeekBtn");
+  const btn = saveWeekBtn;
   if (!btn) return;
   const oldHtml = btn.innerHTML;
   btn.disabled = true;
@@ -2401,11 +2373,11 @@ renderExtras();
 updateAll();
 applyLunchVisibility();
 
-// Кнопка сохранения
-const saveWeekBtn = document.getElementById("saveWeekBtn");
 if (saveWeekBtn) {
   saveWeekBtn.addEventListener("click", saveToWeeklyReport);
 }
+
+fullname.addEventListener("input", updateSaveButtonState);
 
 loadStaff();
 </script>

@@ -489,6 +489,46 @@
   }
   .report-total .sub .instr-val { color: var(--amber); font-weight: 700; }
 
+  .save-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center;
+    margin: 12px 0 4px;
+  }
+  .save-week-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 10px 16px;
+    font-family: inherit; font-size: 0.86rem; font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none; border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.05s, opacity 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+  .save-week-btn:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5); }
+  .save-week-btn:active:not(:disabled) { transform: scale(0.98); }
+  .save-week-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .save-week-btn.instr {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  }
+  .save-week-btn.instr:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(139, 92, 246, 0.55); }
+  .save-week-btn svg { width: 15px; height: 15px; }
+  .save-week-btn .spin {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .save-week-hint {
+    width: 100%;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
   .report-subhead {
     color: var(--blue); font-weight: 700;
     font-size: 0.74rem; margin: 12px 0 6px;
@@ -1029,9 +1069,6 @@
 (function () {
   "use strict";
 
-  // ═══════════════════════════════════════════════════════════════
-  // ИЗМЕНЕНО: обновлён URL Google Apps Script (новая БД)
-  // ═══════════════════════════════════════════════════════════════
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
   const DRAFT_KEY = "smp_calc_draft_v16";
 
@@ -1500,6 +1537,180 @@
     } catch (e) {}
   }
 
+  /* ============================================================
+     СОХРАНЕНИЕ БАЛЛОВ В НЕДЕЛЬНЫЙ ОТЧЁТ
+     ============================================================ */
+
+  function getCalcSession() {
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (d && d.login && d.hash) return d;
+    } catch (e) {}
+    const p = new URLSearchParams(location.search);
+    const pLogin = p.get("login");
+    const pRole = p.get("role");
+    if (!pLogin || !pRole) return null;
+    let hash = null;
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d && d.login === pLogin) hash = d.hash;
+      }
+    } catch (e) {}
+    if (!hash) return null;
+    return { login: pLogin, role: pRole, hash: hash };
+  }
+
+  function isCalcAdmin() {
+    const s = getCalcSession();
+    if (!s) return false;
+    return s.role === "admin" || s.role === "superadmin";
+  }
+
+  function isCalcUser() {
+    const s = getCalcSession();
+    if (!s) return false;
+    return s.role === "user";
+  }
+
+  // Кто может сохранять обычный (не инструкторский) отчёт
+  function canSaveRegularReport() {
+    if (isCalcAdmin()) return true;
+    if (isCalcUser() && !isInstructor) return true;
+    return false;
+  }
+
+  // Кто может сохранять инструкторский отчёт
+  function canSaveInstrReport() {
+    return isCalcAdmin() && isInstructor;
+  }
+
+  let _weekIdCache = null;
+  async function fetchWorkingWeekId() {
+    if (_weekIdCache) return _weekIdCache;
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "getWeekList" })
+      });
+      const data = await res.json();
+      if (data && data.success && data.currentWeekId) {
+        _weekIdCache = data.currentWeekId;
+        return _weekIdCache;
+      }
+    } catch (e) { console.error("fetchWorkingWeekId:", e); }
+    return null;
+  }
+
+  function findStaffByName(name) {
+    const target = String(name || "").trim().toLowerCase();
+    if (!target) return null;
+    return staff.find(s => String(s.name || "").trim().toLowerCase() === target) || null;
+  }
+
+  async function saveToWeeklyReport(saveInstr) {
+    const session = getCalcSession();
+    if (!session) {
+      notifyParent("Ошибка", "Нет активной сессии", "alert");
+      return;
+    }
+
+    // Разные права для инструкторского и обычного отчёта
+    if (saveInstr) {
+      if (!isCalcAdmin()) {
+        notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов", "alert");
+        return;
+      }
+    } else {
+      if (!canSaveRegularReport()) {
+        notifyParent("Ошибка", "Недостаточно прав для сохранения", "alert");
+        return;
+      }
+    }
+
+    const name = fullnameInput.value.trim();
+    if (!name) {
+      notifyParent("Ошибка", "Укажите имя сотрудника", "alert");
+      return;
+    }
+
+    const staffItem = findStaffByName(name);
+    if (!staffItem) {
+      notifyParent("Ошибка", "Сотрудник не найден в справочнике", "alert");
+      return;
+    }
+
+    // Дополнительная проверка: user не может вносить отчёт инструктора
+    if (isCalcUser()) {
+      if (String(staffItem.department || "").trim() === "Инст СМП") {
+        notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов", "alert");
+        return;
+      }
+    }
+
+    const weekId = await fetchWorkingWeekId();
+    if (!weekId) {
+      notifyParent("Ошибка", "Не удалось определить рабочую неделю", "alert");
+      return;
+    }
+
+    const s = calc();
+    const points = s.totalPoints || 0;
+    const instrPoints = saveInstr ? (s.instrPoints || 0) : 0;
+
+    const btn = saveInstr ? document.getElementById('saveInstrBtn') : document.getElementById('saveWeekBtn');
+    if (!btn) return;
+    const oldHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2 a10 10 0 0 1 10 10"/></svg> Сохранение…';
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "saveWeeklyPoints",
+          login: session.login,
+          hash: session.hash,
+          weekId: weekId,
+          name: staffItem.name,
+          passport: staffItem.passport || "",
+          department: staffItem.department || "",
+          rank: staffItem.rank || "",
+          points: points,
+          instrPoints: instrPoints
+        })
+      });
+      const data = await res.json();
+
+      if (data && data.success) {
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Сохранено!';
+        notifyParent(
+          saveInstr ? "Инструкторский отчёт записан" : "Недельный отчёт записан",
+          staffItem.name + " · " + points + " общих" + (saveInstr ? " / " + instrPoints + " инстр." : ""),
+          "success"
+        );
+        setTimeout(() => {
+          btn.innerHTML = oldHtml;
+          btn.disabled = false;
+        }, 2000);
+      } else {
+        btn.innerHTML = oldHtml;
+        btn.disabled = false;
+        notifyParent("Ошибка", (data && data.message) || "Не удалось сохранить", "alert");
+      }
+    } catch (err) {
+      console.error(err);
+      btn.innerHTML = oldHtml;
+      btn.disabled = false;
+      notifyParent("Ошибка сети", String(err.message || err), "alert");
+    }
+  }
+
   let staff = [];
   let staffLoaded = false;
   let staffLoadError = null;
@@ -1583,6 +1794,11 @@
     closeAllAutocomplete();
     renderDashboard();
     saveDraft();
+    const canSave = fullnameInput.value.trim() !== "";
+    const b1 = document.getElementById('saveWeekBtn');
+    const b2 = document.getElementById('saveInstrBtn');
+    if (b1) b1.disabled = !canSave;
+    if (b2) b2.disabled = !canSave;
   }
 
   function closeAllAutocomplete() {
@@ -2334,7 +2550,59 @@
       html += `<div class="report-remarks"><strong>📝 Замечания:</strong> ${escapeHtml(remarksText)}</div>`;
     }
 
+    // ─── Кнопки сохранения в недельный отчёт ───
+    // Показываем:
+    //   - admin / superadmin — всегда
+    //   - user               — только если НЕ инструктор
+    const showSaveBlock = !promo && (isCalcAdmin() || (isCalcUser() && !isInstructor));
+    if (showSaveBlock) {
+      const canSave = fullnameInput.value.trim() !== "";
+      const weekDisabled = canSave ? "" : "disabled";
+
+      let btnsHtml =
+        '<div class="save-actions">' +
+          '<button type="button" class="save-week-btn" id="saveWeekBtn" ' + weekDisabled + '>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>' +
+              '<polyline points="17 21 17 13 7 13 7 21"/>' +
+              '<polyline points="7 3 7 8 15 8"/>' +
+            '</svg>' +
+            'Записать в недельный отчёт' +
+          '</button>';
+
+      // Кнопка инструкторского отчёта — только для admin/superadmin в режиме инструктора
+      if (isCalcAdmin() && isInstructor) {
+        btnsHtml +=
+          '<button type="button" class="save-week-btn instr" id="saveInstrBtn" ' + weekDisabled + '>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/>' +
+              '<path d="M6 12v5c3 3 9 3 12 0v-5"/>' +
+            '</svg>' +
+            'Записать в инструкторский отчёт' +
+          '</button>';
+      }
+
+      btnsHtml +=
+          '<div class="save-week-hint">' +
+            (canSave
+              ? 'Баллы: ' + s.totalPoints + (isInstructor ? ' общих · ' + s.instrPoints + ' инструкторских' : '')
+              : 'Укажите имя сотрудника, чтобы сохранить') +
+          '</div>' +
+        '</div>';
+
+      html += btnsHtml;
+    }
+
     container.innerHTML = html;
+
+    // Навешиваем обработчики на кнопки сохранения
+    if (showSaveBlock) {
+      const btnWeek = document.getElementById('saveWeekBtn');
+      if (btnWeek) btnWeek.addEventListener('click', () => saveToWeeklyReport(false));
+
+      const btnInstr = document.getElementById('saveInstrBtn');
+      if (btnInstr) btnInstr.addEventListener('click', () => saveToWeeklyReport(true));
+    }
   }
 
   function generateFullReport() {
@@ -2619,6 +2887,14 @@
     syncQrButtons();
     renderDashboard();
     loadStaff();
+
+    fullnameInput.addEventListener('input', () => {
+      const canSave = fullnameInput.value.trim() !== "";
+      const b1 = document.getElementById('saveWeekBtn');
+      const b2 = document.getElementById('saveInstrBtn');
+      if (b1) b1.disabled = !canSave;
+      if (b2) b2.disabled = !canSave;
+    });
   }
 
   init();

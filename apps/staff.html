@@ -878,6 +878,68 @@
     return -1;
   }
 
+  /* Ранг → Должность (автоподстановка) */
+  const RANK_TO_POSITION = {
+    1:  "Интерн",
+    2:  "Санитар",
+    3:  "Лаборант",
+    4:  "Фельдшер",
+    5:  "Ординатор",
+    6:  "Старший ординатор",
+    7:  "Психиатр",
+    8:  "Терапевт",
+    9:  "Хирург",
+    10: "Заместитель заведующего отделения",
+    11: "Заведующий отделением",
+    12: "Заместитель главного врача",
+    13: "Лидер"
+  };
+
+  /* HTML для <select id="ei_rank"> — с учётом текущего ранга */
+  function rankOptionsHtml(currentRank) {
+    const parsed = parseRankForSelect(currentRank);
+    let html = "";
+    for (let i = 1; i <= 12; i++) {
+      html += '<option value="' + i + '"' + (parsed === i ? ' selected' : '') + '>' +
+              i + ' — ' + RANK_TO_POSITION[i] + '</option>';
+    }
+    html += '<option value="13"' + (parsed === 13 ? ' selected' : '') + '>13 — Лидер</option>';
+    return html;
+  }
+
+  /* Парсинг ранга для выпадающего списка:
+     13 → 13, "лидер" → 13, число 1-12 → это число.
+     Если непонятно — ставим 1. */
+  function parseRankForSelect(rankStr) {
+    const s = String(rankStr || "").trim().toLowerCase();
+    if (!s) return 1;
+
+    // «лидер» в любом виде → 13
+    if (s.includes("лидер") || s.includes("leader")) return 13;
+
+    const m = s.match(/(\d{1,2})/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (!isNaN(n) && n >= 1 && n <= 13) return n;
+    }
+
+    // Текстовые варианты из старого набора (зам.глав.врача и т.п.)
+    if (s.includes("зам") && s.includes("глав")) return 12;
+    if (s.includes("зав") && s.includes("отдел")) return 11;
+    if (s.includes("зам") && s.includes("зав")) return 10;
+    if (s.includes("хирург")) return 9;
+    if (s.includes("терапевт")) return 8;
+    if (s.includes("психиатр")) return 7;
+    if (s.includes("стар") && s.includes("ординат")) return 6;
+    if (s.includes("ординат")) return 5;
+    if (s.includes("фельдшер")) return 4;
+    if (s.includes("лаборант")) return 3;
+    if (s.includes("санитар")) return 2;
+    if (s.includes("интерн")) return 1;
+
+    return 1;
+  }
+
   function parsePassport(p) {
     const s = String(p || "").trim();
     if (!s) return Number.POSITIVE_INFINITY;
@@ -1105,7 +1167,7 @@
     });
     table.appendChild(tbody);
     firedContainer.innerHTML = "";
-    firedContainer.appendChild(tbody);
+    firedContainer.appendChild(table);
   }
 
   /* ---------- Редактор сотрудника: ВСТРОЕННАЯ ФОРМА ---------- */

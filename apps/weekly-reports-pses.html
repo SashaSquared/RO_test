@@ -319,7 +319,18 @@ select option { background: #0c1420; color: var(--text); }
 .status-pill.vacation { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
 .status-pill.instr    { background: var(--cyan-bg); color: #67e8f9; border: 1px solid var(--cyan-border); }
 
-/* Плашки отделов */
+/* Кликабельная плашка «Освобождён» */
+.status-pill[data-comment] {
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+}
+.status-pill[data-comment]:hover {
+  filter: brightness(1.25);
+}
+.status-pill[data-comment]:active {
+  transform: scale(0.96);
+}
+
 .dept-pill {
   display: inline-block;
   padding: 3px 9px;
@@ -375,7 +386,6 @@ select option { background: #0c1420; color: var(--text); }
 .btn-icon.danger:hover  { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
 .btn-icon.purple:hover  { background: var(--purple-bg); border-color: var(--purple-border); color: #c4b5fd; }
 
-/* Топ: три колонки */
 .top-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -459,6 +469,10 @@ select option { background: #0c1420; color: var(--text); }
 }
 .modal h3 .m-icon svg { width: 18px; height: 18px; }
 
+.modal h3 .m-icon.purple {
+  background: var(--purple-bg); color: #c4b5fd;
+}
+
 .modal-who {
   padding: 10px 12px;
   border-radius: 9px;
@@ -484,6 +498,20 @@ select option { background: #0c1420; color: var(--text); }
   outline: none;
 }
 .modal textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(47,158,68,0.2); }
+
+/* Блок чтения причины освобождения */
+.modal-read-block {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #0d1520;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 56px;
+}
 
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
@@ -668,7 +696,7 @@ select option { background: #0c1420; color: var(--text); }
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#67e8f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
             </svg>
-            Топ Инст ПСЭС
+            Топ-3 Инструкторов ПСЭС
           </h2>
         </div>
         <div class="top-list" id="topInstrPses"><div class="loading">Загрузка…</div></div>
@@ -728,7 +756,7 @@ select option { background: #0c1420; color: var(--text); }
         <div class="top-list" id="historyTopPses"></div>
       </div>
       <div>
-        <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:8px;">🎓 Топ Инст ПСЭС</div>
+        <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:8px;">🎓 Топ-3 Инструкторов ПСЭС</div>
         <div class="top-list" id="historyTopInstrPses"></div>
       </div>
     </div>
@@ -736,6 +764,7 @@ select option { background: #0c1420; color: var(--text); }
 
 </div>
 
+<!-- ============ МОДАЛКА ОСВОБОЖДЕНИЯ ============ -->
 <div class="modal-back hidden" id="exemptModal">
   <div class="modal">
     <h3>
@@ -767,6 +796,39 @@ select option { background: #0c1420; color: var(--text); }
   </div>
 </div>
 
+<!-- ============ МОДАЛКА ИНФОРМАЦИИ ОБ ОСВОБОЖДЕНИИ ============ -->
+<div class="modal-back hidden" id="exemptInfoModal">
+  <div class="modal">
+    <h3>
+      <span class="m-icon purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+      </span>
+      Информация об освобождении
+    </h3>
+
+    <div class="modal-who">
+      <div class="name" id="exemptInfoWhoName">—</div>
+      <div class="sub" id="exemptInfoWhoSub">—</div>
+    </div>
+
+    <label>Причина освобождения</label>
+    <div class="modal-read-block" id="exemptInfoComment">—</div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" type="button" id="exemptInfoClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Понятно
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   "use strict";
@@ -776,7 +838,7 @@ select option { background: #0c1420; color: var(--text); }
   /* ============================================================
      НАСТРОЙКИ ПСЭС
      ============================================================ */
-  const NORM_PSES = 600; // единая норма для ПСЭС и Инст ПСЭС
+  const NORM_PSES = 600;
 
   const DISCORD_CHANNEL_LINK = "https://discord.com/channels/1538939092929216603/1540083930487726160";
   const RULE_TEXT = "3.16. Каждый сотрудник Больницы обязан еженедельно предоставлять отчет о проделанной работе в установленной форме в канале своего отделения — \"Недельный отчет\", в срок с 00:00 Четверга до 23:59 Субботы текущей недели.";
@@ -1029,16 +1091,8 @@ select option { background: #0c1420; color: var(--text); }
     return state.staff.filter(s => {
       if (!isPsesDept(s.department)) return false;
       const rank = parseRank(s.rank);
-      return rank >= 5; // ранги 5+, включая 10-11 (без нормы)
+      return rank >= 5;
     }).sort(compareStaff);
-  }
-
-  function getPsesOnly() {
-    return getPsesStaff().filter(s => s.department === "ПСЭС");
-  }
-
-  function getInstrPsesOnly() {
-    return getPsesStaff().filter(s => s.department === "Инст ПСЭС");
   }
 
   function computeStatus(staffItem, report) {
@@ -1054,7 +1108,6 @@ select option { background: #0c1420; color: var(--text); }
 
     const hasAnyPoints = report && (Number(report.points) || 0) > 0;
 
-    // Ранги 10-11 — без нормы
     if (rank >= 10) {
       if (hasAnyPoints) return { key: "norm", label: "📊 Без нормы", cls: "norm" };
       return { key: "missing", label: "❌ Не сдал", cls: "bad" };
@@ -1065,6 +1118,23 @@ select option { background: #0c1420; color: var(--text); }
     }
     if (hasAnyPoints) return { key: "warn", label: "⚠️ Недостаточно", cls: "warn" };
     return { key: "missing", label: "❌ Не сдал", cls: "bad" };
+  }
+
+  /* Строит HTML плашки статуса. Если это освобождение с комментарием —
+     добавляет кликабельные data-атрибуты. */
+  function buildStatusPill(x) {
+    const s = x.status;
+    if (s.key === "exempt" && x.report && x.report.comment) {
+      return '<span class="status-pill ' + s.cls + '" ' +
+             'data-name="' + esc(x.staff.name) + '" ' +
+             'data-passport="' + esc(x.staff.passport || "") + '" ' +
+             'data-rank="' + esc(x.staff.rank || "") + '" ' +
+             'data-dept="' + esc(x.staff.department || "") + '" ' +
+             'data-comment="' + esc(x.report.comment) + '" ' +
+             'title="Нажмите, чтобы посмотреть причину">' +
+             s.label + ' <span style="opacity:0.8;">ℹ️</span></span>';
+    }
+    return '<span class="status-pill ' + s.cls + '">' + s.label + '</span>';
   }
 
   /* ============================================================
@@ -1133,9 +1203,21 @@ select option { background: #0c1420; color: var(--text); }
           '</div>' +
         '</td>' +
         '<td class="col-norm">' + normText + '</td>' +
-        '<td class="col-status"><span class="status-pill ' + x.status.cls + '">' + x.status.label + '</span></td>' +
+        '<td class="col-status">' + buildStatusPill(x) + '</td>' +
         (canEdit ? '<td class="col-actions"></td>' : '');
       tbody.appendChild(tr);
+
+      // Клик по плашке «Освобождён»
+      const statusPill = tr.querySelector(".status-pill[data-comment]");
+      if (statusPill) {
+        statusPill.addEventListener("click", () => openExemptInfoModal(
+          statusPill.dataset.name,
+          statusPill.dataset.passport,
+          statusPill.dataset.rank,
+          statusPill.dataset.dept,
+          statusPill.dataset.comment
+        ));
+      }
 
       if (canEdit) {
         const actionsTd = tr.querySelector('.col-actions');
@@ -1284,6 +1366,21 @@ select option { background: #0c1420; color: var(--text); }
     $("exemptModal").classList.add("hidden");
   }
 
+  /* ============ МОДАЛКА ИНФОРМАЦИИ ОБ ОСВОБОЖДЕНИИ ============ */
+  function openExemptInfoModal(name, passport, rank, dept, comment) {
+    $("exemptInfoWhoName").textContent = name || "—";
+    $("exemptInfoWhoSub").textContent =
+      "#" + (passport || "—") +
+      " · " + (rank || "—") +
+      " · " + (dept || "—");
+    $("exemptInfoComment").textContent = comment || "(без комментария)";
+    $("exemptInfoModal").classList.remove("hidden");
+  }
+
+  function closeExemptInfoModal() {
+    $("exemptInfoModal").classList.add("hidden");
+  }
+
   async function confirmExempt() {
     if (!state.exemptTarget) return;
     const comment = $("exemptComment").value.trim();
@@ -1421,30 +1518,26 @@ select option { background: #0c1420; color: var(--text); }
       const rank = parseRank(staffItem.rank);
       const points = Number(r.points) || 0;
 
-      // Только ПСЭС и Инст ПСЭС
       if (!isPsesDept(dept)) return false;
-      // Ранги 5–9
       if (rank < 5 || rank >= 10) return false;
-      // Норма 600
       return points >= NORM_PSES;
     });
 
+    // Общий топ-10: и ПСЭС, и Инст ПСЭС вместе
     const psesTop = validCandidates
-      .filter(r => {
-        const name = String(r.name || "").trim().toLowerCase();
-        const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name);
-        return staffItem && staffItem.department === "ПСЭС";
-      })
+      .slice()
       .sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0))
       .slice(0, 10);
 
+    // Топ-3 Инструкторов ПСЭС
     const instrPsesTop = validCandidates
       .filter(r => {
         const name = String(r.name || "").trim().toLowerCase();
         const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name);
         return staffItem && staffItem.department === "Инст ПСЭС";
       })
-      .sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0));
+      .sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0))
+      .slice(0, 3);
 
     const psesCont = $(psesElId);
     psesCont.innerHTML = "";
@@ -1503,6 +1596,7 @@ select option { background: #0c1420; color: var(--text); }
     allStaff.forEach(s => {
       const report = findReportFor(s.name);
       const status = computeStatus(s, report);
+      // Отпускники в должники НЕ попадают
       if (status.key === "missing") {
         debtors.push({
           staff: s,
@@ -1730,8 +1824,17 @@ select option { background: #0c1420; color: var(--text); }
     $("exemptModal").addEventListener("click", (e) => {
       if (e.target === $("exemptModal")) closeExemptModal();
     });
+
+    $("exemptInfoClose").addEventListener("click", closeExemptInfoModal);
+    $("exemptInfoModal").addEventListener("click", (e) => {
+      if (e.target === $("exemptInfoModal")) closeExemptInfoModal();
+    });
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !$("exemptModal").classList.contains("hidden")) closeExemptModal();
+      if (e.key === "Escape") {
+        if (!$("exemptModal").classList.contains("hidden")) closeExemptModal();
+        if (!$("exemptInfoModal").classList.contains("hidden")) closeExemptInfoModal();
+      }
     });
 
     $("weekSelect").addEventListener("change", () => {

@@ -37,6 +37,13 @@
     --purple-border: rgba(167, 139, 250, 0.5);
   }
   html, body { height: 100%; }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -47,6 +54,8 @@
     min-height: 100vh;
     padding: 16px 16px 24px;
     display: flex; flex-direction: column; align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   .tablet { max-width: 1100px; width: 100%; }
 
@@ -198,11 +207,6 @@
   .dept-pill.dept-смп { background: #991b1b; color: #fecaca; }
   .dept-pill.dept-ит { background: #14532d; color: #bbf7d0; }
   .dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
-  /* ▼▼▼ ДОБАВЛЕНО: инструкторские отделы ▼▼▼ */
-  .dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
-  .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
-  .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
-  .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
 
   .vacation-badge {
     display: inline-block; margin-left: 6px;
@@ -564,11 +568,6 @@
             <option value="СМП" selected>СМП — Скорая медицинская помощь</option>
             <option value="ИТ">ИТ — Интенсивная терапия</option>
             <option value="ПСЭС">ПСЭС — Психолого-санитарная служба</option>
-            <!-- ▼▼▼ ДОБАВЛЕНО ▼▼▼ -->
-            <option value="Инст ПСЭС">Инст ПСЭС — Инструктор ПСЭС</option>
-            <option value="Инст СМП">Инст СМП — Инструктор СМП</option>
-            <option value="Инст ИТ">Инст ИТ — Инструктор ИТ</option>
-            <option value="Инст ОК">Инст ОК — Инструктор ОК</option>
           </select>
         </div>
       </div>
@@ -648,12 +647,10 @@
 
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
-  // ▼▼▼ ДОБАВЛЕНО: Инст ПСЭС, Инст СМП, Инст ИТ, Инст ОК ▼▼▼
-  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС", "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"];
+  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС"];
   const DEPT_LABEL = {
     "Руководство": "Руководство",
-    "АБ": "АБ", "ОК": "ОК", "СМП": "СМП", "ИТ": "ИТ", "ПСЭС": "ПСЭС",
-    "Инст ПСЭС": "Инст ПСЭС", "Инст СМП": "Инст СМП", "Инст ИТ": "Инст ИТ", "Инст ОК": "Инст ОК"
+    "АБ": "АБ", "ОК": "ОК", "СМП": "СМП", "ИТ": "ИТ", "ПСЭС": "ПСЭС"
   };
 
   const state = {
@@ -760,7 +757,6 @@
   /* ============================================================
      СОРТИРОВКА ПЕРСОНАЛА
      Ранг: 13 (Лидер) → 1. При равных рангах — паспорт по возрастанию.
-     Поддерживаются и числа, и текстовые названия.
      ============================================================ */
 
   const TEXT_RANKS = {
@@ -902,7 +898,6 @@
     const tbody = document.createElement("tbody");
     list.forEach((s, i) => {
       const tr = document.createElement("tr");
-      // ▼▼▼ ИЗМЕНЕНО: пробелы в отделе заменяются на дефис для CSS-класса ▼▼▼
       const deptCls = "dept-" + String(s.department || "").toLowerCase().replace(/\s+/g, "-");
 
       const vacation = state.vacations.find(v =>
@@ -996,7 +991,6 @@
     const tbody = document.createElement("tbody");
     list.forEach((f, i) => {
       const tr = document.createElement("tr");
-      // ▼▼▼ ИЗМЕНЕНО: пробелы в отделе заменяются на дефис для CSS-класса ▼▼▼
       const deptCls = "dept-" + String(f.department || "").toLowerCase().replace(/\s+/g, "-");
 
       let actionsHtml = "";

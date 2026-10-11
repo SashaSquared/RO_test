@@ -728,6 +728,44 @@
     min-height: 140px;
   }
 
+  /* ============================================================
+     КНОПКА СОХРАНЕНИЯ В НЕДЕЛЬНЫЙ ОТЧЁТ
+     ============================================================ */
+  .save-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center;
+    margin: 14px 0 4px;
+  }
+  .save-week-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 10px 16px;
+    font-family: inherit; font-size: 0.86rem; font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none; border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.05s, opacity 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+  .save-week-btn:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5); }
+  .save-week-btn:active:not(:disabled) { transform: scale(0.98); }
+  .save-week-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .save-week-btn svg { width: 15px; height: 15px; }
+  .save-week-btn .spin {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .save-week-hint {
+    width: 100%;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
   /* Bottom bar */
   .bottombar {
     position: sticky;
@@ -1144,6 +1182,18 @@
       </h2>
       <div id="visualReport"></div>
       <textarea id="out" rows="18" readonly placeholder="Нажми «Сформировать», чтобы получить текст отчёта..."></textarea>
+
+      <div class="save-actions" id="saveActions">
+        <button type="button" class="save-week-btn" id="saveWeekBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Записать в недельный отчёт
+        </button>
+        <div class="save-week-hint" id="saveWeekHint">Укажите имя сотрудника, чтобы сохранить</div>
+      </div>
     </div>
 
     <div class="bottombar">
@@ -1855,6 +1905,16 @@ function toggleMode(){
   applyLunchVisibility();
 }
 
+function updateSaveHint(){
+  const saveHint = document.getElementById("saveWeekHint");
+  if (!saveHint) return;
+  const canSave = fullname.value.trim() !== "";
+  const r = calc();
+  saveHint.textContent = canSave
+    ? "Баллы: " + r.total
+    : "Укажите имя сотрудника, чтобы сохранить";
+}
+
 function updateAll(){
   toggleMode();
   const r = calc();
@@ -1881,6 +1941,7 @@ function updateAll(){
   renderRequirements(r);
   renderDashboard(r);
   updateBottomSummary(r);
+  updateSaveHint();
   debounceSave();
 }
 
@@ -2024,6 +2085,154 @@ function getFailures(r){
   if (r.min < n.min)   fails.push(`Недостаточно минут на посту (${r.min}/${n.min})`);
   if (r.gos < n.gos)   fails.push(`Недостаточно гос. проверок (${r.gos}/${n.gos}, с учётом замен)`);
   return fails;
+}
+
+/* ============================================================
+   СОХРАНЕНИЕ В НЕДЕЛЬНЫЙ ОТЧЁТ ПСЭС
+   ============================================================ */
+function getCalcSession() {
+  try {
+    const raw = localStorage.getItem("hospital_session");
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (d && d.login && d.hash) return d;
+  } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  const pLogin = p.get("login");
+  const pRole = p.get("role");
+  if (!pLogin || !pRole) return null;
+  let hash = null;
+  try {
+    const raw = localStorage.getItem("hospital_session");
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && d.login === pLogin) hash = d.hash;
+    }
+  } catch (e) {}
+  if (!hash) return null;
+  return { login: pLogin, role: pRole, hash: hash };
+}
+
+function getCalcRole() {
+  const s = getCalcSession();
+  return s ? s.role : null;
+}
+
+let _weekIdCache = null;
+async function fetchWorkingWeekId() {
+  if (_weekIdCache) return _weekIdCache;
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "getWeekList" })
+    });
+    const data = await res.json();
+    if (data && data.success && data.currentWeekId) {
+      _weekIdCache = data.currentWeekId;
+      return _weekIdCache;
+    }
+  } catch (e) { console.error("fetchWorkingWeekId:", e); }
+  return null;
+}
+
+function findStaffByName(name) {
+  const target = String(name || "").trim().toLowerCase();
+  if (!target) return null;
+  return STAFF.find(s => String(s.name || "").trim().toLowerCase() === target) || null;
+}
+
+const ALLOWED_DEPTS = ["ПСЭС", "Инст ПСЭС"];
+
+async function saveToWeeklyReport() {
+  const session = getCalcSession();
+  if (!session) {
+    notifyParent("Ошибка", "Нет активной сессии", "alert");
+    return;
+  }
+
+  const name = fullname.value.trim();
+  if (!name) {
+    notifyParent("Ошибка", "Укажите имя сотрудника", "alert");
+    return;
+  }
+
+  const staffItem = findStaffByName(name);
+  if (!staffItem) {
+    notifyParent("Ошибка", "Сотрудник не найден в справочнике", "alert");
+    return;
+  }
+
+  const dept = String(staffItem.department || "").trim();
+
+  // Проверка 1: только ПСЭС и Инст ПСЭС
+  if (!ALLOWED_DEPTS.includes(dept)) {
+    notifyParent("Ошибка", "Можно записывать отчёты только для отдела ПСЭС и Инст ПСЭС", "alert");
+    return;
+  }
+
+  // Проверка 2: role user не может записывать Инст ПСЭС
+  if (getCalcRole() === "user" && dept === "Инст ПСЭС") {
+    notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов ПСЭС", "alert");
+    return;
+  }
+
+  const weekId = await fetchWorkingWeekId();
+  if (!weekId) {
+    notifyParent("Ошибка", "Не удалось определить рабочую неделю", "alert");
+    return;
+  }
+
+  const r = calc();
+  const points = r.total || 0;
+
+  const btn = document.getElementById("saveWeekBtn");
+  if (!btn) return;
+  const oldHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2 a10 10 0 0 1 10 10"/></svg> Сохранение…';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "saveWeeklyPoints",
+        login: session.login,
+        hash: session.hash,
+        weekId: weekId,
+        name: staffItem.name,
+        passport: staffItem.passport || "",
+        department: staffItem.department || "",
+        rank: staffItem.rank || "",
+        points: points,
+        instrPoints: 0
+      })
+    });
+    const data = await res.json();
+
+    if (data && data.success) {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Сохранено!';
+      notifyParent(
+        "Недельный отчёт ПСЭС записан",
+        staffItem.name + " · " + points + " баллов",
+        "success"
+      );
+      setTimeout(() => {
+        btn.innerHTML = oldHtml;
+        btn.disabled = false;
+      }, 2000);
+    } else {
+      btn.innerHTML = oldHtml;
+      btn.disabled = false;
+      notifyParent("Ошибка", (data && data.message) || "Не удалось сохранить", "alert");
+    }
+  } catch (err) {
+    console.error(err);
+    btn.innerHTML = oldHtml;
+    btn.disabled = false;
+    notifyParent("Ошибка сети", String(err.message || err), "alert");
+  }
 }
 
 window.generateReport = function(){
@@ -2186,10 +2395,17 @@ remarks.addEventListener('input', () => {
   qsa('.remark-btn').forEach(b => b.classList.toggle('active', remarks.value.includes(b.dataset.text)));
 });
 
+/* Инициализация */
 loadSavedState();
 renderExtras();
 updateAll();
 applyLunchVisibility();
+
+// Кнопка сохранения
+const saveWeekBtn = document.getElementById("saveWeekBtn");
+if (saveWeekBtn) {
+  saveWeekBtn.addEventListener("click", saveToWeeklyReport);
+}
 
 loadStaff();
 </script>

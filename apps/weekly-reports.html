@@ -47,6 +47,12 @@
 
 html, body { height: 100%; }
 
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
 body {
   font-family: var(--font);
   background: radial-gradient(circle at top, #16202e 0%, var(--bg) 60%);
@@ -58,6 +64,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .wrap { max-width: 1100px; width: 100%; }
@@ -858,8 +866,6 @@ select option { background: #0c1420; color: var(--text); }
     return d;
   }
 
-  /* Резервная функция — используется только если бэк не ответит.
-     Основной weekId берём с сервера в loadWeekList() */
   function getWorkingWeekId() {
     const now = new Date();
     const day = now.getDay();
@@ -936,7 +942,6 @@ select option { background: #0c1420; color: var(--text); }
     return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
   }
 
-  /* ▼▼▼ ИЗМЕНЕНО: сначала спрашиваем у сервера рабочую неделю ▼▼▼ */
   async function loadAll() {
     await loadWeekList();
     state.weekId = state.currentWeekId;
@@ -973,7 +978,6 @@ select option { background: #0c1420; color: var(--text); }
     } catch (e) { console.error("loadReports:", e); state.reports = []; }
   }
 
-  /* ▼▼▼ ИЗМЕНЕНО: берём currentWeekId из ответа сервера ▼▼▼ */
   async function loadWeekList() {
     try {
       const data = await apiPost({ action: "getWeekList" });

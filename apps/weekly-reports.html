@@ -40,6 +40,10 @@
   --purple-bg: rgba(139,92,246,0.14);
   --purple-border: rgba(139,92,246,0.5);
 
+  --cyan: #06b6d4;
+  --cyan-bg: rgba(6,182,212,0.14);
+  --cyan-border: rgba(6,182,212,0.5);
+
   --gold: #fbbf24;
 
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -312,6 +316,19 @@ select option { background: #0c1420; color: var(--text); }
 .status-pill.norm     { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
 .status-pill.exempt   { background: var(--purple-bg); color: #c4b5fd; border: 1px solid var(--purple-border); }
 .status-pill.vacation { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
+.status-pill.instr    { background: var(--cyan-bg); color: #67e8f9; border: 1px solid var(--cyan-border); }
+
+/* Кликабельная плашка «Освобождён» */
+.status-pill[data-comment] {
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+}
+.status-pill[data-comment]:hover {
+  filter: brightness(1.25);
+}
+.status-pill[data-comment]:active {
+  transform: scale(0.96);
+}
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -436,6 +453,10 @@ select option { background: #0c1420; color: var(--text); }
 }
 .modal h3 .m-icon svg { width: 18px; height: 18px; }
 
+.modal h3 .m-icon.purple {
+  background: var(--purple-bg); color: #c4b5fd;
+}
+
 .modal-who {
   padding: 10px 12px;
   border-radius: 9px;
@@ -461,6 +482,20 @@ select option { background: #0c1420; color: var(--text); }
   outline: none;
 }
 .modal textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(47,158,68,0.2); }
+
+/* Блок чтения причины освобождения */
+.modal-read-block {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #0d1520;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 56px;
+}
 
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
@@ -746,6 +781,7 @@ select option { background: #0c1420; color: var(--text); }
 
 </div>
 
+<!-- ============ МОДАЛКА ОСВОБОЖДЕНИЯ ============ -->
 <div class="modal-back hidden" id="exemptModal">
   <div class="modal">
     <h3>
@@ -772,6 +808,39 @@ select option { background: #0c1420; color: var(--text); }
           <polyline points="20 6 9 17 4 12"/>
         </svg>
         Освободить
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ МОДАЛКА ИНФОРМАЦИИ ОБ ОСВОБОЖДЕНИИ ============ -->
+<div class="modal-back hidden" id="exemptInfoModal">
+  <div class="modal">
+    <h3>
+      <span class="m-icon purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+      </span>
+      Информация об освобождении
+    </h3>
+
+    <div class="modal-who">
+      <div class="name" id="exemptInfoWhoName">—</div>
+      <div class="sub" id="exemptInfoWhoSub">—</div>
+    </div>
+
+    <label>Причина освобождения</label>
+    <div class="modal-read-block" id="exemptInfoComment">—</div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" type="button" id="exemptInfoClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Понятно
       </button>
     </div>
   </div>
@@ -984,7 +1053,6 @@ select option { background: #0c1420; color: var(--text); }
       if (data && data.success) {
         state.weekList = data.weeks || [];
         state.currentWeekId = data.currentWeekId || state.currentWeekId || getWorkingWeekId();
-        console.log("WeekList from server:", data);
       }
     } catch (e) {
       console.error("loadWeekList:", e);
@@ -1078,6 +1146,23 @@ select option { background: #0c1420; color: var(--text); }
     return { key: "missing", label: "❌ Не сдал", cls: "bad" };
   }
 
+  /* Строит HTML плашки статуса. Если это освобождение с комментарием —
+     добавляет кликабельные data-атрибуты. */
+  function buildStatusPill(x) {
+    const s = x.status;
+    if (s.key === "exempt" && x.report && x.report.comment) {
+      return '<span class="status-pill ' + s.cls + '" ' +
+             'data-name="' + esc(x.staff.name) + '" ' +
+             'data-passport="' + esc(x.staff.passport || "") + '" ' +
+             'data-rank="' + esc(x.staff.rank || "") + '" ' +
+             'data-dept="' + esc(x.staff.department || "") + '" ' +
+             'data-comment="' + esc(x.report.comment) + '" ' +
+             'title="Нажмите, чтобы посмотреть причину">' +
+             s.label + ' <span style="opacity:0.8;">ℹ️</span></span>';
+    }
+    return '<span class="status-pill ' + s.cls + '">' + s.label + '</span>';
+  }
+
   function renderCurrentTab() {
     const q = ($("searchSmp").value || "").trim().toLowerCase();
     const filterSt = $("filterStatusSmp").value;
@@ -1137,9 +1222,21 @@ select option { background: #0c1420; color: var(--text); }
           '</div>' +
         '</td>' +
         '<td class="col-norm">' + normText + '</td>' +
-        '<td class="col-status"><span class="status-pill ' + x.status.cls + '">' + x.status.label + '</span></td>' +
+        '<td class="col-status">' + buildStatusPill(x) + '</td>' +
         (canEdit ? '<td class="col-actions"></td>' : '');
       tbody.appendChild(tr);
+
+      // Клик по плашке «Освобождён»
+      const statusPill = tr.querySelector(".status-pill[data-comment]");
+      if (statusPill) {
+        statusPill.addEventListener("click", () => openExemptInfoModal(
+          statusPill.dataset.name,
+          statusPill.dataset.passport,
+          statusPill.dataset.rank,
+          statusPill.dataset.dept,
+          statusPill.dataset.comment
+        ));
+      }
 
       if (canEdit) {
         const actionsTd = tr.querySelector('.col-actions');
@@ -1236,9 +1333,21 @@ select option { background: #0c1420; color: var(--text); }
           '</div>' +
         '</td>' +
         '<td class="col-norm">400 / 200</td>' +
-        '<td class="col-status"><span class="status-pill ' + x.status.cls + '">' + x.status.label + '</span></td>' +
+        '<td class="col-status">' + buildStatusPill(x) + '</td>' +
         (canEdit ? '<td class="col-actions"></td>' : '');
       tbody.appendChild(tr);
+
+      // Клик по плашке «Освобождён»
+      const statusPill = tr.querySelector(".status-pill[data-comment]");
+      if (statusPill) {
+        statusPill.addEventListener("click", () => openExemptInfoModal(
+          statusPill.dataset.name,
+          statusPill.dataset.passport,
+          statusPill.dataset.rank,
+          statusPill.dataset.dept,
+          statusPill.dataset.comment
+        ));
+      }
 
       if (canEdit) {
         const actionsTd = tr.querySelector('.col-actions');
@@ -1379,6 +1488,21 @@ select option { background: #0c1420; color: var(--text); }
       btn.classList.remove("saving");
       btn.disabled = false;
     }
+  }
+
+  /* ============ МОДАЛКА ИНФОРМАЦИИ ОБ ОСВОБОЖДЕНИИ ============ */
+  function openExemptInfoModal(name, passport, rank, dept, comment) {
+    $("exemptInfoWhoName").textContent = name || "—";
+    $("exemptInfoWhoSub").textContent =
+      "#" + (passport || "—") +
+      " · " + (rank || "—") +
+      " · " + (dept || "—");
+    $("exemptInfoComment").textContent = comment || "(без комментария)";
+    $("exemptInfoModal").classList.remove("hidden");
+  }
+
+  function closeExemptInfoModal() {
+    $("exemptInfoModal").classList.add("hidden");
   }
 
   function openExemptModal(staffItem) {
@@ -1838,8 +1962,17 @@ select option { background: #0c1420; color: var(--text); }
     $("exemptModal").addEventListener("click", (e) => {
       if (e.target === $("exemptModal")) closeExemptModal();
     });
+
+    $("exemptInfoClose").addEventListener("click", closeExemptInfoModal);
+    $("exemptInfoModal").addEventListener("click", (e) => {
+      if (e.target === $("exemptInfoModal")) closeExemptInfoModal();
+    });
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !$("exemptModal").classList.contains("hidden")) closeExemptModal();
+      if (e.key === "Escape") {
+        if (!$("exemptModal").classList.contains("hidden")) closeExemptModal();
+        if (!$("exemptInfoModal").classList.contains("hidden")) closeExemptInfoModal();
+      }
     });
 
     $("weekSelect").addEventListener("change", () => {

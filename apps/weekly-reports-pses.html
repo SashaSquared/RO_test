@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📊 Недельные отчёты ПСЭС</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0b0f14;
+  --bg-2: #111823;
+  --panel: #16202e;
+  --panel-2: #1c2839;
+  --panel-3: #223147;
+  --text: #e8eef7;
+  --text-soft: #c9d5e3;
+  --muted: #8496ab;
+  --border: #26344a;
+  --border-strong: #3a4d6b;
+
+  --accent: #2f9e44;
+  --accent-2: #37b24d;
+  --accent-bg: rgba(47,158,68,0.12);
+  --accent-border: rgba(47,158,68,0.5);
+
+  --blue: #3b82f6;
+  --blue-bg: rgba(59,130,246,0.14);
+  --blue-border: rgba(59,130,246,0.5);
+
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.12);
+  --amber-border: rgba(245,158,11,0.5);
+
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --red-border: rgba(239,68,68,0.5);
+
+  --purple: #8b5cf6;
+  --purple-bg: rgba(139,92,246,0.14);
+  --purple-border: rgba(139,92,246,0.5);
+
+  --cyan: #06b6d4;
+  --cyan-bg: rgba(6,182,212,0.14);
+  --cyan-border: rgba(6,182,212,0.5);
+
+  --gold: #fbbf24;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html, body { height: 100%; }
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+body {
+  font-family: var(--font);
+  background: radial-gradient(circle at top, #16202e 0%, var(--bg) 60%);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  padding: 16px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.wrap { max-width: 1100px; width: 100%; }
+
+.tabs {
+  display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.tab-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.tab-btn:hover { background: var(--panel-3); color: var(--text); }
+.tab-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: #86efac;
+}
+.tab-btn.tab-debtors.active {
+  background: var(--red-bg);
+  border-color: var(--red-border);
+  color: #fca5a5;
+}
+.tab-btn svg { width: 15px; height: 15px; }
+.tab-btn .count {
+  display: inline-block;
+  min-width: 20px; height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  color: inherit;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+}
+.tab-btn.active .count { background: rgba(47,158,68,0.35); }
+.tab-btn.tab-debtors.active .count { background: rgba(239,68,68,0.35); }
+
+.week-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--blue);
+  margin-bottom: 14px;
+}
+
+.week-info { display: flex; flex-direction: column; gap: 2px; }
+.week-info .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.week-info .value { font-size: 1rem; font-weight: 700; color: #fff; }
+.week-info .sub { font-size: 0.78rem; color: var(--text-soft); }
+
+.week-status {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border);
+}
+.week-status.open { background: var(--accent-bg); color: #86efac; border-color: var(--accent-border); }
+.week-status .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: currentColor;
+}
+.week-status.open .dot { animation: pulse 2s infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.card {
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.card + .card { margin-top: 14px; }
+
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.card-head h2 {
+  font-size: 1rem; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.toolbar {
+  display: grid; grid-template-columns: 1fr 200px 220px;
+  gap: 8px; margin-bottom: 12px;
+}
+@media (max-width: 720px) { .toolbar { grid-template-columns: 1fr; } }
+
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: var(--text);
+  background: #0c1420;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(47,158,68,0.15);
+}
+input::placeholder { color: #5b6b80; }
+select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238496ab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 34px;
+  cursor: pointer;
+}
+select option { background: #0c1420; color: var(--text); }
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.tbl th {
+  text-align: left; font-weight: 600; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted);
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.tbl td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover { background: rgba(47,158,68,0.04); }
+.tbl .col-num { color: var(--muted); width: 40px; font-variant-numeric: tabular-nums; }
+.tbl .col-name { font-weight: 600; }
+.tbl .col-pass { color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tbl .col-rank { color: #c4b5fd; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
+.tbl .col-points { text-align: center; }
+.tbl .col-norm { text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tbl .col-status { text-align: center; white-space: nowrap; }
+.tbl .col-actions { text-align: right; white-space: nowrap; width: 1%; }
+.tbl .col-dept { text-align: center; white-space: nowrap; }
+
+.tbl .points-input {
+  width: 90px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  background: #0d1520;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.tbl .points-input:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(47,158,68,0.2);
+}
+.tbl .points-input[readonly] {
+  background: transparent;
+  border-color: transparent;
+  color: #fff;
+  cursor: default;
+}
+.tbl .points-input.dirty {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+}
+
+.points-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+.save-btn {
+  width: 32px; height: 32px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.save-btn:not(:disabled):hover {
+  border-color: var(--accent-2);
+  background: var(--accent-bg);
+  color: #86efac;
+}
+.save-btn.saving {
+  border-color: var(--amber);
+  color: #fcd34d;
+}
+.save-btn.saved-ok {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: #86efac;
+}
+.save-btn svg { width: 15px; height: 15px; }
+.save-btn .spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.status-pill.ok       { background: var(--accent-bg); color: #86efac; border: 1px solid var(--accent-border); }
+.status-pill.warn     { background: var(--amber-bg); color: #fcd34d; border: 1px solid var(--amber-border); }
+.status-pill.bad      { background: var(--red-bg); color: #fca5a5; border: 1px solid var(--red-border); }
+.status-pill.norm     { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
+.status-pill.exempt   { background: var(--purple-bg); color: #c4b5fd; border: 1px solid var(--purple-border); }
+.status-pill.vacation { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
+.status-pill.instr    { background: var(--cyan-bg); color: #67e8f9; border: 1px solid var(--cyan-border); }
+
+/* Плашки отделов */
+.dept-pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #1e40af;
+  color: #bfdbfe;
+}
+.dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
+.dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 5px; padding: 7px 12px;
+  font-size: 0.8rem; font-weight: 600;
+  font-family: inherit;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+  white-space: nowrap;
+}
+.btn svg { width: 13px; height: 13px; }
+.btn:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--accent-bg); border-color: var(--accent-border); color: #86efac; }
+.btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-warn { background: var(--amber-bg); border-color: var(--amber-border); color: #fcd34d; }
+.btn-warn:hover { background: var(--amber); border-color: var(--amber); color: #1a1207; }
+.btn-danger { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
+.btn-danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
+.btn-icon {
+  width: 30px; height: 30px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, color .15s;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+.btn-icon:first-child { margin-left: 0; }
+.btn-icon svg { width: 14px; height: 14px; }
+.btn-icon:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
+.btn-icon.warn:hover    { background: var(--amber-bg); border-color: var(--amber-border); color: #fcd34d; }
+.btn-icon.danger:hover  { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
+.btn-icon.purple:hover  { background: var(--purple-bg); border-color: var(--purple-border); color: #c4b5fd; }
+
+/* Топ: три колонки */
+.top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 720px) { .top-grid { grid-template-columns: 1fr; } }
+
+.top-list { display: flex; flex-direction: column; gap: 4px; }
+.top-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--panel-3);
+  border: 1px solid var(--border);
+  transition: border-color .15s;
+}
+.top-row:hover { border-color: var(--border-strong); }
+.top-row.place-1 { background: linear-gradient(90deg, rgba(251,191,36,0.15), var(--panel-3)); border-color: rgba(251,191,36,0.5); }
+.top-row.place-2 { background: linear-gradient(90deg, rgba(209,213,219,0.12), var(--panel-3)); border-color: rgba(209,213,219,0.4); }
+.top-row.place-3 { background: linear-gradient(90deg, rgba(217,119,6,0.15), var(--panel-3)); border-color: rgba(217,119,6,0.5); }
+
+.top-medal {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  font-size: 1rem; font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  background: var(--panel-2);
+  color: var(--muted);
+}
+.place-1 .top-medal { background: linear-gradient(135deg, #fbbf24, #d97706); color: #1a1207; }
+.place-2 .top-medal { background: linear-gradient(135deg, #e5e7eb, #9ca3af); color: #1a1207; }
+.place-3 .top-medal { background: linear-gradient(135deg, #d97706, #92400e); color: #fff; }
+
+.top-name { font-weight: 600; font-size: 0.9rem; }
+.top-sub  { font-size: 0.72rem; color: var(--muted); }
+.top-points {
+  font-weight: 800; font-size: 1.05rem;
+  color: #86efac;
+  font-variant-numeric: tabular-nums;
+}
+
+.week-select-row {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;
+}
+.week-select-row label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+.week-select-row select { max-width: 260px; }
+
+.modal-back {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn .18s ease;
+}
+.modal-back.hidden { display: none !important; }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+.modal {
+  width: 100%; max-width: 460px;
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.7);
+}
+.modal h3 {
+  font-size: 1.05rem; font-weight: 700;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.modal h3 .m-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--amber-bg); color: #fcd34d;
+  flex-shrink: 0;
+}
+.modal h3 .m-icon svg { width: 18px; height: 18px; }
+
+.modal-who {
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: var(--panel-3);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  font-size: 0.86rem;
+}
+.modal-who .name { font-weight: 700; color: #fff; }
+.modal-who .sub { color: var(--muted); font-size: 0.76rem; margin-top: 2px; }
+
+.modal label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.modal textarea {
+  width: 100%; min-height: 80px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: #0d1520;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+}
+.modal textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(47,158,68,0.2); }
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+.toast {
+  position: fixed; top: 14px; left: 50%;
+  transform: translate(-50%, -120%);
+  background: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 9px;
+  color: var(--text); font-size: 0.85rem; font-weight: 500;
+  box-shadow: 0 12px 32px rgba(0,0,0,.6);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
+  max-width: calc(100% - 32px);
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.toast.alert { border-left-color: var(--red); }
+.toast.info  { border-left-color: var(--blue); }
+.toast .toast-ic {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+}
+.toast.alert .toast-ic { background: var(--red); }
+.toast.info  .toast-ic { background: var(--blue); }
+.toast .toast-ic svg { width: 12px; height: 12px; color: #071018; }
+
+.debtor-row.punished {
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+.debtor-row.punished td {
+  color: #fca5a5;
+}
+.debtor-row.punished .col-name {
+  color: #fecaca !important;
+}
+.punish-check {
+  width: 20px; height: 20px;
+  cursor: pointer;
+  accent-color: var(--red);
+  margin: 0 auto;
+  display: block;
+}
+
+.empty, .loading {
+  color: var(--muted); font-size: 0.9rem;
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--panel-3);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+.hidden { display: none !important; }
+
+@media (max-width: 640px) {
+  body { padding: 12px 12px 20px; font-size: 14px; }
+  .card { padding: 12px; border-radius: 12px; }
+  .tbl th, .tbl td { padding: 8px 6px; font-size: 0.8rem; }
+  .col-hide-sm { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">
+  <span class="toast-ic" id="toastIcon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </span>
+  <span id="toastText">Готово</span>
+</div>
+
+<div class="wrap">
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="current" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      Текущая неделя
+      <span class="count" id="countPses">0</span>
+    </button>
+    <button class="tab-btn" data-tab="top" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+        <path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+      </svg>
+      Топ недели
+    </button>
+    <button class="tab-btn tab-debtors hidden" data-tab="debtors" type="button" id="tabDebtorsBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      Должники
+      <span class="count" id="countDebtors">0</span>
+    </button>
+    <button class="tab-btn" data-tab="history" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      Прошлые недели
+    </button>
+  </div>
+
+  <div class="week-bar" id="weekBar">
+    <div class="week-info">
+      <div class="label">Рабочая неделя</div>
+      <div class="value" id="weekRange">—</div>
+      <div class="sub" id="weekSub">—</div>
+    </div>
+    <div class="week-status" id="weekStatus">
+      <span class="dot"></span>
+      <span id="weekStatusText">Загрузка…</span>
+    </div>
+  </div>
+
+  <div class="card" id="tab-current">
+    <div class="card-head">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </svg>
+        Сотрудники ПСЭС
+      </h2>
+      <button class="btn" id="refreshBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+          <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+        </svg>
+        Обновить
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchPses" placeholder="🔍 Поиск по имени или паспорту…">
+      <select id="filterStatusPses">
+        <option value="">Все статусы</option>
+        <option value="ok">✅ Норма выполнена</option>
+        <option value="warn">⚠️ Недостаточно баллов</option>
+        <option value="missing">❌ Не сдал</option>
+        <option value="norm">📊 Без нормы (10-11)</option>
+        <option value="exempt">⚪ Освобождён</option>
+        <option value="vacation">🌴 В отпуске</option>
+      </select>
+      <select id="filterDeptPses">
+        <option value="">ПСЭС + Инст ПСЭС</option>
+        <option value="ПСЭС">Только ПСЭС</option>
+        <option value="Инст ПСЭС">Только Инст ПСЭС</option>
+      </select>
+    </div>
+
+    <div id="psesContainer"><div class="loading">Загрузка…</div></div>
+  </div>
+
+  <div class="hidden" id="tab-top">
+    <div class="top-grid">
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+              <path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+            </svg>
+            Топ-10 ПСЭС
+          </h2>
+        </div>
+        <div class="top-list" id="topPses"><div class="loading">Загрузка…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#67e8f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Топ Инст ПСЭС
+          </h2>
+        </div>
+        <div class="top-list" id="topInstrPses"><div class="loading">Загрузка…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="tab-debtors">
+    <div class="card-head">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Должники рабочей недели
+      </h2>
+      <div style="font-size:0.8rem;color:var(--muted);">
+        Отметьте галочку, если взыскание выдано
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchDebtors" placeholder="🔍 Поиск по имени или паспорту…">
+      <select id="filterDebtors">
+        <option value="">Все</option>
+        <option value="unpunished">Без взыскания</option>
+        <option value="punished">С взысканием</option>
+      </select>
+      <div style="display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:0.82rem;">
+        Всего: <b id="totalDebtors" style="margin-left:6px;color:#fca5a5;">0</b>
+      </div>
+    </div>
+
+    <div id="debtorsContainer"><div class="loading">Загрузка…</div></div>
+  </div>
+
+  <div class="card hidden" id="tab-history">
+    <div class="card-head">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        История недель
+      </h2>
+    </div>
+
+    <div class="week-select-row">
+      <label for="weekSelect">Выберите неделю:</label>
+      <select id="weekSelect"><option value="">Загрузка…</option></select>
+      <span id="historyWeekInfo" style="color:var(--muted);font-size:0.82rem;"></span>
+    </div>
+
+    <div class="top-grid">
+      <div>
+        <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:8px;">🏆 Топ-10 ПСЭС</div>
+        <div class="top-list" id="historyTopPses"></div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:8px;">🎓 Топ Инст ПСЭС</div>
+        <div class="top-list" id="historyTopInstrPses"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-back hidden" id="exemptModal">
+  <div class="modal">
+    <h3>
+      <span class="m-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
+        </svg>
+      </span>
+      Освобождение от отчёта
+    </h3>
+
+    <div class="modal-who">
+      <div class="name" id="exemptWhoName">—</div>
+      <div class="sub" id="exemptWhoSub">—</div>
+    </div>
+
+    <label for="exemptComment">Комментарий (обязательно)</label>
+    <textarea id="exemptComment" placeholder="Например: Болел, предупредил старший состав"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn" type="button" id="exemptCancel">Отмена</button>
+      <button class="btn btn-warn" type="button" id="exemptConfirm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Освободить
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const API_URL = "https://hospital-api.asdulgok.workers.dev";
+
+  /* ============================================================
+     НАСТРОЙКИ ПСЭС
+     ============================================================ */
+  const NORM_PSES = 600; // единая норма для ПСЭС и Инст ПСЭС
+
+  const DISCORD_CHANNEL_LINK = "https://discord.com/channels/1538939092929216603/1540083930487726160";
+  const RULE_TEXT = "3.16. Каждый сотрудник Больницы обязан еженедельно предоставлять отчет о проделанной работе в установленной форме в канале своего отделения — \"Недельный отчет\", в срок с 00:00 Четверга до 23:59 Субботы текущей недели.";
+  const PUNISHMENT_TEXT = "Строгий выговор 1/3: 65 вызовов или 50.000р в казну.";
+
+  const state = {
+    user: null,
+    weekId: null,
+    currentWeekId: null,
+    reports: [],
+    staff: [],
+    vacations: [],
+    weekList: [],
+    historyReports: [],
+    activeTab: "current",
+    exemptTarget: null
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const $$ = (sel) => document.querySelectorAll(sel);
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function parseRank(rankStr) {
+    const s = String(rankStr || "").trim();
+    const m = s.match(/(\d{1,2})/);
+    if (!m) return -1;
+    const n = parseInt(m[1], 10);
+    return isNaN(n) ? -1 : n;
+  }
+
+  function parsePassport(p) {
+    const s = String(p || "").trim();
+    if (!s) return Number.POSITIVE_INFINITY;
+    const digits = s.replace(/\D/g, "");
+    if (!digits) return Number.POSITIVE_INFINITY;
+    const n = parseInt(digits, 10);
+    return isNaN(n) ? Number.POSITIVE_INFINITY : n;
+  }
+
+  function compareStaff(a, b) {
+    const ra = parseRank(a.rank);
+    const rb = parseRank(b.rank);
+    if (ra !== rb) return rb - ra;
+    const pa = parsePassport(a.passport);
+    const pb = parsePassport(b.passport);
+    if (pa !== pb) return pa - pb;
+    return (a.name || "").localeCompare(b.name || "");
+  }
+
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function formatDate(d) {
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+  function formatHuman(s) {
+    if (!s) return "—";
+    const [y, m, d] = s.split("-").map(Number);
+    return pad2(d) + "." + pad2(m) + "." + y;
+  }
+  function formatRange(weekId) {
+    if (!weekId) return "—";
+    const [y, m, d] = weekId.split("-").map(Number);
+    const sun = new Date(y, m - 1, d);
+    const sat = new Date(sun);
+    sat.setDate(sat.getDate() + 6);
+    return formatHuman(formatDate(sun)) + " — " + formatHuman(formatDate(sat));
+  }
+
+  function getWeekStartSunday(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    const day = d.getDay();
+    d.setDate(d.getDate() - day);
+    return d;
+  }
+
+  function getWorkingWeekId() {
+    const now = new Date();
+    const day = now.getDay();
+    const sunday = getWeekStartSunday(now);
+    if (day >= 4) {
+      return formatDate(sunday);
+    } else {
+      const prev = new Date(sunday);
+      prev.setDate(prev.getDate() - 7);
+      return formatDate(prev);
+    }
+  }
+
+  function isAcceptOpen(weekId) {
+    const [y, m, d] = weekId.split("-").map(Number);
+    const sunday = new Date(y, m - 1, d);
+    sunday.setHours(0, 0, 0, 0);
+
+    const thursday = new Date(sunday); thursday.setDate(thursday.getDate() + 4);
+    thursday.setHours(0, 0, 0, 0);
+
+    const nextSunday = new Date(sunday); nextSunday.setDate(nextSunday.getDate() + 7);
+    nextSunday.setHours(0, 0, 0, 0);
+
+    const now = new Date();
+    return now >= thursday && now < nextSunday;
+  }
+
+  function apiPost(payload) {
+    return fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(r => {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  function loadSession() {
+    const p = new URLSearchParams(location.search);
+    const pLogin = p.get("login");
+    const pRole = p.get("role");
+    const pDept = p.get("dept");
+    const pDiscord = p.get("discord") || "";
+
+    if (pLogin && pRole) {
+      const raw = localStorage.getItem("hospital_session");
+      let hash = null;
+      let discord = pDiscord;
+      try {
+        if (raw) {
+          const d = JSON.parse(raw);
+          hash = d.hash || null;
+          if (!discord) discord = d.discord || "";
+        }
+      } catch (e) {}
+      return { login: pLogin, role: pRole, department: pDept || "", hash: hash, discord: discord };
+    }
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data && data.login && data.role && data.hash) {
+        if (!data.discord && pDiscord) data.discord = pDiscord;
+        return data;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function isAdmin() {
+    return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
+  }
+
+  async function loadAll() {
+    await loadWeekList();
+    state.weekId = state.currentWeekId;
+
+    await Promise.all([loadStaff(), loadVacations()]);
+    await loadReports(state.weekId);
+
+    renderWeekBar();
+    renderCurrentTab();
+    renderTopTab();
+    renderDebtorsTab();
+    renderHistoryTab();
+  }
+
+  async function loadStaff() {
+    try {
+      const data = await apiPost({ action: "getStaff" });
+      if (data && data.success) state.staff = data.staff || [];
+    } catch (e) { console.error("loadStaff:", e); }
+  }
+
+  async function loadVacations() {
+    try {
+      const data = await apiPost({ action: "getVacations" });
+      if (data && data.success) state.vacations = data.vacations || [];
+    } catch (e) { console.error("loadVacations:", e); }
+  }
+
+  async function loadReports(weekId) {
+    try {
+      const data = await apiPost({ action: "getWeeklyReports", weekId: weekId });
+      if (data && data.success) state.reports = data.reports || [];
+    } catch (e) { console.error("loadReports:", e); state.reports = []; }
+  }
+
+  async function loadWeekList() {
+    try {
+      const data = await apiPost({ action: "getWeekList" });
+      if (data && data.success) {
+        state.weekList = data.weeks || [];
+        state.currentWeekId = data.currentWeekId || state.currentWeekId || getWorkingWeekId();
+      }
+    } catch (e) {
+      console.error("loadWeekList:", e);
+      state.currentWeekId = state.currentWeekId || getWorkingWeekId();
+      state.weekList = [state.currentWeekId];
+    }
+  }
+
+  function getSaturdayOfWeek(weekId) {
+    const [y, m, d] = weekId.split("-").map(Number);
+    const sun = new Date(y, m - 1, d);
+    sun.setDate(sun.getDate() + 6);
+    return formatDate(sun);
+  }
+
+  function findVacation(name) {
+    const lower = String(name || "").trim().toLowerCase();
+    const sat = getSaturdayOfWeek(state.weekId);
+    return state.vacations.find(v => {
+      if (v.returned) return false;
+      if (String(v.name || "").trim().toLowerCase() !== lower) return false;
+      if (!v.start || !v.end) return false;
+      return v.start <= sat && sat <= v.end;
+    });
+  }
+
+  function findReportFor(name) {
+    const lower = String(name || "").trim().toLowerCase();
+    return state.reports.find(r => String(r.name || "").trim().toLowerCase() === lower) || null;
+  }
+
+  function renderWeekBar() {
+    $("weekRange").textContent = formatRange(state.weekId);
+
+    const [y, m, d] = state.weekId.split("-").map(Number);
+    const thursday = new Date(y, m - 1, d + 4);
+    const saturday = new Date(y, m - 1, d + 6);
+    $("weekSub").textContent = "Приём: чт " + formatHuman(formatDate(thursday)) + " 00:00 — сб " + formatHuman(formatDate(saturday)) + " 23:59";
+
+    const open = isAcceptOpen(state.weekId);
+    const st = $("weekStatus");
+    st.classList.toggle("open", open);
+    $("weekStatusText").textContent = open ? "🟢 Приём открыт" : "📝 Приём ещё не открыт";
+  }
+
+  /* ============================================================
+     ВЫБОРКА СОТРУДНИКОВ ПСЭС
+     ============================================================ */
+  function isPsesDept(d) {
+    return d === "ПСЭС" || d === "Инст ПСЭС";
+  }
+
+  function getPsesStaff() {
+    return state.staff.filter(s => {
+      if (!isPsesDept(s.department)) return false;
+      const rank = parseRank(s.rank);
+      return rank >= 5; // ранги 5+, включая 10-11 (без нормы)
+    }).sort(compareStaff);
+  }
+
+  function getPsesOnly() {
+    return getPsesStaff().filter(s => s.department === "ПСЭС");
+  }
+
+  function getInstrPsesOnly() {
+    return getPsesStaff().filter(s => s.department === "Инст ПСЭС");
+  }
+
+  function computeStatus(staffItem, report) {
+    const onVacation = !!findVacation(staffItem.name);
+    const rank = parseRank(staffItem.rank);
+
+    if (onVacation) {
+      return { key: "vacation", label: "🌴 В отпуске", cls: "vacation" };
+    }
+    if (report && report.exempted) {
+      return { key: "exempt", label: "⚪ Освобождён", cls: "exempt" };
+    }
+
+    const hasAnyPoints = report && (Number(report.points) || 0) > 0;
+
+    // Ранги 10-11 — без нормы
+    if (rank >= 10) {
+      if (hasAnyPoints) return { key: "norm", label: "📊 Без нормы", cls: "norm" };
+      return { key: "missing", label: "❌ Не сдал", cls: "bad" };
+    }
+
+    if (report && (Number(report.points) || 0) >= NORM_PSES) {
+      return { key: "ok", label: "✅ Норма выполнена", cls: "ok" };
+    }
+    if (hasAnyPoints) return { key: "warn", label: "⚠️ Недостаточно", cls: "warn" };
+    return { key: "missing", label: "❌ Не сдал", cls: "bad" };
+  }
+
+  /* ============================================================
+     ТЕКУЩАЯ НЕДЕЛЯ
+     ============================================================ */
+  function renderCurrentTab() {
+    const q = ($("searchPses").value || "").trim().toLowerCase();
+    const filterSt = $("filterStatusPses").value;
+    const filterDept = $("filterDeptPses").value;
+
+    let list = getPsesStaff().map(s => {
+      const report = findReportFor(s.name);
+      const status = computeStatus(s, report);
+      return { staff: s, report, status };
+    });
+
+    if (filterDept) list = list.filter(x => x.staff.department === filterDept);
+    if (q) list = list.filter(x =>
+      (x.staff.name || "").toLowerCase().includes(q) ||
+      (x.staff.passport || "").toLowerCase().includes(q)
+    );
+    if (filterSt) list = list.filter(x => x.status.key === filterSt);
+
+    $("countPses").textContent = String(getPsesStaff().length);
+
+    const cont = $("psesContainer");
+    if (!list.length) {
+      cont.innerHTML = '<div class="empty">Никого не найдено</div>';
+      return;
+    }
+
+    const canEdit = isAdmin();
+    const table = document.createElement("table");
+    table.className = "tbl";
+    table.innerHTML =
+      '<thead><tr>' +
+        '<th class="col-num">#</th>' +
+        '<th>Имя</th>' +
+        '<th class="col-hide-sm">Паспорт</th>' +
+        '<th class="col-rank">Ранг</th>' +
+        '<th class="col-dept col-hide-sm">Отдел</th>' +
+        '<th class="col-points">Баллы</th>' +
+        '<th class="col-norm">Норма</th>' +
+        '<th class="col-status">Статус</th>' +
+        (canEdit ? '<th class="col-actions"></th>' : '') +
+      '</tr></thead>';
+
+    const tbody = document.createElement("tbody");
+    list.forEach((x, i) => {
+      const tr = document.createElement("tr");
+      const rank = parseRank(x.staff.rank);
+      const normText = rank >= 10 ? "—" : ("≥ " + NORM_PSES);
+      const points = x.report ? (x.report.points || 0) : "";
+      const deptCls = "dept-" + String(x.staff.department || "").toLowerCase().replace(/\s+/g, "-");
+
+      tr.innerHTML =
+        '<td class="col-num">' + (i + 1) + '</td>' +
+        '<td class="col-name">' + esc(x.staff.name) + '</td>' +
+        '<td class="col-pass col-hide-sm">' + esc(x.staff.passport || "—") + '</td>' +
+        '<td class="col-rank">' + esc(x.staff.rank || "—") + '</td>' +
+        '<td class="col-dept col-hide-sm"><span class="dept-pill ' + deptCls + '">' + esc(x.staff.department || "—") + '</span></td>' +
+        '<td class="col-points">' +
+          '<div class="points-cell">' +
+            '<input type="number" min="0" class="points-input" data-name="' + esc(x.staff.name) + '" value="' + (points === "" ? "" : points) + '" ' + (canEdit ? '' : 'readonly') + '>' +
+            (canEdit ? '<button type="button" class="save-btn" disabled title="Сохранить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>' : '') +
+          '</div>' +
+        '</td>' +
+        '<td class="col-norm">' + normText + '</td>' +
+        '<td class="col-status"><span class="status-pill ' + x.status.cls + '">' + x.status.label + '</span></td>' +
+        (canEdit ? '<td class="col-actions"></td>' : '');
+      tbody.appendChild(tr);
+
+      if (canEdit) {
+        const actionsTd = tr.querySelector('.col-actions');
+        if (x.report && x.report.exempted) {
+          const unexBtn = document.createElement("button");
+          unexBtn.className = "btn-icon purple";
+          unexBtn.title = "Снять освобождение";
+          unexBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>';
+          unexBtn.addEventListener("click", () => unexemptReport(x.staff.name));
+          actionsTd.appendChild(unexBtn);
+        } else {
+          const exBtn = document.createElement("button");
+          exBtn.className = "btn-icon warn";
+          exBtn.title = "Освободить от отчёта";
+          exBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/></svg>';
+          exBtn.addEventListener("click", () => openExemptModal(x.staff));
+          actionsTd.appendChild(exBtn);
+        }
+      }
+    });
+    table.appendChild(tbody);
+    cont.innerHTML = "";
+    cont.appendChild(table);
+
+    if (canEdit) {
+      cont.querySelectorAll('.points-input').forEach(inp => {
+        inp.addEventListener('input', onPointsInput);
+      });
+      cont.querySelectorAll('.save-btn').forEach(btn => {
+        btn.addEventListener('click', onSaveClick);
+      });
+    }
+  }
+
+  function onPointsInput(e) {
+    const inp = e.target;
+    let v = parseInt(inp.value, 10);
+    if (isNaN(v) || v < 0) v = 0;
+    inp.value = v;
+
+    inp.dataset.dirty = "1";
+    inp.classList.add("dirty");
+
+    const tr = inp.closest("tr");
+    if (tr) {
+      const btn = tr.querySelector('.save-btn');
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function onSaveClick(e) {
+    const btn = e.currentTarget;
+    const tr = btn.closest("tr");
+    if (!tr) return;
+    const input = tr.querySelector('.points-input');
+    if (!input) return;
+
+    const name = input.dataset.name;
+    const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name.trim().toLowerCase());
+    if (!staffItem) return;
+
+    const points = parseInt(input.value, 10) || 0;
+
+    btn.disabled = true;
+    btn.classList.add("saving");
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="spin"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2 a10 10 0 0 1 10 10"/></svg>';
+
+    try {
+      const data = await apiPost({
+        action: "saveWeeklyPoints",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId,
+        name: name,
+        passport: staffItem.passport || "",
+        department: staffItem.department || "",
+        rank: staffItem.rank || "",
+        points: points,
+        instrPoints: 0
+      });
+      if (data && data.success) {
+        const existing = findReportFor(name);
+        if (existing) {
+          existing.points = points;
+          existing.instrPoints = 0;
+        } else {
+          state.reports.push({
+            rowIndex: data.rowIndex,
+            weekId: state.weekId,
+            name: name,
+            passport: staffItem.passport || "",
+            department: staffItem.department || "",
+            rank: staffItem.rank || "",
+            points: points,
+            instrPoints: 0,
+            exempted: false,
+            comment: "",
+            punished: false
+          });
+        }
+
+        input.dataset.dirty = "0";
+        input.classList.remove("dirty");
+
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        btn.classList.remove("saving");
+        btn.classList.add("saved-ok");
+        setTimeout(() => {
+          btn.innerHTML = oldHtml;
+          btn.classList.remove("saved-ok");
+        }, 1500);
+
+        showToast("Сохранено: " + name, "success");
+        renderCurrentTab();
+        renderTopTab();
+        renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка сохранения", "alert");
+        btn.innerHTML = oldHtml;
+        btn.classList.remove("saving");
+        btn.disabled = false;
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Ошибка сети", "alert");
+      btn.innerHTML = oldHtml;
+      btn.classList.remove("saving");
+      btn.disabled = false;
+    }
+  }
+
+  function openExemptModal(staffItem) {
+    state.exemptTarget = staffItem;
+    $("exemptWhoName").textContent = staffItem.name || "—";
+    $("exemptWhoSub").textContent = "#" + (staffItem.passport || "—") +
+      " · " + (staffItem.rank || "—") +
+      " · " + (staffItem.department || "—");
+    $("exemptComment").value = "";
+    $("exemptModal").classList.remove("hidden");
+    setTimeout(() => $("exemptComment").focus(), 60);
+  }
+
+  function closeExemptModal() {
+    state.exemptTarget = null;
+    $("exemptModal").classList.add("hidden");
+  }
+
+  async function confirmExempt() {
+    if (!state.exemptTarget) return;
+    const comment = $("exemptComment").value.trim();
+    if (!comment) {
+      showToast("Введите комментарий", "alert");
+      $("exemptComment").focus();
+      return;
+    }
+    const staffItem = state.exemptTarget;
+    $("exemptConfirm").disabled = true;
+
+    try {
+      const data = await apiPost({
+        action: "exemptWeeklyReport",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId,
+        name: staffItem.name,
+        passport: staffItem.passport || "",
+        department: staffItem.department || "",
+        rank: staffItem.rank || "",
+        comment: comment
+      });
+      if (data && data.success) {
+        showToast("Освобождён: " + staffItem.name, "success");
+        closeExemptModal();
+        await loadReports(state.weekId);
+        renderCurrentTab();
+        renderTopTab();
+        renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка", "alert");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Ошибка сети", "alert");
+    } finally {
+      $("exemptConfirm").disabled = false;
+    }
+  }
+
+  async function unexemptReport(name) {
+    if (!confirm("Снять освобождение с «" + name + "»?")) return;
+    try {
+      const data = await apiPost({
+        action: "unexemptWeeklyReport",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId,
+        name: name
+      });
+      if (data && data.success) {
+        showToast("Освобождение снято: " + name, "info");
+        await loadReports(state.weekId);
+        renderCurrentTab();
+        renderTopTab();
+        renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка", "alert");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
+  async function copyPunishment(staffItem) {
+    const adminStaff = state.staff.find(s =>
+      String(s.name || "").trim().toLowerCase() === String(state.user.login || "").trim().toLowerCase()
+    );
+    const adminDiscord = state.user.discord || "";
+    const adminName = adminStaff ? adminStaff.name : state.user.login;
+    const adminPassport = adminStaff ? adminStaff.passport : "—";
+
+    const lines = [
+      "1. " + (adminDiscord ? adminDiscord + " " : "") + adminName + " | " + adminPassport,
+      "2. " + staffItem.name + " | " + (staffItem.passport || "—"),
+      "3. " + RULE_TEXT,
+      "4. " + DISCORD_CHANNEL_LINK,
+      "5. " + PUNISHMENT_TEXT
+    ];
+    const text = lines.join("\n");
+
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta);
+        ok = true;
+      } catch (e2) { ok = false; }
+    }
+    if (ok) {
+      showToast("Форма взыскания скопирована: " + staffItem.name, "success");
+    } else {
+      showToast("Не удалось скопировать", "alert");
+    }
+  }
+
+  /* ============================================================
+     ТОП НЕДЕЛИ
+     ============================================================ */
+  function renderTopTab() {
+    renderTopInto("topPses", "topInstrPses", state.reports);
+  }
+
+  function renderTopInto(psesElId, instrElId, reports) {
+    const uniqueMap = {};
+    reports.forEach(r => {
+      const key = String(r.name || "").trim().toLowerCase();
+      if (!key) return;
+      if (!uniqueMap[key]) {
+        uniqueMap[key] = { ...r };
+      } else {
+        const cur = uniqueMap[key];
+        cur.points = Math.max(cur.points || 0, r.points || 0);
+        cur.exempted = cur.exempted && r.exempted;
+      }
+    });
+    const uniq = Object.values(uniqueMap);
+
+    const validCandidates = uniq.filter(r => {
+      if (r.exempted) return false;
+
+      const name = String(r.name || "").trim().toLowerCase();
+      const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name);
+      if (!staffItem) return false;
+
+      const dept = staffItem.department;
+      const rank = parseRank(staffItem.rank);
+      const points = Number(r.points) || 0;
+
+      // Только ПСЭС и Инст ПСЭС
+      if (!isPsesDept(dept)) return false;
+      // Ранги 5–9
+      if (rank < 5 || rank >= 10) return false;
+      // Норма 600
+      return points >= NORM_PSES;
+    });
+
+    const psesTop = validCandidates
+      .filter(r => {
+        const name = String(r.name || "").trim().toLowerCase();
+        const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name);
+        return staffItem && staffItem.department === "ПСЭС";
+      })
+      .sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0))
+      .slice(0, 10);
+
+    const instrPsesTop = validCandidates
+      .filter(r => {
+        const name = String(r.name || "").trim().toLowerCase();
+        const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name);
+        return staffItem && staffItem.department === "Инст ПСЭС";
+      })
+      .sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0));
+
+    const psesCont = $(psesElId);
+    psesCont.innerHTML = "";
+    if (!psesTop.length) {
+      psesCont.innerHTML = '<div class="empty">Пока нет данных (норма не выполнена ни у кого)</div>';
+    } else {
+      psesTop.forEach((r, i) => {
+        const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === r.name.trim().toLowerCase());
+        psesCont.appendChild(buildTopRow(i + 1, r.name, staffItem, r.points || 0));
+      });
+    }
+
+    const instrCont = $(instrElId);
+    instrCont.innerHTML = "";
+    if (!instrPsesTop.length) {
+      instrCont.innerHTML = '<div class="empty">Пока нет данных (норма не выполнена ни у кого)</div>';
+    } else {
+      instrPsesTop.forEach((r, i) => {
+        const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === r.name.trim().toLowerCase());
+        instrCont.appendChild(buildTopRow(i + 1, r.name, staffItem, r.points || 0));
+      });
+    }
+  }
+
+  function buildTopRow(place, name, staffItem, value) {
+    const row = document.createElement("div");
+    row.className = "top-row" + (place <= 3 ? " place-" + place : "");
+
+    const medal = place <= 3 ? ["🥇", "🥈", "🥉"][place - 1] : String(place);
+    const dept = staffItem ? staffItem.department : "—";
+    const rank = staffItem ? staffItem.rank : "—";
+
+    row.innerHTML =
+      '<div class="top-medal">' + medal + '</div>' +
+      '<div>' +
+        '<div class="top-name">' + esc(name) + '</div>' +
+        '<div class="top-sub">' + esc(dept) + ' · ранг ' + esc(rank) + '</div>' +
+      '</div>' +
+      '<div class="top-points">' + value + '</div>';
+    return row;
+  }
+
+  /* ============================================================
+     ДОЛЖНИКИ
+     ============================================================ */
+  function renderDebtorsTab() {
+    if (!isAdmin()) {
+      $("tabDebtorsBtn").classList.add("hidden");
+      return;
+    }
+    $("tabDebtorsBtn").classList.remove("hidden");
+
+    const allStaff = getPsesStaff();
+    const debtors = [];
+
+    allStaff.forEach(s => {
+      const report = findReportFor(s.name);
+      const status = computeStatus(s, report);
+      if (status.key === "missing") {
+        debtors.push({
+          staff: s,
+          report: report,
+          punished: report ? !!report.punished : false
+        });
+      }
+    });
+
+    const q = ($("searchDebtors").value || "").trim().toLowerCase();
+    const filterP = $("filterDebtors").value;
+
+    let filtered = debtors.slice();
+    if (q) filtered = filtered.filter(d =>
+      (d.staff.name || "").toLowerCase().includes(q) ||
+      (d.staff.passport || "").toLowerCase().includes(q)
+    );
+    if (filterP === "punished") filtered = filtered.filter(d => d.punished);
+    if (filterP === "unpunished") filtered = filtered.filter(d => !d.punished);
+
+    filtered.sort((a, b) => compareStaff(a.staff, b.staff));
+
+    $("totalDebtors").textContent = String(filtered.length);
+    $("countDebtors").textContent = String(debtors.length);
+
+    const cont = $("debtorsContainer");
+    if (!filtered.length) {
+      cont.innerHTML = '<div class="empty">' + (debtors.length === 0 ? "Все отчёты сданы 🎉" : "Никого не найдено") + '</div>';
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.className = "tbl";
+    table.innerHTML =
+      '<thead><tr>' +
+        '<th class="col-num">#</th>' +
+        '<th>Имя</th>' +
+        '<th class="col-hide-sm">Паспорт</th>' +
+        '<th class="col-rank">Ранг</th>' +
+        '<th class="col-hide-sm">Отдел</th>' +
+        '<th class="col-status" style="width:130px;">Взыскание выдано</th>' +
+        '<th class="col-actions"></th>' +
+      '</tr></thead>';
+
+    const tbody = document.createElement("tbody");
+    filtered.forEach((d, i) => {
+      const tr = document.createElement("tr");
+      if (d.punished) tr.classList.add("debtor-row", "punished");
+      const deptCls = "dept-" + String(d.staff.department || "").toLowerCase().replace(/\s+/g, "-");
+
+      tr.innerHTML =
+        '<td class="col-num">' + (i + 1) + '</td>' +
+        '<td class="col-name">' + esc(d.staff.name) + '</td>' +
+        '<td class="col-pass col-hide-sm">' + esc(d.staff.passport || "—") + '</td>' +
+        '<td class="col-rank">' + esc(d.staff.rank || "—") + '</td>' +
+        '<td class="col-hide-sm"><span class="dept-pill ' + deptCls + '">' + esc(d.staff.department || "—") + '</span></td>' +
+        '<td class="col-status" style="text-align:center;">' +
+          '<input type="checkbox" class="punish-check" data-name="' + esc(d.staff.name) + '" ' + (d.punished ? 'checked' : '') + '>' +
+        '</td>' +
+        '<td class="col-actions"></td>';
+
+      tbody.appendChild(tr);
+
+      const actionsTd = tr.querySelector('.col-actions');
+      const pnBtn = document.createElement("button");
+      pnBtn.className = "btn-icon danger";
+      pnBtn.title = "Скопировать форму взыскания";
+      pnBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      pnBtn.addEventListener("click", () => copyPunishment(d.staff));
+      actionsTd.appendChild(pnBtn);
+
+      const cb = tr.querySelector('.punish-check');
+      cb.addEventListener('change', async (e) => {
+        const punished = e.target.checked;
+        try {
+          const data = await apiPost({
+            action: "setPunished",
+            login: state.user.login,
+            hash: state.user.hash,
+            weekId: state.weekId,
+            name: d.staff.name,
+            passport: d.staff.passport || "",
+            department: d.staff.department || "",
+            rank: d.staff.rank || "",
+            punished: punished
+          });
+          if (data && data.success) {
+            const existing = findReportFor(d.staff.name);
+            if (existing) {
+              existing.punished = punished;
+            } else {
+              state.reports.push({
+                rowIndex: data.rowIndex,
+                weekId: state.weekId,
+                name: d.staff.name,
+                passport: d.staff.passport || "",
+                department: d.staff.department || "",
+                rank: d.staff.rank || "",
+                points: 0,
+                instrPoints: 0,
+                exempted: false,
+                comment: "",
+                punished: punished
+              });
+            }
+            d.punished = punished;
+            tr.classList.toggle("punished", punished);
+            showToast(punished ? "Отмечено: взыскание выдано — " + d.staff.name : "Снято: " + d.staff.name, punished ? "info" : "success");
+          } else {
+            showToast(data.message || "Ошибка", "alert");
+            e.target.checked = !punished;
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("Ошибка сети", "alert");
+          e.target.checked = !punished;
+        }
+      });
+    });
+    table.appendChild(tbody);
+    cont.innerHTML = "";
+    cont.appendChild(table);
+  }
+
+  /* ============================================================
+     ИСТОРИЯ
+     ============================================================ */
+  function renderHistoryTab() {
+    const sel = $("weekSelect");
+    sel.innerHTML = "";
+
+    const historyWeeks = state.weekList.filter(w => w !== state.currentWeekId);
+
+    if (!historyWeeks.length) {
+      const o = document.createElement("option");
+      o.value = "";
+      o.textContent = "Других недель пока нет";
+      sel.appendChild(o);
+      $("historyWeekInfo").textContent = "";
+      $("historyTopPses").innerHTML = '<div class="empty">Других недель пока нет</div>';
+      $("historyTopInstrPses").innerHTML = '<div class="empty">Других недель пока нет</div>';
+      return;
+    }
+
+    historyWeeks.forEach(w => {
+      const o = document.createElement("option");
+      o.value = w;
+      o.textContent = formatRange(w);
+      sel.appendChild(o);
+    });
+
+    loadHistoryReports(historyWeeks[0]);
+  }
+
+  async function loadHistoryReports(weekId) {
+    if (!weekId) return;
+    $("historyWeekInfo").textContent = "Загрузка…";
+    try {
+      const data = await apiPost({ action: "getWeeklyReports", weekId: weekId });
+      if (data && data.success) {
+        state.historyReports = data.reports || [];
+        $("historyWeekInfo").textContent = "Записей: " + state.historyReports.length;
+        renderTopInto("historyTopPses", "historyTopInstrPses", state.historyReports);
+      }
+    } catch (e) {
+      console.error(e);
+      $("historyWeekInfo").textContent = "Ошибка загрузки";
+    }
+  }
+
+  function switchTab(tab) {
+    state.activeTab = tab;
+    $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+    $("tab-current").classList.toggle("hidden", tab !== "current");
+    $("tab-top").classList.toggle("hidden", tab !== "top");
+    $("tab-debtors").classList.toggle("hidden", tab !== "debtors");
+    $("tab-history").classList.toggle("hidden", tab !== "history");
+  }
+
+  const toastEl = $("toast");
+  const toastText = $("toastText");
+  const toastIcon = $("toastIcon");
+  let toastTimer = null;
+  const I_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const I_ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  const I_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+
+  function showToast(text, kind) {
+    kind = kind || "success";
+    toastEl.className = "toast " + (kind === "alert" ? "alert" : kind === "info" ? "info" : "");
+    toastText.textContent = text;
+    toastIcon.innerHTML = kind === "alert" ? I_ALERT : kind === "info" ? I_INFO : I_OK;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+  }
+
+  function init() {
+    const user = loadSession();
+    if (!user) {
+      document.querySelector(".wrap").innerHTML =
+        '<div class="card" style="text-align:center;padding:40px 20px;">' +
+          '<div style="font-size:2rem;margin-bottom:10px;">🔒</div>' +
+          '<div style="font-weight:600;margin-bottom:6px;">Нет активной сессии</div>' +
+          '<div class="empty">Войдите в планшет заново</div>' +
+        '</div>';
+      return;
+    }
+    state.user = user;
+
+    $$(".tab-btn").forEach(b => b.addEventListener("click", () => switchTab(b.dataset.tab)));
+
+    $("refreshBtn").addEventListener("click", () => {
+      showToast("Обновление…", "info");
+      loadAll();
+    });
+    $("searchPses").addEventListener("input", renderCurrentTab);
+    $("filterStatusPses").addEventListener("change", renderCurrentTab);
+    $("filterDeptPses").addEventListener("change", renderCurrentTab);
+    $("searchDebtors").addEventListener("input", renderDebtorsTab);
+    $("filterDebtors").addEventListener("change", renderDebtorsTab);
+
+    $("exemptCancel").addEventListener("click", closeExemptModal);
+    $("exemptConfirm").addEventListener("click", confirmExempt);
+    $("exemptModal").addEventListener("click", (e) => {
+      if (e.target === $("exemptModal")) closeExemptModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !$("exemptModal").classList.contains("hidden")) closeExemptModal();
+    });
+
+    $("weekSelect").addEventListener("change", () => {
+      loadHistoryReports($("weekSelect").value);
+    });
+
+    loadAll();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

@@ -21,12 +21,21 @@
   --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 html,body{height:100%}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar{
+  width:0;
+  display:none;
+}
+
 body{
   font-family:var(--font);
   background:radial-gradient(circle at top,#16202e 0%,var(--bg) 60%);
   color:var(--text);line-height:1.5;min-height:100vh;
   -webkit-font-smoothing:antialiased;
   padding:16px 16px 24px;display:flex;flex-direction:column;align-items:center;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
 }
 .wrap{max-width:1100px;width:100%;display:flex;flex-direction:column}
 
@@ -263,9 +272,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
    *  КОНФИГУРАЦИЯ
    * ============================================================ */
 
-  // ═══════════════════════════════════════════════════════════════
-  // ИЗМЕНЕНО: обновлён URL Google Apps Script (новая БД)
-  // ═══════════════════════════════════════════════════════════════
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
   const HOURS_START = 10;
@@ -334,12 +340,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
   }
 
-  /* Сравнение дат в формате YYYY-MM-DD: <, =, > */
-  function cmpDate(a, b) {
-    return a < b ? -1 : a > b ? 1 : 0;
-  }
-
-  /* После 22:20 — активна завтрашняя дата. До — сегодняшняя. */
   function computeActiveDate() {
     const now = new Date();
     const h = now.getHours();
@@ -357,7 +357,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     return d + " " + months[mo-1] + " (" + days[dt.getDay()] + ")";
   }
 
-  /* Обновляем плашку "Рабочая дата" в шапке */
   function renderShiftBanner() {
     if (!state.activeDate) return;
     const today = todayStr();
@@ -373,29 +372,21 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     }
   }
 
-  /* Есть ли в имени дата — неважно, работаем от активной даты */
-
-  /* Проверка "время прошло" — учитывает активную дату */
   function isPastTime(timeStr) {
     if (!/^\d{2}:\d{2}$/.test(timeStr)) return false;
     if (!state.activeDate) return false;
 
     const today = todayStr();
 
-    // Если активная дата — будущее, ничего не "прошло"
     if (state.activeDate > today) return false;
-
-    // Если активная дата — прошлое (крайне редкий случай), всё прошло
     if (state.activeDate < today) return true;
 
-    // Активная дата = сегодня. Сравниваем часы
     const now = new Date();
     const [h, m] = timeStr.split(":").map(Number);
     const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
     return target.getTime() <= now.getTime();
   }
 
-  /* Остались ли ещё непрошедшие часы в активной дате */
   function hasFutureSlots() {
     return allHours().some(t => !isPastTime(t));
   }
@@ -834,14 +825,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
 
   /* ============================================================
    *  АВТОСБРОС В 22:20
-   *
-   *  Логика:
-   *   - до 22:20: активна сегодняшняя дата;
-   *   - после 22:20: активна завтрашняя, старые брони стираются.
-   *
-   *  Сбрасываем ровно один раз в сутки в 22:20.
-   *  Только админ/суперадмин дёргает сервер. Остальные просто
-   *  помечают дату локально и переключают рабочую дату.
    * ============================================================ */
   function isAfterReset() {
     const now = new Date();
@@ -860,20 +843,16 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   }
 
   async function tryAutoReset() {
-    // сначала посчитаем актуальную дату (может уже быть "завтра")
     state.activeDate = computeActiveDate();
 
     if (!shouldResetToday()) return false;
 
     if (!state.user) {
-      // Даже без сессии пометим дату, чтобы не пытаться постоянно
       return false;
     }
 
     if (state.user.role !== "admin" && state.user.role !== "superadmin") {
-      // Обычный сотрудник просто помечает, что сброс уже был
       markResetDone();
-      // Обновим страницу, чтобы перешли на завтрашнюю дату
       renderAll();
       return false;
     }
@@ -898,11 +877,9 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     return false;
   }
 
-  /* Периодически проверяем: не наступило ли 22:20 в момент работы */
   async function checkResetTick() {
     const newActive = computeActiveDate();
     if (newActive !== state.activeDate) {
-      // Дата "переключилась" — обновим интерфейс и попробуем сброс
       state.activeDate = newActive;
       await tryAutoReset();
       await loadBookings();
@@ -976,7 +953,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     }
     state.user = user;
 
-    // Рабочая дата
     state.activeDate = computeActiveDate();
 
     if (user.role === "user") {
@@ -987,10 +963,8 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
       employeeInput.placeholder = "Имя сотрудника";
     }
 
-    // Первый сброс после 22:20 — единожды за день
     tryAutoReset();
 
-    // Автообновление раз в 30 секунд
     setInterval(() => {
       if (document.hidden) return;
       checkResetTick();

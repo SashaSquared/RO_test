@@ -1653,11 +1653,17 @@
       return;
     }
 
-    if (isCalcUser()) {
-      if (String(staffItem.department || "").trim() === "Инст СМП") {
-        notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов", "alert");
-        return;
-      }
+    // ▼ ПРОВЕРКИ ОТДЕЛА
+    const dept = String(staffItem.department || "").trim();
+    const ALLOWED_DEPTS = ["СМП", "Инст СМП"];
+
+    if (!ALLOWED_DEPTS.includes(dept)) {
+      notifyParent("Ошибка", "Можно записывать отчёты только для отдела СМП и Инст СМП", "alert");
+      return;
+    }
+    if (isCalcUser() && dept === "Инст СМП") {
+      notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов СМП", "alert");
+      return;
     }
 
     const weekId = await fetchWorkingWeekId();

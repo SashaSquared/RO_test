@@ -630,7 +630,7 @@
         </div>
         <div class="modal-form-group" style="margin-bottom:0;">
           <label for="staffRank">Ранг</label>
-          <input type="text" id="staffRank">
+          <select id="staffRank"></select>
         </div>
         <div class="modal-form-group" style="margin-bottom:0;grid-column:1 / -1;">
           <label for="staffDepartment">Отдел</label>
@@ -1155,7 +1155,7 @@
             '</div>' +
             '<div class="edit-form-group">' +
               '<label for="ei_rank">Ранг</label>' +
-              '<input type="text" id="ei_rank" value="' + esc(s.rank || "") + '">' +
+              '<select id="ei_rank">' + rankOptionsHtml(s.rank) + '</select>' +
             '</div>' +
             '<div class="edit-form-group full">' +
               '<label for="ei_department">Отдел</label>' +
@@ -1196,6 +1196,15 @@
     const eiPosition = editTr.querySelector("#ei_position");
     const eiRank = editTr.querySelector("#ei_rank");
     const eiDepartment = editTr.querySelector("#ei_department");
+
+    // Автоподстановка должности при смене ранга
+    eiRank.addEventListener("change", () => {
+      const r = parseInt(eiRank.value, 10);
+      if (r >= 1 && r <= 12) {
+        eiPosition.value = RANK_TO_POSITION[r];
+      }
+      // r === 13 (Лидер) — должность не трогаем
+    });
 
     editTr.querySelector('[data-action="edit-cancel"]').addEventListener("click", () => {
       closeInlineEditor();
@@ -1279,6 +1288,8 @@
     staffFormTitle.textContent = "Новый сотрудник";
     staffForm.reset();
     staffDepartment.value = "СМП";
+    staffRank.value = "1";
+    staffPosition.value = RANK_TO_POSITION[1];
     staffSubmitBtn.textContent = "Добавить сотрудника";
     staffFormCard.classList.remove("hidden");
     staffFormCard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1485,6 +1496,19 @@
       o.value = d; o.textContent = DEPT_LABEL[d];
       filterDept.appendChild(o);
     });
+
+    // Заполнить select ранга в форме создания
+    staffRank.innerHTML = "";
+    for (let i = 1; i <= 12; i++) {
+      const o = document.createElement("option");
+      o.value = String(i);
+      o.textContent = i + " — " + RANK_TO_POSITION[i];
+      staffRank.appendChild(o);
+    }
+    const oLeader = document.createElement("option");
+    oLeader.value = "13";
+    oLeader.textContent = "13 — Лидер";
+    staffRank.appendChild(oLeader);
   }
 
   function init() {
@@ -1511,6 +1535,14 @@
     addStaffBtn.addEventListener("click", openCreate);
     cancelStaffBtn.addEventListener("click", closeCreate);
     staffForm.addEventListener("submit", handleStaffForm);
+
+    // Автоподстановка должности в форме создания
+    staffRank.addEventListener("change", () => {
+      const r = parseInt(staffRank.value, 10);
+      if (r >= 1 && r <= 12) {
+        staffPosition.value = RANK_TO_POSITION[r];
+      }
+    });
 
     searchInput.addEventListener("input", renderActive);
     filterDept.addEventListener("change", renderActive);

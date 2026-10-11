@@ -11,7 +11,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    /* Фон — глубокий, чтобы карточки явно от него отличались */
     --bg: #070b12;
     --panel: #151f30;
     --panel-2: #1b2739;
@@ -42,6 +41,12 @@
 
   html, body { height: 100%; }
 
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
   body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
@@ -57,6 +62,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   .tablet {
@@ -258,7 +265,6 @@
   }
   .qa-item.open .q-chevron { transform: rotate(180deg); color: var(--accent-2); }
 
-  /* === Компактный ответ, отделённый фоном и линией === */
   .qa-answer {
     max-height: 0;
     overflow: hidden;

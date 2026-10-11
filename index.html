@@ -444,10 +444,6 @@
   .dept-pill.dept-смп { background: #991b1b; color: #fecaca; }
   .dept-pill.dept-ит { background: #14532d; color: #bbf7d0; }
   .dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
-  .dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
-  .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
-  .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
-  .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
 
   .empty, .loading { color: var(--muted); font-size: 0.86rem; text-align: center; padding: 20px 0; }
 
@@ -478,8 +474,8 @@
 
   .iframe-wrap {
     width: 100%;
-    height: calc(100vh - 220px);
-    min-height: 480px;
+    height: calc(100vh - 200px);
+    min-height: 520px;
     background: #0d1520;
     border: 1px solid var(--border);
     border-radius: 16px;
@@ -939,10 +935,6 @@
               <option value="СМП" selected>СМП — Скорая медицинская помощь</option>
               <option value="ИТ">ИТ — Интенсивная терапия</option>
               <option value="ПСЭС">ПСЭС — Психолого-санитарная служба</option>
-              <option value="Инст ПСЭС">Инст ПСЭС — Инструктор ПСЭС</option>
-              <option value="Инст СМП">Инст СМП — Инструктор СМП</option>
-              <option value="Инст ИТ">Инст ИТ — Инструктор ИТ</option>
-              <option value="Инст ОК">Инст ОК — Инструктор ОК</option>
             </select>
           </div>
           <div class="form-group">
@@ -1094,19 +1086,17 @@
 
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
-  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС", "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"];
+  // ▼ ИЗМЕНЕНО: убраны инструкторские рабочие столы (Инст ПСЭС, Инст СМП, Инст ИТ, Инст ОК)
+  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС"];
 
+  // ▼ ИЗМЕНЕНО: убраны лейблы инструкторских отделов
   const DEPT_LABEL = {
     "Руководство": "Руководство",
     "АБ": "Администрация больницы",
     "ОК": "Отдел кадров",
     "СМП": "Скорая медицинская помощь",
     "ИТ": "Интенсивная терапия",
-    "ПСЭС": "Психолого-санитарная служба",
-    "Инст ПСЭС": "Инструктор ПСЭС",
-    "Инст СМП":  "Инструктор СМП",
-    "Инст ИТ":   "Инструктор ИТ",
-    "Инст ОК":   "Инструктор ОК"
+    "ПСЭС": "Психолого-санитарная служба"
   };
 
   const ROLE_LABEL = {
@@ -1551,11 +1541,11 @@
 
     if (isAdmin()) base.splice(2, 0, "users");
 
-    if (dept === "СМП" || dept === "Инст СМП") {
+    if (dept === "СМП") {
       base.splice(base.length - 1, 0, "calculator", "weeklyReports", "booking", "examSmp");
     }
 
-    if (dept === "ПСЭС" || dept === "Инст ПСЭС") {
+    if (dept === "ПСЭС") {
       base.splice(base.length - 1, 0, "calculatorPses", "examPses");
     }
 
@@ -1722,7 +1712,7 @@
     if (!gosScheduleWidget) return;
 
     const dept = state.activeDesk || (state.user && state.user.department) || "—";
-    const shouldShow = dept === "ПСЭС" || dept === "Инст ПСЭС";
+    const shouldShow = dept === "ПСЭС";
 
     gosScheduleWidget.classList.toggle("hidden", !shouldShow);
     if (!shouldShow) { gosScheduleWidget.innerHTML = ""; return; }
@@ -1891,7 +1881,7 @@
   function scheduleCheckTick() {
     if (!state.user) return;
     const dept = state.activeDesk || state.user.department;
-    if (dept !== "ПСЭС" && dept !== "Инст ПСЭС") return;
+    if (dept !== "ПСЭС") return;
     if (!state.schedule.length) return;
 
     const now = new Date();
@@ -2093,7 +2083,6 @@
     else if (key === "about") { showScreen("about"); renderAbout(); }
   }
 
-  /* ▼▼▼ ИЗМЕНЕНО: передаём discord в URL параметрах ▼▼▼ */
   function openFrame(key) {
     const a = APPS[key];
     if (!a || !a.frame) return;

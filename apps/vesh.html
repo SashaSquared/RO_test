@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📻 Бронирование вещаний — Планшет СМП</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0f14;--bg2:#111823;
+  --panel:#16202e;--panel-2:#1c2839;--panel-3:#223147;
+  --text:#e8eef7;--muted:#8496ab;
+  --border:#26344a;
+  --accent:#2f9e44;--accent-2:#37b24d;
+  --blue:#3b82f6;--red:#ef4444;--red-hover:#f56565;
+  --amber:#f59e0b;
+  --busy-bg:#3f3a1a;--busy-text:#fde68a;
+  --success-bg:#14532d;--success-text:#bbf7d0;
+  --error-bg:#4c1d1d;--error-text:#fecaca;
+  --radius:16px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+html,body{height:100%}
+body{
+  font-family:var(--font);
+  background:radial-gradient(circle at top,#16202e 0%,var(--bg) 60%);
+  color:var(--text);line-height:1.5;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  padding:16px 16px 24px;display:flex;flex-direction:column;align-items:center;
+}
+.wrap{max-width:1100px;width:100%;display:flex;flex-direction:column}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.topbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tab-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 14px;
+  background:var(--panel-2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:inherit;font-size:0.86rem;font-weight:600;
+  cursor:pointer;transition:.15s;
+}
+.tab-btn:hover{background:var(--panel-3)}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab-btn svg{width:16px;height:16px}
+
+/* Плашка с рабочей датой */
+.shift-banner{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(76,177,216,.18),rgba(76,177,216,.08));
+  border:1px solid rgba(76,177,216,.4);
+  color:#c9e9f6;font-size:0.84rem;font-weight:600;
+  white-space:nowrap;
+}
+.shift-banner.future{
+  background:linear-gradient(135deg,rgba(245,185,74,.18),rgba(245,185,74,.08));
+  border-color:rgba(245,185,74,.45);
+  color:#fcd97e;
+}
+.shift-banner svg{width:15px;height:15px}
+
+.card{
+  background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;box-shadow:0 6px 20px rgba(0,0,0,.3);
+}
+.card + .card{margin-top:16px}
+.card h3{font-size:0.98rem;font-weight:600;margin-bottom:14px}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.card-head h3{margin-bottom:0}
+
+.form-group{margin-bottom:14px}
+label{display:block;font-size:0.78rem;font-weight:600;margin-bottom:6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+select,input[type="text"]{
+  width:100%;padding:12px 14px;font-size:.96rem;font-family:inherit;
+  color:var(--text);background:#0d1520;border:1px solid var(--border);
+  border-radius:10px;outline:none;transition:border-color .15s,box-shadow .15s;
+  -webkit-appearance:none;appearance:none;
+}
+select{
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238496ab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px;
+}
+select:focus,input:focus{border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(47,158,68,.22)}
+select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-allowed}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:11px 16px;font-size:.92rem;font-weight:600;font-family:inherit;
+  color:#fff;background:var(--accent);border:none;border-radius:10px;
+  cursor:pointer;transition:.15s;white-space:nowrap;
+}
+.btn:hover:not(:disabled){background:var(--accent-2)}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-block{width:100%}
+
+.btn-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;padding:0;border-radius:10px;
+  border:1px solid var(--border);background:transparent;color:var(--text);
+  cursor:pointer;font-family:inherit;transition:.15s;
+}
+.btn-icon:hover{background:var(--panel-3)}
+.btn-icon svg{width:18px;height:18px}
+.btn-icon.copy{color:var(--blue);background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3)}
+.btn-icon.copy:hover{background:rgba(59,130,246,.2);border-color:rgba(59,130,246,.55);color:#93c5fd}
+.btn-icon.copy.copied{color:#86efac;background:rgba(47,158,68,.15);border-color:rgba(47,158,68,.5)}
+.btn-icon.del{color:var(--red);background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3)}
+.btn-icon.del:hover{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.6);color:#fca5a5}
+
+.notification{margin-top:14px;padding:11px 14px;border-radius:10px;font-size:.86rem;font-weight:500;display:none}
+.notification.show{display:block;animation:fadeIn .25s ease}
+.notification.success{background:var(--success-bg);color:var(--success-text)}
+.notification.error{background:var(--error-bg);color:var(--error-text)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.bookings-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.bookings-table th{
+  text-align:left;font-weight:600;font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--muted);padding:8px 10px;
+  border-bottom:1px solid var(--border);
+}
+.bookings-table td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.bookings-table tr:last-child td{border-bottom:none}
+.bookings-table tr:hover{background:rgba(47,158,68,.05)}
+.bookings-table td.actions{text-align:right;white-space:nowrap;width:1%}
+.bookings-table td.actions > *{display:inline-flex;margin-left:6px}
+.bookings-table td.actions > *:first-child{margin-left:0}
+
+.time-badge{
+  display:inline-block;padding:3px 10px;
+  background:var(--busy-bg);color:var(--busy-text);
+  border-radius:6px;font-weight:600;font-size:.84rem;font-variant-numeric:tabular-nums;
+}
+.time-badge.mine{background:#1e3a2a;color:#86efac;box-shadow:0 0 0 1px rgba(134,239,172,.3)}
+.time-badge.past{background:#2a2f3a;color:#6b7280;text-decoration:line-through}
+
+.empty,.loading{color:var(--muted);font-size:.86rem;text-align:center;padding:20px 0}
+
+.my-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.my-header .icon-badge{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,#f59e0b,#b45309);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.my-header .icon-badge svg{width:18px;height:18px;color:#fff}
+.my-header h2{font-size:1.05rem;font-weight:700}
+
+.hidden{display:none!important}
+
+@media(max-width:600px){
+  body{padding:12px 12px 20px}
+  .card{padding:14px;border-radius:14px}
+  .bookings-table th,.bookings-table td{padding:8px 6px;font-size:.82rem}
+  .btn-icon{width:32px;height:32px;border-radius:8px}
+  .btn-icon svg{width:16px;height:16px}
+  .bookings-table td.actions > *{margin-left:4px}
+  .topbar{flex-direction:column;align-items:stretch}
+  .shift-banner{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="tab-btn active" data-tab="book" id="tabBook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
+          <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/>
+          <circle cx="12" cy="12" r="2"/>
+          <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/>
+          <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/>
+        </svg>
+        Бронирование
+      </button>
+      <button class="tab-btn" data-tab="my" id="tabMy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <path d="M9 16l2 2 4-4"/>
+        </svg>
+        Мои брони
+      </button>
+    </div>
+    <div class="shift-banner" id="shiftBanner" title="Активная дата для бронирования">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span id="shiftBannerText">Загрузка…</span>
+    </div>
+  </div>
+
+  <div id="screenBook">
+    <div class="card">
+      <h3>Новая бронь</h3>
+      <form id="bookingForm">
+        <div class="form-group">
+          <label for="timeSelect">Время</label>
+          <select id="timeSelect" required>
+            <option value="">Загрузка…</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="employeeInput">Имя сотрудника</label>
+          <input type="text" id="employeeInput" required>
+        </div>
+        <button type="submit" class="btn btn-block" id="bookBtn">Забронировать</button>
+        <div class="notification" id="bookingNotification"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3 id="bookingsTitle">Текущие брони</h3>
+        <button class="btn-icon copy" id="refreshBtn" title="Обновить">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+            <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+          </svg>
+        </button>
+      </div>
+      <div id="bookingsContainer">
+        <div class="loading">Загрузка данных…</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screenMy" class="hidden">
+    <div class="card">
+      <div class="my-header">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <path d="M9 16l2 2 4-4"/>
+          </svg>
+        </div>
+        <h2>Ваши забронированные часы</h2>
+      </div>
+      <div id="myBookingsContainer">
+        <div class="loading">Загрузка…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+   *  КОНФИГУРАЦИЯ
+   * ============================================================ */
+
+  // ═══════════════════════════════════════════════════════════════
+  // ИЗМЕНЕНО: обновлён URL Google Apps Script (новая БД)
+  // ═══════════════════════════════════════════════════════════════
+  const API_URL = "https://hospital-api.asdulgok.workers.dev";
+
+  const HOURS_START = 10;
+  const HOURS_END = 22;
+  const USER_BOOKING_LIMIT = 2;
+
+  /* Автосброс: после 22:20 открываем следующий день */
+  const RESET_HOUR = 22;
+  const RESET_MINUTE = 20;
+  const RESET_KEY = "booking_last_reset_v2";
+
+  const AUTO_REFRESH_MS = 30000;
+
+  const HOUR_MESSAGES = {
+    "10:00": "Доброе утро. Не забывайте включить бодикамеру. Скриншоты без включенной бодикамеры в отчетность не принимаются.",
+    "11:00": "Дежурство в больницах также является важной частью нашей работы, пожалуйста распределитесь по больницам.",
+    "12:00": "По всем интересующим вас вопросам вы можете обратиться к инструкторам или заместителям отдела в личные сообщения спецсвязи.",
+    "13:00": "Пожалуйста, проверяйте свои укладки на количество и комплектность медикаментов. В случае если у вас не оказалось эпинефрина на месте вызова - вызовите 103 с телефона и дождитесь сотрудника больницы.",
+    "14:00": "Настало время обеденного перерыва. Напоминаю, что работа в обеденный перерыв с 14:00 до 15:00 учитывается в двойном размере по системе баллов.",
+    "15:00": "Обед завершен. Продолжаем работу. Не забывайте парковать АСМП в отведенных для этого местах.",
+    "16:00": "Будьте осторожны на ПМП. При угрозе жизни или при перестрелке на месте происшествия немедленно уезжаем.",
+    "17:00": "По прибытию на ПМП в первую очередь оказываем медицинскую помощь государственным служащим силовых структур на месте происшествия.",
+    "18:00": "Не забывайте включать бодикамеры, находясь на рабочем месте. Скриншоты с выключенной бодикамерой в отчетность не принимаются.",
+    "19:00": "По приезду на место вызова, где осуществляется перекрытие военной поставки и при наличии активной перестрелки категорически запрещено оказывать ПМП, в случае окончания перестрелки в первую очередь необходимо оказывать помощь исключительно государственным служащим.",
+    "20:00": "Напоминаю, для сотрудников 7 ранга и выше введена активность - практика для сотрудников с должностью \"Санитар\", в рацию будут поступать запросы, вы на них реагируете, встречаетесь и вместе едете на ПМП, параллельно отвечаете на вопросы. Подробная информация имеется в спецсвязи.",
+    "21:00": "Дежурство в больницах также является важной частью нашей работы, пожалуйста распределитесь по больницам.",
+    "22:00": "Дневная смена завершена. Напоминаю, что в ночную смену вы получаете увеличенное количество баллов за ПМП. Ночная смена не является обязательной."
+  };
+
+  const state = {
+    user: null,
+    bookings: [],
+    activeDate: null    // "YYYY-MM-DD" — рабочая дата для бронирования
+  };
+
+  const $ = id => document.getElementById(id);
+
+  const tabBook = $("tabBook");
+  const tabMy = $("tabMy");
+  const screenBook = $("screenBook");
+  const screenMy = $("screenMy");
+
+  const bookingForm = $("bookingForm");
+  const timeSelect = $("timeSelect");
+  const employeeInput = $("employeeInput");
+  const bookBtn = $("bookBtn");
+  const bookingNotification = $("bookingNotification");
+  const bookingsContainer = $("bookingsContainer");
+  const myBookingsContainer = $("myBookingsContainer");
+  const refreshBtn = $("refreshBtn");
+  const shiftBanner = $("shiftBanner");
+  const shiftBannerText = $("shiftBannerText");
+  const bookingsTitle = $("bookingsTitle");
+
+  /* ============================================================
+   *  ДАТЫ
+   * ============================================================ */
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  function tomorrowStr() {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  /* Сравнение дат в формате YYYY-MM-DD: <, =, > */
+  function cmpDate(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+  }
+
+  /* После 22:20 — активна завтрашняя дата. До — сегодняшняя. */
+  function computeActiveDate() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const afterReset = h > RESET_HOUR || (h === RESET_HOUR && m >= RESET_MINUTE);
+    return afterReset ? tomorrowStr() : todayStr();
+  }
+
+  function fmtHumanDate(s) {
+    if (!s) return "—";
+    const [y, mo, d] = s.split("-").map(Number);
+    const dt = new Date(y, mo-1, d);
+    const days = ["вс","пн","вт","ср","чт","пт","сб"];
+    const months = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
+    return d + " " + months[mo-1] + " (" + days[dt.getDay()] + ")";
+  }
+
+  /* Обновляем плашку "Рабочая дата" в шапке */
+  function renderShiftBanner() {
+    if (!state.activeDate) return;
+    const today = todayStr();
+    const isFuture = state.activeDate > today;
+
+    shiftBanner.classList.toggle("future", isFuture);
+    shiftBannerText.textContent = isFuture
+      ? "Запись открыта на завтра: " + fmtHumanDate(state.activeDate)
+      : "Активная дата: " + fmtHumanDate(state.activeDate);
+
+    if (bookingsTitle) {
+      bookingsTitle.textContent = "Брони на " + fmtHumanDate(state.activeDate);
+    }
+  }
+
+  /* Есть ли в имени дата — неважно, работаем от активной даты */
+
+  /* Проверка "время прошло" — учитывает активную дату */
+  function isPastTime(timeStr) {
+    if (!/^\d{2}:\d{2}$/.test(timeStr)) return false;
+    if (!state.activeDate) return false;
+
+    const today = todayStr();
+
+    // Если активная дата — будущее, ничего не "прошло"
+    if (state.activeDate > today) return false;
+
+    // Если активная дата — прошлое (крайне редкий случай), всё прошло
+    if (state.activeDate < today) return true;
+
+    // Активная дата = сегодня. Сравниваем часы
+    const now = new Date();
+    const [h, m] = timeStr.split(":").map(Number);
+    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
+    return target.getTime() <= now.getTime();
+  }
+
+  /* Остались ли ещё непрошедшие часы в активной дате */
+  function hasFutureSlots() {
+    return allHours().some(t => !isPastTime(t));
+  }
+
+  function allHours() {
+    const arr = [];
+    for (let h = HOURS_START; h <= HOURS_END; h++) {
+      arr.push(String(h).padStart(2, "0") + ":00");
+    }
+    return arr;
+  }
+
+  /* ============================================================
+   *  СЕТЬ
+   * ============================================================ */
+  function apiPost(payload) {
+    return new Promise((resolve, reject) => {
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", API_URL, true);
+        xhr.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try { resolve(JSON.parse(xhr.responseText)); }
+            catch (e) { reject(new Error("Некорректный JSON от сервера")); }
+          } else {
+            reject(new Error("HTTP " + xhr.status));
+          }
+        };
+        xhr.onerror = function() { reject(new Error("Сеть: не удалось связаться с сервером")); };
+        xhr.timeout = 20000;
+        xhr.ontimeout = function() { reject(new Error("Таймаут запроса")); };
+        xhr.send(JSON.stringify(payload));
+      } catch (e) { reject(e); }
+    });
+  }
+
+  /* ============================================================
+   *  СЕССИЯ
+   * ============================================================ */
+  function loadUser() {
+    const params = new URLSearchParams(location.search);
+    const pLogin = params.get("login");
+    const pRole = params.get("role");
+    const pDept = params.get("dept");
+    if (pLogin && pRole) {
+      return { login: pLogin, role: pRole, department: pDept || "", hash: null };
+    }
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data && data.login && data.role && data.hash) return data;
+    } catch (e) {}
+    return null;
+  }
+
+  function ensureHash(user) {
+    if (!user) return null;
+    if (user.hash) return user;
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data && data.login === user.login && data.hash) {
+        user.hash = data.hash;
+        return user;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function myBookingsCount() {
+    if (!state.user) return 0;
+    const me = state.user.login.toLowerCase();
+    return state.bookings.filter(b =>
+      String(b.employee).trim().toLowerCase() === me
+    ).length;
+  }
+
+  function myBookingsList() {
+    if (!state.user) return [];
+    const me = state.user.login.toLowerCase();
+    return state.bookings
+      .filter(b => String(b.employee).trim().toLowerCase() === me)
+      .sort((a,b) => a.time.localeCompare(b.time));
+  }
+
+  function canDeleteBooking(b) {
+    if (!state.user) return false;
+    if (state.user.role === "superadmin") return true;
+    const isOwner = String(b.employee).trim().toLowerCase() ===
+                    state.user.login.toLowerCase();
+    if (!isOwner) return false;
+    if (isPastTime(b.time)) return false;
+    return true;
+  }
+
+  /* ============================================================
+   *  РЕНДЕР
+   * ============================================================ */
+  function renderTimeOptions() {
+    const busy = {};
+    state.bookings.forEach(b => { busy[b.time] = b.employee; });
+
+    timeSelect.innerHTML = "";
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    placeholder.textContent = "Выберите время";
+    timeSelect.appendChild(placeholder);
+
+    allHours().forEach(time => {
+      const opt = document.createElement("option");
+      opt.value = time;
+      const isPast = isPastTime(time);
+      if (busy[time]) {
+        opt.disabled = true;
+        opt.textContent = time + " — Занято (" + busy[time] + ")";
+      } else if (isPast) {
+        opt.disabled = true;
+        opt.textContent = time + " — Прошло";
+      } else {
+        opt.textContent = time;
+      }
+      timeSelect.appendChild(opt);
+    });
+  }
+
+  function renderBookingsTable() {
+    if (!state.bookings.length) {
+      bookingsContainer.innerHTML = '<div class="empty">Пока нет броней на ' + fmtHumanDate(state.activeDate) + '</div>';
+      return;
+    }
+    const me = state.user ? state.user.login.toLowerCase() : "";
+
+    const table = document.createElement("table");
+    table.className = "bookings-table";
+    const thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>Время</th><th>Сотрудник</th><th></th></tr>";
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    state.bookings
+      .slice()
+      .sort((a,b) => a.time.localeCompare(b.time))
+      .forEach(b => {
+        const tr = document.createElement("tr");
+
+        const isPast = isPastTime(b.time);
+        const isMine = String(b.employee).trim().toLowerCase() === me;
+
+        const tdTime = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = "time-badge" +
+          (isPast ? " past" : "") +
+          (!isPast && isMine ? " mine" : "");
+        badge.textContent = b.time;
+        tdTime.appendChild(badge);
+
+        const tdName = document.createElement("td");
+        tdName.textContent = b.employee;
+
+        const tdActions = document.createElement("td");
+        tdActions.className = "actions";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.type = "button";
+        copyBtn.className = "btn-icon copy";
+        copyBtn.title = "Скопировать текст вещания";
+        copyBtn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>' +
+          '</svg>';
+        copyBtn.addEventListener("click", () => copyHourMessage(b.time, copyBtn));
+        tdActions.appendChild(copyBtn);
+
+        if (canDeleteBooking(b)) {
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn-icon del";
+          delBtn.title = state.user.role === "superadmin" ? "Удалить бронь (суперадмин)" : "Удалить свою бронь";
+          delBtn.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<polyline points="3 6 5 6 21 6"/>' +
+              '<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>' +
+              '<path d="M10 11v6"/>' +
+              '<path d="M14 11v6"/>' +
+              '<path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>' +
+            '</svg>';
+          delBtn.addEventListener("click", () => deleteReservation(b.rowIndex, b));
+          tdActions.appendChild(delBtn);
+        }
+
+        tr.appendChild(tdTime);
+        tr.appendChild(tdName);
+        tr.appendChild(tdActions);
+        tbody.appendChild(tr);
+      });
+    table.appendChild(tbody);
+
+    bookingsContainer.innerHTML = "";
+    bookingsContainer.appendChild(table);
+  }
+
+  function renderMyBookings() {
+    if (!state.user) {
+      myBookingsContainer.innerHTML = '<div class="empty">Войдите, чтобы увидеть брони</div>';
+      return;
+    }
+    const list = myBookingsList();
+    if (!list.length) {
+      myBookingsContainer.innerHTML = '<div class="empty">У вас пока нет броней</div>';
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.className = "bookings-table";
+    const thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>Время</th><th></th></tr>";
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    list.forEach(b => {
+      const tr = document.createElement("tr");
+      const isPast = isPastTime(b.time);
+
+      const tdTime = document.createElement("td");
+      const badge = document.createElement("span");
+      badge.className = "time-badge" + (isPast ? " past" : " mine");
+      badge.textContent = b.time;
+      tdTime.appendChild(badge);
+
+      const tdActions = document.createElement("td");
+      tdActions.className = "actions";
+
+      const copyBtn = document.createElement("button");
+      copyBtn.type = "button";
+      copyBtn.className = "btn-icon copy";
+      copyBtn.title = "Скопировать текст вещания";
+      copyBtn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>' +
+        '</svg>';
+      copyBtn.addEventListener("click", () => copyHourMessage(b.time, copyBtn));
+      tdActions.appendChild(copyBtn);
+
+      if (canDeleteBooking(b)) {
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "btn-icon del";
+        delBtn.title = "Удалить бронь";
+        delBtn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<polyline points="3 6 5 6 21 6"/>' +
+            '<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>' +
+            '<path d="M10 11v6"/>' +
+            '<path d="M14 11v6"/>' +
+            '<path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>' +
+          '</svg>';
+        delBtn.addEventListener("click", () => deleteReservation(b.rowIndex, b));
+        tdActions.appendChild(delBtn);
+      }
+
+      tr.appendChild(tdTime);
+      tr.appendChild(tdActions);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    myBookingsContainer.innerHTML = "";
+    myBookingsContainer.appendChild(table);
+  }
+
+  function renderAll() {
+    renderShiftBanner();
+    renderTimeOptions();
+    renderBookingsTable();
+    renderMyBookings();
+
+    if (state.user && state.user.role === "user" && myBookingsCount() >= USER_BOOKING_LIMIT) {
+      bookBtn.disabled = true;
+      bookBtn.textContent = "Лимит: " + USER_BOOKING_LIMIT + " брони";
+    } else if (!hasFutureSlots()) {
+      bookBtn.disabled = true;
+      bookBtn.textContent = "Смена завершена";
+    } else {
+      bookBtn.disabled = false;
+      bookBtn.textContent = "Забронировать";
+    }
+  }
+
+  /* ============================================================
+   *  КОПИРОВАНИЕ
+   * ============================================================ */
+  async function copyHourMessage(time, btnEl) {
+    const base = HOUR_MESSAGES[time] || "";
+    if (!base) {
+      notify(bookingNotification, "Для этого времени нет текста", "error");
+      return;
+    }
+    const text = "/fb " + base;
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta);
+        ok = true;
+      } catch (e2) { ok = false; }
+    }
+    if (ok) {
+      notify(bookingNotification, "Текст для " + time + " скопирован", "success");
+      notifyParent("Скопировано", "Текст для " + time, "success");
+      if (btnEl) {
+        btnEl.classList.add("copied");
+        setTimeout(() => btnEl.classList.remove("copied"), 1500);
+      }
+    } else {
+      notify(bookingNotification, "Не удалось скопировать текст", "error");
+    }
+  }
+
+  /* ============================================================
+   *  ДЕЙСТВИЯ
+   * ============================================================ */
+  async function loadBookings() {
+    if (!state.bookings.length) {
+      bookingsContainer.innerHTML = '<div class="loading">Загрузка данных…</div>';
+      timeSelect.innerHTML = '<option value="">Загрузка…</option>';
+    }
+    try {
+      const data = await apiPost({ action: "getReservations" });
+      if (!data || !data.success) throw new Error((data && data.message) || "Сервер вернул ошибку");
+      state.bookings = data.reservations || [];
+      renderAll();
+    } catch (err) {
+      console.error("loadBookings error:", err);
+      bookingsContainer.innerHTML =
+        '<div class="empty">Не удалось загрузить данные: ' + String(err.message || err) + '</div>';
+      state.bookings = [];
+      renderAll();
+      notify(bookingNotification, "Не удалось загрузить брони: " + (err.message || err), "error");
+    }
+  }
+
+  async function addReservation(e) {
+    e.preventDefault();
+    if (!state.user) return;
+
+    if (state.user.role === "user" && myBookingsCount() >= USER_BOOKING_LIMIT) {
+      notify(bookingNotification, "Достигнут лимит: не более " + USER_BOOKING_LIMIT + " броней", "error");
+      return;
+    }
+
+    const time = timeSelect.value;
+    const employee = employeeInput.value.trim();
+
+    if (!time) { notify(bookingNotification, "Выберите время", "error"); return; }
+    if (!employee) { notify(bookingNotification, "Укажите имя сотрудника", "error"); return; }
+    if (isPastTime(time)) {
+      notify(bookingNotification, "Нельзя забронировать прошедшее время", "error");
+      return;
+    }
+
+    bookBtn.disabled = true;
+    bookBtn.textContent = "Отправка…";
+
+    try {
+      const data = await apiPost({
+        action: "addReservation",
+        login: state.user.login,
+        hash: state.user.hash,
+        time: time,
+        employee: employee
+      });
+
+      if (!data.success) {
+        notify(bookingNotification, data.message || "Не удалось забронировать", "error");
+        notifyParent("Ошибка брони", data.message || "", "alert");
+      } else {
+        notify(bookingNotification, data.message || "Бронь создана", "success");
+        notifyParent("Бронь создана", time + " — " + employee, "success");
+        notifyParentReservationsChanged();
+        if (state.user.role === "admin" || state.user.role === "superadmin") employeeInput.value = "";
+      }
+      await loadBookings();
+    } catch (err) {
+      console.error(err);
+      notify(bookingNotification, "Ошибка сети. Попробуйте позже.", "error");
+    } finally {
+      bookBtn.textContent = "Забронировать";
+      renderAll();
+    }
+  }
+
+  async function deleteReservation(rowIndex, b) {
+    if (!state.user) return;
+
+    if (!canDeleteBooking(b)) {
+      notify(bookingNotification, "Нельзя удалить эту бронь", "error");
+      return;
+    }
+
+    const msg = state.user.role === "superadmin"
+      ? "Удалить бронь " + b.time + " (" + b.employee + ")?"
+      : "Удалить свою бронь на " + b.time + "?";
+    if (!confirm(msg)) return;
+
+    try {
+      const data = await apiPost({
+        action: "deleteReservation",
+        login: state.user.login,
+        hash: state.user.hash,
+        rowIndex: rowIndex
+      });
+      if (!data.success) {
+        notify(bookingNotification, data.message || "Не удалось удалить", "error");
+      } else {
+        notify(bookingNotification, data.message || "Бронь удалена", "success");
+        notifyParent("Бронь удалена", b.time + " — " + b.employee, "info");
+        notifyParentReservationsChanged();
+      }
+      await loadBookings();
+    } catch (err) {
+      console.error(err);
+      notify(bookingNotification, "Ошибка сети", "error");
+    }
+  }
+
+  /* ============================================================
+   *  АВТОСБРОС В 22:20
+   *
+   *  Логика:
+   *   - до 22:20: активна сегодняшняя дата;
+   *   - после 22:20: активна завтрашняя, старые брони стираются.
+   *
+   *  Сбрасываем ровно один раз в сутки в 22:20.
+   *  Только админ/суперадмин дёргает сервер. Остальные просто
+   *  помечают дату локально и переключают рабочую дату.
+   * ============================================================ */
+  function isAfterReset() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    return h > RESET_HOUR || (h === RESET_HOUR && m >= RESET_MINUTE);
+  }
+
+  function shouldResetToday() {
+    if (!isAfterReset()) return false;
+    return localStorage.getItem(RESET_KEY) !== todayStr();
+  }
+
+  function markResetDone() {
+    localStorage.setItem(RESET_KEY, todayStr());
+  }
+
+  async function tryAutoReset() {
+    // сначала посчитаем актуальную дату (может уже быть "завтра")
+    state.activeDate = computeActiveDate();
+
+    if (!shouldResetToday()) return false;
+
+    if (!state.user) {
+      // Даже без сессии пометим дату, чтобы не пытаться постоянно
+      return false;
+    }
+
+    if (state.user.role !== "admin" && state.user.role !== "superadmin") {
+      // Обычный сотрудник просто помечает, что сброс уже был
+      markResetDone();
+      // Обновим страницу, чтобы перешли на завтрашнюю дату
+      renderAll();
+      return false;
+    }
+
+    try {
+      const data = await apiPost({
+        action: "clearReservations",
+        login: state.user.login,
+        hash: state.user.hash
+      });
+      if (data && data.success) {
+        markResetDone();
+        notify(bookingNotification, "Смена закрыта. Открыта запись на завтра.", "success");
+        notifyParent("Смена закрыта", "Открыта запись на завтра", "info");
+        notifyParentReservationsChanged();
+        await loadBookings();
+        return true;
+      }
+    } catch (e) {
+      console.error("tryAutoReset error:", e);
+    }
+    return false;
+  }
+
+  /* Периодически проверяем: не наступило ли 22:20 в момент работы */
+  async function checkResetTick() {
+    const newActive = computeActiveDate();
+    if (newActive !== state.activeDate) {
+      // Дата "переключилась" — обновим интерфейс и попробуем сброс
+      state.activeDate = newActive;
+      await tryAutoReset();
+      await loadBookings();
+    }
+  }
+
+  /* ============================================================
+   *  ВКЛАДКИ
+   * ============================================================ */
+  function switchTab(tab) {
+    if (tab === "book") {
+      tabBook.classList.add("active");
+      tabMy.classList.remove("active");
+      screenBook.classList.remove("hidden");
+      screenMy.classList.add("hidden");
+    } else {
+      tabMy.classList.add("active");
+      tabBook.classList.remove("active");
+      screenMy.classList.remove("hidden");
+      screenBook.classList.add("hidden");
+      renderMyBookings();
+    }
+  }
+
+  tabBook.addEventListener("click", () => switchTab("book"));
+  tabMy.addEventListener("click", () => switchTab("my"));
+  refreshBtn.addEventListener("click", () => loadBookings());
+  bookingForm.addEventListener("submit", addReservation);
+
+  /* ============================================================
+   *  МОСТ
+   * ============================================================ */
+  function notifyParent(title, text, kind) {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: "toast", title: title || "", text: text || "", kind: kind || "success"
+        }, "*");
+      }
+    } catch (e) {}
+  }
+
+  function notifyParentReservationsChanged() {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: "reservations-changed" }, "*");
+      }
+    } catch (e) {}
+  }
+
+  function notify(el, message, type) {
+    el.textContent = message;
+    el.className = "notification show " + type;
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => el.classList.remove("show"), 4500);
+  }
+
+  /* ============================================================
+   *  ИНИЦИАЛИЗАЦИЯ
+   * ============================================================ */
+  function init() {
+    const user = loadUser();
+    if (!user || !ensureHash(user)) {
+      document.querySelector(".wrap").innerHTML =
+        '<div class="card" style="text-align:center;padding:40px 20px;">' +
+          '<div style="font-size:2rem;margin-bottom:10px;">🔒</div>' +
+          '<div style="font-weight:600;margin-bottom:6px;">Нет активной сессии</div>' +
+          '<div class="empty">Войдите в планшет заново</div>' +
+        '</div>';
+      return;
+    }
+    state.user = user;
+
+    // Рабочая дата
+    state.activeDate = computeActiveDate();
+
+    if (user.role === "user") {
+      employeeInput.value = user.login;
+      employeeInput.disabled = true;
+    } else {
+      employeeInput.disabled = false;
+      employeeInput.placeholder = "Имя сотрудника";
+    }
+
+    // Первый сброс после 22:20 — единожды за день
+    tryAutoReset();
+
+    // Автообновление раз в 30 секунд
+    setInterval(() => {
+      if (document.hidden) return;
+      checkResetTick();
+      if (!shouldResetToday()) {
+        loadBookings();
+      }
+    }, AUTO_REFRESH_MS);
+
+    loadBookings();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

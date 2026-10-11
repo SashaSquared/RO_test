@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шпаргалка — Экзамены ПСЭС</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Фон — глубокий, чтобы карточки явно от него отличались */
+    --bg: #070b12;
+    --panel: #151f30;
+    --panel-2: #1b2739;
+    --panel-3: #25344b;
+    --panel-hover: #202e44;
+
+    --text: #eef4fb;
+    --text-soft: #c9d5e3;
+    --muted: #8fa3ba;
+    --border: #31435e;
+    --border-soft: #24334a;
+    --border-strong: #43587a;
+
+    --accent: #4CB1D8;
+    --accent-2: #6FC5E5;
+    --accent-bg: rgba(76, 177, 216, 0.12);
+    --accent-bg-strong: rgba(76, 177, 216, 0.2);
+    --accent-border: rgba(76, 177, 216, 0.5);
+
+    --good: #4ade80;
+    --good-bg: rgba(74, 222, 128, 0.12);
+    --good-text: #a7f3c4;
+
+    --amber: #f5b94a;
+    --amber-bg: rgba(245, 185, 74, 0.12);
+    --amber-text: #fcd97e;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    letter-spacing: -0.005em;
+    padding: 18px 18px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tablet {
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tablet-body { flex: 1; }
+
+  /* ============================================================
+     PAGE TITLE
+     ============================================================ */
+  .page-title {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    letter-spacing: -0.015em;
+    padding: 6px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .page-title .brand-icon {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .page-title .brand-icon svg { width: 18px; height: 18px; color: var(--accent-2); }
+  .page-title .subtitle {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0;
+    margin-top: 3px;
+  }
+
+  /* ============================================================
+     CARD
+     ============================================================ */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  }
+  .card + .card { margin-top: 14px; }
+
+  .card h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    letter-spacing: -0.015em;
+  }
+  .card h2 .h-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    flex-shrink: 0;
+  }
+  .card h2 .h-icon svg { width: 14px; height: 14px; color: var(--accent-2); }
+
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .card-head h2 { margin-bottom: 0; }
+
+  /* ============================================================
+     TABS
+     ============================================================ */
+  .exam-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .exam-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 9px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+  .exam-tab .tab-rank {
+    font-size: 0.96rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.015em;
+  }
+  .exam-tab .tab-exam {
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .exam-tab:hover {
+    border-color: var(--border-strong);
+    background: var(--panel-hover);
+  }
+  .exam-tab.active {
+    background: var(--accent-bg-strong);
+    border-color: var(--accent);
+  }
+  .exam-tab.active .tab-rank { color: var(--accent-2); }
+  .exam-tab.active .tab-exam { color: var(--accent-2); opacity: 0.9; }
+
+  /* ============================================================
+     QA ACCORDION
+     ============================================================ */
+  .qa-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .qa-item {
+    background: var(--panel-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .qa-item:hover {
+    border-color: var(--border-strong);
+  }
+  .qa-item.open {
+    border-color: var(--accent-border);
+    background: var(--panel-2);
+  }
+
+  .qa-question {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 16px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.45;
+    letter-spacing: -0.008em;
+    transition: background 0.12s;
+  }
+  .qa-question:hover { background: rgba(76, 177, 216, 0.05); }
+
+  .q-num {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: var(--panel-3);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    transition: background 0.15s, color 0.15s;
+  }
+  .qa-item.open .q-num {
+    background: var(--accent);
+    color: #071018;
+    font-weight: 700;
+  }
+
+  .q-text { flex: 1; }
+
+  .q-chevron {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    color: var(--muted);
+    transition: transform 0.2s ease, color 0.15s;
+  }
+  .qa-item.open .q-chevron { transform: rotate(180deg); color: var(--accent-2); }
+
+  /* === Компактный ответ, отделённый фоном и линией === */
+  .qa-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    background: #0c1420;
+    border-top: 1px solid var(--border-soft);
+  }
+  .qa-item.open .qa-answer {
+    border-top-color: var(--accent-border);
+  }
+
+  .qa-answer-inner {
+    padding: 10px 16px 12px 16px;
+    color: var(--text-soft);
+    font-size: 0.96rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  .qa-answer-inner::before {
+    content: "Ответ";
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-2);
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  /* ============================================================
+     GUIDE STEPS
+     ============================================================ */
+  .guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .guide-step {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--panel-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    align-items: flex-start;
+  }
+  .guide-step .step-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    color: var(--accent-2);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+  .guide-step .step-body { flex: 1; min-width: 0; }
+  .guide-step .step-title {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 7px;
+    letter-spacing: -0.01em;
+  }
+  .guide-step .step-text {
+    font-size: 0.94rem;
+    color: var(--text-soft);
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+  }
+  .guide-step .step-text ul {
+    margin: 6px 0 0;
+    padding-left: 20px;
+    list-style: disc;
+  }
+  .guide-step .step-text li { margin: 5px 0; }
+  .guide-step .step-text b { color: #fff; font-weight: 600; }
+  .guide-step .step-text code {
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.86rem;
+    color: var(--accent-2);
+    border: 1px solid var(--accent-border);
+    letter-spacing: 0;
+  }
+  .guide-step .step-note {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--amber-bg);
+    border-left: 3px solid var(--amber);
+    color: var(--amber-text);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .guide-step .step-note.ok {
+    background: var(--good-bg);
+    border-left-color: var(--good);
+    color: var(--good-text);
+  }
+
+  .form-example {
+    margin-top: 10px;
+    padding: 11px 14px;
+    background: #060a10;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    white-space: pre-wrap;
+    line-height: 1.7;
+    letter-spacing: 0;
+  }
+  .form-example .tag { color: var(--accent-2); font-weight: 500; }
+  .form-example .role { color: var(--good-text); font-weight: 500; }
+
+  /* ============================================================
+     BUTTONS
+     ============================================================ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 8px 14px;
+    font-size: 0.85rem; font-weight: 500;
+    font-family: inherit; color: var(--accent-2);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: -0.005em;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+    color: var(--accent-2);
+  }
+  .btn:active { transform: scale(0.98); }
+
+  /* ============================================================
+     INFO BANNER
+     ============================================================ */
+  .info-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 0.94rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  .info-banner .info-icon {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: var(--accent-bg-strong);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .info-banner .info-icon svg { width: 14px; height: 14px; color: var(--accent-2); }
+  .info-banner b { color: #fff; font-weight: 600; }
+
+  /* Empty */
+  .empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 28px 0;
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 640px) {
+    body { padding: 14px 12px 24px; font-size: 15px; }
+    .card { padding: 15px; border-radius: 12px; }
+    .page-title { font-size: 1.02rem; }
+    .page-title .brand-icon { width: 30px; height: 30px; }
+    .card h2 { font-size: 0.98rem; }
+
+    .exam-tab { padding: 8px 12px; }
+    .exam-tab .tab-rank { font-size: 0.88rem; }
+    .exam-tab .tab-exam { font-size: 0.68rem; }
+
+    .qa-question { padding: 12px 13px; font-size: 0.95rem; gap: 10px; }
+    .q-num { width: 24px; height: 24px; font-size: 0.78rem; }
+    .qa-answer-inner { padding: 10px 13px 12px 13px; font-size: 0.92rem; }
+
+    .guide-step { padding: 12px 13px; gap: 12px; }
+    .guide-step .step-num { width: 26px; height: 26px; font-size: 0.84rem; }
+    .guide-step .step-title { font-size: 0.94rem; }
+    .guide-step .step-text { font-size: 0.9rem; }
+
+    .info-banner { padding: 11px 14px; font-size: 0.9rem; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tablet">
+  <div class="tablet-body">
+
+    <div class="page-title">
+      <span class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+      </span>
+      <span>
+        Шпаргалка — Экзамены ПСЭС
+        <span class="subtitle">Вопросы и ответы · квалификация «Терапевт»</span>
+      </span>
+    </div>
+
+    <div class="exam-tabs" id="examTabs"></div>
+
+    <div id="content"></div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     ДАННЫЕ ЭКЗАМЕНОВ
+     ============================================================ */
+  const EXAMS = {
+    "5→6": {
+      label: "Повышение 5 → 6",
+      exam: "Социофобия",
+      questions: [
+        { q: "Назовите минимум 3 физиологических признака характерных для социофобии?",
+          a: "Тошнота, потливость, дрожь в конечностях, затруднение дыхания, изменение сердечного ритма." },
+        { q: "Назовите поведенческие признаки характерные для социофобии?",
+          a: "Тревога, боязнь мнения окружающих, боязнь контакта с людьми, боязнь зрительного контакта." },
+        { q: "Что такое Социофобия и в чем она выражается?",
+          a: "Тип тревожного расстройства, выражающийся излишним страхом или тревогой." },
+        { q: "Как можно лечить социофобию?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Флуоксетин, Дулоксетин, Диазепам, Пропранолол." }
+      ]
+    },
+
+    "6→7": {
+      label: "Повышение 6 → 7",
+      exam: "Депрессия",
+      questions: [
+        { q: "Что такое Депрессия и в чем она выражается?",
+          a: "Психическое расстройство, выражается пессимизмом, резким спадом настроения и активности." },
+        { q: "Назовите минимум 5 характерных признаков для Депрессии?",
+          a: "Низкое настроение, потеря интереса, изменение аппетита, проблемы со сном, усталость, навязчивые мысли, снижение концентрации, чувство вины, физические симптомы, мысли о смерти." },
+        { q: "Как можно лечить Депрессию?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Сертралин, Эсциталопрам, Амитриптилин, Тразодон." },
+        { q: "Каких видов бывает Депрессия?",
+          a: "Клиническая, через расстройство психики." }
+      ]
+    },
+
+    "7→8": {
+      label: "Повышение 7 → 8",
+      exam: "Биполярка",
+      questions: [
+        { q: "Что такое Биполярное аффективное расстройство?",
+          a: "Хроническое психологическое расстройство." },
+        { q: "Назовите признаки Биполярного расстройства?",
+          a: "Смена маниакальных и депрессивных фаз, раздражительность, нервозность, частая смена тем разговора, низкая потребность в сне или еде, бред, галлюцинации." },
+        { q: "Как расшифровывается аббревиатура БАР?",
+          a: "Биполярное аффективное расстройство." },
+        { q: "Как можно лечить Биполярное аффективное расстройство?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Вальпроат натрия, Карбамазепин, Ламотриджин." },
+        { q: "Что необходимо использовать при лечении через психотерапию?",
+          a: "Психотерапевтические и психосоциальные вмешательства, листы самоконтроля." }
+      ]
+    },
+
+    "8→9": {
+      label: "Повышение 8 → 9",
+      exam: "Шизофрения",
+      questions: [
+        { q: "Шизофрения это?",
+          a: "Хроническое психическое расстройство, при котором нарушается восприятие, мышление и эмоциональные реакции." },
+        { q: "Назовите признаки Шизофрении?",
+          a: "Нарушение мышления, памяти, планирования, социальных взаимодействий, снижение социального функционирования и эмоциональной экспрессивности." },
+        { q: "Как можно лечить Шизофрению?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Хлорпромазин, Рисперидон, Зипразидон, Палиперидон." },
+        { q: "Что занимает важное место в лечении шизофрении через психотерапию?",
+          a: "Психосоциальная реабилитация и поддерживающие занятия." },
+        { q: "Какова цель лечения шизофрении через психотерапию?",
+          a: "Восстановление социальных и коммуникативных навыков." }
+      ]
+    }
+  };
+
+  /* ============================================================
+     ВОПРОСЫ НА КВАЛИФИКАЦИЮ «ТЕРАПЕВТ»
+     ============================================================ */
+  const THERAPIST_QUESTIONS = [
+    { q: "В какое время можно выдавать мед. справки в Больнице Склифосовского?",
+      a: "В любое время." },
+    { q: "Сколько стоит справка о физическом здоровье, психологическом?",
+      a: "2500 и 5000." },
+    { q: "У какого отдела приоритет на выдачу мед. справок?",
+      a: "ПСЭС." },
+    { q: "Если у человека при осмотре есть простуда или отравление, то что надо сделать?",
+      a: "Провести вакцинацию на месте (можно в том же кабинете)." },
+    { q: "Сколько действительна мед. справка?",
+      a: "30 дней." },
+    { q: "Через какое время можно обновить мед. справку?",
+      a: "7 дней." },
+    { q: "В какой кабинет надо отвести пациента для выдачи мед. справки в ГКБ №2 Склифосовского и в ГКБ №1?",
+      a: "В ГКБ №1 — выдаёт только старший и руководящий составы. В ГКБ №2 — второй этаж, 3 кабинета справа от лестницы на 2 этаже." },
+    { q: "Расскажите как вы будете выдавать мед. справку, с начала до конца.",
+      a: "Тут можете подавить о том, какие бы вопросы задавали, главное — уточнить, чтоб они осознанно отвечали, что зависит выдача мед. справок." }
+  ];
+
+  /* ============================================================
+     СОСТОЯНИЕ
+     ============================================================ */
+  const TAB_KEY = "shpargalka_last_tab_v3";
+  const DEFAULT_TAB = "5→6";
+
+  const state = {
+    activeTab: DEFAULT_TAB,
+    openQuestions: new Set()
+  };
+
+  const tabsEl = document.getElementById("examTabs");
+  const contentEl = document.getElementById("content");
+
+  /* ============================================================
+     УТИЛИТЫ
+     ============================================================ */
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function saveLastTab() {
+    try { localStorage.setItem(TAB_KEY, state.activeTab); } catch (e) {}
+  }
+  function loadLastTab() {
+    try {
+      const v = localStorage.getItem(TAB_KEY);
+      if (v === "therapist" || EXAMS[v]) return v;
+    } catch (e) {}
+    return DEFAULT_TAB;
+  }
+
+  /* ============================================================
+     РЕНДЕР ВКЛАДОК
+     ============================================================ */
+  function renderTabs() {
+    tabsEl.innerHTML = "";
+
+    Object.keys(EXAMS).forEach((key) => {
+      const e = EXAMS[key];
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "exam-tab" + (state.activeTab === key ? " active" : "");
+      btn.dataset.key = key;
+      btn.innerHTML =
+        '<span class="tab-rank">' + esc(e.label.replace("Повышение ", "")) + '</span>' +
+        '<span class="tab-exam">' + esc(e.exam) + '</span>';
+      btn.addEventListener("click", () => switchTab(key));
+      tabsEl.appendChild(btn);
+    });
+
+    const th = document.createElement("button");
+    th.type = "button";
+    th.className = "exam-tab" + (state.activeTab === "therapist" ? " active" : "");
+    th.dataset.key = "therapist";
+    th.innerHTML =
+      '<span class="tab-rank">Квалификация</span>' +
+      '<span class="tab-exam">Терапевт</span>';
+    th.addEventListener("click", () => switchTab("therapist"));
+    tabsEl.appendChild(th);
+  }
+
+  function switchTab(key) {
+    if (state.activeTab === key) return;
+    state.activeTab = key;
+    state.openQuestions.clear();
+    saveLastTab();
+    renderTabs();
+    renderContent();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ============================================================
+     QA ACCORDION
+     ============================================================ */
+  function buildQAItems(questions, prefix) {
+    const list = document.createElement("div");
+    list.className = "qa-list";
+
+    questions.forEach((item, idx) => {
+      const qid = prefix + idx;
+      const isOpen = state.openQuestions.has(qid);
+
+      const wrap = document.createElement("div");
+      wrap.className = "qa-item" + (isOpen ? " open" : "");
+      wrap.dataset.qid = qid;
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "qa-question";
+      btn.innerHTML =
+        '<span class="q-num">' + (idx + 1) + '</span>' +
+        '<span class="q-text">' + esc(item.q) + '</span>' +
+        '<svg class="q-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+          '<polyline points="6 9 12 15 18 9"/>' +
+        '</svg>';
+
+      const ans = document.createElement("div");
+      ans.className = "qa-answer";
+      ans.innerHTML = '<div class="qa-answer-inner">' + esc(item.a) + '</div>';
+
+      btn.addEventListener("click", () => {
+        const open = wrap.classList.toggle("open");
+        if (open) {
+          state.openQuestions.add(qid);
+          ans.style.maxHeight = ans.scrollHeight + "px";
+        } else {
+          state.openQuestions.delete(qid);
+          ans.style.maxHeight = "0px";
+        }
+      });
+
+      wrap.appendChild(btn);
+      wrap.appendChild(ans);
+
+      if (isOpen) {
+        requestAnimationFrame(() => {
+          ans.style.maxHeight = ans.scrollHeight + "px";
+        });
+      }
+
+      list.appendChild(wrap);
+    });
+
+    return list;
+  }
+
+  /* ============================================================
+     КНОПКА «РАЗВЕРНУТЬ/СВЕРНУТЬ ВСЁ»
+     ============================================================ */
+  function attachToggleAll(container, prefix, questions) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn";
+    const anyOpen = questions.some((_, i) => state.openQuestions.has(prefix + i));
+    btn.textContent = anyOpen ? "Свернуть все" : "Развернуть все";
+
+    btn.addEventListener("click", () => {
+      const items = container.querySelectorAll(".qa-item");
+      const currentlyOpen = [...items].some((el) => el.classList.contains("open"));
+      items.forEach((el) => {
+        const qid = el.dataset.qid;
+        const ans = el.querySelector(".qa-answer");
+        if (currentlyOpen) {
+          el.classList.remove("open");
+          ans.style.maxHeight = "0px";
+          state.openQuestions.delete(qid);
+        } else {
+          el.classList.add("open");
+          ans.style.maxHeight = ans.scrollHeight + "px";
+          state.openQuestions.add(qid);
+        }
+      });
+      btn.textContent = currentlyOpen ? "Развернуть все" : "Свернуть все";
+    });
+
+    return btn;
+  }
+
+  /* ============================================================
+     РЕНДЕР ЭКЗАМЕНА
+     ============================================================ */
+  function renderExam(key) {
+    const e = EXAMS[key];
+    const frag = document.createDocumentFragment();
+
+    const banner = document.createElement("div");
+    banner.className = "info-banner";
+    banner.innerHTML =
+      '<div class="info-icon">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div>Экзамен <b>' + esc(e.label) + '</b> · тема: <b>' + esc(e.exam) + '</b> · вопросов: <b>' + e.questions.length + '</b></div>';
+    frag.appendChild(banner);
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const head = document.createElement("div");
+    head.className = "card-head";
+    head.innerHTML =
+      '<h2>' +
+        '<span class="h-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>' +
+          '</svg>' +
+        '</span>' +
+        'Вопросы к экзамену' +
+      '</h2>';
+
+    head.appendChild(attachToggleAll(card, "q_", e.questions));
+    card.appendChild(head);
+    card.appendChild(buildQAItems(e.questions, "q_"));
+    frag.appendChild(card);
+
+    contentEl.innerHTML = "";
+    contentEl.appendChild(frag);
+  }
+
+  /* ============================================================
+     РЕНДЕР ГАЙДА «ТЕРАПЕВТ»
+     ============================================================ */
+  function stepBlock(num, title, html) {
+    const el = document.createElement("div");
+    el.className = "guide-step";
+    el.innerHTML =
+      '<div class="step-num">' + num + '</div>' +
+      '<div class="step-body">' +
+        '<div class="step-title">' + esc(title) + '</div>' +
+        '<div class="step-text">' + html + '</div>' +
+      '</div>';
+    return el;
+  }
+
+  function renderTherapist() {
+    const frag = document.createDocumentFragment();
+
+    const banner = document.createElement("div");
+    banner.className = "info-banner";
+    banner.innerHTML =
+      '<div class="info-icon">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div>Пошаговая шпаргалка по <b>выдаче квалификации «Терапевт»</b>. Соблюдайте порядок этапов.</div>';
+    frag.appendChild(banner);
+
+    const stepsCard = document.createElement("div");
+    stepsCard.className = "card";
+    stepsCard.innerHTML =
+      '<div class="card-head"><h2>' +
+        '<span class="h-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>' +
+            '<line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>' +
+          '</svg>' +
+        '</span>' +
+        'Порядок действий' +
+      '</h2></div>';
+
+    const steps = document.createElement("div");
+    steps.className = "guide-steps";
+
+    steps.appendChild(stepBlock(1, "Подготовка и проверка", `
+      <ul>
+        <li>Уточняем у человека, ознакомился ли он с <b>«Правилами выдачи мед. карт»</b>.</li>
+        <li>Уточняем, имеется ли у него/неё <b>макрос для выдачи</b>.</li>
+      </ul>
+      <div class="step-note">⚠️ Выдавать справки нужно с некоторым <b>отступом по времени</b>.</div>
+    `));
+
+    steps.appendChild(stepBlock(2, "Оплата 15.000₽", `
+      <ul>
+        <li>Спрашиваем, готов ли человек <b>оплатить 15.000₽</b>.</li>
+      </ul>
+    `));
+
+    steps.appendChild(stepBlock(3, "Отыгровки", `
+      <ul>
+        <li>Отыгровка — <b>дать физ.</b></li>
+        <li>Отыгровка — <b>дать псих.</b></li>
+      </ul>
+    `));
+
+    stepsCard.appendChild(steps);
+    frag.appendChild(stepsCard);
+
+    const qCard = document.createElement("div");
+    qCard.className = "card";
+
+    const qHead = document.createElement("div");
+    qHead.className = "card-head";
+    qHead.innerHTML =
+      '<h2>' +
+        '<span class="h-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>' +
+          '</svg>' +
+        '</span>' +
+        'Вопросы для проверки' +
+      '</h2>';
+
+    qHead.appendChild(attachToggleAll(qCard, "th_", THERAPIST_QUESTIONS));
+    qCard.appendChild(qHead);
+    qCard.appendChild(buildQAItems(THERAPIST_QUESTIONS, "th_"));
+    frag.appendChild(qCard);
+
+    const step5 = document.createElement("div");
+    step5.className = "card";
+    step5.appendChild(stepBlock(5, "Оплата и отчёт в казну", `
+      <ul>
+        <li>Просим оплатить <b>15.000₽</b> на руки (наличкой или на карту).</li>
+        <li>После оплаты заходим в планшет <b>«Баланс фракции»</b> → <b>«Пополнить»</b>.</li>
+        <li>Сумма — <code>4.500₽</code>, причина — <code>квал.Терапевт</code>.</li>
+        <li>Делаем <b>скриншот</b> планшета, где видно пополнение.</li>
+        <li>Переходим сюда и <b>заполняем отчёт в казну</b>.</li>
+        <li>Оставшиеся <b>10.500₽ остаются Вам</b>.</li>
+      </ul>
+      <div class="step-note ok">✅ Сохраните скриншот пополнения — он нужен для отчёта.</div>
+    `));
+    frag.appendChild(step5);
+
+    const step6 = document.createElement("div");
+    step6.className = "card";
+    step6.appendChild(stepBlock(6, "Отчёт в ветку под запросом", `
+      <div>Если человек прошёл, вы пишете в ветку под запросом на квалификацию по форме:</div>
+      <ul>
+        <li><b>1.</b> (тег человека)</li>
+        <li><b>2.</b> + Терапевт (какую роль надо выдать)</li>
+        <li><b>3.</b> Тегаете <b>@Старший состав ПСЭС</b></li>
+      </ul>
+      <div class="form-example"><span class="tag">@Зав.ПСЭС | Прохор Дмитриев | 911</span>  <span class="tag">Прохор Быков | 911</span>
+<span class="role">+ Терапевт</span>
+<span class="tag">@Старший состав ПСЭС</span></div>
+      <div class="step-note">👀 Убираем <b>👀</b> с заявления в канале <b>«заявление на квалификацию»</b> и ставим <b>✅</b>.</div>
+    `));
+    frag.appendChild(step6);
+
+    contentEl.innerHTML = "";
+    contentEl.appendChild(frag);
+  }
+
+  /* ============================================================
+     ОБЩИЙ РЕНДЕР
+     ============================================================ */
+  function renderContent() {
+    if (state.activeTab === "therapist") {
+      renderTherapist();
+    } else if (EXAMS[state.activeTab]) {
+      renderExam(state.activeTab);
+    } else {
+      contentEl.innerHTML = '<div class="empty">Выберите раздел</div>';
+    }
+  }
+
+  /* ============================================================
+     СТАРТ
+     ============================================================ */
+  function init() {
+    state.activeTab = loadLastTab();
+    renderTabs();
+    renderContent();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") init();
+})();
+</script>
+</body>
+</html>

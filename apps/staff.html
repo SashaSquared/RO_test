@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Персонал больницы</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #070b12;
+    --panel: #151f30;
+    --panel-2: #1b2739;
+    --panel-3: #25344b;
+    --text: #eef4fb;
+    --text-soft: #c9d5e3;
+    --muted: #8fa3ba;
+    --border: #31435e;
+    --border-soft: #24334a;
+    --border-strong: #43587a;
+    --accent: #4CB1D8;
+    --accent-2: #6FC5E5;
+    --accent-bg-strong: rgba(76, 177, 216, 0.2);
+    --accent-border: rgba(76, 177, 216, 0.5);
+    --good: #4ade80;
+    --good-bg-strong: rgba(74, 222, 128, 0.16);
+    --good-border: rgba(74, 222, 128, 0.5);
+    --good-text: #a7f3c4;
+    --red: #ef4444;
+    --red-bg-strong: rgba(239, 68, 68, 0.16);
+    --red-border: rgba(239, 68, 68, 0.5);
+    --red-text: #fca5a5;
+    --amber: #f5b94a;
+    --amber-bg: rgba(245, 185, 74, 0.12);
+    --amber-text: #fcd97e;
+    --purple: #a78bfa;
+    --purple-bg: rgba(167, 139, 250, 0.18);
+    --purple-border: rgba(167, 139, 250, 0.5);
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 16px 16px 24px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .tablet { max-width: 1100px; width: 100%; }
+
+  /* -------- Заголовок -------- */
+  .page-title {
+    text-align: center; font-size: 1.05rem; font-weight: 600;
+    color: var(--accent-2); padding: 4px 0 14px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .page-title .brand-icon {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+  }
+  .page-title .brand-icon svg { width: 17px; height: 17px; color: #fff; }
+  .page-title .subtitle {
+    display: block; font-size: 0.72rem; font-weight: 500;
+    color: var(--muted); margin-top: 2px;
+  }
+
+  /* -------- Вкладки -------- */
+  .tabs {
+    display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 14px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .tab-btn:hover { background: var(--panel-3); color: var(--text); }
+  .tab-btn.active {
+    background: var(--accent-bg-strong);
+    border-color: var(--accent-border);
+    color: var(--accent-2);
+  }
+  .tab-btn svg { width: 15px; height: 15px; }
+  .tab-btn .count {
+    display: inline-block;
+    min-width: 20px; height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.1);
+    color: inherit;
+    font-size: 0.7rem;
+    font-weight: 800;
+    line-height: 20px;
+    text-align: center;
+  }
+  .tab-btn.active .count { background: rgba(76,177,216,0.3); }
+
+  /* -------- Карточка -------- */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .card + .card { margin-top: 10px; }
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .card-head h2 {
+    font-size: 0.95rem; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* -------- Тулбар -------- */
+  .toolbar {
+    display: grid; grid-template-columns: 1fr 200px 180px;
+    gap: 8px; margin-bottom: 12px;
+  }
+  @media (max-width: 720px) { .toolbar { grid-template-columns: 1fr; } }
+  input[type="text"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #0c1420;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  textarea { resize: vertical; min-height: 76px; line-height: 1.45; }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(76, 177, 216, 0.15);
+  }
+  input::placeholder, textarea::placeholder { color: #5b6b80; }
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa3ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 34px;
+    cursor: pointer;
+  }
+  select option { background: #0c1420; color: var(--text); }
+
+  /* -------- Таблица -------- */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .tbl th {
+    text-align: left; font-weight: 600; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .tbl td {
+    padding: 11px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: middle;
+  }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover { background: rgba(76, 177, 216, 0.05); }
+
+  .tbl .col-num { color: var(--muted); width: 40px; font-variant-numeric: tabular-nums; }
+  .tbl .col-name { font-weight: 600; }
+  .tbl .col-pass { color: var(--accent-2); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tbl .col-rank { color: #c4b5fd; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tbl .col-actions { text-align: right; white-space: nowrap; width: 1%; }
+
+  .tr-on-vacation { background: rgba(245, 185, 74, 0.06); }
+  .tr-on-vacation:hover { background: rgba(245, 185, 74, 0.12); }
+
+  /* -------- Плашки -------- */
+  .pill {
+    display: inline-block; padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .dept-pill.dept-руководство { background: #4c1d95; color: #ddd6fe; }
+  .dept-pill.dept-аб { background: #7c2d12; color: #fed7aa; }
+  .dept-pill.dept-ок { background: #78350f; color: #fde68a; }
+  .dept-pill.dept-смп { background: #991b1b; color: #fecaca; }
+  .dept-pill.dept-ит { background: #14532d; color: #bbf7d0; }
+  .dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
+  /* ▼▼▼ ДОБАВЛЕНО: инструкторские отделы ▼▼▼ */
+  .dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
+  .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
+  .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
+  .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
+
+  .vacation-badge {
+    display: inline-block; margin-left: 6px;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 800;
+    background: linear-gradient(135deg, #f5b94a, #b45309);
+    color: #1a1207;
+    box-shadow: 0 0 8px rgba(245, 185, 74, 0.35);
+  }
+  .blacklist-badge {
+    display: inline-block; margin-left: 6px;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 800;
+    background: linear-gradient(135deg, #ef4444, #991b1b);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
+  }
+
+  /* -------- Стильные иконочные кнопки -------- */
+  .icon-btn {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s, transform .08s;
+    margin-left: 5px;
+    padding: 0;
+    font-family: inherit;
+  }
+  .icon-btn:first-child { margin-left: 0; }
+  .icon-btn svg { width: 15px; height: 15px; }
+  .icon-btn:active { transform: scale(0.94); }
+
+  .icon-btn.edit:hover {
+    background: var(--accent-bg-strong);
+    border-color: var(--accent-border);
+    color: var(--accent-2);
+  }
+  .icon-btn.fire:hover {
+    background: var(--amber-bg);
+    border-color: var(--amber);
+    color: var(--amber-text);
+  }
+  .icon-btn.delete:hover {
+    background: var(--red-bg-strong);
+    border-color: var(--red-border);
+    color: var(--red-text);
+  }
+  .icon-btn.restore:hover {
+    background: var(--good-bg-strong);
+    border-color: var(--good-border);
+    color: var(--good-text);
+  }
+
+  /* -------- Кнопки общего назначения -------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 0.84rem; font-weight: 600;
+    font-family: inherit;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+    white-space: nowrap;
+  }
+  .btn svg { width: 13px; height: 13px; }
+  .btn:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
+  .btn-primary {
+    background: var(--accent-bg-strong);
+    border-color: var(--accent-border);
+    color: var(--accent-2);
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #071018; }
+  .btn-danger {
+    background: var(--red-bg-strong);
+    border-color: var(--red-border);
+    color: var(--red-text);
+  }
+  .btn-danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn-amber {
+    background: var(--amber-bg);
+    border-color: var(--amber);
+    color: var(--amber-text);
+  }
+  .btn-amber:hover { background: var(--amber); border-color: var(--amber); color: #1a1207; }
+
+  /* -------- Пусто/загрузка -------- */
+  .empty, .loading {
+    color: var(--muted); font-size: 0.88rem;
+    text-align: center;
+    padding: 24px 16px;
+    background: var(--panel-2);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+  }
+
+  /* -------- Модалка -------- */
+  .modal-back {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn .18s ease;
+  }
+  .modal-back.hidden { display: none !important; }
+  .modal {
+    width: 100%; max-width: 460px;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7);
+    position: relative;
+  }
+  .modal-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .modal-head h3 {
+    font-size: 1.02rem; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal-head h3 .fire-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, #ef4444, #7f1d1d);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    flex-shrink: 0;
+  }
+  .modal-head h3 .fire-icon svg { width: 16px; height: 16px; }
+  .modal-head .close-x {
+    background: transparent; border: none;
+    color: var(--muted);
+    font-size: 1.3rem; line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px; border-radius: 6px;
+    transition: background .15s, color .15s;
+  }
+  .modal-head .close-x:hover { background: var(--panel-3); color: var(--text); }
+
+  .modal-who {
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: var(--panel-3);
+    border: 1px solid var(--border-soft);
+    margin-bottom: 12px;
+    font-size: 0.86rem;
+  }
+  .modal-who .who-name { font-weight: 700; color: #fff; }
+  .modal-who .who-sub { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+
+  .modal-form-group { margin-bottom: 12px; }
+  .modal-form-group label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .check-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 12px;
+    background: var(--red-bg-strong);
+    border: 1px solid var(--red-border);
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .check-row:hover { background: rgba(239, 68, 68, 0.22); }
+  .check-row input[type="checkbox"] {
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--red-border);
+    background: #0c1420;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: background .15s, border-color .15s;
+  }
+  .check-row input[type="checkbox"]:checked {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .check-row input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px; top: 2px;
+    width: 6px; height: 11px;
+    border: solid #fff;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .check-row .check-text { font-size: 0.86rem; color: var(--red-text); font-weight: 600; }
+  .check-row .check-hint { font-size: 0.72rem; color: #fca5a5; margin-top: 2px; }
+
+  .modal-actions {
+    display: flex; justify-content: flex-end; gap: 8px;
+    margin-top: 16px;
+  }
+
+  /* -------- Toast -------- */
+  .toast {
+    position: fixed; top: 14px; left: 50%;
+    transform: translate(-50%, -120%);
+    background: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
+    border: 1px solid var(--border-strong); border-left: 4px solid var(--good);
+    border-radius: 10px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 9px;
+    color: var(--text); font-size: 0.85rem; font-weight: 500;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    z-index: 9999; opacity: 0; pointer-events: none;
+    transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
+    max-width: calc(100% - 32px);
+  }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+  .toast.alert { border-left-color: var(--red); }
+  .toast.info  { border-left-color: var(--accent); }
+  .toast .toast-ic {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px;
+    background: var(--good); display: flex; align-items: center; justify-content: center;
+  }
+  .toast.alert .toast-ic { background: var(--red); }
+  .toast.info  .toast-ic { background: var(--accent); }
+  .toast .toast-ic svg { width: 12px; height: 12px; color: #071018; }
+
+  .hidden { display: none !important; }
+
+  /* -------- Мобилка -------- */
+  @media (max-width: 700px) {
+    body { padding: 12px 12px 20px; font-size: 14px; }
+    .card { padding: 12px; border-radius: 10px; }
+    .tbl th, .tbl td { padding: 8px 6px; font-size: 0.8rem; }
+    .icon-btn { width: 30px; height: 30px; border-radius: 8px; }
+    .icon-btn svg { width: 14px; height: 14px; }
+    .col-hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">
+  <span class="toast-ic" id="toastIcon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </span>
+  <span id="toastText">Готово</span>
+</div>
+
+<div class="tablet">
+
+  <div class="page-title">
+    <span class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </span>
+    <span>
+      Персонал больницы
+      <span class="subtitle">Управление сотрудниками и увольнениями</span>
+    </span>
+  </div>
+
+  <!-- Вкладки -->
+  <div class="tabs" id="tabsRow">
+    <button class="tab-btn active" data-tab="active" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+      </svg>
+      Активные
+      <span class="count" id="countActive">0</span>
+    </button>
+    <button class="tab-btn hidden" data-tab="fired" type="button" id="tabFired">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="15" y1="9" x2="9" y2="15"/>
+        <line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+      Уволенные
+      <span class="count" id="countFired">0</span>
+    </button>
+  </div>
+
+  <!-- Карточка: активные -->
+  <div class="card" id="cardActive">
+    <div class="card-head">
+      <h2>Список сотрудников</h2>
+      <button class="btn btn-primary hidden" id="addStaffBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Добавить
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="🔍 Поиск по имени или № паспорта…">
+      <select id="filterDept"><option value="">Все отделы</option></select>
+      <div style="display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:0.82rem;">
+        Всего: <b id="staffCount" style="margin-left:6px;color:var(--accent-2);">0</b>
+      </div>
+    </div>
+
+    <div id="staffContainer">
+      <div class="loading">Загрузка…</div>
+    </div>
+  </div>
+
+  <!-- Карточка: форма сотрудника -->
+  <div class="card hidden" id="staffFormCard">
+    <div class="card-head">
+      <h2 id="staffFormTitle">Новый сотрудник</h2>
+      <button class="btn" id="cancelStaffBtn" type="button">Отмена</button>
+    </div>
+    <form id="staffForm" autocomplete="off">
+      <input type="hidden" id="editingStaffRow">
+      <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="modal-form-group" style="margin-bottom:0;">
+          <label for="staffName">Имя Фамилия</label>
+          <input type="text" id="staffName" required>
+        </div>
+        <div class="modal-form-group" style="margin-bottom:0;">
+          <label for="staffPassport">№ Паспорта</label>
+          <input type="text" id="staffPassport">
+        </div>
+        <div class="modal-form-group" style="margin-bottom:0;">
+          <label for="staffPosition">Должность</label>
+          <input type="text" id="staffPosition">
+        </div>
+        <div class="modal-form-group" style="margin-bottom:0;">
+          <label for="staffRank">Ранг</label>
+          <input type="text" id="staffRank">
+        </div>
+        <div class="modal-form-group" style="margin-bottom:0;grid-column:1 / -1;">
+          <label for="staffDepartment">Отдел</label>
+          <select id="staffDepartment">
+            <option value="Руководство">Руководство</option>
+            <option value="АБ">АБ — Администрация больницы</option>
+            <option value="ОК">ОК — Отдел кадров</option>
+            <option value="СМП" selected>СМП — Скорая медицинская помощь</option>
+            <option value="ИТ">ИТ — Интенсивная терапия</option>
+            <option value="ПСЭС">ПСЭС — Психолого-санитарная служба</option>
+            <!-- ▼▼▼ ДОБАВЛЕНО ▼▼▼ -->
+            <option value="Инст ПСЭС">Инст ПСЭС — Инструктор ПСЭС</option>
+            <option value="Инст СМП">Инст СМП — Инструктор СМП</option>
+            <option value="Инст ИТ">Инст ИТ — Инструктор ИТ</option>
+            <option value="Инст ОК">Инст ОК — Инструктор ОК</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="staffSubmitBtn" style="margin-top:14px;width:100%;">Добавить сотрудника</button>
+    </form>
+  </div>
+
+  <!-- Карточка: уволенные -->
+  <div class="card hidden" id="cardFired">
+    <div class="card-head">
+      <h2>Уволенные сотрудники</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select id="filterFiredBlacklist" style="min-width:170px;">
+          <option value="">Все</option>
+          <option value="1">🚫 Только ЧС</option>
+          <option value="0">Без ЧС</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <input type="text" id="searchFired" placeholder="🔍 Поиск по имени, паспорту или причине…">
+    </div>
+    <div id="firedContainer">
+      <div class="loading">Загрузка…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ МОДАЛКА УВОЛЬНЕНИЯ ============ -->
+<div class="modal-back hidden" id="fireModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>
+        <span class="fire-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+          </svg>
+        </span>
+        Увольнение
+      </h3>
+      <button class="close-x" type="button" id="fireCloseX" aria-label="Закрыть">×</button>
+    </div>
+
+    <div class="modal-who">
+      <div class="who-name" id="fireWhoName">—</div>
+      <div class="who-sub" id="fireWhoSub">—</div>
+    </div>
+
+    <div class="modal-form-group">
+      <label for="fireReason">Причина увольнения</label>
+      <textarea id="fireReason" placeholder="Укажите причину увольнения…"></textarea>
+    </div>
+
+    <label class="check-row" for="fireBlacklist">
+      <input type="checkbox" id="fireBlacklist">
+      <div>
+        <div class="check-text">🚫 Занести сотрудника в ЧС</div>
+        <div class="check-hint">Отметка о занесении в чёрный список</div>
+      </div>
+    </label>
+
+    <div class="modal-actions">
+      <button class="btn" type="button" id="fireCancel">Отмена</button>
+      <button class="btn btn-danger" type="button" id="fireConfirm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Уволить
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const API_URL = "https://hospital-api.asdulgok.workers.dev";
+
+  // ▼▼▼ ДОБАВЛЕНО: Инст ПСЭС, Инст СМП, Инст ИТ, Инст ОК ▼▼▼
+  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС", "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"];
+  const DEPT_LABEL = {
+    "Руководство": "Руководство",
+    "АБ": "АБ", "ОК": "ОК", "СМП": "СМП", "ИТ": "ИТ", "ПСЭС": "ПСЭС",
+    "Инст ПСЭС": "Инст ПСЭС", "Инст СМП": "Инст СМП", "Инст ИТ": "Инст ИТ", "Инст ОК": "Инст ОК"
+  };
+
+  const state = {
+    user: null,
+    staff: [],
+    vacations: [],
+    fired: [],
+    activeTab: "active",
+    firingTarget: null
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  const tabsRow = $("tabsRow");
+  const tabFired = $("tabFired");
+  const cardActive = $("cardActive");
+  const cardFired = $("cardFired");
+  const countActive = $("countActive");
+  const countFired = $("countFired");
+
+  const searchInput = $("searchInput");
+  const filterDept = $("filterDept");
+  const staffContainer = $("staffContainer");
+  const staffCount = $("staffCount");
+  const addStaffBtn = $("addStaffBtn");
+
+  const staffFormCard = $("staffFormCard");
+  const staffFormTitle = $("staffFormTitle");
+  const staffForm = $("staffForm");
+  const editingStaffRow = $("editingStaffRow");
+  const staffName = $("staffName");
+  const staffPassport = $("staffPassport");
+  const staffPosition = $("staffPosition");
+  const staffRank = $("staffRank");
+  const staffDepartment = $("staffDepartment");
+  const staffSubmitBtn = $("staffSubmitBtn");
+  const cancelStaffBtn = $("cancelStaffBtn");
+
+  const searchFired = $("searchFired");
+  const filterFiredBlacklist = $("filterFiredBlacklist");
+  const firedContainer = $("firedContainer");
+
+  const fireModal = $("fireModal");
+  const fireCloseX = $("fireCloseX");
+  const fireWhoName = $("fireWhoName");
+  const fireWhoSub = $("fireWhoSub");
+  const fireReason = $("fireReason");
+  const fireBlacklist = $("fireBlacklist");
+  const fireCancel = $("fireCancel");
+  const fireConfirm = $("fireConfirm");
+
+  /* ---------- Сеть ---------- */
+  async function apiPost(payload) {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();
+  }
+
+  function loadSession() {
+    const p = new URLSearchParams(location.search);
+    const pLogin = p.get("login");
+    const pRole  = p.get("role");
+    const pDept  = p.get("dept");
+    if (pLogin && pRole) {
+      const raw = localStorage.getItem("hospital_session");
+      let hash = null;
+      try { hash = raw ? (JSON.parse(raw).hash || null) : null; } catch (e) {}
+      return { login: pLogin, role: pRole, department: pDept || "", hash: hash };
+    }
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data && data.login && data.role && data.hash) return data;
+    } catch (e) {}
+    return null;
+  }
+
+  function isAdmin() { return state.user && (state.user.role === "admin" || state.user.role === "superadmin"); }
+  function isSuperadmin() { return state.user && state.user.role === "superadmin"; }
+
+  /* ---------- Утилиты ---------- */
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  function isOnVacation(v) {
+    if (v.returned) return false;
+    const today = todayStr();
+    return v.start <= today && today <= v.end;
+  }
+
+  /* ============================================================
+     СОРТИРОВКА ПЕРСОНАЛА
+     Ранг: 13 (Лидер) → 1. При равных рангах — паспорт по возрастанию.
+     Поддерживаются и числа, и текстовые названия.
+     ============================================================ */
+
+  const TEXT_RANKS = {
+    "лидер":        13,
+    "leader":       13,
+    "лидерство":    13,
+    "лидер больницы": 13,
+
+    "зам":          12,
+    "заместитель":  12,
+    "deputy":       12,
+
+    "главный врач": 11,
+    "главврач":     11,
+    "chief":        11
+  };
+
+  function parseRank(rankStr) {
+    const s = String(rankStr || "").trim().toLowerCase();
+    if (!s) return -1;
+
+    const m = s.match(/(\d{1,2})/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (!isNaN(n)) {
+        if (n < 1) return -1;
+        if (n > 13) return 13;
+        return n;
+      }
+    }
+
+    if (TEXT_RANKS[s] !== undefined) return TEXT_RANKS[s];
+
+    for (const key in TEXT_RANKS) {
+      if (s.includes(key)) return TEXT_RANKS[key];
+    }
+
+    return -1;
+  }
+
+  function parsePassport(p) {
+    const s = String(p || "").trim();
+    if (!s) return Number.POSITIVE_INFINITY;
+    const digits = s.replace(/\D/g, "");
+    if (!digits) return Number.POSITIVE_INFINITY;
+    const n = parseInt(digits, 10);
+    return isNaN(n) ? Number.POSITIVE_INFINITY : n;
+  }
+
+  function compareStaff(a, b) {
+    const ra = parseRank(a.rank);
+    const rb = parseRank(b.rank);
+
+    if (ra !== rb) return rb - ra;
+
+    const pa = parsePassport(a.passport);
+    const pb = parsePassport(b.passport);
+    if (pa !== pb) return pa - pb;
+
+    return (a.name || "").localeCompare(b.name || "");
+  }
+
+  /* ---------- Загрузка данных ---------- */
+  async function loadStaff() {
+    staffContainer.innerHTML = '<div class="loading">Загрузка…</div>';
+    try {
+      const data = await apiPost({ action: "getStaff" });
+      if (!data || !data.success) throw new Error((data && data.message) || "Ошибка");
+      state.staff = data.staff || [];
+      renderActive();
+      addStaffBtn.classList.toggle("hidden", !isAdmin());
+    } catch (err) {
+      console.error(err);
+      staffContainer.innerHTML = '<div class="empty">Не удалось загрузить: ' + esc(err.message) + '</div>';
+    }
+  }
+
+  async function loadVacations() {
+    try {
+      const data = await apiPost({ action: "getVacations" });
+      if (data && data.success) state.vacations = data.vacations || [];
+    } catch (e) { console.error("loadVacations:", e); }
+  }
+
+  async function loadFired() {
+    if (!isAdmin()) return;
+    firedContainer.innerHTML = '<div class="loading">Загрузка…</div>';
+    try {
+      const data = await apiPost({
+        action: "getFired",
+        login: state.user.login, hash: state.user.hash
+      });
+      if (!data || !data.success) throw new Error((data && data.message) || "Ошибка");
+      state.fired = data.fired || [];
+      renderFired();
+    } catch (err) {
+      console.error(err);
+      firedContainer.innerHTML = '<div class="empty">Не удалось загрузить: ' + esc(err.message) + '</div>';
+    }
+  }
+
+  /* ---------- Рендер: активные ---------- */
+  function renderActive() {
+    const q = (searchInput.value || "").trim().toLowerCase();
+    const dept = filterDept.value;
+
+    let list = state.staff.slice();
+    if (dept) list = list.filter(s => s.department === dept);
+    if (q) list = list.filter(s =>
+      (s.name || "").toLowerCase().includes(q) ||
+      (s.passport || "").toLowerCase().includes(q)
+    );
+
+    list.sort(compareStaff);
+
+    staffCount.textContent = String(list.length);
+    countActive.textContent = String(state.staff.length);
+    countFired.textContent = String(state.fired.length);
+
+    if (!list.length) {
+      staffContainer.innerHTML = '<div class="empty">Никого не найдено</div>';
+      return;
+    }
+
+    const canEdit = isAdmin();
+    const table = document.createElement("table");
+    table.className = "tbl";
+    table.innerHTML =
+      '<thead><tr>' +
+        '<th class="col-num">#</th>' +
+        '<th>Имя Фамилия</th>' +
+        '<th>№ Паспорта</th>' +
+        '<th class="col-hide-sm">Должность</th>' +
+        '<th>Ранг</th>' +
+        '<th class="col-hide-sm">Отдел</th>' +
+        (canEdit ? '<th class="col-actions"></th>' : '') +
+      '</tr></thead>';
+
+    const tbody = document.createElement("tbody");
+    list.forEach((s, i) => {
+      const tr = document.createElement("tr");
+      // ▼▼▼ ИЗМЕНЕНО: пробелы в отделе заменяются на дефис для CSS-класса ▼▼▼
+      const deptCls = "dept-" + String(s.department || "").toLowerCase().replace(/\s+/g, "-");
+
+      const vacation = state.vacations.find(v =>
+        isOnVacation(v) && v.name.trim().toLowerCase() === s.name.trim().toLowerCase());
+      if (vacation) tr.classList.add("tr-on-vacation");
+
+      const vacBadge = vacation
+        ? ' <span class="vacation-badge" title="' + esc(vacation.type + ": " + vacation.start + " → " + vacation.end) + '">🌴 ' + esc(vacation.type) + '</span>'
+        : '';
+
+      let actionsHtml = "";
+      if (canEdit) {
+        actionsHtml =
+          '<button class="icon-btn edit" data-action="edit" title="Изменить">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>' +
+              '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>' +
+            '</svg>' +
+          '</button>' +
+          '<button class="icon-btn fire" data-action="fire" title="Уволить">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>' +
+            '</svg>' +
+          '</button>' +
+          '<button class="icon-btn delete" data-action="delete" title="Удалить">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<polyline points="3 6 5 6 21 6"/>' +
+              '<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>' +
+              '<path d="M10 11v6M14 11v6"/>' +
+            '</svg>' +
+          '</button>';
+      }
+
+      tr.innerHTML =
+        '<td class="col-num">' + (i + 1) + '</td>' +
+        '<td class="col-name">' + esc(s.name || "—") + vacBadge + '</td>' +
+        '<td class="col-pass">' + esc(s.passport || "—") + '</td>' +
+        '<td class="col-hide-sm">' + esc(s.position || "—") + '</td>' +
+        '<td class="col-rank">' + esc(s.rank || "—") + '</td>' +
+        '<td class="col-hide-sm"><span class="pill dept-pill ' + deptCls + '">' + esc(s.department || "—") + '</span></td>' +
+        (canEdit ? '<td class="col-actions">' + actionsHtml + '</td>' : '');
+      tbody.appendChild(tr);
+
+      tr.querySelector('[data-action="edit"]')?.addEventListener("click", () => openEditor(s));
+      tr.querySelector('[data-action="fire"]')?.addEventListener("click", () => openFireModal(s));
+      tr.querySelector('[data-action="delete"]')?.addEventListener("click", () => deleteStaff(s));
+    });
+    table.appendChild(tbody);
+    staffContainer.innerHTML = "";
+    staffContainer.appendChild(table);
+  }
+
+  /* ---------- Рендер: уволенные ---------- */
+  function renderFired() {
+    const q = (searchFired.value || "").trim().toLowerCase();
+    const bl = filterFiredBlacklist.value;
+
+    let list = state.fired.slice();
+    if (bl === "1") list = list.filter(f => f.blacklist);
+    else if (bl === "0") list = list.filter(f => !f.blacklist);
+    if (q) list = list.filter(f =>
+      (f.name || "").toLowerCase().includes(q) ||
+      (f.passport || "").toLowerCase().includes(q) ||
+      (f.reason || "").toLowerCase().includes(q)
+    );
+
+    list.sort(compareStaff);
+
+    countFired.textContent = String(state.fired.length);
+
+    if (!list.length) {
+      firedContainer.innerHTML = '<div class="empty">Никого не найдено</div>';
+      return;
+    }
+
+    const canDelete = isSuperadmin();
+    const table = document.createElement("table");
+    table.className = "tbl";
+    table.innerHTML =
+      '<thead><tr>' +
+        '<th class="col-num">#</th>' +
+        '<th>Имя Фамилия</th>' +
+        '<th>№ Паспорта</th>' +
+        '<th class="col-hide-sm">Ранг</th>' +
+        '<th class="col-hide-sm">Отдел</th>' +
+        '<th>Причина</th>' +
+        '<th class="col-hide-sm">Дата</th>' +
+        (canDelete ? '<th class="col-actions"></th>' : '') +
+      '</tr></thead>';
+
+    const tbody = document.createElement("tbody");
+    list.forEach((f, i) => {
+      const tr = document.createElement("tr");
+      // ▼▼▼ ИЗМЕНЕНО: пробелы в отделе заменяются на дефис для CSS-класса ▼▼▼
+      const deptCls = "dept-" + String(f.department || "").toLowerCase().replace(/\s+/g, "-");
+
+      let actionsHtml = "";
+      if (canDelete) {
+        actionsHtml =
+          '<button class="icon-btn delete" data-action="delete-fired" title="Удалить запись">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<polyline points="3 6 5 6 21 6"/>' +
+              '<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>' +
+            '</svg>' +
+          '</button>';
+      }
+
+      const blBadge = f.blacklist
+        ? ' <span class="blacklist-badge" title="В чёрном списке">🚫 ЧС</span>'
+        : '';
+
+      tr.innerHTML =
+        '<td class="col-num">' + (i + 1) + '</td>' +
+        '<td class="col-name">' + esc(f.name || "—") + blBadge + '</td>' +
+        '<td class="col-pass">' + esc(f.passport || "—") + '</td>' +
+        '<td class="col-hide-sm col-rank">' + esc(f.rank || "—") + '</td>' +
+        '<td class="col-hide-sm"><span class="pill dept-pill ' + deptCls + '">' + esc(f.department || "—") + '</span></td>' +
+        '<td style="max-width:340px;white-space:pre-wrap;word-break:break-word;color:var(--red-text);">' + esc(f.reason || "—") + '</td>' +
+        '<td class="col-hide-sm" style="color:var(--muted);font-size:0.8rem;">' + esc(f.firedAt || "—") + '</td>' +
+        (canDelete ? '<td class="col-actions">' + actionsHtml + '</td>' : '');
+      tbody.appendChild(tr);
+
+      tr.querySelector('[data-action="delete-fired"]')?.addEventListener("click", () => deleteFired(f));
+    });
+    table.appendChild(tbody);
+    firedContainer.innerHTML = "";
+    firedContainer.appendChild(table);
+  }
+
+  /* ---------- Редактор сотрудника ---------- */
+  function openEditor(s) {
+    if (!isAdmin()) return;
+    editingStaffRow.value = s.rowIndex;
+    staffFormTitle.textContent = "Редактирование: " + s.name;
+    staffName.value = s.name || "";
+    staffPassport.value = s.passport || "";
+    staffPosition.value = s.position || "";
+    staffRank.value = s.rank || "";
+    staffDepartment.value = s.department || "СМП";
+    staffSubmitBtn.textContent = "Сохранить";
+    staffFormCard.classList.remove("hidden");
+    staffFormCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openCreate() {
+    if (!isAdmin()) return;
+    editingStaffRow.value = "";
+    staffFormTitle.textContent = "Новый сотрудник";
+    staffForm.reset();
+    staffDepartment.value = "СМП";
+    staffSubmitBtn.textContent = "Добавить сотрудника";
+    staffFormCard.classList.remove("hidden");
+    staffFormCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function closeEditor() {
+    editingStaffRow.value = "";
+    staffForm.reset();
+    staffFormCard.classList.add("hidden");
+  }
+
+  async function handleStaffForm(e) {
+    e.preventDefault();
+    if (!isAdmin()) return;
+
+    const fields = {
+      newName: staffName.value.trim(),
+      newPassport: staffPassport.value.trim(),
+      newPosition: staffPosition.value.trim(),
+      newRank: staffRank.value.trim(),
+      newDepartment: staffDepartment.value
+    };
+    if (!fields.newName) { showToast("Введите имя", "alert"); return; }
+
+    staffSubmitBtn.disabled = true;
+    const original = staffSubmitBtn.textContent;
+    staffSubmitBtn.textContent = "Отправка…";
+
+    try {
+      const targetRow = parseInt(editingStaffRow.value, 10);
+      const payload = targetRow
+        ? Object.assign({
+            action: "updateStaff",
+            login: state.user.login, hash: state.user.hash,
+            targetRowIndex: targetRow
+          }, fields)
+        : Object.assign({
+            action: "registerStaff",
+            login: state.user.login, hash: state.user.hash
+          }, fields);
+
+      const res = await apiPost(payload);
+      if (!res.success) {
+        showToast(res.message || "Ошибка", "alert");
+      } else {
+        showToast(targetRow ? "Обновлено" : "Сотрудник добавлен", "success");
+        notifyParent(targetRow ? "Сотрудник обновлён" : "Сотрудник добавлен", fields.newName);
+        closeEditor();
+        await loadStaff();
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Ошибка сети", "alert");
+    } finally {
+      staffSubmitBtn.disabled = false;
+      staffSubmitBtn.textContent = original;
+    }
+  }
+
+  /* ---------- Удалить (hard) ---------- */
+  async function deleteStaff(s) {
+    if (!isAdmin()) return;
+    if (!confirm("Удалить сотрудника «" + s.name + "» без сохранения в базе уволенных?\n\nЕсли нужно уволить с сохранением — используйте кнопку «Уволить».")) return;
+    try {
+      const data = await apiPost({
+        action: "deleteStaff",
+        login: state.user.login, hash: state.user.hash,
+        targetRowIndex: s.rowIndex
+      });
+      if (!data.success) { showToast(data.message || "Ошибка", "alert"); return; }
+      showToast("Удалено", "info");
+      notifyParent("Сотрудник удалён", s.name, "info");
+      await loadStaff();
+    } catch (e) { console.error(e); showToast("Ошибка сети", "alert"); }
+  }
+
+  /* ---------- Модалка увольнения ---------- */
+  function openFireModal(s) {
+    if (!isAdmin()) return;
+    state.firingTarget = s;
+    fireWhoName.textContent = s.name || "—";
+    fireWhoSub.textContent =
+      "#" + (s.passport || "—") +
+      " · " + (s.position || "—") +
+      " · " + (s.rank || "—") +
+      " · " + (s.department || "—");
+    fireReason.value = "";
+    fireBlacklist.checked = false;
+    fireModal.classList.remove("hidden");
+    setTimeout(() => fireReason.focus(), 50);
+  }
+
+  function closeFireModal() {
+    state.firingTarget = null;
+    fireModal.classList.add("hidden");
+  }
+
+  async function confirmFire() {
+    if (!state.firingTarget) return;
+    const reason = fireReason.value.trim();
+    if (!reason) { showToast("Укажите причину увольнения", "alert"); fireReason.focus(); return; }
+
+    const target = state.firingTarget;
+    const blacklist = fireBlacklist.checked;
+
+    fireConfirm.disabled = true;
+    const original = fireConfirm.innerHTML;
+    fireConfirm.innerHTML = "Отправка…";
+
+    try {
+      const data = await apiPost({
+        action: "fireStaff",
+        login: state.user.login, hash: state.user.hash,
+        targetRowIndex: target.rowIndex,
+        reason: reason,
+        blacklist: blacklist
+      });
+      if (!data.success) {
+        showToast(data.message || "Ошибка", "alert");
+        return;
+      }
+
+      showToast(
+        "Уволен: " + target.name + (blacklist ? " · 🚫 ЧС" : ""),
+        blacklist ? "alert" : "info"
+      );
+      notifyParent(
+        blacklist ? "Уволен в ЧС" : "Сотрудник уволен",
+        target.name,
+        blacklist ? "alert" : "success"
+      );
+
+      closeFireModal();
+      await loadStaff();
+      if (state.activeTab === "fired") await loadFired();
+    } catch (err) {
+      console.error(err);
+      showToast("Ошибка сети", "alert");
+    } finally {
+      fireConfirm.disabled = false;
+      fireConfirm.innerHTML = original;
+    }
+  }
+
+  /* ---------- Удалить запись из уволенных ---------- */
+  async function deleteFired(f) {
+    if (!isSuperadmin()) return;
+    if (!confirm("Удалить запись об увольнении «" + f.name + "»?\nЭто действие необратимо.")) return;
+    try {
+      const data = await apiPost({
+        action: "deleteFired",
+        login: state.user.login, hash: state.user.hash,
+        targetRowIndex: f.rowIndex
+      });
+      if (!data.success) { showToast(data.message || "Ошибка", "alert"); return; }
+      showToast("Запись удалена", "info");
+      await loadFired();
+    } catch (e) { console.error(e); showToast("Ошибка сети", "alert"); }
+  }
+
+  /* ---------- Вкладки ---------- */
+  function switchTab(tab) {
+    state.activeTab = tab;
+    document.querySelectorAll(".tab-btn").forEach(b =>
+      b.classList.toggle("active", b.dataset.tab === tab)
+    );
+    cardActive.classList.toggle("hidden", tab !== "active");
+    cardFired.classList.toggle("hidden", tab !== "fired");
+    staffFormCard.classList.add("hidden");
+
+    if (tab === "fired" && isAdmin()) loadFired();
+  }
+
+  /* ---------- Мост с родителем ---------- */
+  function notifyParent(title, text, kind) {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: "toast", title: title || "", text: text || "", kind: kind || "success"
+        }, "*");
+      }
+    } catch (e) {}
+  }
+
+  /* ---------- Toast ---------- */
+  const toastEl = $("toast");
+  const toastText = $("toastText");
+  const toastIcon = $("toastIcon");
+  let toastTimer = null;
+  const I_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const I_ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  const I_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+
+  function showToast(text, kind) {
+    kind = kind || "success";
+    toastEl.className = "toast " + (kind === "alert" ? "alert" : kind === "info" ? "info" : "");
+    toastText.textContent = text;
+    toastIcon.innerHTML = kind === "alert" ? I_ALERT : kind === "info" ? I_INFO : I_OK;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2400);
+  }
+
+  /* ---------- Инициализация ---------- */
+  function fillSelects() {
+    filterDept.innerHTML = '<option value="">Все отделы</option>';
+    DEPARTMENTS.forEach(d => {
+      const o = document.createElement("option");
+      o.value = d; o.textContent = DEPT_LABEL[d];
+      filterDept.appendChild(o);
+    });
+  }
+
+  function init() {
+    const user = loadSession();
+    if (!user) {
+      document.querySelector(".tablet").innerHTML =
+        '<div class="card" style="text-align:center;padding:40px 20px;">' +
+          '<div style="font-size:2rem;margin-bottom:10px;">🔒</div>' +
+          '<div style="font-weight:600;margin-bottom:6px;">Нет активной сессии</div>' +
+          '<div class="empty">Войдите в планшет заново</div>' +
+        '</div>';
+      return;
+    }
+    state.user = user;
+
+    if (isAdmin()) tabFired.classList.remove("hidden");
+
+    fillSelects();
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    addStaffBtn.addEventListener("click", openCreate);
+    cancelStaffBtn.addEventListener("click", closeEditor);
+    staffForm.addEventListener("submit", handleStaffForm);
+
+    searchInput.addEventListener("input", renderActive);
+    filterDept.addEventListener("change", renderActive);
+
+    searchFired.addEventListener("input", renderFired);
+    filterFiredBlacklist.addEventListener("change", renderFired);
+
+    fireCloseX.addEventListener("click", closeFireModal);
+    fireCancel.addEventListener("click", closeFireModal);
+    fireConfirm.addEventListener("click", confirmFire);
+    fireModal.addEventListener("click", (e) => { if (e.target === fireModal) closeFireModal(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !fireModal.classList.contains("hidden")) closeFireModal();
+    });
+
+    Promise.all([loadStaff(), loadVacations()]).then(() => renderActive());
+
+    setInterval(() => {
+      if (document.hidden) return;
+      loadVacations().then(() => renderActive());
+    }, 60000);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

@@ -501,46 +501,6 @@
   }
   .report-total .sub .instr-val { color: var(--amber); font-weight: 700; }
 
-  .save-actions {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    justify-content: center;
-    margin: 12px 0 4px;
-  }
-  .save-week-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 10px 16px;
-    font-family: inherit; font-size: 0.86rem; font-weight: 600;
-    color: #fff;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border: none; border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.05s, opacity 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
-  }
-  .save-week-btn:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5); }
-  .save-week-btn:active:not(:disabled) { transform: scale(0.98); }
-  .save-week-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-  .save-week-btn.instr {
-    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-  }
-  .save-week-btn.instr:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(139, 92, 246, 0.55); }
-  .save-week-btn svg { width: 15px; height: 15px; }
-  .save-week-btn .spin {
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  .save-week-hint {
-    width: 100%;
-    text-align: center;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
   .report-subhead {
     color: var(--blue); font-weight: 700;
     font-size: 0.74rem; margin: 12px 0 6px;
@@ -712,6 +672,24 @@
   .req-item .req-status { font-size: 0.78rem; margin-left: 8px; }
   .req-item.ok .req-status { color: #86efac; }
   .req-item.bad .req-status { color: #fca5a5; }
+
+  /* Кнопка сохранения в нижней панели */
+  .save-week-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+  .save-week-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5);
+  }
+  .save-week-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .save-week-btn .spin {
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 
   @media (max-width: 640px) {
     body { padding: 12px 12px 20px; }
@@ -1050,6 +1028,14 @@
       <div class="bottombar-inner">
         <div class="bottombar-buttons">
           <button class="btn" onclick="generateFullReport()">📄 Сформировать отчёт</button>
+          <button class="btn save-week-btn" id="saveWeekBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Записать в отчёт
+          </button>
           <button class="btn btn-ghost" id="copyBtn" onclick="copyReport()">📋 Копировать</button>
           <button class="btn btn-danger" onclick="resetForm()">🔄 Сбросить всё</button>
         </div>
@@ -1588,16 +1574,6 @@
     return s.role === "user";
   }
 
-  function canSaveRegularReport() {
-    if (isCalcAdmin()) return true;
-    if (isCalcUser() && !isInstructor) return true;
-    return false;
-  }
-
-  function canSaveInstrReport() {
-    return isCalcAdmin() && isInstructor;
-  }
-
   let _weekIdCache = null;
   async function fetchWorkingWeekId() {
     if (_weekIdCache) return _weekIdCache;
@@ -1622,23 +1598,14 @@
     return staff.find(s => String(s.name || "").trim().toLowerCase() === target) || null;
   }
 
-  async function saveToWeeklyReport(saveInstr) {
+  /* ============================================================
+     ЕДИНАЯ КНОПКА «Записать в отчёт»
+     ============================================================ */
+  async function saveToWeeklyReport() {
     const session = getCalcSession();
     if (!session) {
       notifyParent("Ошибка", "Нет активной сессии", "alert");
       return;
-    }
-
-    if (saveInstr) {
-      if (!isCalcAdmin()) {
-        notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов", "alert");
-        return;
-      }
-    } else {
-      if (!canSaveRegularReport()) {
-        notifyParent("Ошибка", "Недостаточно прав для сохранения", "alert");
-        return;
-      }
     }
 
     const name = fullnameInput.value.trim();
@@ -1653,7 +1620,6 @@
       return;
     }
 
-    // ▼ ПРОВЕРКИ ОТДЕЛА
     const dept = String(staffItem.department || "").trim();
     const ALLOWED_DEPTS = ["СМП", "Инст СМП"];
 
@@ -1661,7 +1627,11 @@
       notifyParent("Ошибка", "Можно записывать отчёты только для отдела СМП и Инст СМП", "alert");
       return;
     }
-    if (isCalcUser() && dept === "Инст СМП") {
+
+    const isInstrDept = (dept === "Инст СМП");
+
+    // Для Инст СМП — только старший состав
+    if (isInstrDept && !isCalcAdmin()) {
       notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов СМП", "alert");
       return;
     }
@@ -1674,9 +1644,9 @@
 
     const s = calc();
     const points = s.totalPoints || 0;
-    const instrPoints = saveInstr ? (s.instrPoints || 0) : 0;
+    const instrPoints = isInstrDept ? (s.instrPoints || 0) : 0;
 
-    const btn = saveInstr ? document.getElementById('saveInstrBtn') : document.getElementById('saveWeekBtn');
+    const btn = document.getElementById("saveWeekBtn");
     if (!btn) return;
     const oldHtml = btn.innerHTML;
     btn.disabled = true;
@@ -1704,8 +1674,8 @@
       if (data && data.success) {
         btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Сохранено!';
         notifyParent(
-          saveInstr ? "Инструкторский отчёт записан" : "Недельный отчёт записан",
-          staffItem.name + " · " + points + " общих" + (saveInstr ? " / " + instrPoints + " инстр." : ""),
+          "Отчёт записан",
+          staffItem.name + " · " + points + " общих" + (isInstrDept ? " / " + instrPoints + " инстр." : ""),
           "success"
         );
         setTimeout(() => {
@@ -1808,11 +1778,6 @@
     closeAllAutocomplete();
     renderDashboard();
     saveDraft();
-    const canSave = fullnameInput.value.trim() !== "";
-    const b1 = document.getElementById('saveWeekBtn');
-    const b2 = document.getElementById('saveInstrBtn');
-    if (b1) b1.disabled = !canSave;
-    if (b2) b2.disabled = !canSave;
   }
 
   function closeAllAutocomplete() {
@@ -2564,53 +2529,7 @@
       html += `<div class="report-remarks"><strong>📝 Замечания:</strong> ${escapeHtml(remarksText)}</div>`;
     }
 
-    const showSaveBlock = !promo && (isCalcAdmin() || (isCalcUser() && !isInstructor));
-    if (showSaveBlock) {
-      const canSave = fullnameInput.value.trim() !== "";
-      const weekDisabled = canSave ? "" : "disabled";
-
-      let btnsHtml =
-        '<div class="save-actions">' +
-          '<button type="button" class="save-week-btn" id="saveWeekBtn" ' + weekDisabled + '>' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-              '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>' +
-              '<polyline points="17 21 17 13 7 13 7 21"/>' +
-              '<polyline points="7 3 7 8 15 8"/>' +
-            '</svg>' +
-            'Записать в недельный отчёт' +
-          '</button>';
-
-      if (isCalcAdmin() && isInstructor) {
-        btnsHtml +=
-          '<button type="button" class="save-week-btn instr" id="saveInstrBtn" ' + weekDisabled + '>' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-              '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/>' +
-              '<path d="M6 12v5c3 3 9 3 12 0v-5"/>' +
-            '</svg>' +
-            'Записать в инструкторский отчёт' +
-          '</button>';
-      }
-
-      btnsHtml +=
-          '<div class="save-week-hint">' +
-            (canSave
-              ? 'Баллы: ' + s.totalPoints + (isInstructor ? ' общих · ' + s.instrPoints + ' инструкторских' : '')
-              : 'Укажите имя сотрудника, чтобы сохранить') +
-          '</div>' +
-        '</div>';
-
-      html += btnsHtml;
-    }
-
     container.innerHTML = html;
-
-    if (showSaveBlock) {
-      const btnWeek = document.getElementById('saveWeekBtn');
-      if (btnWeek) btnWeek.addEventListener('click', () => saveToWeeklyReport(false));
-
-      const btnInstr = document.getElementById('saveInstrBtn');
-      if (btnInstr) btnInstr.addEventListener('click', () => saveToWeeklyReport(true));
-    }
   }
 
   function generateFullReport() {
@@ -2896,12 +2815,14 @@
     renderDashboard();
     loadStaff();
 
+    const saveBtn = document.getElementById("saveWeekBtn");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", saveToWeeklyReport);
+    }
+
     fullnameInput.addEventListener('input', () => {
       const canSave = fullnameInput.value.trim() !== "";
-      const b1 = document.getElementById('saveWeekBtn');
-      const b2 = document.getElementById('saveInstrBtn');
-      if (b1) b1.disabled = !canSave;
-      if (b2) b2.disabled = !canSave;
+      if (saveBtn) saveBtn.disabled = !canSave;
     });
   }
 

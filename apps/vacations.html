@@ -34,6 +34,13 @@
     --amber-text: #fcd97e;
   }
   html, body { height: 100%; }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -46,6 +53,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   .tablet { max-width: 1100px; width: 100%; }
   .page-title {
@@ -141,11 +150,6 @@
   .dept-pill.dept-смп { background: #991b1b; color: #fecaca; }
   .dept-pill.dept-ит { background: #14532d; color: #bbf7d0; }
   .dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
-  /* ▼▼▼ ДОБАВЛЕНО: инструкторские отделы ▼▼▼ */
-  .dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
-  .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
-  .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
-  .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
   .vac-dates {
     font-size: 0.78rem; font-weight: 500; color: var(--text-soft);
     font-variant-numeric: tabular-nums; white-space: nowrap;
@@ -431,13 +435,11 @@
 (function () {
   "use strict";
 
-const API_URL = "https://hospital-api.asdulgok.workers.dev";
+  const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
-  // ▼▼▼ ДОБАВЛЕНО: Инст ПСЭС, Инст СМП, Инст ИТ, Инст ОК ▼▼▼
-  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС", "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"];
+  const DEPARTMENTS = ["Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС"];
   const DEPT_LABEL = {
-    "Руководство":"Руководство","АБ":"АБ","ОК":"ОК","СМП":"СМП","ИТ":"ИТ","ПСЭС":"ПСЭС",
-    "Инст ПСЭС":"Инст ПСЭС", "Инст СМП":"Инст СМП", "Инст ИТ":"Инст ИТ", "Инст ОК":"Инст ОК"
+    "Руководство":"Руководство","АБ":"АБ","ОК":"ОК","СМП":"СМП","ИТ":"ИТ","ПСЭС":"ПСЭС"
   };
 
   /* Лимиты */
@@ -547,8 +549,7 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
     return Math.round((t - d) / 86400000);
   }
 
-  /* Сколько дней между двумя датами (не включая границы).
-     Например, между 1 и 31 = 29 дней. */
+  /* Сколько дней между двумя датами (не включая границы). */
   function daysBetweenStrict(a, b) {
     const da = parseDate(a), db = parseDate(b);
     if (!da || !db) return 0;
@@ -569,12 +570,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
   /* ============================================================
      ВАЛИДАЦИЯ
-     Правила:
-       1) IC: длительность ≤ 3 дня
-       2) OOC: длительность ≤ 14 дней
-       3) Суммарно IC + OOC ≤ 14 дней в окне 30 дней у одного сотрудника.
-          Окно: [start - 29 дней; end] вокруг нового отпуска, пересечение по датам.
-     Возвращает массив warnings {kind: "err"|"warn", text}.
      ============================================================ */
   function validate(v, editingRow) {
     const w = [];
@@ -612,7 +607,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
     }
 
     // --- 3) Общий лимит 14 дней IC + OOC в окне 30 дней ---
-    // Окно: 29 дней до start (включительно с самим start) → проверяем пересечение с [start - 29; end]
     const windowStart = (() => {
       const d = parseDate(v.start);
       if (!d) return v.start;
@@ -623,20 +617,16 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
     })();
     const windowEnd = v.end;
 
-    // Собираем чужие отпуска того же сотрудника, пересекающиеся с окном
     const sameName = (v.name || "").trim().toLowerCase();
     const overlapping = state.vacations.filter(x => {
       if (x.rowIndex === editingRow) return false;
       if (!sameName) return false;
       if ((x.name || "").trim().toLowerCase() !== sameName) return false;
-
-      // Пересечение [x.start; x.end] с [windowStart; windowEnd]
       if (x.end < windowStart) return false;
       if (x.start > windowEnd) return false;
       return true;
     });
 
-    // Считаем суммарное количество дней пересечения каждого отпуска с окном
     let usedDays = 0;
     overlapping.forEach(x => {
       const s = x.start > windowStart ? x.start : windowStart;
@@ -645,7 +635,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
       if (d > 0) usedDays += d;
     });
 
-    // Дней в окне от нового отпуска (только его длительность)
     const newDays = dur;
 
     if (usedDays + newDays > LIMIT_TOTAL_DAYS) {
@@ -656,7 +645,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
               (usedDays + newDays) + " дн. (макс. " + LIMIT_TOTAL_DAYS + ")."
       });
     } else if (usedDays + newDays > LIMIT_TOTAL_DAYS - 3) {
-      // предупреждение — почти упёрлись в лимит
       w.push({
         kind: "warn",
         text: "Общий лимит: за 30 дней будет " + (usedDays + newDays) +
@@ -667,7 +655,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
     return w;
   }
 
-  /* Есть ли в массиве ошибки, блокирующие сохранение */
   function hasBlockingErrors(warns) {
     return warns.some(w => w.kind === "err");
   }
@@ -741,7 +728,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
   function buildRow(v) {
     const s = v._status;
     const dur = daysBetween(v.start, v.end);
-    // ▼▼▼ ИЗМЕНЕНО: пробелы в отделе заменяются на дефис для CSS-класса ▼▼▼
     const deptCls = "dept-" + String(v.department || "").toLowerCase().replace(/\s+/g, "-");
     const initial = (v.name || "?").trim().charAt(0).toUpperCase();
 
@@ -948,7 +934,6 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
       el.className = "suggest-item";
       el.dataset.idx = i;
 
-      // ▼▼▼ ИЗМЕНЕНО: пробелы в отделе заменяются на дефис ▼▼▼
       const deptCls = "dept-" + String(s.department || "").toLowerCase().replace(/\s+/g, "-");
 
       el.innerHTML =
@@ -1086,11 +1071,9 @@ const API_URL = "https://hospital-api.asdulgok.workers.dev";
     const warns = validate(pseudo, state.editingRowIndex);
     const errs = warns.filter(w => w.kind === "err");
 
-    // Жёсткая блокировка — без "всё равно сохранить"
     if (hasBlockingErrors(warns)) {
       const msg = errs.map(w => "• " + w.text).join("\n");
       showToast("Сохранение невозможно: лимит нарушен", "alert");
-      // Обновим предупреждения в форме, чтобы было видно
       formWarnings.innerHTML = "";
       errs.forEach(w => {
         const div = document.createElement("div");

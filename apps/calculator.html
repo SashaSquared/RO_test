@@ -32,12 +32,12 @@
     background: #0d1520;
     color: var(--text);
     line-height: 1.5;
-    min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     padding: 16px 16px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
   }
 
   .tablet {
@@ -45,6 +45,10 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+
+  .tablet-body {
+    padding-bottom: 90px;
   }
 
   .card {
@@ -593,17 +597,17 @@
 
   .bottombar {
     position: sticky;
-    bottom: 0;
+    bottom: 8px;
     z-index: 30;
     width: 100%;
     margin-top: 14px;
-    background: rgba(10, 14, 20, 0.92);
+    background: rgba(10, 14, 20, 0.96);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 12px 18px;
-    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55);
   }
   .bottombar-inner {
     display: flex; flex-wrap: wrap; align-items: center;
@@ -1576,14 +1580,12 @@
     return s.role === "user";
   }
 
-  // Кто может сохранять обычный (не инструкторский) отчёт
   function canSaveRegularReport() {
     if (isCalcAdmin()) return true;
     if (isCalcUser() && !isInstructor) return true;
     return false;
   }
 
-  // Кто может сохранять инструкторский отчёт
   function canSaveInstrReport() {
     return isCalcAdmin() && isInstructor;
   }
@@ -1619,7 +1621,6 @@
       return;
     }
 
-    // Разные права для инструкторского и обычного отчёта
     if (saveInstr) {
       if (!isCalcAdmin()) {
         notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов", "alert");
@@ -1644,7 +1645,6 @@
       return;
     }
 
-    // Дополнительная проверка: user не может вносить отчёт инструктора
     if (isCalcUser()) {
       if (String(staffItem.department || "").trim() === "Инст СМП") {
         notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов", "alert");
@@ -2550,10 +2550,6 @@
       html += `<div class="report-remarks"><strong>📝 Замечания:</strong> ${escapeHtml(remarksText)}</div>`;
     }
 
-    // ─── Кнопки сохранения в недельный отчёт ───
-    // Показываем:
-    //   - admin / superadmin — всегда
-    //   - user               — только если НЕ инструктор
     const showSaveBlock = !promo && (isCalcAdmin() || (isCalcUser() && !isInstructor));
     if (showSaveBlock) {
       const canSave = fullnameInput.value.trim() !== "";
@@ -2570,7 +2566,6 @@
             'Записать в недельный отчёт' +
           '</button>';
 
-      // Кнопка инструкторского отчёта — только для admin/superadmin в режиме инструктора
       if (isCalcAdmin() && isInstructor) {
         btnsHtml +=
           '<button type="button" class="save-week-btn instr" id="saveInstrBtn" ' + weekDisabled + '>' +
@@ -2595,7 +2590,6 @@
 
     container.innerHTML = html;
 
-    // Навешиваем обработчики на кнопки сохранения
     if (showSaveBlock) {
       const btnWeek = document.getElementById('saveWeekBtn');
       if (btnWeek) btnWeek.addEventListener('click', () => saveToWeeklyReport(false));

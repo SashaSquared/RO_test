@@ -278,10 +278,11 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   const HOURS_END = 22;
   const USER_BOOKING_LIMIT = 2;
 
-  /* Автосброс: после 22:20 открываем следующий день */
+  /* Автосброс: после 22:20 открываем следующий день.
+     Эти константы нужны только чтобы локально понимать, что дата сменилась —
+     итоговую дату всё равно берём с сервера. */
   const RESET_HOUR = 22;
   const RESET_MINUTE = 20;
-  const RESET_KEY = "booking_last_reset_v2";
 
   const AUTO_REFRESH_MS = 30000;
 
@@ -304,7 +305,7 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   const state = {
     user: null,
     bookings: [],
-    activeDate: null    // "YYYY-MM-DD" — рабочая дата для бронирования
+    activeDate: null    // "YYYY-MM-DD" — берётся с сервера, локальный расчёт только для проверки смены даты
   };
 
   const $ = id => document.getElementById(id);
@@ -727,6 +728,10 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     try {
       const data = await apiPost({ action: "getReservations" });
       if (!data || !data.success) throw new Error((data && data.message) || "Сервер вернул ошибку");
+
+      // Сервер — источник правды по активной дате
+      if (data.activeDate) state.activeDate = data.activeDate;
+
       state.bookings = data.reservations || [];
       renderAll();
     } catch (err) {
@@ -774,6 +779,9 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
         notify(bookingNotification, data.message || "Не удалось забронировать", "error");
         notifyParent("Ошибка брони", data.message || "", "alert");
       } else {
+        // Сервер мог вернуть актуальную активную дату
+        if (data.activeDate) state.activeDate = data.activeDate;
+
         notify(bookingNotification, data.message || "Бронь создана", "success");
         notifyParent("Бронь создана", time + " — " + employee, "success");
         notifyParentReservationsChanged();
@@ -824,64 +832,13 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   }
 
   /* ============================================================
-   *  АВТОСБРОС В 22:20
+   *  ПРОВЕРКА СМЕНЫ АКТИВНОЙ ДАТЫ (локально + подтягиваем с сервера)
    * ============================================================ */
-  function isAfterReset() {
-    const now = new Date();
-    const h = now.getHours();
-    const m = now.getMinutes();
-    return h > RESET_HOUR || (h === RESET_HOUR && m >= RESET_MINUTE);
-  }
-
-  function shouldResetToday() {
-    if (!isAfterReset()) return false;
-    return localStorage.getItem(RESET_KEY) !== todayStr();
-  }
-
-  function markResetDone() {
-    localStorage.setItem(RESET_KEY, todayStr());
-  }
-
-  async function tryAutoReset() {
-    state.activeDate = computeActiveDate();
-
-    if (!shouldResetToday()) return false;
-
-    if (!state.user) {
-      return false;
-    }
-
-    if (state.user.role !== "admin" && state.user.role !== "superadmin") {
-      markResetDone();
-      renderAll();
-      return false;
-    }
-
-    try {
-      const data = await apiPost({
-        action: "clearReservations",
-        login: state.user.login,
-        hash: state.user.hash
-      });
-      if (data && data.success) {
-        markResetDone();
-        notify(bookingNotification, "Смена закрыта. Открыта запись на завтра.", "success");
-        notifyParent("Смена закрыта", "Открыта запись на завтра", "info");
-        notifyParentReservationsChanged();
-        await loadBookings();
-        return true;
-      }
-    } catch (e) {
-      console.error("tryAutoReset error:", e);
-    }
-    return false;
-  }
-
   async function checkResetTick() {
     const newActive = computeActiveDate();
     if (newActive !== state.activeDate) {
       state.activeDate = newActive;
-      await tryAutoReset();
+      renderAll();
       await loadBookings();
     }
   }
@@ -963,14 +920,10 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
       employeeInput.placeholder = "Имя сотрудника";
     }
 
-    tryAutoReset();
-
     setInterval(() => {
       if (document.hidden) return;
       checkResetTick();
-      if (!shouldResetToday()) {
-        loadBookings();
-      }
+      loadBookings();
     }, AUTO_REFRESH_MS);
 
     loadBookings();

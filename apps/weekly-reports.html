@@ -117,7 +117,7 @@ body {
 .tab-btn.active .count { background: rgba(47,158,68,0.35); }
 .tab-btn.tab-debtors.active .count { background: rgba(239,68,68,0.35); }
 
-/* ===== Кнопка ПРЕМИИ (внутри вкладки Топ недели) ===== */
+/* ===== Кнопка ПРЕМИИ ===== */
 .btn-bonus-open {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 18px;
@@ -241,12 +241,6 @@ body {
   color: #fff;
 }
 
-.bonus-toolbar {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-bottom: 12px;
-  align-items: center;
-}
-
 .bonus-list {
   display: flex; flex-direction: column; gap: 6px;
   margin-bottom: 14px;
@@ -318,18 +312,6 @@ body {
   transition: background .15s, color .15s;
 }
 .bonus-add-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-.bonus-summary {
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: rgba(76,177,216,0.06);
-  border-left: 3px solid var(--blue);
-  color: var(--text-soft);
-  font-size: 0.86rem;
-  margin-bottom: 14px;
-  line-height: 1.6;
-}
-.bonus-summary b { color: #fff; }
 
 .bonus-copy-bar {
   display: flex; align-items: center; justify-content: space-between;
@@ -545,7 +527,6 @@ select option { background: #0c1420; color: var(--text); }
 .tbl .col-norm { text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tbl .col-status { text-align: center; white-space: nowrap; }
 .tbl .col-actions { text-align: right; white-space: nowrap; width: 1%; }
-.tbl .col-seniority { text-align: center; color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .tbl .points-input {
   width: 90px;
@@ -1250,7 +1231,7 @@ select option { background: #0c1420; color: var(--text); }
     /* === Премии === */
     bonusModalTab: "general",
     bonusCount: 10,
-    bonusGeneralList: [],   // массив имён (в порядке показа)
+    bonusGeneralList: [],
     bonusInstrCoeff: 175,
     bonusInstrShare: 3
   };
@@ -2277,13 +2258,10 @@ select option { background: #0c1420; color: var(--text); }
     if (!isAdmin()) return;
     state.bonusModalTab = "general";
     switchBonusTab("general");
-
     $("bonusCountInput").value = String(state.bonusCount || 10);
     $("bonusGeneralResult").classList.add("hidden");
     $("bonusList").innerHTML = "";
-
     renderInstrBonusTab();
-
     $("bonusModal").classList.remove("hidden");
     setTimeout(() => $("bonusCountInput").focus(), 80);
   }
@@ -2309,16 +2287,21 @@ select option { background: #0c1420; color: var(--text); }
     }
     state.bonusCount = cnt;
 
-    // Берём топ-N по общим баллам среди СМП (ранг 5+), у кого норма выполнена
-    const candidates = getSmpStaff().map(s => {
-      const report = findReportFor(s.name);
-      const points = report ? (Number(report.points) || 0) : 0;
-      const submitted = !!report && !report.exempted;
-      const normDone = submitted && points >= NORM_SMP;
-      return { staff: s, report, points, submitted, normDone };
-    }).filter(x => x.normDone);
+    // Берём всех СМП 5+ ранга с недельным отчётом (не освобождённых),
+    // сортируем по баллам убыванием, берём топ-N.
+    const candidates = getSmpStaff()
+      .map(s => {
+        const report = findReportFor(s.name);
+        const points = report ? (Number(report.points) || 0) : 0;
+        const submitted = !!report && !report.exempted;
+        return { staff: s, report, points, submitted };
+      })
+      .filter(x => x.submitted);
 
-    candidates.sort((a, b) => b.points - a.points);
+    candidates.sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      return compareStaff(a.staff, b.staff);
+    });
 
     state.bonusGeneralList = candidates.slice(0, cnt).map(x => x.staff.name);
 
@@ -2441,7 +2424,8 @@ select option { background: #0c1420; color: var(--text); }
       return;
     }
 
-    const text = lines.join("\n");
+    // Оборачиваем в тройные обратные кавычки
+    const text = "```\n" + lines.join("\n") + "\n```";
     let ok = false;
     try { await navigator.clipboard.writeText(text); ok = true; }
     catch (e) {
@@ -2630,7 +2614,6 @@ select option { background: #0c1420; color: var(--text); }
     }
     state.user = user;
 
-    // Доступ к кнопке Премии — только admin+
     if (isAdmin()) {
       $("openBonusBtn").classList.remove("hidden");
     } else {

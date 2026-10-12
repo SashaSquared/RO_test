@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Выгрузка сотрудников</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background: #0d1520; color: #e8eef7; }
+  h1 { color: #86efac; }
+  button { padding: 12px 24px; font-size: 16px; background: #2f9e44; color: #fff; border: none; border-radius: 8px; cursor: pointer; margin-right: 10px; }
+  button:hover { background: #37b24d; }
+  #status { margin: 15px 0; padding: 10px; background: #16202e; border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+  th, td { padding: 6px 10px; border: 1px solid #26344a; text-align: left; }
+  th { background: #223147; }
+  tr:nth-child(even) { background: #111823; }
+</style>
+</head>
+<body>
+
+<h1>📤 Выгрузка сотрудников</h1>
+
+<div>
+  <button onclick="loadStaff()">🔄 Загрузить данные</button>
+  <button onclick="downloadCSV()" id="dlBtn" disabled>💾 Скачать Excel (CSV)</button>
+</div>
+
+<div id="status">Нажми «Загрузить данные», чтобы получить список сотрудников из базы.</div>
+
+<div id="tableWrap"></div>
+
+<script>
+const API_URL = "https://hospital-api.asdulgok.workers.dev";
+let staffData = [];
+
+async function loadStaff() {
+  const status = document.getElementById('status');
+  status.textContent = '⏳ Загрузка...';
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "getStaff" })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || "Ошибка");
+    staffData = data.staff || [];
+    status.textContent = '✅ Загружено: ' + staffData.length + ' сотрудников';
+    renderTable();
+    document.getElementById('dlBtn').disabled = false;
+  } catch (e) {
+    status.textContent = '❌ Ошибка: ' + e.message;
+  }
+}
+
+function renderTable() {
+  const wrap = document.getElementById('tableWrap');
+  let html = '<table><thead><tr><th>ID</th><th>Имя Фамилия</th><th>№ Паспорта</th><th>Должность</th><th>Ранг</th><th>Отдел</th></tr></thead><tbody>';
+  staffData.forEach(s => {
+    html += '<tr>' +
+      '<td>' + (s.rowIndex || '') + '</td>' +
+      '<td>' + escapeHtml(s.name || '') + '</td>' +
+      '<td>' + escapeHtml(String(s.passport || '')) + '</td>' +
+      '<td>' + escapeHtml(s.position || '') + '</td>' +
+      '<td>' + escapeHtml(String(s.rank || '')) + '</td>' +
+      '<td>' + escapeHtml(s.department || '') + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function downloadCSV() {
+  if (!staffData.length) return;
+  const rows = [['ID', 'Имя Фамилия', '№ Паспорта', 'Должность', 'Ранг', 'Отдел']];
+  staffData.forEach(s => {
+    rows.push([
+      s.rowIndex || '',
+      s.name || '',
+      s.passport || '',
+      s.position || '',
+      s.rank || '',
+      s.department || ''
+    ]);
+  });
+  const csv = '\uFEFF' + rows.map(r => r.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(';')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'staff_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>

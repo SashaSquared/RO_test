@@ -294,10 +294,12 @@ body {
   grid-template-columns: 1fr auto;
   gap: 8px;
   margin-bottom: 16px;
+  position: relative;
 }
+.bonus-add-row input,
 .bonus-add-row select {
-  padding: 10px 34px 10px 12px;
-  font-size: 0.86rem;
+  padding: 10px 12px;
+  font-size: 0.9rem;
 }
 .bonus-add-btn {
   padding: 10px 16px;
@@ -312,6 +314,35 @@ body {
   transition: background .15s, color .15s;
 }
 .bonus-add-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.bonus-add-suggest {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--panel-2);
+  border: 1px solid var(--accent-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px;
+  display: none;
+}
+.bonus-add-suggest.open { display: block; }
+.bonus-add-suggest .s-item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 8px 10px;
+  border-radius: 6px; cursor: pointer;
+  transition: background .12s;
+  font-size: 0.86rem;
+}
+.bonus-add-suggest .s-item:hover { background: var(--accent-bg); }
+.bonus-add-suggest .s-name { font-weight: 600; color: #fff; }
+.bonus-add-suggest .s-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.bonus-add-suggest .s-pass { color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bonus-add-suggest .s-empty { padding: 10px; color: var(--muted); font-size: 0.8rem; text-align: center; }
 
 .bonus-copy-bar {
   display: flex; align-items: center; justify-content: space-between;
@@ -549,6 +580,21 @@ select option { background: #0c1420; color: var(--text); }
 .tbl .points-input.dirty {
   border-color: var(--amber);
   box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+}
+
+.tbl .seniority-input {
+  width: 90px;
+  padding: 6px 10px;
+  font-size: 0.9rem; font-weight: 700; text-align: center;
+  background: #0d1520;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #86efac;
+  font-variant-numeric: tabular-nums;
+}
+.tbl .seniority-input:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(47,158,68,0.2);
 }
 
 .points-cell { display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
@@ -1060,7 +1106,7 @@ select option { background: #0c1420; color: var(--text); }
     <div class="modal-bonus-body">
       <!-- =============== ВКЛАДКА: ОБЩАЯ ПРЕМИЯ =============== -->
       <div id="bonusTabGeneral">
-        <div class="bonus-section-title">Сколько премий разыгрывается на этой неделе?</div>
+        <div class="bonus-section-title">Сколько премий выдать на этой неделе</div>
         <div class="bonus-instr-input-row">
           <input type="number" id="bonusCountInput" min="1" step="1" placeholder="Например: 10" value="10">
           <button class="btn-primary btn" id="bonusConfirmBtn" type="button" style="padding:10px 20px;font-weight:700;">
@@ -1074,8 +1120,9 @@ select option { background: #0c1420; color: var(--text); }
 
           <div class="bonus-section-title">Добавить сотрудника вручную</div>
           <div class="bonus-add-row">
-            <select id="bonusAddSelect"></select>
+            <input type="text" id="bonusAddInput" placeholder="Начните вводить имя или паспорт…" autocomplete="off">
             <button class="bonus-add-btn" id="bonusAddBtn" type="button">+ Добавить</button>
+            <div id="bonusAddSuggest" class="bonus-add-suggest"></div>
           </div>
 
           <div class="bonus-copy-bar">
@@ -1379,13 +1426,23 @@ select option { background: #0c1420; color: var(--text); }
   }
   function readSenioritySmp(name) {
     const key = seniorityKeySmp(name);
-    try { const v = localStorage.getItem(key); if (v) return v; } catch (e) {}
+    try { const v = localStorage.getItem(key); if (v !== null) return v; } catch (e) {}
     try {
       const topLs = getTopStorageSmp();
-      if (topLs) { const v = topLs.getItem(key); if (v) return v; }
+      if (topLs) { const v = topLs.getItem(key); if (v !== null) return v; }
     } catch (e) {}
-    try { const v = sessionStorage.getItem(key); if (v) return v; } catch (e) {}
+    try { const v = sessionStorage.getItem(key); if (v !== null) return v; } catch (e) {}
     return "";
+  }
+  function writeSenioritySmp(name, val) {
+    const key = seniorityKeySmp(name);
+    const v = String(val == null ? "" : val).trim();
+    try { v === "" ? localStorage.removeItem(key) : localStorage.setItem(key, v); } catch (e) {}
+    try {
+      const topLs = getTopStorageSmp();
+      if (topLs) { v === "" ? topLs.removeItem(key) : topLs.setItem(key, v); }
+    } catch (e) {}
+    try { v === "" ? sessionStorage.removeItem(key) : sessionStorage.setItem(key, v); } catch (e) {}
   }
 
   async function loadAll() {
@@ -1590,7 +1647,12 @@ select option { background: #0c1420; color: var(--text); }
         '<td class="col-name">' + esc(x.staff.name) + '</td>' +
         '<td class="col-pass col-hide-sm">' + esc(x.staff.passport || "—") + '</td>' +
         '<td class="col-rank">' + esc(x.staff.rank || "—") + '</td>' +
-        '<td class="col-hide-sm" style="text-align:center;color:#86efac;font-weight:700;">' + (seniorityVal ? esc(seniorityVal) : "—") + '</td>' +
+        '<td class="col-hide-sm" style="text-align:center;">' +
+          (canEdit
+            ? '<input type="number" min="0" step="1" class="seniority-input" data-name="' + esc(x.staff.name) + '" value="' + esc(seniorityVal) + '" placeholder="0">'
+            : '<span style="color:#86efac;font-weight:700;">' + (seniorityVal || "—") + '</span>'
+          ) +
+        '</td>' +
         '<td class="col-points">' +
           '<div class="points-cell">' +
             '<input type="number" min="0" class="points-input" data-name="' + esc(x.staff.name) + '" value="' + (points === "" ? "" : points) + '" ' + (canEdit ? '' : 'readonly') + '>' +
@@ -1643,6 +1705,13 @@ select option { background: #0c1420; color: var(--text); }
       cont.querySelectorAll('.save-btn').forEach(btn => {
         btn.addEventListener('click', onSaveClick);
       });
+      cont.querySelectorAll('.seniority-input').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+          const name = e.target.dataset.name;
+          const val = e.target.value;
+          writeSenioritySmp(name, val);
+        });
+      });
     }
   }
 
@@ -1680,6 +1749,7 @@ select option { background: #0c1420; color: var(--text); }
         '<th>Имя</th>' +
         '<th class="col-hide-sm">Паспорт</th>' +
         '<th class="col-rank">Ранг</th>' +
+        '<th class="col-hide-sm" style="text-align:center;">Выслуга лет</th>' +
         '<th class="col-points">Общие</th>' +
         '<th class="col-points">Инстр.</th>' +
         '<th class="col-norm">Норма</th>' +
@@ -1693,11 +1763,20 @@ select option { background: #0c1420; color: var(--text); }
       const points = x.report ? (x.report.points || 0) : "";
       const instr = x.report ? (x.report.instrPoints || 0) : "";
 
+      let seniorityVal = (x.report && x.report.seniority) ? String(x.report.seniority) : "";
+      if (!seniorityVal) seniorityVal = readSenioritySmp(x.staff.name);
+
       tr.innerHTML =
         '<td class="col-num">' + (i + 1) + '</td>' +
         '<td class="col-name">' + esc(x.staff.name) + '</td>' +
         '<td class="col-pass col-hide-sm">' + esc(x.staff.passport || "—") + '</td>' +
         '<td class="col-rank">' + esc(x.staff.rank || "—") + '</td>' +
+        '<td class="col-hide-sm" style="text-align:center;">' +
+          (canEdit
+            ? '<input type="number" min="0" step="1" class="seniority-input" data-name="' + esc(x.staff.name) + '" value="' + esc(seniorityVal) + '" placeholder="0">'
+            : '<span style="color:#86efac;font-weight:700;">' + (seniorityVal || "—") + '</span>'
+          ) +
+        '</td>' +
         '<td class="col-points">' +
           '<input type="number" min="0" class="points-input" data-name="' + esc(x.staff.name) + '" data-field="points" value="' + (points === "" ? "" : points) + '" ' + (canEdit ? '' : 'readonly') + '>' +
         '</td>' +
@@ -1752,6 +1831,13 @@ select option { background: #0c1420; color: var(--text); }
       });
       cont.querySelectorAll('.save-btn').forEach(btn => {
         btn.addEventListener('click', onSaveClick);
+      });
+      cont.querySelectorAll('.seniority-input').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+          const name = e.target.dataset.name;
+          const val = e.target.value;
+          writeSenioritySmp(name, val);
+        });
       });
     }
   }
@@ -2261,6 +2347,8 @@ select option { background: #0c1420; color: var(--text); }
     $("bonusCountInput").value = String(state.bonusCount || 10);
     $("bonusGeneralResult").classList.add("hidden");
     $("bonusList").innerHTML = "";
+    $("bonusAddInput").value = "";
+    $("bonusAddSuggest").classList.remove("open");
     renderInstrBonusTab();
     $("bonusModal").classList.remove("hidden");
     setTimeout(() => $("bonusCountInput").focus(), 80);
@@ -2287,9 +2375,11 @@ select option { background: #0c1420; color: var(--text); }
     }
     state.bonusCount = cnt;
 
-    // Берём всех СМП 5+ ранга с недельным отчётом (не освобождённых),
-    // сортируем по баллам убыванием, берём топ-N.
-    const candidates = getSmpStaff()
+    // Берём всех сотрудников СМП (5+) + Инст СМП с недельным отчётом,
+    // сортируем по общим баллам убыванием, берём топ-N.
+    const allCandidates = [...getSmpStaff(), ...getInstrStaff()];
+
+    const candidates = allCandidates
       .map(s => {
         const report = findReportFor(s.name);
         const points = report ? (Number(report.points) || 0) : 0;
@@ -2351,51 +2441,78 @@ select option { background: #0c1420; color: var(--text); }
     }
 
     $("bonusListCount").textContent = String(state.bonusGeneralList.length);
-    updateAddSelect();
   }
 
-  function updateAddSelect() {
-    const sel = $("bonusAddSelect");
-    sel.innerHTML = "";
+  /* Пул для ручного добавления: СМП 5+ + Инст СМП */
+  function getBonusPool() {
+    return [...getSmpStaff(), ...getInstrStaff()];
+  }
 
-    const available = getSmpStaff().filter(s =>
-      !state.bonusGeneralList.some(n =>
-        String(n).trim().toLowerCase() === String(s.name).trim().toLowerCase()
-      )
+  function nrm(s) { return String(s || "").trim().toLowerCase(); }
+
+  function renderAddSuggest(query) {
+    const box = $("bonusAddSuggest");
+    const q = nrm(query);
+    if (!q) { box.classList.remove("open"); box.innerHTML = ""; return; }
+
+    const pool = getBonusPool().filter(s =>
+      !state.bonusGeneralList.some(n => nrm(n) === nrm(s.name))
     );
 
-    if (!available.length) {
-      const o = document.createElement("option");
-      o.value = "";
-      o.textContent = "Нет доступных сотрудников";
-      sel.appendChild(o);
+    const matches = pool.filter(s =>
+      nrm(s.name).includes(q) || String(s.passport || "").includes(q)
+    ).slice(0, 12);
+
+    if (!matches.length) {
+      box.innerHTML = '<div class="s-empty">Никого не найдено</div>';
+      box.classList.add("open");
       return;
     }
 
-    const o0 = document.createElement("option");
-    o0.value = "";
-    o0.textContent = "— выберите сотрудника —";
-    sel.appendChild(o0);
-
-    available.forEach(s => {
-      const o = document.createElement("option");
-      o.value = s.name;
-      o.textContent = s.name + ' · ' + (s.passport || "—") + ' · ' + (s.rank || "—");
-      sel.appendChild(o);
+    box.innerHTML = "";
+    matches.forEach(s => {
+      const el = document.createElement("div");
+      el.className = "s-item";
+      el.innerHTML =
+        '<div style="min-width:0;">' +
+          '<div class="s-name">' + esc(s.name) + '</div>' +
+          '<div class="s-sub">' + esc(s.rank || "—") + (s.position ? ' | ' + esc(s.position) : '') + ' · ' + esc(s.department || "—") + '</div>' +
+        '</div>' +
+        '<div class="s-pass">' + esc(s.passport || "—") + '</div>';
+      el.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        $("bonusAddInput").value = s.name;
+        box.classList.remove("open");
+      });
+      box.appendChild(el);
     });
+    box.classList.add("open");
   }
 
   function addEmployeeToBonusList() {
-    const sel = $("bonusAddSelect");
-    const name = sel.value;
-    if (!name) {
-      showToast("Выберите сотрудника", "alert");
+    const input = $("bonusAddInput");
+    const raw = String(input.value || "").trim();
+    if (!raw) { showToast("Введите имя сотрудника", "alert"); return; }
+
+    const pool = getBonusPool();
+
+    let s = pool.find(x => nrm(x.name) === nrm(raw));
+    if (!s) s = pool.find(x => String(x.passport || "") === raw);
+    if (!s) s = pool.find(x => nrm(x.name).includes(nrm(raw)));
+
+    if (!s) { showToast("Сотрудник не найден", "alert"); return; }
+
+    if (state.bonusGeneralList.some(n => nrm(n) === nrm(s.name))) {
+      showToast("Уже в списке", "info");
+      input.value = "";
+      $("bonusAddSuggest").classList.remove("open");
       return;
     }
-    if (!state.bonusGeneralList.some(n => String(n).toLowerCase() === name.toLowerCase())) {
-      state.bonusGeneralList.push(name);
-      renderGeneralBonusList();
-    }
+
+    state.bonusGeneralList.push(s.name);
+    input.value = "";
+    $("bonusAddSuggest").classList.remove("open");
+    renderGeneralBonusList();
   }
 
   async function copyGeneralBonusList() {
@@ -2413,7 +2530,13 @@ select option { background: #0c1420; color: var(--text); }
       const rankNum = parseRank(s.rank);
       const rankStr = "Ранг " + (rankNum > 0 ? rankNum : (s.rank || "—"));
       const position = s.position || "—";
-      const seniority = readSenioritySmp(s.name) || "0";
+
+      // Выслуга: сначала из отчёта (пришла из калькулятора), затем из localStorage
+      let seniority = "";
+      const rep = findReportFor(s.name);
+      if (rep && rep.seniority) seniority = String(rep.seniority).trim();
+      if (!seniority) seniority = readSenioritySmp(s.name) || "0";
+
       const passport = s.passport || "—";
 
       return s.name + "." + passport + "." + rankStr + " | " + position + "." + seniority;
@@ -2424,7 +2547,6 @@ select option { background: #0c1420; color: var(--text); }
       return;
     }
 
-    // Оборачиваем в тройные обратные кавычки
     const text = "```\n" + lines.join("\n") + "\n```";
     let ok = false;
     try { await navigator.clipboard.writeText(text); ok = true; }
@@ -2669,6 +2791,24 @@ select option { background: #0c1420; color: var(--text); }
 
     $("bonusConfirmBtn").addEventListener("click", confirmBonusCount);
     $("bonusAddBtn").addEventListener("click", addEmployeeToBonusList);
+
+    // Живое автодополнение для поля добавления
+    const addInp = $("bonusAddInput");
+    addInp.addEventListener("input", () => renderAddSuggest(addInp.value));
+    addInp.addEventListener("focus", () => { if (addInp.value.trim()) renderAddSuggest(addInp.value); });
+    addInp.addEventListener("blur", () => {
+      setTimeout(() => $("bonusAddSuggest").classList.remove("open"), 150);
+    });
+    addInp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); addEmployeeToBonusList(); }
+      if (e.key === "Escape") $("bonusAddSuggest").classList.remove("open");
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".bonus-add-row")) {
+        $("bonusAddSuggest").classList.remove("open");
+      }
+    });
+
     $("copyGeneralBonusBtn").addEventListener("click", copyGeneralBonusList);
 
     $("instrCoeff").addEventListener("change", renderInstrBonusTab);

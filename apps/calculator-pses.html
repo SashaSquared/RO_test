@@ -844,7 +844,7 @@
       <div class="bottombar-inner">
         <div class="bottombar-buttons">
           <button class="btn" onclick="generateReport()">📄 Сформировать отчёт</button>
-          <button class="btn save-week-btn" id="saveWeekBtn">
+          <button class="btn save-week-btn hidden" id="saveWeekBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
               <polyline points="17 21 17 13 7 13 7 21"/>
@@ -1099,14 +1099,12 @@ let showLunch = false;
 let extras = [];
 
 /* ============================================================
-   МОСТ "ВЫСЛУГА ЛЕТ":
-   пишем в localStorage текущего окна + localStorage родителя (index.html)
-   + sessionStorage. Читаем в таком же порядке.
+   МОСТ "ВЫСЛУГА ЛЕТ"
    ============================================================ */
 function getTopStorage() {
   try {
     if (window.top && window.top !== window) return window.top.localStorage;
-  } catch (e) { /* cross-origin — игнор */ }
+  } catch (e) {}
   return null;
 }
 
@@ -1119,13 +1117,11 @@ function writeSeniorityEverywhere(name, value) {
   const key = seniorityKey(name);
   const val = String(value == null ? "" : value).trim();
 
-  // 1) Свой localStorage
   try {
     if (val === "") localStorage.removeItem(key);
     else localStorage.setItem(key, val);
   } catch (e) {}
 
-  // 2) localStorage родителя
   try {
     const topLs = getTopStorage();
     if (topLs) {
@@ -1134,7 +1130,6 @@ function writeSeniorityEverywhere(name, value) {
     }
   } catch (e) {}
 
-  // 3) sessionStorage туда же
   try {
     if (val === "") sessionStorage.removeItem(key);
     else sessionStorage.setItem(key, val);
@@ -1635,10 +1630,17 @@ function toggleMode(){
   const showInstr = weekly && isInstructor.checked;
   instrCard.classList.toggle('hidden', !showInstr);
 
+  // Кнопка "Записать в отчёт" — только для режима "Недельный отчёт"
+  // и только для ролей admin / superadmin.
+  if (saveWeekBtn) {
+    const role = getCalcRole();
+    const canSave = weekly && (role === "admin" || role === "superadmin");
+    saveWeekBtn.classList.toggle("hidden", !canSave);
+  }
+
   if (weekly) {
     exam.checked = false;
     penalty.checked = false;
-    // Подтянем сохранённую выслугу для уже введённого имени
     if (fullname.value.trim()) fillSeniorityFromStorage(fullname.value.trim());
   } else {
     isInstructor.checked = false;
@@ -1920,7 +1922,6 @@ async function saveToWeeklyReport() {
     return;
   }
 
-  // ГАРАНТИРОВАННО записываем выслугу перед сохранением
   syncSeniorityToStorage();
 
   const r = calc();
@@ -2148,11 +2149,9 @@ if (saveWeekBtn) {
 
 fullname.addEventListener("input", updateSaveButtonState);
 
-/* ВЫСЛУГА ЛЕТ — слушатели */
 seniority.addEventListener("input", syncSeniorityToStorage);
 seniority.addEventListener("change", syncSeniorityToStorage);
 fullname.addEventListener("change", () => {
-  // при смене имени подтянуть сохранённую выслугу
   fillSeniorityFromStorage(fullname.value.trim());
 });
 

@@ -117,97 +117,6 @@ body {
 .tab-btn.active .count { background: rgba(47,158,68,0.35); }
 .tab-btn.tab-debtors.active .count { background: rgba(239,68,68,0.35); }
 
-/* ===== Вкладка ПРЕМИИ ===== */
-.tab-btn.tab-bonus.active {
-  background: linear-gradient(135deg, rgba(251,191,36,0.18), rgba(217,119,6,0.14));
-  border-color: rgba(251,191,36,0.55);
-  color: #fcd34d;
-}
-.tab-btn.tab-bonus.active .count { background: rgba(251,191,36,0.35); }
-
-.bonus-row {
-  background: rgba(47,158,68,0.08) !important;
-  border-left: 3px solid rgba(47,158,68,0.6);
-}
-.bonus-row:hover {
-  background: rgba(47,158,68,0.14) !important;
-}
-.bonus-row .col-name {
-  color: #86efac;
-  font-weight: 700;
-}
-.bonus-row .col-points {
-  color: #86efac;
-  font-weight: 800;
-}
-.bonus-row.picked {
-  background: rgba(251,191,36,0.12) !important;
-  border-left-color: #fbbf24;
-}
-.bonus-row.picked .col-name { color: #fcd34d; }
-.bonus-row.picked .col-points { color: #fcd34d; }
-
-.seniority-input {
-  width: 90px;
-  padding: 5px 10px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-align: center;
-  background: #0d1520;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: #fff;
-  font-variant-numeric: tabular-nums;
-}
-.seniority-input:focus {
-  border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px rgba(47,158,68,0.2);
-}
-
-.bonus-check {
-  width: 20px; height: 20px;
-  cursor: pointer;
-  accent-color: var(--accent-2);
-  margin: 0 auto;
-  display: block;
-}
-
-.bonus-copy-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(217,119,6,0.06));
-  border: 1px solid rgba(251,191,36,0.4);
-  margin-bottom: 14px;
-}
-.bonus-copy-bar .bar-info {
-  font-size: 0.88rem;
-  color: #fcd34d;
-  font-weight: 600;
-}
-.bonus-copy-bar .bar-info b { color: #fff; font-weight: 800; }
-
-.btn-copy-bonus {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px;
-  font-size: 0.88rem; font-weight: 700;
-  font-family: inherit;
-  color: #1a1207;
-  background: linear-gradient(135deg, #fbbf24, #d97706);
-  border: none; border-radius: 10px;
-  cursor: pointer;
-  transition: filter .15s, transform .05s;
-  box-shadow: 0 4px 14px rgba(251,191,36,0.35);
-}
-.btn-copy-bonus:hover { filter: brightness(1.08); }
-.btn-copy-bonus:active { transform: scale(0.98); }
-.btn-copy-bonus:disabled {
-  opacity: 0.45; cursor: not-allowed;
-  filter: grayscale(0.4);
-}
-.btn-copy-bonus svg { width: 15px; height: 15px; }
-
 .week-bar {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
@@ -699,13 +608,6 @@ select option { background: #0c1420; color: var(--text); }
       Должники
       <span class="count" id="countDebtors">0</span>
     </button>
-    <button class="tab-btn tab-bonus hidden" data-tab="bonus" type="button" id="tabBonusBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
-      </svg>
-      Премии
-      <span class="count" id="countBonus">0</span>
-    </button>
     <button class="tab-btn" data-tab="history" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
@@ -826,36 +728,6 @@ select option { background: #0c1420; color: var(--text); }
     <div id="debtorsContainer"><div class="loading">Загрузка…</div></div>
   </div>
 
-  <!-- ============ ВКЛАДКА ПРЕМИИ (только старший состав) ============ -->
-  <div class="card hidden" id="tab-bonus">
-    <div class="card-head">
-      <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
-        </svg>
-        Премии недели — ПСЭС
-      </h2>
-      <div style="font-size:0.8rem;color:var(--muted);">
-        Зелёным — выполнившие норму. Отметьте нужных и укажите выслугу лет.
-      </div>
-    </div>
-
-    <div class="bonus-copy-bar">
-      <div class="bar-info">
-        Выбрано на премию: <b id="bonusPickedCount">0</b>
-      </div>
-      <button class="btn-copy-bonus" id="copyBonusBtn" type="button" disabled>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        Скопировать списки на премию
-      </button>
-    </div>
-
-    <div id="bonusContainer"><div class="loading">Загрузка…</div></div>
-  </div>
-
   <div class="card hidden" id="tab-history">
     <div class="card-head">
       <h2>
@@ -957,9 +829,6 @@ select option { background: #0c1420; color: var(--text); }
 
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
-  /* ============================================================
-     НАСТРОЙКИ ПСЭС
-     ============================================================ */
   const NORM_PSES = 600;
 
   const DISCORD_CHANNEL_LINK = "https://discord.com/channels/1538939092929216603/1540083930487726160";
@@ -976,9 +845,7 @@ select option { background: #0c1420; color: var(--text); }
     weekList: [],
     historyReports: [],
     activeTab: "current",
-    exemptTarget: null,
-    bonusSelected: new Set(),   // имена выбранных на премию
-    bonusSeniority: {}          // name -> выслуга лет
+    exemptTarget: null
   };
 
   const $ = (id) => document.getElementById(id);
@@ -1129,7 +996,6 @@ select option { background: #0c1420; color: var(--text); }
     renderCurrentTab();
     renderTopTab();
     renderDebtorsTab();
-    renderBonusTab();
     renderHistoryTab();
   }
 
@@ -1205,9 +1071,6 @@ select option { background: #0c1420; color: var(--text); }
     $("weekStatusText").textContent = open ? "🟢 Приём открыт" : "📝 Приём ещё не открыт";
   }
 
-  /* ============================================================
-     ВЫБОРКА СОТРУДНИКОВ ПСЭС
-     ============================================================ */
   function isPsesDept(d) {
     return d === "ПСЭС" || d === "Инст ПСЭС";
   }
@@ -1260,9 +1123,6 @@ select option { background: #0c1420; color: var(--text); }
     return '<span class="status-pill ' + s.cls + '">' + s.label + '</span>';
   }
 
-  /* ============================================================
-     ТЕКУЩАЯ НЕДЕЛЯ
-     ============================================================ */
   function renderCurrentTab() {
     const q = ($("searchPses").value || "").trim().toLowerCase();
     const filterSt = $("filterStatusPses").value;
@@ -1298,6 +1158,7 @@ select option { background: #0c1420; color: var(--text); }
         '<th>Имя</th>' +
         '<th class="col-hide-sm">Паспорт</th>' +
         '<th class="col-rank">Ранг</th>' +
+        '<th class="col-hide-sm" style="text-align:center;">Выслуга лет</th>' +
         '<th class="col-dept col-hide-sm">Отдел</th>' +
         '<th class="col-points">Баллы</th>' +
         '<th class="col-norm">Норма</th>' +
@@ -1313,11 +1174,20 @@ select option { background: #0c1420; color: var(--text); }
       const points = x.report ? (x.report.points || 0) : "";
       const deptCls = "dept-" + String(x.staff.department || "").toLowerCase().replace(/\s+/g, "-");
 
+      // Выслуга: сначала из отчёта, иначе из localStorage
+      let seniorityVal = (x.report && x.report.seniority) ? x.report.seniority : "";
+      if (!seniorityVal) {
+        try {
+          seniorityVal = localStorage.getItem('pses_seniority_' + String(x.staff.name).trim().toLowerCase()) || "";
+        } catch (e) { seniorityVal = ""; }
+      }
+
       tr.innerHTML =
         '<td class="col-num">' + (i + 1) + '</td>' +
         '<td class="col-name">' + esc(x.staff.name) + '</td>' +
         '<td class="col-pass col-hide-sm">' + esc(x.staff.passport || "—") + '</td>' +
         '<td class="col-rank">' + esc(x.staff.rank || "—") + '</td>' +
+        '<td class="col-hide-sm" style="text-align:center;color:#86efac;font-weight:700;">' + (seniorityVal || "—") + '</td>' +
         '<td class="col-dept col-hide-sm"><span class="dept-pill ' + deptCls + '">' + esc(x.staff.department || "—") + '</span></td>' +
         '<td class="col-points">' +
           '<div class="points-cell">' +
@@ -1457,7 +1327,6 @@ select option { background: #0c1420; color: var(--text); }
         renderCurrentTab();
         renderTopTab();
         renderDebtorsTab();
-        renderBonusTab();
       } else {
         showToast(data.message || "Ошибка сохранения", "alert");
         btn.innerHTML = oldHtml;
@@ -1533,7 +1402,6 @@ select option { background: #0c1420; color: var(--text); }
         renderCurrentTab();
         renderTopTab();
         renderDebtorsTab();
-        renderBonusTab();
       } else {
         showToast(data.message || "Ошибка", "alert");
       }
@@ -1561,7 +1429,6 @@ select option { background: #0c1420; color: var(--text); }
         renderCurrentTab();
         renderTopTab();
         renderDebtorsTab();
-        renderBonusTab();
       } else {
         showToast(data.message || "Ошибка", "alert");
       }
@@ -1609,9 +1476,6 @@ select option { background: #0c1420; color: var(--text); }
     }
   }
 
-  /* ============================================================
-     ТОП НЕДЕЛИ
-     ============================================================ */
   function renderTopTab() {
     renderTopInto("topPses", "topInstrPses", state.reports);
   }
@@ -1702,9 +1566,6 @@ select option { background: #0c1420; color: var(--text); }
     return row;
   }
 
-  /* ============================================================
-     ДОЛЖНИКИ
-     ============================================================ */
   function renderDebtorsTab() {
     if (!isAdmin()) {
       $("tabDebtorsBtn").classList.add("hidden");
@@ -1842,182 +1703,6 @@ select option { background: #0c1420; color: var(--text); }
     cont.appendChild(table);
   }
 
-  /* ============================================================
-     ПРЕМИИ (только старший состав)
-     ============================================================ */
-  function renderBonusTab() {
-    if (!isAdmin()) {
-      $("tabBonusBtn").classList.add("hidden");
-      const activeBtn = document.querySelector('.tab-btn[data-tab="bonus"]');
-      if (activeBtn && activeBtn.classList.contains("active")) switchTab("current");
-      return;
-    }
-    $("tabBonusBtn").classList.remove("hidden");
-
-    // Только ПСЭС + Инст ПСЭС, у кого сдан недельник и набрана норма
-    const list = getPsesStaff().map(s => {
-      const report = findReportFor(s.name);
-      return { staff: s, report };
-    }).filter(x => {
-      if (!x.report) return false;
-      if (x.report.exempted) return false;
-      const points = Number(x.report.points) || 0;
-      return points >= NORM_PSES;
-    }).sort((a, b) =>
-      (Number(b.report.points) || 0) - (Number(a.report.points) || 0)
-    );
-
-    $("countBonus").textContent = String(list.length);
-
-    const cont = $("bonusContainer");
-    if (!list.length) {
-      cont.innerHTML = '<div class="empty">Никто не выполнил норму на этой неделе</div>';
-      updateBonusBar();
-      return;
-    }
-
-    const table = document.createElement("table");
-    table.className = "tbl";
-    table.innerHTML =
-      '<thead><tr>' +
-        '<th class="col-num">#</th>' +
-        '<th>Имя</th>' +
-        '<th class="col-hide-sm">Паспорт</th>' +
-        '<th class="col-rank">Ранг | Должность</th>' +
-        '<th class="col-points">Баллы</th>' +
-        '<th class="col-num">Выслуга лет</th>' +
-        '<th class="col-status" style="width:110px;">На премию</th>' +
-      '</tr></thead>';
-
-    const tbody = document.createElement("tbody");
-    list.forEach((x, i) => {
-      const tr = document.createElement("tr");
-      tr.className = "bonus-row";
-      const points = Number(x.report.points) || 0;
-      const name = x.staff.name;
-      const seniority = state.bonusSeniority[name] !== undefined ? state.bonusSeniority[name] : "";
-      const picked = state.bonusSelected.has(name);
-      if (picked) tr.classList.add("picked");
-
-      tr.innerHTML =
-        '<td class="col-num">' + (i + 1) + '</td>' +
-        '<td class="col-name">' + esc(name) + '</td>' +
-        '<td class="col-pass col-hide-sm">' + esc(x.staff.passport || "—") + '</td>' +
-        '<td class="col-rank">' + esc(x.staff.rank || "—") + ' | ' + esc(x.staff.position || "—") + '</td>' +
-        '<td class="col-points">' + points + '</td>' +
-        '<td class="col-num" style="text-align:center;">' +
-          '<input type="number" min="0" step="1" class="seniority-input" ' +
-                 'data-name="' + esc(name) + '" value="' + esc(seniority) + '" placeholder="0">' +
-        '</td>' +
-        '<td class="col-status" style="text-align:center;">' +
-          '<input type="checkbox" class="bonus-check" data-name="' + esc(name) + '"' + (picked ? ' checked' : '') + '>' +
-        '</td>';
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    cont.innerHTML = "";
-    cont.appendChild(table);
-
-    // Слушатели
-    cont.querySelectorAll(".seniority-input").forEach(inp => {
-      inp.addEventListener("input", (e) => {
-        const name = e.target.dataset.name;
-        const val = e.target.value;
-        if (val === "") delete state.bonusSeniority[name];
-        else state.bonusSeniority[name] = val;
-      });
-    });
-
-    cont.querySelectorAll(".bonus-check").forEach(cb => {
-      cb.addEventListener("change", (e) => {
-        const name = e.target.dataset.name;
-        const row = e.target.closest("tr");
-        if (e.target.checked) {
-          state.bonusSelected.add(name);
-          row.classList.add("picked");
-        } else {
-          state.bonusSelected.delete(name);
-          row.classList.remove("picked");
-        }
-        updateBonusBar();
-      });
-    });
-
-    updateBonusBar();
-  }
-
-  function updateBonusBar() {
-    const cnt = state.bonusSelected.size;
-    const cntEl = $("bonusPickedCount");
-    if (cntEl) cntEl.textContent = String(cnt);
-    const btn = $("copyBonusBtn");
-    if (btn) btn.disabled = cnt === 0;
-  }
-
-  async function copyBonusList() {
-    if (!state.bonusSelected.size) {
-      showToast("Выберите хотя бы одного сотрудника", "alert");
-      return;
-    }
-
-    const lines = [];
-    // сохраняем порядок как в отсортированном списке (по баллам)
-    const order = getPsesStaff()
-      .map(s => s.name)
-      .filter(n => state.bonusSelected.has(n));
-
-    order.forEach(name => {
-      const staffItem = state.staff.find(s =>
-        String(s.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
-      );
-      if (!staffItem) return;
-
-      const rankNum = parseRank(staffItem.rank);
-      const rankStr = rankNum > 0 ? ("Ранг " + rankNum) : ("Ранг " + (staffItem.rank || "—"));
-      const position = staffItem.position || "—";
-      const seniority = state.bonusSeniority[name] || "0";
-      const passport = staffItem.passport || "—";
-
-      lines.push(
-        staffItem.name + "." + passport + "." + rankStr + " | " + position + "." + seniority
-      );
-    });
-
-    if (!lines.length) {
-      showToast("Нет выбранных сотрудников", "alert");
-      return;
-    }
-
-    const text = lines.join("\n");
-
-    let ok = false;
-    try {
-      await navigator.clipboard.writeText(text);
-      ok = true;
-    } catch (e) {
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-        ok = true;
-      } catch (e2) { ok = false; }
-    }
-
-    if (ok) {
-      showToast("Список на премию скопирован (" + lines.length + " чел.)", "success");
-    } else {
-      showToast("Не удалось скопировать", "alert");
-    }
-  }
-
-  /* ============================================================
-     ИСТОРИЯ
-     ============================================================ */
   function renderHistoryTab() {
     const sel = $("weekSelect");
     sel.innerHTML = "";
@@ -2067,9 +1752,7 @@ select option { background: #0c1420; color: var(--text); }
     $("tab-current").classList.toggle("hidden", tab !== "current");
     $("tab-top").classList.toggle("hidden", tab !== "top");
     $("tab-debtors").classList.toggle("hidden", tab !== "debtors");
-    $("tab-bonus").classList.toggle("hidden", tab !== "bonus");
     $("tab-history").classList.toggle("hidden", tab !== "history");
-    if (tab === "bonus") renderBonusTab();
   }
 
   const toastEl = $("toast");
@@ -2136,10 +1819,6 @@ select option { background: #0c1420; color: var(--text); }
     $("weekSelect").addEventListener("change", () => {
       loadHistoryReports($("weekSelect").value);
     });
-
-    // Премии
-    const copyBonusBtnEl = $("copyBonusBtn");
-    if (copyBonusBtnEl) copyBonusBtnEl.addEventListener("click", copyBonusList);
 
     loadAll();
   }

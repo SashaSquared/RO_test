@@ -271,9 +271,6 @@
   .act-name { font-weight: 500; }
   .act-note { display: block; font-size: 0.7rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
 
-  /* ============================================================
-     ПЕРЕКЛЮЧАТЕЛЬ ОБЕДА
-     ============================================================ */
   .lunch-toggle-wrap {
     display: flex;
     justify-content: center;
@@ -391,7 +388,6 @@
     50%      { box-shadow: 0 6px 24px rgba(245, 158, 11, 0.5); }
   }
 
-  /* Lunch card */
   .card.lunch {
     border-color: var(--lunch-border);
     background: linear-gradient(180deg, rgba(245, 158, 11, 0.06) 0%, var(--panel-2) 100%);
@@ -410,7 +406,6 @@
   .card.lunch h2 .h-icon svg { color: var(--lunch); }
   .card.lunch td .sum { color: var(--lunch-text); }
 
-  /* Subs */
   .subs-grid { display: grid; gap: 10px; }
   .sub-row {
     display: grid;
@@ -450,7 +445,6 @@
   .sub-info b { color: #fff; }
   .sub-info .sub-title { font-weight: 700; margin-bottom: 4px; display: block; }
 
-  /* Extras */
   .extras-list { display: flex; flex-wrap: wrap; gap: 8px; }
   .extra-item {
     display: inline-flex; align-items: center; gap: 6px;
@@ -514,7 +508,6 @@
   }
   .extra-total.visible { display: block; }
 
-  /* Warnings */
   .bodi-info { margin-top: 10px; color: var(--muted); font-size: 0.78rem; }
   .bodi-warn {
     margin-top: 10px; padding: 10px 14px;
@@ -533,7 +526,6 @@
     font-size: 0.82rem; line-height: 1.5;
   }
 
-  /* Progress */
   .progress { height: 8px; background: var(--panel-3); border-radius: 999px; overflow: hidden; margin: 4px 0 12px; }
   .fill {
     height: 100%;
@@ -550,7 +542,6 @@
   }
   .progress-label .val { color: #fff; font-weight: 600; }
 
-  /* Requirements */
   .req-list { display: grid; gap: 6px; }
   .req-row {
     display: flex; align-items: center; gap: 12px;
@@ -571,7 +562,6 @@
   .req-row.no  .val { color: var(--red-text); }
   .req-row.sub .val, .req-row.extra .val { color: var(--accent-2); }
 
-  /* Big total */
   .total-box {
     text-align: center;
     padding: 18px 14px;
@@ -595,7 +585,6 @@
     margin-top: 6px;
   }
 
-  /* Remarks */
   .remark-buttons {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -622,7 +611,6 @@
     font-weight: 600;
   }
 
-  /* Report output */
   #visualReport {
     margin-top: 14px;
     background: #0d1520;
@@ -728,7 +716,6 @@
     min-height: 140px;
   }
 
-  /* Bottom bar */
   .bottombar {
     position: sticky;
     bottom: 0;
@@ -770,7 +757,6 @@
   .summary-item .mark.bad { color: var(--red-text); }
   .summary-item .norm { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
 
-  /* Buttons */
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
     gap: 6px; padding: 10px 16px;
@@ -794,7 +780,6 @@
     box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.35);
   }
 
-  /* Кнопка сохранения в нижней панели */
   .save-week-btn {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
@@ -813,7 +798,6 @@
     to { transform: rotate(360deg); }
   }
 
-  /* Draft badge */
   .draft-badge {
     position: fixed;
     top: 12px;
@@ -836,7 +820,6 @@
   .draft-badge.show { display: flex; opacity: 1; }
   .draft-badge svg { width: 12px; height: 12px; }
 
-  /* Exam topic box */
   .topic-box {
     margin-top: 12px;
     padding: 10px 14px;
@@ -1423,9 +1406,30 @@ const saveWeekBtn    = $('saveWeekBtn');
 let showLunch = false;
 let extras = [];
 
+/* ============ МОСТ ВЫСЛУГИ ЛЕТ (общий с weekly-reports-pses) ============ */
+function seniorityStorageKey(name) {
+  return "pses_seniority_" + String(name || "").trim().toLowerCase();
+}
+function fillSeniorityFromStorage(name) {
+  try {
+    const saved = localStorage.getItem(seniorityStorageKey(name));
+    if (saved !== null) seniority.value = saved;
+  } catch (e) {}
+}
+function syncSeniorityToStorage() {
+  const nm = String(fullname.value || "").trim().toLowerCase();
+  if (!nm) return;
+  try {
+    const v = String(seniority.value || "").trim();
+    if (v === "") localStorage.removeItem(seniorityStorageKey(nm));
+    else localStorage.setItem(seniorityStorageKey(nm), v);
+  } catch (e) {}
+}
+
 attachAutocomplete(fullname, $('acName'), filterByName, s => {
   fullname.value = s.name || '';
   staticId.value = s.passport || '';
+  fillSeniorityFromStorage(s.name);
   $('acName').classList.remove('open');
   $('acStatic').classList.remove('open');
   updateAll();
@@ -1435,6 +1439,7 @@ attachAutocomplete(fullname, $('acName'), filterByName, s => {
 attachAutocomplete(staticId, $('acStatic'), filterByStatic, s => {
   fullname.value = s.name || '';
   staticId.value = s.passport || '';
+  fillSeniorityFromStorage(s.name);
   $('acName').classList.remove('open');
   $('acStatic').classList.remove('open');
   updateAll();
@@ -2178,7 +2183,8 @@ async function saveToWeeklyReport() {
         department: staffItem.department || "",
         rank: staffItem.rank || "",
         points: points,
-        instrPoints: 0
+        instrPoints: 0,
+        seniority: String(seniority.value || "").trim()
       })
     });
     const data = await res.json();
@@ -2378,6 +2384,10 @@ if (saveWeekBtn) {
 }
 
 fullname.addEventListener("input", updateSaveButtonState);
+
+/* Мост с weekly-reports-pses: сохраняем выслугу лет по имени */
+seniority.addEventListener("input", syncSeniorityToStorage);
+seniority.addEventListener("change", syncSeniorityToStorage);
 
 loadStaff();
 </script>

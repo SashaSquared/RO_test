@@ -117,41 +117,235 @@ body {
 .tab-btn.active .count { background: rgba(47,158,68,0.35); }
 .tab-btn.tab-debtors.active .count { background: rgba(239,68,68,0.35); }
 
-/* ===== ВКЛАДКА ПРЕМИИ ===== */
-.tab-btn.tab-bonus.active {
-  background: linear-gradient(135deg, rgba(251,191,36,0.18), rgba(217,119,6,0.14));
-  border-color: rgba(251,191,36,0.55);
+/* ===== Кнопка ПРЕМИИ (внутри вкладки Топ недели) ===== */
+.btn-bonus-open {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  font-size: 0.88rem; font-weight: 700;
+  font-family: inherit; color: #1a1207;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  border: none; border-radius: 10px;
+  cursor: pointer;
+  transition: filter .15s, transform .05s;
+  box-shadow: 0 4px 14px rgba(251,191,36,0.35);
+  white-space: nowrap;
+}
+.btn-bonus-open:hover { filter: brightness(1.08); }
+.btn-bonus-open:active { transform: scale(0.98); }
+.btn-bonus-open svg { width: 15px; height: 15px; }
+
+/* ===== МОДАЛКА ПРЕМИЙ ===== */
+.modal-back {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn .18s ease;
+}
+.modal-back.hidden { display: none !important; }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+.modal-bonus {
+  width: 100%;
+  max-width: 900px;
+  max-height: calc(100vh - 40px);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.75);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-bonus-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(217,119,6,0.05));
+}
+.modal-bonus-head h3 {
+  font-size: 1.05rem; font-weight: 700;
+  display: flex; align-items: center; gap: 10px;
+}
+.modal-bonus-head h3 .head-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  color: #fff; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(251,191,36,0.4);
+}
+.modal-bonus-head h3 .head-icon svg { width: 18px; height: 18px; }
+.modal-close-x {
+  background: transparent; border: none;
+  color: var(--muted);
+  font-size: 1.4rem; line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px; border-radius: 6px;
+  transition: background .15s, color .15s;
+}
+.modal-close-x:hover { background: var(--panel-3); color: var(--text); }
+
+.modal-bonus-tabs {
+  display: flex; gap: 4px;
+  padding: 10px 20px 0;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+}
+.modal-bonus-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-top-left-radius: 10px; border-top-right-radius: 10px;
+  color: var(--muted);
+  font-family: inherit; font-size: 0.86rem; font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  margin-bottom: -1px;
+}
+.modal-bonus-tab:hover { color: var(--text); }
+.modal-bonus-tab.active {
+  background: var(--panel-2);
+  border-color: var(--border);
+  border-bottom: 1px solid var(--panel-2);
   color: #fcd34d;
 }
-.tab-btn.tab-bonus.active .count { background: rgba(251,191,36,0.35); }
-.bonus-row { background: rgba(47,158,68,0.08) !important; border-left: 3px solid rgba(47,158,68,0.6); }
-.bonus-row:hover { background: rgba(47,158,68,0.14) !important; }
-.bonus-row .col-name { color: #86efac; font-weight: 700; }
-.bonus-row .col-points { color: #86efac; font-weight: 800; }
-.bonus-row.picked { background: rgba(251,191,36,0.12) !important; border-left-color: #fbbf24; }
-.bonus-row.picked .col-name { color: #fcd34d; }
-.bonus-row.picked .col-points { color: #fcd34d; }
-.seniority-input {
-  width: 90px; padding: 5px 10px; font-size: 0.85rem; font-weight: 700;
-  text-align: center; background: #0d1520;
-  border: 1px solid var(--border); border-radius: 8px;
-  color: #fff; font-variant-numeric: tabular-nums;
+.modal-bonus-tab svg { width: 15px; height: 15px; }
+
+.modal-bonus-body {
+  padding: 18px 20px 20px;
+  overflow-y: auto;
+  flex: 1;
 }
-.seniority-input:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(47,158,68,0.2); }
-.bonus-check { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent-2); margin: 0 auto; display: block; }
+
+.bonus-section-title {
+  font-size: 0.72rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.bonus-instr-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-bottom: 14px;
+  align-items: stretch;
+}
+.bonus-instr-input-row input {
+  padding: 11px 14px;
+  font-size: 0.96rem; font-weight: 700;
+  color: #fff;
+}
+
+.bonus-toolbar {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.bonus-list {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-bottom: 14px;
+}
+
+.bonus-item {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  gap: 12px; align-items: center;
+  padding: 10px 12px;
+  background: var(--panel-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.bonus-item .b-place {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 9px;
+  font-size: 0.9rem; font-weight: 900;
+  background: var(--panel-2); color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.bonus-item.place-1 .b-place { background: linear-gradient(135deg,#fbbf24,#d97706); color:#1a1207; }
+.bonus-item.place-2 .b-place { background: linear-gradient(135deg,#e5e7eb,#9ca3af); color:#1a1207; }
+.bonus-item.place-3 .b-place { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
+
+.bonus-item .b-info { min-width: 0; }
+.bonus-item .b-name { font-weight: 700; color: #fff; font-size: 0.92rem; }
+.bonus-item .b-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+.bonus-item .b-points {
+  font-weight: 800; font-size: 1rem;
+  color: #86efac;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.bonus-item .b-remove {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--red-border);
+  background: var(--red-bg);
+  color: var(--red-text);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+}
+.bonus-item .b-remove:hover { background: rgba(239,68,68,0.28); color: #fff; }
+.bonus-item .b-remove svg { width: 14px; height: 14px; }
+
+.bonus-add-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.bonus-add-row select {
+  padding: 10px 34px 10px 12px;
+  font-size: 0.86rem;
+}
+.bonus-add-btn {
+  padding: 10px 16px;
+  font-size: 0.84rem; font-weight: 700;
+  font-family: inherit;
+  color: #86efac;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.bonus-add-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.bonus-summary {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(76,177,216,0.06);
+  border-left: 3px solid var(--blue);
+  color: var(--text-soft);
+  font-size: 0.86rem;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.bonus-summary b { color: #fff; }
+
 .bonus-copy-bar {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap; padding: 12px 16px;
+  gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(217,119,6,0.06));
   border: 1px solid rgba(251,191,36,0.4);
-  margin-bottom: 14px;
 }
 .bonus-copy-bar .bar-info { font-size: 0.88rem; color: #fcd34d; font-weight: 600; }
 .bonus-copy-bar .bar-info b { color: #fff; font-weight: 800; }
+
 .btn-copy-bonus {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px; font-size: 0.88rem; font-weight: 700;
+  padding: 10px 18px;
+  font-size: 0.88rem; font-weight: 700;
   font-family: inherit; color: #1a1207;
   background: linear-gradient(135deg, #fbbf24, #d97706);
   border: none; border-radius: 10px; cursor: pointer;
@@ -163,6 +357,95 @@ body {
 .btn-copy-bonus:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.4); }
 .btn-copy-bonus svg { width: 15px; height: 15px; }
 
+/* Инструкторский блок */
+.instr-coeff-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 560px) { .instr-coeff-row { grid-template-columns: 1fr; } }
+.instr-coeff-row .form-group { display: flex; flex-direction: column; gap: 6px; }
+.instr-coeff-row label {
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.instr-coeff-row select {
+  padding: 10px 34px 10px 12px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.instr-list {
+  display: flex; flex-direction: column; gap: 6px;
+  margin-bottom: 14px;
+}
+.instr-item {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  gap: 12px; align-items: center;
+  padding: 12px;
+  background: var(--panel-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.instr-item .b-place {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 9px;
+  font-size: 0.9rem; font-weight: 900;
+  background: var(--panel-2); color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.instr-item.place-1 .b-place { background: linear-gradient(135deg,#fbbf24,#d97706); color:#1a1207; }
+.instr-item.place-2 .b-place { background: linear-gradient(135deg,#e5e7eb,#9ca3af); color:#1a1207; }
+.instr-item.place-3 .b-place { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
+.instr-item .i-name { font-weight: 700; color: #fff; font-size: 0.92rem; }
+.instr-item .i-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+.instr-item .i-points {
+  font-weight: 800; font-size: 1rem;
+  color: #86efac;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.instr-item .i-sum {
+  font-weight: 800; font-size: 1rem;
+  color: #fcd34d;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.instr-total-box {
+  padding: 12px 14px;
+  background: rgba(251,191,36,0.08);
+  border-left: 3px solid #fbbf24;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  color: #fcd34d;
+  line-height: 1.6;
+}
+.instr-total-box b { color: #fff; font-weight: 800; }
+.instr-total-box .big { font-size: 1.05rem; color: #fff; font-weight: 800; }
+.instr-total-box .share {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-weight: 800;
+}
+
+.debtor-row.punished { background: rgba(239, 68, 68, 0.15) !important; }
+.debtor-row.punished td { color: #fca5a5; }
+.debtor-row.punished .col-name { color: #fecaca !important; }
+.punish-check {
+  width: 20px; height: 20px; cursor: pointer;
+  accent-color: var(--red); margin: 0 auto; display: block;
+}
+
 .week-bar {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
@@ -173,31 +456,21 @@ body {
   border-left: 4px solid var(--blue);
   margin-bottom: 14px;
 }
-
 .week-info { display: flex; flex-direction: column; gap: 2px; }
 .week-info .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
 .week-info .value { font-size: 1rem; font-weight: 700; color: #fff; }
 .week-info .sub { font-size: 0.78rem; color: var(--text-soft); }
-
 .week-status {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 14px;
   border-radius: 999px;
-  font-size: 0.84rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 0.84rem; font-weight: 700; letter-spacing: 0.02em;
   background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border);
 }
 .week-status.open { background: var(--accent-bg); color: #86efac; border-color: var(--accent-border); }
-.week-status .dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: currentColor;
-}
+.week-status .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .week-status.open .dot { animation: pulse 2s infinite; }
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
+@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.35 } }
 
 .card {
   background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
@@ -212,10 +485,7 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
 }
-.card-head h2 {
-  font-size: 1rem; font-weight: 700;
-  display: flex; align-items: center; gap: 8px;
-}
+.card-head h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 
 .toolbar {
   display: grid; grid-template-columns: 1fr 200px 220px;
@@ -275,13 +545,12 @@ select option { background: #0c1420; color: var(--text); }
 .tbl .col-norm { text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tbl .col-status { text-align: center; white-space: nowrap; }
 .tbl .col-actions { text-align: right; white-space: nowrap; width: 1%; }
+.tbl .col-seniority { text-align: center; color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .tbl .points-input {
   width: 90px;
   padding: 6px 10px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-align: center;
+  font-size: 0.9rem; font-weight: 700; text-align: center;
   background: #0d1520;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -293,22 +562,15 @@ select option { background: #0c1420; color: var(--text); }
   box-shadow: 0 0 0 3px rgba(47,158,68,0.2);
 }
 .tbl .points-input[readonly] {
-  background: transparent;
-  border-color: transparent;
-  color: #fff;
-  cursor: default;
+  background: transparent; border-color: transparent;
+  color: #fff; cursor: default;
 }
 .tbl .points-input.dirty {
   border-color: var(--amber);
   box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
 }
 
-.points-cell {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  justify-content: center;
-}
+.points-cell { display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
 .save-btn {
   width: 32px; height: 32px; padding: 0;
   display: inline-flex; align-items: center; justify-content: center;
@@ -320,41 +582,24 @@ select option { background: #0c1420; color: var(--text); }
   transition: all .15s;
   flex-shrink: 0;
 }
-.save-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .save-btn:not(:disabled):hover {
   border-color: var(--accent-2);
   background: var(--accent-bg);
   color: #86efac;
 }
-.save-btn.saving {
-  border-color: var(--amber);
-  color: #fcd34d;
-}
-.save-btn.saved-ok {
-  border-color: var(--accent);
-  background: var(--accent-bg);
-  color: #86efac;
-}
+.save-btn.saving { border-color: var(--amber); color: #fcd34d; }
+.save-btn.saved-ok { border-color: var(--accent); background: var(--accent-bg); color: #86efac; }
 .save-btn svg { width: 15px; height: 15px; }
-.save-btn .spin {
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+.save-btn .spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 .status-pill {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 4px 10px;
   border-radius: 999px;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
+  font-size: 0.74rem; font-weight: 700;
+  letter-spacing: 0.02em; white-space: nowrap;
 }
 .status-pill.ok       { background: var(--accent-bg); color: #86efac; border: 1px solid var(--accent-border); }
 .status-pill.warn     { background: var(--amber-bg); color: #fcd34d; border: 1px solid var(--amber-border); }
@@ -364,10 +609,7 @@ select option { background: #0c1420; color: var(--text); }
 .status-pill.vacation { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
 .status-pill.instr    { background: var(--cyan-bg); color: #67e8f9; border: 1px solid var(--cyan-border); }
 
-.status-pill[data-comment] {
-  cursor: pointer;
-  transition: filter 0.15s, transform 0.1s;
-}
+.status-pill[data-comment] { cursor: pointer; transition: filter 0.15s, transform 0.1s; }
 .status-pill[data-comment]:hover { filter: brightness(1.25); }
 .status-pill[data-comment]:active { transform: scale(0.96); }
 
@@ -462,17 +704,6 @@ select option { background: #0c1420; color: var(--text); }
 .week-select-row label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
 .week-select-row select { max-width: 260px; }
 
-.modal-back {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.65);
-  z-index: 500;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  animation: fadeIn .18s ease;
-}
-.modal-back.hidden { display: none !important; }
-@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-
 .modal {
   width: 100%; max-width: 460px;
   background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
@@ -493,9 +724,7 @@ select option { background: #0c1420; color: var(--text); }
   flex-shrink: 0;
 }
 .modal h3 .m-icon svg { width: 18px; height: 18px; }
-.modal h3 .m-icon.purple {
-  background: var(--purple-bg); color: #c4b5fd;
-}
+.modal h3 .m-icon.purple { background: var(--purple-bg); color: #c4b5fd; }
 .modal-who {
   padding: 10px 12px;
   border-radius: 9px;
@@ -558,23 +787,6 @@ select option { background: #0c1420; color: var(--text); }
 .toast.alert .toast-ic { background: var(--red); }
 .toast.info  .toast-ic { background: var(--blue); }
 .toast .toast-ic svg { width: 12px; height: 12px; color: #071018; }
-
-.debtor-row.punished {
-  background: rgba(239, 68, 68, 0.15) !important;
-}
-.debtor-row.punished td {
-  color: #fca5a5;
-}
-.debtor-row.punished .col-name {
-  color: #fecaca !important;
-}
-.punish-check {
-  width: 20px; height: 20px;
-  cursor: pointer;
-  accent-color: var(--red);
-  margin: 0 auto;
-  display: block;
-}
 
 .empty, .loading {
   color: var(--muted); font-size: 0.9rem;
@@ -639,13 +851,6 @@ select option { background: #0c1420; color: var(--text); }
       </svg>
       Должники
       <span class="count" id="countDebtors">0</span>
-    </button>
-    <button class="tab-btn tab-bonus hidden" data-tab="bonus" type="button" id="tabBonusBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
-      </svg>
-      Премии
-      <span class="count" id="countBonus">0</span>
     </button>
     <button class="tab-btn" data-tab="history" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -735,6 +940,23 @@ select option { background: #0c1420; color: var(--text); }
   </div>
 
   <div class="hidden" id="tab-top">
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head" style="margin-bottom:0;">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
+          </svg>
+          Премии недели
+        </h2>
+        <button class="btn-bonus-open hidden" id="openBonusBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
+          </svg>
+          Премии
+        </button>
+      </div>
+    </div>
+
     <div class="top-grid">
       <div class="card">
         <div class="card-head">
@@ -793,34 +1015,6 @@ select option { background: #0c1420; color: var(--text); }
     <div id="debtorsContainer"><div class="loading">Загрузка…</div></div>
   </div>
 
-  <!-- ============ ВКЛАДКА ПРЕМИИ ============ -->
-  <div class="card hidden" id="tab-bonus">
-    <div class="card-head">
-      <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
-        </svg>
-        Премии недели — СМП
-      </h2>
-      <div style="font-size:0.8rem;color:var(--muted);">
-        🟢 — выполнили норму. Отметьте нужных и укажите выслугу лет.
-      </div>
-    </div>
-
-    <div class="bonus-copy-bar">
-      <div class="bar-info">Выбрано на премию: <b id="bonusPickedCount">0</b></div>
-      <button class="btn-copy-bonus" id="copyBonusBtn" type="button" disabled>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        Скопировать списки на премию
-      </button>
-    </div>
-
-    <div id="bonusContainer"><div class="loading">Загрузка…</div></div>
-  </div>
-
   <div class="card hidden" id="tab-history">
     <div class="card-head">
       <h2>
@@ -849,6 +1043,117 @@ select option { background: #0c1420; color: var(--text); }
     </div>
   </div>
 
+</div>
+
+<!-- ============ МОДАЛКА ПРЕМИЙ ============ -->
+<div class="modal-back hidden" id="bonusModal">
+  <div class="modal-bonus">
+    <div class="modal-bonus-head">
+      <h3>
+        <span class="head-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
+          </svg>
+        </span>
+        Премии недели
+      </h3>
+      <button class="modal-close-x" type="button" id="bonusCloseX" aria-label="Закрыть">×</button>
+    </div>
+
+    <div class="modal-bonus-tabs">
+      <button class="modal-bonus-tab active" type="button" data-btab="general">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </svg>
+        Общая премия
+      </button>
+      <button class="modal-bonus-tab" type="button" data-btab="instr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+        Премия Инструкторов
+      </button>
+    </div>
+
+    <div class="modal-bonus-body">
+      <!-- =============== ВКЛАДКА: ОБЩАЯ ПРЕМИЯ =============== -->
+      <div id="bonusTabGeneral">
+        <div class="bonus-section-title">Сколько премий разыгрывается на этой неделе?</div>
+        <div class="bonus-instr-input-row">
+          <input type="number" id="bonusCountInput" min="1" step="1" placeholder="Например: 10" value="10">
+          <button class="btn-primary btn" id="bonusConfirmBtn" type="button" style="padding:10px 20px;font-weight:700;">
+            Подтвердить
+          </button>
+        </div>
+
+        <div id="bonusGeneralResult" class="hidden">
+          <div class="bonus-section-title">Список на премию</div>
+          <div class="bonus-list" id="bonusList"></div>
+
+          <div class="bonus-section-title">Добавить сотрудника вручную</div>
+          <div class="bonus-add-row">
+            <select id="bonusAddSelect"></select>
+            <button class="bonus-add-btn" id="bonusAddBtn" type="button">+ Добавить</button>
+          </div>
+
+          <div class="bonus-copy-bar">
+            <div class="bar-info">В списке: <b id="bonusListCount">0</b> чел.</div>
+            <button class="btn-copy-bonus" id="copyGeneralBonusBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Скопировать списки на премию
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== ВКЛАДКА: ПРЕМИЯ ИНСТРУКТОРОВ =============== -->
+      <div id="bonusTabInstr" class="hidden">
+        <div class="instr-coeff-row">
+          <div class="form-group">
+            <label for="instrCoeff">Коэффициент</label>
+            <select id="instrCoeff">
+              <option value="150">×150</option>
+              <option value="175" selected>×175</option>
+              <option value="200">×200</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="instrShare">Старший состав (кол-во человек)</label>
+            <select id="instrShare">
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bonus-section-title">Топ-3 инструктора по инструкторским баллам</div>
+        <div class="instr-list" id="instrBonusList">
+          <div class="empty">Нет данных</div>
+        </div>
+
+        <div class="instr-total-box" id="instrTotalBox">
+          <div>Общая сумма к выплате: <span class="big" id="instrGrandTotal">0</span> ₽</div>
+          <div>Делится на <b id="instrShareLabel">3</b> → по <span class="share" id="instrShareSum">0</span> ₽ с человека</div>
+        </div>
+
+        <div class="bonus-copy-bar">
+          <div class="bar-info">К выплате: <b id="instrPayoutLabel">0</b> ₽</div>
+          <button class="btn-copy-bonus" id="copyInstrBonusBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Скопировать
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ============ МОДАЛКА ОСВОБОЖДЕНИЯ ============ -->
@@ -941,8 +1246,13 @@ select option { background: #0c1420; color: var(--text); }
     historyReports: [],
     activeTab: "current",
     exemptTarget: null,
-    bonusSelected: new Set(),
-    bonusSeniority: {}
+
+    /* === Премии === */
+    bonusModalTab: "general",
+    bonusCount: 10,
+    bonusGeneralList: [],   // массив имён (в порядке показа)
+    bonusInstrCoeff: 175,
+    bonusInstrShare: 3
   };
 
   const $ = (id) => document.getElementById(id);
@@ -1011,27 +1321,20 @@ select option { background: #0c1420; color: var(--text); }
     const now = new Date();
     const day = now.getDay();
     const sunday = getWeekStartSunday(now);
-
-    if (day >= 4) {
-      return formatDate(sunday);
-    } else {
-      const prev = new Date(sunday);
-      prev.setDate(prev.getDate() - 7);
-      return formatDate(prev);
-    }
+    if (day >= 4) return formatDate(sunday);
+    const prev = new Date(sunday);
+    prev.setDate(prev.getDate() - 7);
+    return formatDate(prev);
   }
 
   function isAcceptOpen(weekId) {
     const [y, m, d] = weekId.split("-").map(Number);
     const sunday = new Date(y, m - 1, d);
     sunday.setHours(0, 0, 0, 0);
-
     const thursday = new Date(sunday); thursday.setDate(thursday.getDate() + 4);
     thursday.setHours(0, 0, 0, 0);
-
     const nextSunday = new Date(sunday); nextSunday.setDate(nextSunday.getDate() + 7);
     nextSunday.setHours(0, 0, 0, 0);
-
     const now = new Date();
     return now >= thursday && now < nextSunday;
   }
@@ -1083,7 +1386,7 @@ select option { background: #0c1420; color: var(--text); }
     return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
   }
 
-  /* ===== Утилиты выслуги СМП ===== */
+  /* ===== Утилиты выслуги ===== */
   function getTopStorageSmp() {
     try {
       if (window.top && window.top !== window) return window.top.localStorage;
@@ -1103,30 +1406,17 @@ select option { background: #0c1420; color: var(--text); }
     try { const v = sessionStorage.getItem(key); if (v) return v; } catch (e) {}
     return "";
   }
-  function writeSenioritySmp(name, val) {
-    const key = seniorityKeySmp(name);
-    const v = String(val == null ? "" : val).trim();
-    try { v === "" ? localStorage.removeItem(key) : localStorage.setItem(key, v); } catch (e) {}
-    try {
-      const topLs = getTopStorageSmp();
-      if (topLs) { v === "" ? topLs.removeItem(key) : topLs.setItem(key, v); }
-    } catch (e) {}
-    try { v === "" ? sessionStorage.removeItem(key) : sessionStorage.setItem(key, v); } catch (e) {}
-  }
 
   async function loadAll() {
     await loadWeekList();
     state.weekId = state.currentWeekId;
-
     await Promise.all([loadStaff(), loadVacations()]);
     await loadReports(state.weekId);
-
     renderWeekBar();
     renderCurrentTab();
     renderInstrTab();
     renderTopTab();
     renderDebtorsTab();
-    renderBonusTab();
     renderHistoryTab();
   }
 
@@ -1190,12 +1480,10 @@ select option { background: #0c1420; color: var(--text); }
 
   function renderWeekBar() {
     $("weekRange").textContent = formatRange(state.weekId);
-
     const [y, m, d] = state.weekId.split("-").map(Number);
     const thursday = new Date(y, m - 1, d + 4);
     const saturday = new Date(y, m - 1, d + 6);
     $("weekSub").textContent = "Приём: чт " + formatHuman(formatDate(thursday)) + " 00:00 — сб " + formatHuman(formatDate(saturday)) + " 23:59";
-
     const open = isAcceptOpen(state.weekId);
     const st = $("weekStatus");
     st.classList.toggle("open", open);
@@ -1492,10 +1780,8 @@ select option { background: #0c1420; color: var(--text); }
     let v = parseInt(inp.value, 10);
     if (isNaN(v) || v < 0) v = 0;
     inp.value = v;
-
     inp.dataset.dirty = "1";
     inp.classList.add("dirty");
-
     const tr = inp.closest("tr");
     if (tr) {
       const btn = tr.querySelector('.save-btn');
@@ -1580,7 +1866,6 @@ select option { background: #0c1420; color: var(--text); }
         renderInstrTab();
         renderTopTab();
         renderDebtorsTab();
-        renderBonusTab();
       } else {
         showToast(data.message || "Ошибка сохранения", "alert");
         btn.innerHTML = oldHtml;
@@ -1610,6 +1895,20 @@ select option { background: #0c1420; color: var(--text); }
   function closeExemptModal() {
     state.exemptTarget = null;
     $("exemptModal").classList.add("hidden");
+  }
+
+  function openExemptInfoModal(name, passport, rank, dept, comment) {
+    $("exemptInfoWhoName").textContent = name || "—";
+    $("exemptInfoWhoSub").textContent =
+      "#" + (passport || "—") +
+      " · " + (rank || "—") +
+      " · " + (dept || "—");
+    $("exemptInfoComment").textContent = comment || "(без комментария)";
+    $("exemptInfoModal").classList.remove("hidden");
+  }
+
+  function closeExemptInfoModal() {
+    $("exemptInfoModal").classList.add("hidden");
   }
 
   async function confirmExempt() {
@@ -1643,7 +1942,6 @@ select option { background: #0c1420; color: var(--text); }
         renderInstrTab();
         renderTopTab();
         renderDebtorsTab();
-        renderBonusTab();
       } else {
         showToast(data.message || "Ошибка", "alert");
       }
@@ -1672,7 +1970,6 @@ select option { background: #0c1420; color: var(--text); }
         renderInstrTab();
         renderTopTab();
         renderDebtorsTab();
-        renderBonusTab();
       } else {
         showToast(data.message || "Ошибка", "alert");
       }
@@ -1742,11 +2039,9 @@ select option { background: #0c1420; color: var(--text); }
 
     const validCandidates = uniq.filter(r => {
       if (r.exempted) return false;
-
       const name = String(r.name || "").trim().toLowerCase();
       const staffItem = state.staff.find(s => s.name.trim().toLowerCase() === name);
       if (!staffItem) return false;
-
       const dept = staffItem.department;
       const rank = parseRank(staffItem.rank);
       const points = Number(r.points) || 0;
@@ -1757,11 +2052,9 @@ select option { background: #0c1420; color: var(--text); }
         if (rank < 5) return false;
         return points >= NORM_SMP;
       }
-
       if (dept === "Инст СМП") {
         return points >= NORM_INSTR_TOTAL && instrPoints >= NORM_INSTR_WORK;
       }
-
       return false;
     });
 
@@ -1802,11 +2095,9 @@ select option { background: #0c1420; color: var(--text); }
   function buildTopRow(place, name, staffItem, value, kind) {
     const row = document.createElement("div");
     row.className = "top-row" + (place <= 3 ? " place-" + place : "");
-
     const medal = place <= 3 ? ["🥇", "🥈", "🥉"][place - 1] : String(place);
     const dept = staffItem ? staffItem.department : "—";
     const rank = staffItem ? staffItem.rank : "—";
-
     row.innerHTML =
       '<div class="top-medal">' + medal + '</div>' +
       '<div>' +
@@ -1826,14 +2117,12 @@ select option { background: #0c1420; color: var(--text); }
 
     const allStaff = [...getSmpStaff(), ...getInstrStaff()];
     const debtors = [];
-
     allStaff.forEach(s => {
       const report = findReportFor(s.name);
       const status = computeStatus(s, report);
       if (status.key === "missing") {
         debtors.push({
-          staff: s,
-          report: report,
+          staff: s, report: report,
           punished: report ? !!report.punished : false
         });
       }
@@ -1841,7 +2130,6 @@ select option { background: #0c1420; color: var(--text); }
 
     const q = ($("searchDebtors").value || "").trim().toLowerCase();
     const filterP = $("filterDebtors").value;
-
     let filtered = debtors.slice();
     if (q) filtered = filtered.filter(d =>
       (d.staff.name || "").toLowerCase().includes(q) ||
@@ -1849,7 +2137,6 @@ select option { background: #0c1420; color: var(--text); }
     );
     if (filterP === "punished") filtered = filtered.filter(d => d.punished);
     if (filterP === "unpunished") filtered = filtered.filter(d => !d.punished);
-
     filtered.sort((a, b) => compareStaff(a.staff, b.staff));
 
     $("totalDebtors").textContent = String(filtered.length);
@@ -1889,7 +2176,6 @@ select option { background: #0c1420; color: var(--text); }
           '<input type="checkbox" class="punish-check" data-name="' + esc(d.staff.name) + '" ' + (d.punished ? 'checked' : '') + '>' +
         '</td>' +
         '<td class="col-actions"></td>';
-
       tbody.appendChild(tr);
 
       const actionsTd = tr.querySelector('.col-actions');
@@ -1917,23 +2203,15 @@ select option { background: #0c1420; color: var(--text); }
           });
           if (data && data.success) {
             const existing = findReportFor(d.staff.name);
-            if (existing) {
-              existing.punished = punished;
-            } else {
-              state.reports.push({
-                rowIndex: data.rowIndex,
-                weekId: state.weekId,
-                name: d.staff.name,
-                passport: d.staff.passport || "",
-                department: d.staff.department || "",
-                rank: d.staff.rank || "",
-                points: 0,
-                instrPoints: 0,
-                exempted: false,
-                comment: "",
-                punished: punished
-              });
-            }
+            if (existing) existing.punished = punished;
+            else state.reports.push({
+              rowIndex: data.rowIndex, weekId: state.weekId,
+              name: d.staff.name, passport: d.staff.passport || "",
+              department: d.staff.department || "",
+              rank: d.staff.rank || "",
+              points: 0, instrPoints: 0,
+              exempted: false, comment: "", punished: punished
+            });
             d.punished = punished;
             tr.classList.toggle("punished", punished);
             showToast(punished ? "Отмечено: взыскание выдано — " + d.staff.name : "Снято: " + d.staff.name, punished ? "info" : "success");
@@ -1953,188 +2231,10 @@ select option { background: #0c1420; color: var(--text); }
     cont.appendChild(table);
   }
 
-  /* ============================================================
-     ВКЛАДКА ПРЕМИИ
-     ============================================================ */
-  function renderBonusTab() {
-    if (!isAdmin()) {
-      $("tabBonusBtn").classList.add("hidden");
-      const activeBtn = document.querySelector('.tab-btn[data-tab="bonus"]');
-      if (activeBtn && activeBtn.classList.contains("active")) switchTab("current");
-      return;
-    }
-    $("tabBonusBtn").classList.remove("hidden");
-
-    const staffList = getSmpStaff();
-    const rows = staffList.map(s => {
-      const report = findReportFor(s.name);
-      const points = report ? (Number(report.points) || 0) : 0;
-      const submitted = !!report && !report.exempted;
-      const normDone = submitted && points >= NORM_SMP;
-      return { staff: s, report, points, submitted, normDone };
-    });
-
-    rows.sort((a, b) => {
-      if (a.normDone !== b.normDone) return a.normDone ? -1 : 1;
-      if (b.points !== a.points) return b.points - a.points;
-      return compareStaff(a.staff, b.staff);
-    });
-
-    $("countBonus").textContent = String(rows.filter(r => r.normDone).length);
-
-    const cont = $("bonusContainer");
-    if (!rows.length) {
-      cont.innerHTML = '<div class="empty">В отделе СМП нет сотрудников</div>';
-      updateBonusBar();
-      return;
-    }
-
-    const table = document.createElement("table");
-    table.className = "tbl";
-    table.innerHTML =
-      '<thead><tr>' +
-        '<th class="col-num">#</th>' +
-        '<th>Имя</th>' +
-        '<th class="col-hide-sm">Паспорт</th>' +
-        '<th class="col-rank">Ранг | Должность</th>' +
-        '<th class="col-points">Баллы</th>' +
-        '<th class="col-status" style="width:130px;">Выслуга лет</th>' +
-        '<th class="col-status" style="width:110px;">На премию</th>' +
-      '</tr></thead>';
-
-    const tbody = document.createElement("tbody");
-    rows.forEach((x, i) => {
-      const tr = document.createElement("tr");
-      const name = x.staff.name;
-      if (x.normDone) tr.classList.add("bonus-row");
-      const picked = state.bonusSelected.has(name);
-      if (picked) tr.classList.add("picked");
-
-      const rankNum = parseRank(x.staff.rank);
-      const rankStr = rankNum > 0 ? ("Ранг " + rankNum) : (x.staff.rank || "—");
-      const position = x.staff.position || "—";
-
-      let seniorityVal = state.bonusSeniority[name];
-      if (seniorityVal === undefined) {
-        seniorityVal = readSenioritySmp(name) || "";
-        if (seniorityVal) state.bonusSeniority[name] = seniorityVal;
-      }
-
-      tr.innerHTML =
-        '<td class="col-num">' + (i + 1) + '</td>' +
-        '<td class="col-name">' + esc(name) + '</td>' +
-        '<td class="col-pass col-hide-sm">' + esc(x.staff.passport || "—") + '</td>' +
-        '<td class="col-rank">' + esc(rankStr) + ' | ' + esc(position) + '</td>' +
-        '<td class="col-points">' + (x.submitted ? x.points : '—') + '</td>' +
-        '<td class="col-status" style="text-align:center;">' +
-          '<input type="number" min="0" step="1" class="seniority-input" ' +
-            'data-name="' + esc(name) + '" value="' + esc(seniorityVal) + '" placeholder="0">' +
-        '</td>' +
-        '<td class="col-status" style="text-align:center;">' +
-          '<input type="checkbox" class="bonus-check" data-name="' + esc(name) + '"' + (picked ? ' checked' : '') + '>' +
-        '</td>';
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    cont.innerHTML = "";
-    cont.appendChild(table);
-
-    cont.querySelectorAll(".seniority-input").forEach(inp => {
-      inp.addEventListener("input", (e) => {
-        const name = e.target.dataset.name;
-        const val = e.target.value;
-        if (val === "") { delete state.bonusSeniority[name]; writeSenioritySmp(name, ""); }
-        else { state.bonusSeniority[name] = val; writeSenioritySmp(name, val); }
-      });
-    });
-
-    cont.querySelectorAll(".bonus-check").forEach(cb => {
-      cb.addEventListener("change", (e) => {
-        const name = e.target.dataset.name;
-        const row = e.target.closest("tr");
-        if (e.target.checked) { state.bonusSelected.add(name); row.classList.add("picked"); }
-        else { state.bonusSelected.delete(name); row.classList.remove("picked"); }
-        updateBonusBar();
-      });
-    });
-
-    updateBonusBar();
-  }
-
-  function updateBonusBar() {
-    const cnt = state.bonusSelected.size;
-    const cntEl = $("bonusPickedCount");
-    if (cntEl) cntEl.textContent = String(cnt);
-    const btn = $("copyBonusBtn");
-    if (btn) btn.disabled = cnt === 0;
-  }
-
-  async function copyBonusList() {
-    if (!state.bonusSelected.size) {
-      showToast("Выберите хотя бы одного сотрудника", "alert");
-      return;
-    }
-
-    const orderedNames = getSmpStaff()
-      .map(s => s.name)
-      .filter(n => state.bonusSelected.has(n));
-
-    const lines = [];
-    orderedNames.forEach(name => {
-      const staffItem = state.staff.find(s =>
-        String(s.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
-      );
-      if (!staffItem) return;
-
-      const rankNum = parseRank(staffItem.rank);
-      const rankStr = rankNum > 0 ? ("Ранг " + rankNum) : ("Ранг " + (staffItem.rank || "—"));
-      const position = staffItem.position || "—";
-      const seniority = state.bonusSeniority[name] || readSenioritySmp(name) || "0";
-      const passport = staffItem.passport || "—";
-
-      lines.push(
-        staffItem.name + "." + passport + "." + rankStr + " | " + position + "." + seniority
-      );
-    });
-
-    if (!lines.length) {
-      showToast("Нет выбранных сотрудников", "alert");
-      return;
-    }
-
-    const text = lines.join("\n");
-
-    let ok = false;
-    try {
-      await navigator.clipboard.writeText(text);
-      ok = true;
-    } catch (e) {
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-        ok = true;
-      } catch (e2) { ok = false; }
-    }
-
-    if (ok) {
-      showToast("Скопировано (" + lines.length + " чел.)", "success");
-    } else {
-      showToast("Не удалось скопировать", "alert");
-    }
-  }
-
   function renderHistoryTab() {
     const sel = $("weekSelect");
     sel.innerHTML = "";
-
     const historyWeeks = state.weekList.filter(w => w !== state.currentWeekId);
-
     if (!historyWeeks.length) {
       const o = document.createElement("option");
       o.value = "";
@@ -2145,14 +2245,12 @@ select option { background: #0c1420; color: var(--text); }
       $("historyTopInstr").innerHTML = '<div class="empty">Других недель пока нет</div>';
       return;
     }
-
     historyWeeks.forEach(w => {
       const o = document.createElement("option");
       o.value = w;
       o.textContent = formatRange(w);
       sel.appendChild(o);
     });
-
     loadHistoryReports(historyWeeks[0]);
   }
 
@@ -2172,6 +2270,325 @@ select option { background: #0c1420; color: var(--text); }
     }
   }
 
+  /* ============================================================
+     МОДАЛКА ПРЕМИЙ
+     ============================================================ */
+  function openBonusModal() {
+    if (!isAdmin()) return;
+    state.bonusModalTab = "general";
+    switchBonusTab("general");
+
+    $("bonusCountInput").value = String(state.bonusCount || 10);
+    $("bonusGeneralResult").classList.add("hidden");
+    $("bonusList").innerHTML = "";
+
+    renderInstrBonusTab();
+
+    $("bonusModal").classList.remove("hidden");
+    setTimeout(() => $("bonusCountInput").focus(), 80);
+  }
+
+  function closeBonusModal() {
+    $("bonusModal").classList.add("hidden");
+  }
+
+  function switchBonusTab(tab) {
+    state.bonusModalTab = tab;
+    $$(".modal-bonus-tab").forEach(b => b.classList.toggle("active", b.dataset.btab === tab));
+    $("bonusTabGeneral").classList.toggle("hidden", tab !== "general");
+    $("bonusTabInstr").classList.toggle("hidden", tab !== "instr");
+    if (tab === "instr") renderInstrBonusTab();
+  }
+
+  /* ---------- ОБЩАЯ ПРЕМИЯ ---------- */
+  function confirmBonusCount() {
+    let cnt = parseInt($("bonusCountInput").value, 10);
+    if (isNaN(cnt) || cnt < 1) {
+      showToast("Укажите корректное количество премий", "alert");
+      return;
+    }
+    state.bonusCount = cnt;
+
+    // Берём топ-N по общим баллам среди СМП (ранг 5+), у кого норма выполнена
+    const candidates = getSmpStaff().map(s => {
+      const report = findReportFor(s.name);
+      const points = report ? (Number(report.points) || 0) : 0;
+      const submitted = !!report && !report.exempted;
+      const normDone = submitted && points >= NORM_SMP;
+      return { staff: s, report, points, submitted, normDone };
+    }).filter(x => x.normDone);
+
+    candidates.sort((a, b) => b.points - a.points);
+
+    state.bonusGeneralList = candidates.slice(0, cnt).map(x => x.staff.name);
+
+    renderGeneralBonusList();
+    $("bonusGeneralResult").classList.remove("hidden");
+  }
+
+  function renderGeneralBonusList() {
+    const listEl = $("bonusList");
+    listEl.innerHTML = "";
+
+    if (!state.bonusGeneralList.length) {
+      listEl.innerHTML = '<div class="empty">Список пуст</div>';
+    } else {
+      state.bonusGeneralList.forEach((name, idx) => {
+        const staffItem = state.staff.find(s =>
+          String(s.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
+        );
+        if (!staffItem) return;
+        const report = findReportFor(name);
+        const points = report ? (Number(report.points) || 0) : 0;
+
+        const el = document.createElement("div");
+        el.className = "bonus-item" + (idx < 3 ? " place-" + (idx + 1) : "");
+        el.innerHTML =
+          '<div class="b-place">' + (idx < 3 ? ["🥇","🥈","🥉"][idx] : (idx + 1)) + '</div>' +
+          '<div class="b-info">' +
+            '<div class="b-name">' + esc(staffItem.name) + '</div>' +
+            '<div class="b-meta">#' + esc(staffItem.passport || "—") + ' · ' + esc(staffItem.rank || "—") +
+              (staffItem.position ? ' | ' + esc(staffItem.position) : '') +
+              ' · ' + esc(staffItem.department || "—") + '</div>' +
+          '</div>' +
+          '<div class="b-points">' + points + ' б.</div>' +
+          '<button type="button" class="b-remove" data-name="' + esc(staffItem.name) + '" title="Убрать из списка">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          '</button>';
+        listEl.appendChild(el);
+      });
+
+      listEl.querySelectorAll(".b-remove").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const name = btn.dataset.name;
+          state.bonusGeneralList = state.bonusGeneralList.filter(n => n !== name);
+          renderGeneralBonusList();
+        });
+      });
+    }
+
+    $("bonusListCount").textContent = String(state.bonusGeneralList.length);
+    updateAddSelect();
+  }
+
+  function updateAddSelect() {
+    const sel = $("bonusAddSelect");
+    sel.innerHTML = "";
+
+    const available = getSmpStaff().filter(s =>
+      !state.bonusGeneralList.some(n =>
+        String(n).trim().toLowerCase() === String(s.name).trim().toLowerCase()
+      )
+    );
+
+    if (!available.length) {
+      const o = document.createElement("option");
+      o.value = "";
+      o.textContent = "Нет доступных сотрудников";
+      sel.appendChild(o);
+      return;
+    }
+
+    const o0 = document.createElement("option");
+    o0.value = "";
+    o0.textContent = "— выберите сотрудника —";
+    sel.appendChild(o0);
+
+    available.forEach(s => {
+      const o = document.createElement("option");
+      o.value = s.name;
+      o.textContent = s.name + ' · ' + (s.passport || "—") + ' · ' + (s.rank || "—");
+      sel.appendChild(o);
+    });
+  }
+
+  function addEmployeeToBonusList() {
+    const sel = $("bonusAddSelect");
+    const name = sel.value;
+    if (!name) {
+      showToast("Выберите сотрудника", "alert");
+      return;
+    }
+    if (!state.bonusGeneralList.some(n => String(n).toLowerCase() === name.toLowerCase())) {
+      state.bonusGeneralList.push(name);
+      renderGeneralBonusList();
+    }
+  }
+
+  async function copyGeneralBonusList() {
+    if (!state.bonusGeneralList.length) {
+      showToast("Список пуст", "alert");
+      return;
+    }
+
+    const lines = state.bonusGeneralList.map(name => {
+      const s = state.staff.find(x =>
+        String(x.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
+      );
+      if (!s) return null;
+
+      const rankNum = parseRank(s.rank);
+      const rankStr = "Ранг " + (rankNum > 0 ? rankNum : (s.rank || "—"));
+      const position = s.position || "—";
+      const seniority = readSenioritySmp(s.name) || "0";
+      const passport = s.passport || "—";
+
+      return s.name + "." + passport + "." + rankStr + " | " + position + "." + seniority;
+    }).filter(Boolean);
+
+    if (!lines.length) {
+      showToast("Нет данных для копирования", "alert");
+      return;
+    }
+
+    const text = lines.join("\n");
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; }
+    catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta);
+        ok = true;
+      } catch (e2) { ok = false; }
+    }
+    if (ok) showToast("Скопировано (" + lines.length + " чел.)", "success");
+    else showToast("Не удалось скопировать", "alert");
+  }
+
+  /* ---------- ПРЕМИЯ ИНСТРУКТОРОВ ---------- */
+  function getInstrTop3() {
+    const reports = state.reports.filter(r => !r.exempted);
+    const uniqueMap = {};
+    reports.forEach(r => {
+      const key = String(r.name || "").trim().toLowerCase();
+      if (!key) return;
+      if (!uniqueMap[key]) uniqueMap[key] = { ...r };
+      else uniqueMap[key].instrPoints = Math.max(uniqueMap[key].instrPoints || 0, r.instrPoints || 0);
+    });
+
+    const list = Object.values(uniqueMap).filter(r => {
+      const name = String(r.name || "").trim().toLowerCase();
+      const s = state.staff.find(x => x.name.trim().toLowerCase() === name);
+      if (!s) return false;
+      if (s.department !== "Инст СМП") return false;
+      return (Number(r.instrPoints) || 0) > 0;
+    });
+
+    list.sort((a, b) => (Number(b.instrPoints) || 0) - (Number(a.instrPoints) || 0));
+    return list.slice(0, 3);
+  }
+
+  function renderInstrBonusTab() {
+    const listEl = $("instrBonusList");
+    const top = getInstrTop3();
+
+    const coeff = parseInt($("instrCoeff").value, 10) || 175;
+    const share = parseInt($("instrShare").value, 10) || 3;
+    state.bonusInstrCoeff = coeff;
+    state.bonusInstrShare = share;
+
+    listEl.innerHTML = "";
+    let grandTotal = 0;
+
+    if (!top.length) {
+      listEl.innerHTML = '<div class="empty">Нет инструкторов с баллами</div>';
+      $("instrGrandTotal").textContent = "0";
+      $("instrShareSum").textContent = "0";
+      $("instrShareLabel").textContent = String(share);
+      $("instrPayoutLabel").textContent = "0";
+      return;
+    }
+
+    top.forEach((r, i) => {
+      const s = state.staff.find(x =>
+        String(x.name || "").trim().toLowerCase() === String(r.name).trim().toLowerCase()
+      );
+      const pts = Number(r.instrPoints) || 0;
+      const sum = pts * coeff;
+      grandTotal += sum;
+
+      const el = document.createElement("div");
+      el.className = "instr-item" + (i < 3 ? " place-" + (i + 1) : "");
+      el.innerHTML =
+        '<div class="b-place">' + (i < 3 ? ["🥇","🥈","🥉"][i] : (i + 1)) + '</div>' +
+        '<div class="b-info">' +
+          '<div class="i-name">' + esc(s ? s.name : r.name) + '</div>' +
+          '<div class="i-meta">' + (s ? ('#' + esc(s.passport || "—") + ' · ' + esc(s.rank || "—")) : '') + '</div>' +
+        '</div>' +
+        '<div class="i-points">' + pts + ' б.</div>' +
+        '<div class="i-sum">' + fmtMoney(sum) + ' ₽</div>';
+      listEl.appendChild(el);
+    });
+
+    const perPerson = Math.ceil(grandTotal / share);
+
+    $("instrGrandTotal").textContent = fmtMoney(grandTotal);
+    $("instrShareLabel").textContent = String(share);
+    $("instrShareSum").textContent = fmtMoney(perPerson);
+    $("instrPayoutLabel").textContent = fmtMoney(perPerson);
+  }
+
+  function fmtMoney(n) {
+    const s = String(Math.round(n));
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  }
+
+  async function copyInstrBonusList() {
+    const top = getInstrTop3();
+    if (!top.length) {
+      showToast("Нет данных для копирования", "alert");
+      return;
+    }
+
+    const coeff = state.bonusInstrCoeff || 175;
+    const share = state.bonusInstrShare || 3;
+
+    let grandTotal = 0;
+    const lines = [];
+
+    lines.push("# ПРЕМИИ ИНСТРУКТОРАМ");
+    lines.push("");
+
+    top.forEach(r => {
+      const s = state.staff.find(x =>
+        String(x.name || "").trim().toLowerCase() === String(r.name).trim().toLowerCase()
+      );
+      const pts = Number(r.instrPoints) || 0;
+      const sum = pts * coeff;
+      grandTotal += sum;
+
+      lines.push(
+        (s ? s.name : r.name) +
+        ' — ' + pts + ' б. — ' + fmtMoney(sum) + ' Р'
+      );
+    });
+
+    const perPerson = Math.ceil(grandTotal / share);
+
+    lines.push('');
+    lines.push('## ПО ' + fmtMoney(perPerson) + ' Р');
+    lines.push('## НА КАРТУ 11479');
+    lines.push('__*КТО СКИНУЛ ✅ *__');
+
+    const text = lines.join('\n');
+
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; }
+    catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta);
+        ok = true;
+      } catch (e2) { ok = false; }
+    }
+    if (ok) showToast("Скопировано", "success");
+    else showToast("Не удалось скопировать", "alert");
+  }
+
   function switchTab(tab) {
     state.activeTab = tab;
     $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
@@ -2179,9 +2596,7 @@ select option { background: #0c1420; color: var(--text); }
     $("tab-instr").classList.toggle("hidden", tab !== "instr");
     $("tab-top").classList.toggle("hidden", tab !== "top");
     $("tab-debtors").classList.toggle("hidden", tab !== "debtors");
-    $("tab-bonus").classList.toggle("hidden", tab !== "bonus");
     $("tab-history").classList.toggle("hidden", tab !== "history");
-    if (tab === "bonus") renderBonusTab();
   }
 
   const toastEl = $("toast");
@@ -2215,6 +2630,13 @@ select option { background: #0c1420; color: var(--text); }
     }
     state.user = user;
 
+    // Доступ к кнопке Премии — только admin+
+    if (isAdmin()) {
+      $("openBonusBtn").classList.remove("hidden");
+    } else {
+      $("openBonusBtn").classList.add("hidden");
+    }
+
     $$(".tab-btn").forEach(b => b.addEventListener("click", () => switchTab(b.dataset.tab)));
 
     $("refreshBtn").addEventListener("click", () => {
@@ -2243,31 +2665,34 @@ select option { background: #0c1420; color: var(--text); }
       if (e.key === "Escape") {
         if (!$("exemptModal").classList.contains("hidden")) closeExemptModal();
         if (!$("exemptInfoModal").classList.contains("hidden")) closeExemptInfoModal();
+        if (!$("bonusModal").classList.contains("hidden")) closeBonusModal();
       }
     });
-
-    const copyBonusBtnEl = $("copyBonusBtn");
-    if (copyBonusBtnEl) copyBonusBtnEl.addEventListener("click", copyBonusList);
 
     $("weekSelect").addEventListener("change", () => {
       loadHistoryReports($("weekSelect").value);
     });
 
+    // === Премии ===
+    $("openBonusBtn").addEventListener("click", openBonusModal);
+    $("bonusCloseX").addEventListener("click", closeBonusModal);
+    $("bonusModal").addEventListener("click", (e) => {
+      if (e.target === $("bonusModal")) closeBonusModal();
+    });
+
+    $$(".modal-bonus-tab").forEach(b => {
+      b.addEventListener("click", () => switchBonusTab(b.dataset.btab));
+    });
+
+    $("bonusConfirmBtn").addEventListener("click", confirmBonusCount);
+    $("bonusAddBtn").addEventListener("click", addEmployeeToBonusList);
+    $("copyGeneralBonusBtn").addEventListener("click", copyGeneralBonusList);
+
+    $("instrCoeff").addEventListener("change", renderInstrBonusTab);
+    $("instrShare").addEventListener("change", renderInstrBonusTab);
+    $("copyInstrBonusBtn").addEventListener("click", copyInstrBonusList);
+
     loadAll();
-  }
-
-  function openExemptInfoModal(name, passport, rank, dept, comment) {
-    $("exemptInfoWhoName").textContent = name || "—";
-    $("exemptInfoWhoSub").textContent =
-      "#" + (passport || "—") +
-      " · " + (rank || "—") +
-      " · " + (dept || "—");
-    $("exemptInfoComment").textContent = comment || "(без комментария)";
-    $("exemptInfoModal").classList.remove("hidden");
-  }
-
-  function closeExemptInfoModal() {
-    $("exemptInfoModal").classList.add("hidden");
   }
 
   document.addEventListener("DOMContentLoaded", init);

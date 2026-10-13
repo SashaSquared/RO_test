@@ -603,8 +603,8 @@ label {
       <input type="text" id="searchRequest" placeholder="🔍 Поиск по имени или паспорту…">
       <select id="filterRequest">
         <option value="pending">🟡 Ожидает рассмотрения</option>
-        <option value="rejected">🔴 Отклонено</option>
         <option value="active">🟢 Выдано</option>
+        <option value="rejected">🔴 Отклонено</option>
         <option value="deleted">🗑 Удалённые</option>
         <option value="">Все</option>
       </select>
@@ -766,7 +766,7 @@ label {
           <path d="M21 21l-4.35-4.35"/>
         </svg>
       </span>
-      Рассмотрение взыскания
+      Рассмотрение запроса
     </h3>
 
     <div class="modal-who" id="reviewWho">—</div>
@@ -1053,7 +1053,8 @@ label {
   const state = {
     user: null,
     staff: [],
-    penalties: [],
+    requests: [],
+    issued: [],
     groups: [],
     staffLevels: [],
     activeTab: "main",
@@ -1380,13 +1381,20 @@ label {
         hash: state.user.hash
       });
       if (data && data.success) {
-        state.penalties = data.penalties || [];
+        state.requests = data.requests || [];
+        state.issued = data.issued || [];
         state.groups = data.groups || [];
       } else {
-        state.penalties = [];
+        state.requests = [];
+        state.issued = [];
         state.groups = [];
       }
-    } catch (e) { console.error("loadPenalties:", e); state.penalties = []; state.groups = []; }
+    } catch (e) {
+      console.error("loadPenalties:", e);
+      state.requests = [];
+      state.issued = [];
+      state.groups = [];
+    }
   }
 
   async function loadPendingCount() {
@@ -1425,7 +1433,7 @@ label {
   }
 
   /* ============================================================
-     ГЛАВНАЯ
+     ГЛАВНАЯ — только issued, сгруппированные
      ============================================================ */
   function renderMain() {
     const q = ($("searchMain").value || "").trim().toLowerCase();
@@ -1433,7 +1441,6 @@ label {
 
     let list = state.groups.slice();
 
-    // Показываем группы, где есть запись с нужным статусом
     if (filter) {
       list = list.filter(g => g.penalties.some(p => p.status === filter));
     } else {
@@ -1534,16 +1541,15 @@ label {
   }
 
   /* ============================================================
-     ЗАПРОСЫ
+     ЗАПРОСЫ — только category='request'
      ============================================================ */
   function renderRequest() {
     const q = ($("searchRequest").value || "").trim().toLowerCase();
     const filter = $("filterRequest").value;
 
-    let list = state.penalties.slice();
+    let list = state.requests.slice();
     list = list.filter(p => {
       if (!filter) return p.status !== "deleted";
-      if (filter === "active") return p.status === "active" || p.status === "reissue";
       return p.status === filter;
     });
     if (q) list = list.filter(p =>
@@ -1803,7 +1809,6 @@ label {
     detailsRow.className = "details-row";
     const colCount = tr.cells.length;
 
-    // Показываем ТОЛЬКО активные записи
     const activeItems = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
 
     let itemsHtml = "";
@@ -1840,7 +1845,6 @@ label {
     const btn = tr.querySelector(".expand-btn");
     if (btn) btn.classList.add("open");
 
-    // Обработчики «Обжаловать» на каждой записи
     detailsRow.querySelectorAll(".appeal-item-btn").forEach(b => {
       b.addEventListener("click", () => {
         const penId = parseInt(b.dataset.appealId, 10);
@@ -1880,6 +1884,8 @@ label {
           '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
           (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
           '<div><b>Мера отработки:</b> ' + esc(p.measure || "—") + '</div>' +
+          (p.approvedBy ? '<div><b>Одобрил:</b> ' + esc(p.approvedBy) + ' · ' + esc(formatDateTime(p.approvedAt)) + '</div>' : '') +
+          (p.rejectedReason ? '<div><b>Отклонено:</b> ' + esc(p.rejectedReason) + '</div>' : '') +
           flags +
         '</div>' +
       '</td>';
@@ -1983,7 +1989,7 @@ label {
   }
 
   /* ============================================================
-     РАССМОТРЕНИЕ (approve + auto-issue)
+     РАССМОТРЕНИЕ
      ============================================================ */
   function openReview(p) {
     state.reviewTarget = p;
@@ -2197,7 +2203,7 @@ label {
   }
 
   /* ============================================================
-     ОБЖАЛОВАНИЕ КОНКРЕТНОЙ ЗАПИСИ
+     ОБЖАЛОВАНИЕ
      ============================================================ */
   function openAppeal(pen) {
     state.appealTarget = pen;
@@ -2263,7 +2269,7 @@ label {
     if (!confirm("Удалить взыскание «" + group.employeeName + "» (уровень " + group.level + ")?")) return;
     try {
       const toDelete = group.penalties.filter(p =>
-        ["active", "reissue", "pending"].includes(p.status)
+        ["active", "reissue"].includes(p.status)
       );
       for (const p of toDelete) {
         await apiPost({
@@ -2307,7 +2313,7 @@ label {
 
   async function deletePenalty(p) {
     if (!canModerate()) return;
-    if (!confirm("Удалить взыскание «" + p.employeeName + "» (статья " + p.article + ")?")) return;
+    if (!confirm("Удалить запрос «" + p.employeeName + "» (статья " + p.article + ")?")) return;
     try {
       const data = await apiPost({
         action: "deletePenalty",

@@ -512,6 +512,16 @@ label {
       Запрос на взыскание
       <span class="badge-count hidden" id="pendingBadge">0</span>
     </button>
+    <button class="tab-btn hidden" data-tab="staffLevels" type="button" id="tabStaffLevelsBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      Сотрудники с взысканиями
+      <span class="badge-count hidden" id="staffLevelsCount">0</span>
+    </button>
   </div>
 
   <div class="card" id="tab-main">
@@ -582,6 +592,50 @@ label {
     </div>
 
     <div id="requestContainer"><div class="loading">Загрузка…</div></div>
+  </div>
+
+  <div class="card hidden" id="tab-staffLevels">
+    <div class="card-head">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </svg>
+        Сотрудники с взысканиями
+      </h2>
+      <button class="btn" id="refreshStaffLevels" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+          <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+        </svg>
+        Обновить
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="searchStaffLevels" placeholder="🔍 Поиск по имени или паспорту…">
+      <select id="filterStaffLevelsDept">
+        <option value="">Все отделы</option>
+        <option value="Руководство">Руководство</option>
+        <option value="АБ">АБ</option>
+        <option value="ОК">ОК</option>
+        <option value="СМП">СМП</option>
+        <option value="ИТ">ИТ</option>
+        <option value="ПСЭС">ПСЭС</option>
+        <option value="Инст ПСЭС">Инст ПСЭС</option>
+        <option value="Инст СМП">Инст СМП</option>
+        <option value="Инст ИТ">Инст ИТ</option>
+        <option value="Инст ОК">Инст ОК</option>
+      </select>
+    </div>
+
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">
+      Ручное изменение уровня взыскания. Изменение применяется сразу.
+    </div>
+
+    <div id="staffLevelsContainer"><div class="loading">Загрузка…</div></div>
   </div>
 
 </div>
@@ -972,6 +1026,7 @@ label {
     staff: [],
     penalties: [],
     groups: [],
+    staffLevels: [],
     activeTab: "main",
     pendingSubmit: null,
     reviewTarget: null,
@@ -1058,6 +1113,13 @@ label {
       return pad(d.getDate()) + "." + pad(d.getMonth()+1) + "." + d.getFullYear() +
              " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
     } catch (e) { return iso; }
+  }
+
+  function intToLevel(n) {
+    if (n >= 3) return "3/3";
+    if (n === 2) return "2/3";
+    if (n === 1) return "1/3";
+    return "0/3";
   }
 
   function levelClass(level) {
@@ -1265,8 +1327,10 @@ label {
     $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
     $("tab-main").classList.toggle("hidden", tab !== "main");
     $("tab-request").classList.toggle("hidden", tab !== "request");
+    $("tab-staffLevels").classList.toggle("hidden", tab !== "staffLevels");
     if (tab === "main") renderMain();
     if (tab === "request") renderRequest();
+    if (tab === "staffLevels") renderStaffLevels();
   }
 
   async function loadStaff() {
@@ -1310,8 +1374,26 @@ label {
     } catch (e) { console.error(e); }
   }
 
+  async function loadStaffWithPenalties() {
+    try {
+      const data = await apiPost({
+        action: "listStaffWithPenalties",
+        login: state.user.login,
+        hash: state.user.hash
+      });
+      if (data && data.success) {
+        state.staffLevels = data.staff || [];
+      } else {
+        state.staffLevels = [];
+      }
+    } catch (e) {
+      console.error("loadStaffWithPenalties:", e);
+      state.staffLevels = [];
+    }
+  }
+
   /* ============================================================
-     ГЛАВНАЯ — сгруппированные взыскания
+     ГЛАВНАЯ
      ============================================================ */
   function renderMain() {
     const q = ($("searchMain").value || "").trim().toLowerCase();
@@ -1366,7 +1448,6 @@ label {
 
       const actions = tr.querySelector(".col-actions");
 
-      // Снять (отработано) — если есть активные
       if (canModerate() && g.penalties.some(p => ["active", "reissue"].includes(p.status))) {
         const removeBtn = document.createElement("button");
         removeBtn.className = "btn-icon success";
@@ -1376,7 +1457,6 @@ label {
         actions.appendChild(removeBtn);
       }
 
-      // Обжаловать — если есть активные
       if (canModerate() && g.penalties.some(p => ["active", "reissue"].includes(p.status))) {
         const appealBtn = document.createElement("button");
         appealBtn.className = "btn-icon purple";
@@ -1386,7 +1466,6 @@ label {
         actions.appendChild(appealBtn);
       }
 
-      // Перевыдать — если есть reissue
       if (canModerate() && g.penalties.some(p => p.status === "reissue")) {
         const reBtn = document.createElement("button");
         reBtn.className = "btn-icon success";
@@ -1396,7 +1475,6 @@ label {
         actions.appendChild(reBtn);
       }
 
-      // Удалить (soft)
       if (canModerate()) {
         const delBtn = document.createElement("button");
         delBtn.className = "btn-icon danger";
@@ -1406,7 +1484,6 @@ label {
         actions.appendChild(delBtn);
       }
 
-      // Hard-delete — только superadmin
       if (isSuperadmin() && g.penalties.some(p => p.status === "deleted")) {
         const hardBtn = document.createElement("button");
         hardBtn.className = "btn-icon danger";
@@ -1548,6 +1625,147 @@ label {
     table.appendChild(tbody);
     cont.innerHTML = "";
     cont.appendChild(table);
+  }
+
+  /* ============================================================
+     СОТРУДНИКИ С ВЗЫСКАНИЯМИ (superadmin)
+     ============================================================ */
+  function renderStaffLevels() {
+    const cont = $("staffLevelsContainer");
+    const q = ($("searchStaffLevels").value || "").trim().toLowerCase();
+    const dept = $("filterStaffLevelsDept").value;
+
+    let list = (state.staffLevels || []).slice();
+
+    if (dept) list = list.filter(s => String(s.department || "").trim() === dept);
+    if (q) list = list.filter(s =>
+      String(s.name || "").toLowerCase().includes(q) ||
+      String(s.passport || "").toLowerCase().includes(q)
+    );
+
+    const cnt = $("staffLevelsCount");
+    if (cnt) {
+      const total = (state.staffLevels || []).length;
+      if (total > 0) { cnt.textContent = total; cnt.classList.remove("hidden"); }
+      else cnt.classList.add("hidden");
+    }
+
+    if (!list.length) {
+      cont.innerHTML = '<div class="empty">Нет сотрудников с взысканиями</div>';
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.className = "tbl";
+    table.innerHTML =
+      '<thead><tr>' +
+        '<th class="col-num">#</th>' +
+        '<th>Сотрудник</th>' +
+        '<th class="col-hide-sm">Паспорт</th>' +
+        '<th class="col-hide-sm">Отдел</th>' +
+        '<th class="col-hide-sm">Ранг</th>' +
+        '<th>Из penalties</th>' +
+        '<th>staff</th>' +
+        '<th>Уровень</th>' +
+      '</tr></thead>';
+
+    const tbody = document.createElement("tbody");
+    list.forEach((s, i) => {
+      const tr = document.createElement("tr");
+      const penLvl = intToLevel(s.penaltiesLevel || 0);
+      const staffLvl = intToLevel(s.penaltyLevel || 0);
+
+      tr.innerHTML =
+        '<td class="col-num">' + (i + 1) + '</td>' +
+        '<td class="col-name">' + esc(s.name) + '</td>' +
+        '<td class="col-pass col-hide-sm">' + esc(s.passport || "—") + '</td>' +
+        '<td class="col-hide-sm">' + esc(s.department || "—") + '</td>' +
+        '<td class="col-hide-sm">' + esc(s.rank || "—") + '</td>' +
+        '<td><span class="level-pill ' + levelClass(penLvl) + '">' + penLvl + '</span></td>' +
+        '<td><span class="level-pill ' + levelClass(staffLvl) + '">' + staffLvl + '</span></td>' +
+        '<td></td>';
+      tbody.appendChild(tr);
+
+      const tdSelect = tr.cells[7];
+      const sel = document.createElement("select");
+      sel.style.maxWidth = "110px";
+      sel.style.fontWeight = "700";
+      const effLevel = s.effectiveLevel || 0;
+
+      [
+        { v: "0", l: "0/3" },
+        { v: "1", l: "1/3" },
+        { v: "2", l: "2/3" },
+        { v: "3", l: "3/3" }
+      ].forEach(opt => {
+        const o = document.createElement("option");
+        o.value = opt.v;
+        o.textContent = opt.l;
+        if (parseInt(opt.v, 10) === effLevel) o.selected = true;
+        sel.appendChild(o);
+      });
+
+      sel.addEventListener("change", () => setPenaltyLevelManual(s, parseInt(sel.value, 10), sel));
+
+      tdSelect.appendChild(sel);
+    });
+
+    table.appendChild(tbody);
+    cont.innerHTML = "";
+    cont.appendChild(table);
+  }
+
+  async function setPenaltyLevelManual(staffItem, newLevel, selectEl) {
+    const oldLevel = staffItem.effectiveLevel || 0;
+    if (newLevel === oldLevel) return;
+
+    const confirmText =
+      "Изменить уровень взысканий для «" + staffItem.name + "»?\n" +
+      "Было: " + intToLevel(oldLevel) + "\n" +
+      "Станет: " + intToLevel(newLevel);
+
+    if (!confirm(confirmText)) {
+      selectEl.value = String(oldLevel);
+      return;
+    }
+
+    selectEl.disabled = true;
+
+    try {
+      const data = await apiPost({
+        action: "setPenaltyLevel",
+        login: state.user.login,
+        hash: state.user.hash,
+        name: staffItem.name,
+        level: newLevel
+      });
+
+      if (!data.success) {
+        showToast(data.message || "Ошибка", "alert");
+        selectEl.value = String(oldLevel);
+        selectEl.disabled = false;
+        return;
+      }
+
+      showToast("Уровень обновлён: " + staffItem.name + " → " + intToLevel(newLevel), "info");
+      notifyParent("Уровень обновлён", staffItem.name + " → " + intToLevel(newLevel), "success");
+
+      await loadPenalties();
+      await loadStaffWithPenalties();
+      renderMain();
+      renderStaffLevels();
+
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "staff-changed" }, "*");
+        }
+      } catch (e) {}
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
+      selectEl.value = String(oldLevel);
+      selectEl.disabled = false;
+    }
   }
 
   /* ============================================================
@@ -1935,7 +2153,7 @@ label {
   }
 
   /* ============================================================
-     ОБЖАЛОВАНИЕ (последнее активное в группе)
+     ОБЖАЛОВАНИЕ
      ============================================================ */
   function openAppeal(group) {
     state.appealGroup = group;
@@ -2160,6 +2378,10 @@ label {
     }
     state.user = user;
 
+    if (state.user.role === "superadmin") {
+      $("tabStaffLevelsBtn").classList.remove("hidden");
+    }
+
     $$(".tab-btn").forEach(b => b.addEventListener("click", () => switchTab(b.dataset.tab)));
 
     $("searchMain").addEventListener("input", renderMain);
@@ -2172,6 +2394,14 @@ label {
       await loadPendingCount();
       renderMain();
       renderRequest();
+    });
+
+    $("searchStaffLevels").addEventListener("input", renderStaffLevels);
+    $("filterStaffLevelsDept").addEventListener("change", renderStaffLevels);
+    $("refreshStaffLevels").addEventListener("click", async () => {
+      showToast("Обновление…", "info");
+      await loadStaffWithPenalties();
+      renderStaffLevels();
     });
 
     $("openSubmitBtn").addEventListener("click", openSubmit);
@@ -2255,6 +2485,9 @@ label {
       renderMain();
       renderRequest();
       loadPendingCount();
+      if (state.user.role === "superadmin") {
+        loadStaffWithPenalties().then(() => renderStaffLevels());
+      }
     });
 
     setInterval(() => {
@@ -2263,6 +2496,9 @@ label {
         loadPendingCount();
         if (state.activeTab === "main") renderMain();
         if (state.activeTab === "request") renderRequest();
+        if (state.activeTab === "staffLevels" && state.user.role === "superadmin") {
+          loadStaffWithPenalties().then(() => renderStaffLevels());
+        }
       });
     }, 60000);
   }

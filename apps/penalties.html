@@ -226,7 +226,6 @@ textarea { resize: vertical; min-height: 70px; }
   letter-spacing: 0.02em; white-space: nowrap;
 }
 .status-pill.pending  { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
-.status-pill.approved { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
 .status-pill.active   { background: var(--accent-bg); color: #86efac; border: 1px solid var(--accent-border); }
 .status-pill.reissue  { background: rgba(245,158,11,0.18); color: var(--amber-text); border: 1px solid var(--amber-border); }
 .status-pill.inactive { background: rgba(132,150,171,0.12); color: var(--muted); border: 1px solid var(--border); }
@@ -253,6 +252,11 @@ textarea { resize: vertical; min-height: 70px; }
   background: rgba(255,255,255,0.02);
   border-radius: 8px;
   border-left: 3px solid var(--border);
+  position: relative;
+}
+.details-inner .pen-item.active-item {
+  border-left-color: var(--accent);
+  background: rgba(47,158,68,0.06);
 }
 .details-inner .pen-item b { color: #fff; }
 .details-inner .pen-item a { color: #93c5fd; text-decoration: none; word-break: break-all; }
@@ -264,6 +268,22 @@ textarea { resize: vertical; min-height: 70px; }
 }
 .details-inner .flag.yes { background: var(--accent-bg); color: #86efac; }
 .details-inner .flag.no  { background: rgba(132,150,171,0.12); color: var(--muted); }
+.details-inner .appeal-item-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--purple-text);
+  background: var(--purple-bg);
+  border: 1px solid var(--purple-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.details-inner .appeal-item-btn:hover { background: var(--purple); color: #fff; }
 
 .expand-btn {
   width: 30px; height: 30px; padding: 0;
@@ -428,7 +448,7 @@ label {
   color: var(--text-soft);
   white-space: pre-wrap;
   word-break: break-word;
-  max-height: 200px;
+  max-height: 240px;
   overflow-y: auto;
   line-height: 1.55;
 }
@@ -532,7 +552,7 @@ label {
           <line x1="12" y1="9" x2="12" y2="13"/>
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
-        Активные взыскания
+        Выданные взыскания
       </h2>
       <button class="btn" id="refreshMain" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -583,9 +603,8 @@ label {
       <input type="text" id="searchRequest" placeholder="🔍 Поиск по имени или паспорту…">
       <select id="filterRequest">
         <option value="pending">🟡 Ожидает рассмотрения</option>
-        <option value="approved">🔵 Одобрено (ждём выдачу)</option>
-        <option value="active">🟢 Выдано</option>
         <option value="rejected">🔴 Отклонено</option>
+        <option value="active">🟢 Выдано</option>
         <option value="deleted">🗑 Удалённые</option>
         <option value="">Все</option>
       </select>
@@ -737,7 +756,7 @@ label {
   </div>
 </div>
 
-<!-- ============ МОДАЛКА: РАССМОТРЕНИЕ ============ -->
+<!-- ============ МОДАЛКА: РАССМОТРЕНИЕ (approve + auto-issue) ============ -->
 <div class="modal-back hidden" id="reviewModal">
   <div class="modal">
     <h3>
@@ -751,63 +770,73 @@ label {
     </h3>
 
     <div class="modal-who" id="reviewWho">—</div>
+
+    <div class="form-group">
+      <label for="reviewProofUrl">Ссылка на взыскание (для шаблона)</label>
+      <input type="text" id="reviewProofUrl" placeholder="https://…">
+      <div class="hint">Вставляется в пункт 4 шаблона выдачи.</div>
+    </div>
+
     <div class="template-block" id="reviewTemplate">—</div>
 
-    <div class="form-group" style="margin-top: 14px;">
-      <label for="rejectReason">Причина отклонения (обязательна для отклонения)</label>
+    <div class="form-group" style="margin-top: 12px;">
+      <label for="rejectReason">Причина отклонения (только для кнопки «Отклонить»)</label>
       <textarea id="rejectReason" placeholder="Опишите, почему взыскание отклоняется…"></textarea>
     </div>
+
+    <label class="checkbox-row" for="reviewDiscord" style="margin-top: 12px;">
+      <input type="checkbox" id="reviewDiscord">
+      <span class="cb-text">Выдано в Discord</span>
+    </label>
+    <label class="checkbox-row" for="reviewGame">
+      <input type="checkbox" id="reviewGame">
+      <span class="cb-text">Выдано в Игре</span>
+    </label>
 
     <div class="modal-actions">
       <button type="button" class="btn" id="reviewCancel">Отмена</button>
       <button type="button" class="btn btn-primary" id="reviewReject">✕ Отклонить</button>
-      <button type="button" class="btn btn-success" id="reviewApprove">✓ Одобрить</button>
+      <button type="button" class="btn btn-success" id="reviewApprove" disabled>✓ Одобрить и выдать</button>
     </div>
   </div>
 </div>
 
-<!-- ============ МОДАЛКА: ВЫДАЧА / ПЕРЕВЫДАЧА ============ -->
-<div class="modal-back hidden" id="issueModal">
+<!-- ============ МОДАЛКА: ПЕРЕВЫДАЧА ============ -->
+<div class="modal-back hidden" id="reissueModal">
   <div class="modal">
     <h3>
       <span class="m-icon green">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+          <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
         </svg>
       </span>
-      <span id="issueTitle">Выдай взыскание</span>
+      Перевыдать взыскание
     </h3>
 
     <div class="form-group">
-      <label for="issueProofUrl">Ссылка на взыскание</label>
-      <input type="text" id="issueProofUrl" placeholder="https://…">
-      <div class="hint">Вставляется в пункт 4 шаблона выдачи.</div>
+      <label for="reissuePrevUrl">Предыдущее взыскание (ссылка)</label>
+      <input type="text" id="reissuePrevUrl" placeholder="https://…">
+      <div class="hint">Вставляется в пункт 4 шаблона. Заменяет «Ссылку на взыскание».</div>
     </div>
 
-    <div class="template-block" id="issueTemplate">—</div>
+    <div class="template-block" id="reissueTemplate">—</div>
 
-    <div class="modal-actions" style="justify-content: space-between; margin-top: 16px;">
-      <button type="button" class="btn btn-success" id="copyIssueBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        Копировать
-      </button>
-      <div style="display: flex; gap: 8px;">
-        <button type="button" class="btn" id="issueCancel">Отмена</button>
-        <button type="button" class="btn btn-success" id="issueConfirm" disabled>✓ Подтвердить</button>
-      </div>
-    </div>
-
-    <label class="checkbox-row" for="issueDiscord" style="margin-top: 14px;">
-      <input type="checkbox" id="issueDiscord">
+    <label class="checkbox-row" for="reissueDiscord" style="margin-top: 14px;">
+      <input type="checkbox" id="reissueDiscord">
       <span class="cb-text">Выдано в Discord</span>
     </label>
-    <label class="checkbox-row" for="issueGame">
-      <input type="checkbox" id="issueGame">
+    <label class="checkbox-row" for="reissueGame">
+      <input type="checkbox" id="reissueGame">
       <span class="cb-text">Выдано в Игре</span>
     </label>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" id="reissueCancel">Отмена</button>
+      <button type="button" class="btn btn-success" id="reissueConfirm" disabled>✓ Подтвердить</button>
+    </div>
   </div>
 </div>
 
@@ -885,7 +914,7 @@ label {
     </h3>
 
     <p style="color: var(--muted); font-size: 0.88rem; line-height: 1.55;">
-      Сотрудник обжаловал взыскание. Сними выговор в планшете в отделе <b>«Взыскания»</b> — и подтверди ниже.
+      Сотрудник обжаловал взыскание. Сними выговор в планшете — и подтверди ниже.
     </p>
 
     <label class="checkbox-row" for="appealConfirmCheck" style="margin-top: 14px;">
@@ -935,6 +964,7 @@ label {
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
   const ARTICLES = [
+    { num: "3.14",  text: "Сотрудник организации обязан отработать выговор в течение 48 часов после его получения.", cat: "СРОК" },
     { num: "3.15",  text: "Сотрудник организации обязан пройти переаттестацию в течение 48 часов после ее получения.", cat: "УВОЛЬНЕНИЕ" },
     { num: "3.21",  text: "Медицинский сотрудник обязан пройти ординатуру в течение 3 дней.", cat: "УВОЛЬНЕНИЕ" },
     { num: "3.22",  text: "Сотрудник Больницы, желающий изменить имя и/или фамилию, обязан до изменения персональных данных получить разрешение Руководящего состава.", cat: "УВОЛЬНЕНИЕ" },
@@ -982,7 +1012,6 @@ label {
     { num: "3.12",  text: "Сотрудник организации обязан появиться на брифинге, который проводят АБ, Старший или Руководящий состав.", cat: "СТРОГИЙ_1" },
     { num: "3.13",  text: "Сотрудники отделов обязаны во время дежурства находиться на закреплённых за их отделом местах несения дежурства.", cat: "СТРОГИЙ_1" },
     { num: "3.13.1",text: "Сотрудник больницы обязан проводить осмотр пациента/выдачу вакцин/выдачу медицинских справок согласно всем правилам в предназначенных для этого местах.", cat: "СТРОГИЙ_1" },
-    { num: "3.14",  text: "Сотрудник организации обязан отработать выговор в течение 48 часов после его получения.", cat: "СТРОГИЙ_1" },
     { num: "3.17",  text: "Каждый сотрудник должен иметь действующую медицинскую справку о психическом и физическом здоровье.", cat: "СТРОГИЙ_1" },
     { num: "3.18",  text: "Каждый сотрудник после брифинга обязан оставить отчет в специальном канале \"Отчет после брифинга\".", cat: "СТРОГИЙ_1" },
     { num: "4.4",   text: "Сотрудники отделения АБ, Инструктора отдела, Старший и Руководящий состав имеют право запросить отчет о проделанной работе, а также о местоположении любого сотрудника. Если у сотрудника нет отчета без уважительной причины (обеденный перерыв, обед, перерыв, отпуск) или он отказывается его предоставлять, то это повлечет за собой наложение взыскания.", cat: "СТРОГИЙ_1" },
@@ -1030,9 +1059,8 @@ label {
     activeTab: "main",
     pendingSubmit: null,
     reviewTarget: null,
-    issueTarget: null,
-    issueMode: "approve",
-    appealGroup: null,
+    reissueTarget: null,
+    appealTarget: null,
     removeGroup: null
   };
 
@@ -1131,8 +1159,7 @@ label {
   function statusLabel(s) {
     return {
       pending:  "🟡 Ожидает рассмотрения",
-      approved: "🔵 Одобрено",
-      active:   "🟢 Активно",
+      active:   "🟢 Выдано",
       reissue:  "🔁 Перевыдать",
       inactive: "⚪ Неактивно",
       appealed: "🟣 Обжаловано",
@@ -1298,15 +1325,20 @@ label {
     return lines.join("\n");
   }
 
-  function buildIssueTemplate(pen, issueProofUrl) {
+  function buildIssueTemplate(pen, proofUrl, isReissue) {
     const requester = findStaffByName(pen.requestedBy);
     const requesterPassport = requester ? (requester.passport || "—") : "—";
+
+    const article = isReissue ? "3.14" : pen.article;
+    const articleText = isReissue
+      ? "Сотрудник организации обязан отработать выговор в течение 48 часов после его получения."
+      : (pen.articleText || "");
 
     const lines = [
       "1. " + (pen.requestedDiscord || "") + " " + pen.requestedBy + " | " + requesterPassport,
       "2. " + pen.employeeName + " | " + (pen.employeePassport || "—"),
-      "3. Статья " + pen.article + (pen.articleText ? " — " + pen.articleText : ""),
-      "4. " + (issueProofUrl || pen.proofUrl || "—"),
+      "3. Статья " + article + (articleText ? " — " + articleText : ""),
+      "4. " + (proofUrl || pen.issuedProofUrl || pen.proofUrl || "—"),
       "5. " + pen.level + " — " + pen.measure
     ];
     return lines.join("\n");
@@ -1401,6 +1433,7 @@ label {
 
     let list = state.groups.slice();
 
+    // Показываем группы, где есть запись с нужным статусом
     if (filter) {
       list = list.filter(g => g.penalties.some(p => p.status === filter));
     } else {
@@ -1457,21 +1490,12 @@ label {
         actions.appendChild(removeBtn);
       }
 
-      if (canModerate() && g.penalties.some(p => ["active", "reissue"].includes(p.status))) {
-        const appealBtn = document.createElement("button");
-        appealBtn.className = "btn-icon purple";
-        appealBtn.title = "Обжаловать";
-        appealBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>';
-        appealBtn.addEventListener("click", () => openAppeal(g));
-        actions.appendChild(appealBtn);
-      }
-
       if (canModerate() && g.penalties.some(p => p.status === "reissue")) {
         const reBtn = document.createElement("button");
         reBtn.className = "btn-icon success";
         reBtn.title = "Перевыдать";
         reBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/></svg>';
-        reBtn.addEventListener("click", () => openIssue(g.penalties.find(p => p.status === "reissue"), "reissue"));
+        reBtn.addEventListener("click", () => openReissue(g));
         actions.appendChild(reBtn);
       }
 
@@ -1570,15 +1594,6 @@ label {
         revBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 12 18 17 13"/></svg>';
         revBtn.addEventListener("click", () => openReview(p));
         actions.appendChild(revBtn);
-      }
-
-      if (canModerate() && p.status === "approved") {
-        const issBtn = document.createElement("button");
-        issBtn.className = "btn-icon success";
-        issBtn.title = "Выдать";
-        issBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-        issBtn.addEventListener("click", () => openIssue(p, "approve"));
-        actions.appendChild(issBtn);
       }
 
       const copyBtn = document.createElement("button");
@@ -1788,31 +1803,35 @@ label {
     detailsRow.className = "details-row";
     const colCount = tr.cells.length;
 
-    let itemsHtml = "";
-    group.penalties.forEach((p, i) => {
-      const flags = source === "main"
-        ? '<div style="margin-top:6px;"><span class="flag ' + (p.issuedDiscord ? "yes" : "no") + '">' + (p.issuedDiscord ? "✓" : "✕") + ' Discord</span> ' +
-          '<span class="flag ' + (p.issuedGame ? "yes" : "no") + '">' + (p.issuedGame ? "✓" : "✕") + ' Игра</span></div>'
-        : "";
+    // Показываем ТОЛЬКО активные записи
+    const activeItems = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
 
-      itemsHtml +=
-        '<div class="pen-item">' +
-          '<div><b>№' + (i + 1) + ' · Статья ' + esc(p.article) + '</b> — ' + esc(p.level) + ' · ' + esc(statusLabel(p.status)) + '</div>' +
-          '<div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">' + esc(p.articleText || "") + '</div>' +
-          '<div style="margin-top:6px;"><b>Запросил:</b> ' + esc(p.requestedBy || "—") + (p.requestedDiscord ? ' (' + esc(p.requestedDiscord) + ')' : '') + ' · ' + esc(formatDateTime(p.requestedAt)) + '</div>' +
-          '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
-          (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
-          '<div><b>Мера отработки:</b> ' + esc(p.measure || "—") + '</div>' +
-          (p.removedReason ? '<div><b>Снято:</b> ' + esc(p.removedReason) + ' · ' + esc(formatDateTime(p.removedAt)) + '</div>' : '') +
-          (p.appealedReason ? '<div><b>Обжаловано:</b> ' + esc(p.appealedReason) + '</div>' : '') +
-          flags +
-        '</div>';
-    });
+    let itemsHtml = "";
+    if (!activeItems.length) {
+      itemsHtml = '<div class="pen-item">Нет активных взысканий в этой группе</div>';
+    } else {
+      activeItems.forEach((p, i) => {
+        itemsHtml +=
+          '<div class="pen-item active-item" data-pen-id="' + p.id + '">' +
+            '<button type="button" class="appeal-item-btn" data-appeal-id="' + p.id + '">Обжаловать</button>' +
+            '<div><b>№' + (i + 1) + ' · Статья ' + esc(p.article) + '</b> — ' + esc(p.level) + '</div>' +
+            '<div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">' + esc(p.articleText || "") + '</div>' +
+            '<div style="margin-top:6px;"><b>Запросил:</b> ' + esc(p.requestedBy || "—") + (p.requestedDiscord ? ' (' + esc(p.requestedDiscord) + ')' : '') + ' · ' + esc(formatDateTime(p.requestedAt)) + '</div>' +
+            '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
+            (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
+            '<div><b>Мера отработки:</b> ' + esc(p.measure || "—") + '</div>' +
+            '<div style="margin-top:6px;">' +
+              '<span class="flag ' + (p.issuedDiscord ? "yes" : "no") + '">' + (p.issuedDiscord ? "✓" : "✕") + ' Discord</span> ' +
+              '<span class="flag ' + (p.issuedGame ? "yes" : "no") + '">' + (p.issuedGame ? "✓" : "✕") + ' Игра</span>' +
+            '</div>' +
+          '</div>';
+      });
+    }
 
     detailsRow.innerHTML =
       '<td colspan="' + colCount + '">' +
         '<div class="details-inner">' +
-          '<div><b>Общий уровень:</b> ' + esc(group.level) + ' · <b>Всего записей:</b> ' + group.penalties.length + '</div>' +
+          '<div><b>Общий уровень:</b> ' + esc(group.level) + ' · <b>Активных записей:</b> ' + activeItems.length + '</div>' +
           itemsHtml +
         '</div>' +
       '</td>';
@@ -1820,6 +1839,16 @@ label {
     tr.parentNode.insertBefore(detailsRow, tr.nextSibling);
     const btn = tr.querySelector(".expand-btn");
     if (btn) btn.classList.add("open");
+
+    // Обработчики «Обжаловать» на каждой записи
+    detailsRow.querySelectorAll(".appeal-item-btn").forEach(b => {
+      b.addEventListener("click", () => {
+        const penId = parseInt(b.dataset.appealId, 10);
+        const pen = group.penalties.find(p => p.id === penId);
+        if (!pen) return;
+        openAppeal(pen);
+      });
+    });
   }
 
   function toggleDetailsSingle(tr, p, source) {
@@ -1839,16 +1868,14 @@ label {
     detailsRow.className = "details-row";
     const colCount = tr.cells.length;
 
-    const flags = source === "main"
-      ? '<div><span class="flag ' + (p.issuedDiscord ? "yes" : "no") + '">' + (p.issuedDiscord ? "✓" : "✕") + ' Discord</span> ' +
-        '<span class="flag ' + (p.issuedGame ? "yes" : "no") + '">' + (p.issuedGame ? "✓" : "✕") + ' Игра</span></div>'
-      : "";
+    const flags = '<div><span class="flag ' + (p.issuedDiscord ? "yes" : "no") + '">' + (p.issuedDiscord ? "✓" : "✕") + ' Discord</span> ' +
+      '<span class="flag ' + (p.issuedGame ? "yes" : "no") + '">' + (p.issuedGame ? "✓" : "✕") + ' Игра</span></div>';
 
     detailsRow.innerHTML =
       '<td colspan="' + colCount + '">' +
         '<div class="details-inner">' +
           '<div><b>Дата и время:</b> ' + esc(formatDateTime(p.requestedAt)) + '</div>' +
-          '<div><b>' + (source === "main" ? "Кем выдано" : "Кем запрошено") + ':</b> ' + esc(p.requestedBy || "—") + (p.requestedDiscord ? ' (' + esc(p.requestedDiscord) + ')' : '') + '</div>' +
+          '<div><b>Кем запрошено:</b> ' + esc(p.requestedBy || "—") + (p.requestedDiscord ? ' (' + esc(p.requestedDiscord) + ')' : '') + '</div>' +
           '<div><b>Статья:</b> ' + esc(p.article) + ' — ' + esc(p.articleText || "") + '</div>' +
           '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
           (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
@@ -1956,15 +1983,22 @@ label {
   }
 
   /* ============================================================
-     РАССМОТРЕНИЕ
+     РАССМОТРЕНИЕ (approve + auto-issue)
      ============================================================ */
   function openReview(p) {
     state.reviewTarget = p;
     $("reviewWho").innerHTML =
       '<div class="name">' + esc(p.employeeName) + '</div>' +
       '<div class="sub">#' + esc(p.employeePassport || "—") + ' · ' + esc(p.employeeDept || "—") + ' · Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
-    $("reviewTemplate").textContent = buildIssueTemplate(p, "");
+
+    $("reviewProofUrl").value = "";
+    $("reviewTemplate").textContent = buildIssueTemplate(p, "", false);
+
     $("rejectReason").value = "";
+    $("reviewDiscord").checked = false;
+    $("reviewGame").checked = false;
+    $("reviewApprove").disabled = true;
+
     $("reviewModal").classList.remove("hidden");
   }
 
@@ -1973,26 +2007,44 @@ label {
     state.reviewTarget = null;
   }
 
+  function checkReviewChecks() {
+    $("reviewApprove").disabled = !($("reviewDiscord").checked && $("reviewGame").checked);
+  }
+
   async function approveReview() {
     if (!state.reviewTarget) return;
     const target = state.reviewTarget;
+
+    const discord = $("reviewDiscord").checked;
+    const game = $("reviewGame").checked;
+    if (!discord || !game) return showToast("Отметьте обе галочки", "alert");
+
+    const issueProofUrl = String($("reviewProofUrl").value || "").replace(/\s+/g, "").trim();
+
     try {
       const data = await apiPost({
         action: "approvePenalty",
         login: state.user.login,
         hash: state.user.hash,
-        id: target.id
+        id: target.id,
+        discord: true,
+        game: true,
+        issueProofUrl: issueProofUrl
       });
       if (!data.success) return showToast(data.message || "Ошибка", "alert");
+
       closeReview();
       await loadPenalties();
+      await loadPendingCount();
       renderRequest();
       renderMain();
-      notifyParent("Одобрено", target.employeeName, "success");
-      showToast("Одобрено — выдай взыскание", "info");
 
-      const updated = state.penalties.find(p => p.id === target.id) || target;
-      openIssue(updated, "approve");
+      notifyParent(
+        "Выдано",
+        target.employeeName + (data.level >= 3 ? " — УВОЛЕН (3/3)" : ""),
+        "success"
+      );
+      showToast("Выдано", "info");
     } catch (e) {
       console.error(e);
       showToast("Ошибка: " + (e.message || String(e)), "alert");
@@ -2025,74 +2077,66 @@ label {
   }
 
   /* ============================================================
-     ВЫДАЧА
+     ПЕРЕВЫДАЧА
      ============================================================ */
-  function openIssue(p, mode) {
-    state.issueTarget = p;
-    state.issueMode = mode || "approve";
+  function openReissue(group) {
+    const reissueItem = group.penalties.find(p => p.status === "reissue");
+    if (!reissueItem) return showToast("Нет взысканий для перевыдачи", "alert");
 
-    $("issueTitle").textContent = state.issueMode === "reissue" ? "Перевыдать взыскание" : "Выдай взыскание";
-    $("issueProofUrl").value = "";
-    $("issueTemplate").textContent = buildIssueTemplate(p, "");
+    state.reissueTarget = reissueItem;
 
-    $("issueDiscord").checked = false;
-    $("issueGame").checked = false;
-    $("issueConfirm").disabled = true;
+    $("reissuePrevUrl").value = "";
+    $("reissueTemplate").textContent = buildIssueTemplate(reissueItem, "", true);
 
-    $("issueModal").classList.remove("hidden");
+    $("reissueDiscord").checked = false;
+    $("reissueGame").checked = false;
+    $("reissueConfirm").disabled = true;
+
+    $("reissueModal").classList.remove("hidden");
   }
 
-  function closeIssue() {
-    $("issueModal").classList.add("hidden");
-    state.issueTarget = null;
+  function closeReissue() {
+    $("reissueModal").classList.add("hidden");
+    state.reissueTarget = null;
   }
 
-  async function confirmIssue() {
-    if (!state.issueTarget) return;
+  async function confirmReissue() {
+    if (!state.reissueTarget) return;
 
-    const discord = $("issueDiscord").checked;
-    const game = $("issueGame").checked;
+    const discord = $("reissueDiscord").checked;
+    const game = $("reissueGame").checked;
     if (!discord || !game) return showToast("Отметьте обе галочки", "alert");
 
-    const issueProofUrl = String($("issueProofUrl").value || "").replace(/\s+/g, "").trim();
-    const target = state.issueTarget;
-    const mode = state.issueMode;
+    const prevIssueUrl = String($("reissuePrevUrl").value || "").replace(/\s+/g, "").trim();
+    if (!prevIssueUrl) return showToast("Укажите ссылку на предыдущее взыскание", "alert");
+
+    const target = state.reissueTarget;
 
     try {
-      let data;
-      if (mode === "reissue") {
-        data = await apiPost({
-          action: "reissuePenalty",
-          login: state.user.login,
-          hash: state.user.hash,
-          id: target.id
-        });
-      } else {
-        data = await apiPost({
-          action: "issuePenalty",
-          login: state.user.login,
-          hash: state.user.hash,
-          id: target.id,
-          discord: true,
-          game: true,
-          issueProofUrl: issueProofUrl
-        });
-      }
+      const data = await apiPost({
+        action: "reissuePenalty",
+        login: state.user.login,
+        hash: state.user.hash,
+        id: target.id,
+        discord: true,
+        game: true,
+        prevIssueUrl: prevIssueUrl
+      });
 
       if (!data.success) return showToast(data.message || "Ошибка", "alert");
 
-      closeIssue();
+      closeReissue();
       await loadPenalties();
       await loadPendingCount();
       renderRequest();
       renderMain();
 
       notifyParent(
-        mode === "reissue" ? "Перевыдано" : "Выдано",
+        "Перевыдано",
         target.employeeName + (data.level >= 3 ? " — УВОЛЕН (3/3)" : ""),
         "success"
       );
-      showToast(mode === "reissue" ? "Перевыдано" : "Выдано", "info");
+      showToast("Перевыдано", "info");
     } catch (e) {
       console.error(e);
       showToast("Ошибка: " + (e.message || String(e)), "alert");
@@ -2153,25 +2197,21 @@ label {
   }
 
   /* ============================================================
-     ОБЖАЛОВАНИЕ
+     ОБЖАЛОВАНИЕ КОНКРЕТНОЙ ЗАПИСИ
      ============================================================ */
-  function openAppeal(group) {
-    state.appealGroup = group;
-    const actives = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
-    if (!actives.length) return showToast("Нет активных взысканий для обжалования", "alert");
-    actives.sort((a, b) => (b.id || 0) - (a.id || 0));
-    const target = actives[0];
+  function openAppeal(pen) {
+    state.appealTarget = pen;
 
     $("appealWho").innerHTML =
-      '<div class="name">' + esc(target.employeeName) + '</div>' +
-      '<div class="sub">#' + esc(target.employeePassport || "—") + ' · ' + esc(target.employeeDept || "—") + ' · Статья ' + esc(target.article) + ' · ' + esc(target.level) + '</div>';
+      '<div class="name">' + esc(pen.employeeName) + '</div>' +
+      '<div class="sub">#' + esc(pen.employeePassport || "—") + ' · ' + esc(pen.employeeDept || "—") + ' · Статья ' + esc(pen.article) + ' · ' + esc(pen.level) + '</div>';
     $("appealReason").value = "";
     $("appealModal").classList.remove("hidden");
   }
 
   function closeAppeal() {
     $("appealModal").classList.add("hidden");
-    state.appealGroup = null;
+    state.appealTarget = null;
   }
 
   function openAppealConfirm() {
@@ -2183,14 +2223,9 @@ label {
   }
 
   async function confirmAppeal() {
-    if (!state.appealGroup) return;
+    if (!state.appealTarget) return;
     const reason = $("appealReason").value.trim();
-    const group = state.appealGroup;
-
-    const actives = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
-    actives.sort((a, b) => (b.id || 0) - (a.id || 0));
-    const target = actives[0];
-    if (!target) return showToast("Нет активных взысканий", "alert");
+    const target = state.appealTarget;
 
     try {
       const data = await apiPost({
@@ -2228,7 +2263,7 @@ label {
     if (!confirm("Удалить взыскание «" + group.employeeName + "» (уровень " + group.level + ")?")) return;
     try {
       const toDelete = group.penalties.filter(p =>
-        ["active", "reissue", "pending", "approved"].includes(p.status)
+        ["active", "reissue", "pending"].includes(p.status)
       );
       for (const p of toDelete) {
         await apiPost({
@@ -2428,25 +2463,26 @@ label {
     $("reviewCancel").addEventListener("click", closeReview);
     $("reviewApprove").addEventListener("click", approveReview);
     $("reviewReject").addEventListener("click", rejectReview);
-
-    $("issueCancel").addEventListener("click", closeIssue);
-    $("issueConfirm").addEventListener("click", confirmIssue);
-    $("copyIssueBtn").addEventListener("click", async () => {
-      if (!state.issueTarget) return;
-      const issueProofUrl = String($("issueProofUrl").value || "").replace(/\s+/g, "").trim();
-      const ok = await copyText(buildIssueTemplate(state.issueTarget, issueProofUrl));
-      showToast(ok ? "Скопировано" : "Ошибка копирования", ok ? "info" : "alert");
+    $("reviewDiscord").addEventListener("change", checkReviewChecks);
+    $("reviewGame").addEventListener("change", checkReviewChecks);
+    $("reviewProofUrl").addEventListener("input", () => {
+      if (!state.reviewTarget) return;
+      const clean = String($("reviewProofUrl").value || "").replace(/\s+/g, "").trim();
+      $("reviewTemplate").textContent = buildIssueTemplate(state.reviewTarget, clean, false);
     });
-    function checkIssueChecks() {
-      $("issueConfirm").disabled = !($("issueDiscord").checked && $("issueGame").checked);
-    }
-    $("issueDiscord").addEventListener("change", checkIssueChecks);
-    $("issueGame").addEventListener("change", checkIssueChecks);
 
-    $("issueProofUrl").addEventListener("input", () => {
-      if (!state.issueTarget) return;
-      const clean = String($("issueProofUrl").value || "").replace(/\s+/g, "").trim();
-      $("issueTemplate").textContent = buildIssueTemplate(state.issueTarget, clean);
+    $("reissueCancel").addEventListener("click", closeReissue);
+    $("reissueConfirm").addEventListener("click", confirmReissue);
+    $("reissueDiscord").addEventListener("change", () => {
+      $("reissueConfirm").disabled = !($("reissueDiscord").checked && $("reissueGame").checked);
+    });
+    $("reissueGame").addEventListener("change", () => {
+      $("reissueConfirm").disabled = !($("reissueDiscord").checked && $("reissueGame").checked);
+    });
+    $("reissuePrevUrl").addEventListener("input", () => {
+      if (!state.reissueTarget) return;
+      const clean = String($("reissuePrevUrl").value || "").replace(/\s+/g, "").trim();
+      $("reissueTemplate").textContent = buildIssueTemplate(state.reissueTarget, clean, true);
     });
 
     $("removeCancel").addEventListener("click", closeRemove);
@@ -2468,13 +2504,14 @@ label {
     $("appealConfirmModal").addEventListener("click", (e) => { if (e.target === $("appealConfirmModal")) $("appealConfirmModal").classList.add("hidden"); });
     $("appealInfoModal").addEventListener("click", (e) => { if (e.target === $("appealInfoModal")) $("appealInfoModal").classList.add("hidden"); });
     $("removeModal").addEventListener("click", (e) => { if (e.target === $("removeModal")) closeRemove(); });
+    $("reissueModal").addEventListener("click", (e) => { if (e.target === $("reissueModal")) closeReissue(); });
 
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
       if (!$("submitModal").classList.contains("hidden")) closeSubmit();
       if (!$("confirmModal").classList.contains("hidden")) closeConfirm();
       if (!$("reviewModal").classList.contains("hidden")) closeReview();
-      if (!$("issueModal").classList.contains("hidden")) closeIssue();
+      if (!$("reissueModal").classList.contains("hidden")) closeReissue();
       if (!$("appealModal").classList.contains("hidden")) closeAppeal();
       if (!$("removeModal").classList.contains("hidden")) closeRemove();
       $("appealConfirmModal").classList.add("hidden");

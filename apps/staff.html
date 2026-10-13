@@ -296,6 +296,30 @@
     box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
   }
 
+  /* ===== Бейдж взысканий ===== */
+  .penalty-badge {
+    display: inline-block; margin-left: 6px;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 800;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+  }
+  .penalty-badge.l1 {
+    background: rgba(245,158,11,0.18);
+    color: #fcd34d;
+    box-shadow: 0 0 8px rgba(245,158,11,0.35);
+  }
+  .penalty-badge.l2 {
+    background: rgba(239,68,68,0.2);
+    color: #fca5a5;
+    box-shadow: 0 0 8px rgba(239,68,68,0.4);
+  }
+  .penalty-badge.l3 {
+    background: linear-gradient(135deg, #ef4444, #7f1d1d);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(239,68,68,0.6);
+  }
+
   /* -------- Стильные иконочные кнопки -------- */
   .icon-btn {
     width: 32px; height: 32px;
@@ -607,7 +631,7 @@
     </div>
   </div>
 
-  <!-- Карточка: форма добавления сотрудника (только для создания нового, не для редактирования) -->
+  <!-- Карточка: форма добавления сотрудника -->
   <div class="card hidden" id="staffFormCard">
     <div class="card-head">
       <h2 id="staffFormTitle">Новый сотрудник</h2>
@@ -1052,6 +1076,12 @@
         ? ' <span class="vacation-badge" title="' + esc(vacation.type + ": " + vacation.start + " → " + vacation.end) + '">🌴 ' + esc(vacation.type) + '</span>'
         : '';
 
+      const lvl = parseInt(s.penaltyLevel, 10) || 0;
+      let penaltyBadge = "";
+      if (lvl === 1) penaltyBadge = ' <span class="penalty-badge l1" title="Строгий выговор 1/3">⚠️ 1/3</span>';
+      else if (lvl === 2) penaltyBadge = ' <span class="penalty-badge l2" title="Строгий выговор 2/3">⚠️ 2/3</span>';
+      else if (lvl >= 3) penaltyBadge = ' <span class="penalty-badge l3" title="Строгий выговор 3/3">🚫 3/3</span>';
+
       let actionsHtml = "";
       if (canEdit) {
         actionsHtml =
@@ -1077,7 +1107,7 @@
 
       tr.innerHTML =
         '<td class="col-num">' + (i + 1) + '</td>' +
-        '<td class="col-name">' + esc(s.name || "—") + vacBadge + '</td>' +
+        '<td class="col-name">' + esc(s.name || "—") + vacBadge + penaltyBadge + '</td>' +
         '<td class="col-pass">' + esc(s.passport || "—") + '</td>' +
         '<td class="col-hide-sm">' + esc(s.position || "—") + '</td>' +
         '<td class="col-rank">' + esc(s.rank || "—") + '</td>' +
@@ -1174,13 +1204,11 @@
   function openEditorInline(s, tr) {
     if (!isAdmin()) return;
 
-    // Если уже открыт редактор — закрыть
     closeInlineEditor();
 
     state.editingStaffRow = s.rowIndex;
     tr.classList.add("tr-editing");
 
-    // Создаём <tr> с формой
     const editTr = document.createElement("tr");
     editTr.className = "edit-row";
     editTr.dataset.editFor = s.rowIndex;
@@ -1237,35 +1265,29 @@
         '</div>' +
       '</td>';
 
-    // Вставляем СРАЗУ после редактируемой строки
     tr.insertAdjacentElement("afterend", editTr);
 
-    // Анимация раскрытия
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         editTr.classList.add("open");
       });
     });
 
-    // Автоскролл к форме
     setTimeout(() => {
       editTr.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }, 100);
 
-    // Обработчики кнопок
     const eiName = editTr.querySelector("#ei_name");
     const eiPassport = editTr.querySelector("#ei_passport");
     const eiPosition = editTr.querySelector("#ei_position");
     const eiRank = editTr.querySelector("#ei_rank");
     const eiDepartment = editTr.querySelector("#ei_department");
 
-    // Автоподстановка должности при смене ранга
     eiRank.addEventListener("change", () => {
       const r = parseInt(eiRank.value, 10);
       if (r >= 1 && r <= 12) {
         eiPosition.value = RANK_TO_POSITION[r];
       }
-      // r === 13 (Лидер) — должность не трогаем
     });
 
     editTr.querySelector('[data-action="edit-cancel"]').addEventListener("click", () => {
@@ -1302,7 +1324,6 @@
         } else {
           showToast("Обновлено: " + fields.newName, "success");
           notifyParent("Сотрудник обновлён", fields.newName);
-          // После успешного сохранения renderActive перерисует таблицу без формы
           state.editingStaffRow = null;
           await loadStaff();
         }
@@ -1314,7 +1335,6 @@
       }
     });
 
-    // Enter — сохранить, Escape — отменить
     editTr.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey && e.target.tagName !== "TEXTAREA") {
         e.preventDefault();
@@ -1332,17 +1352,15 @@
     const existing = staffContainer.querySelector(".edit-row");
     if (existing) {
       existing.classList.remove("open");
-      // Убираем tr после анимации сворачивания
       setTimeout(() => {
         existing.remove();
       }, 350);
     }
-    // Снимаем подсветку со всех строк
     staffContainer.querySelectorAll("tr.tr-editing").forEach(tr => tr.classList.remove("tr-editing"));
     state.editingStaffRow = null;
   }
 
-  /* ---------- Открытие формы создания (карточка внизу) ---------- */
+  /* ---------- Открытие формы создания ---------- */
   function openCreate() {
     if (!isAdmin()) return;
     state.editingStaffRow = null;
@@ -1367,7 +1385,6 @@
     e.preventDefault();
     if (!isAdmin()) return;
 
-    // Это только создание нового сотрудника (редактирование идёт через inline-форму)
     const fields = {
       newName: staffName.value.trim(),
       newPassport: staffPassport.value.trim(),
@@ -1559,7 +1576,6 @@
       filterDept.appendChild(o);
     });
 
-    // Заполнить select ранга в форме создания
     staffRank.innerHTML = "";
     for (let i = 1; i <= 12; i++) {
       const o = document.createElement("option");
@@ -1598,7 +1614,6 @@
     cancelStaffBtn.addEventListener("click", closeCreate);
     staffForm.addEventListener("submit", handleStaffForm);
 
-    // Автоподстановка должности в форме создания
     staffRank.addEventListener("change", () => {
       const r = parseInt(staffRank.value, 10);
       if (r >= 1 && r <= 12) {

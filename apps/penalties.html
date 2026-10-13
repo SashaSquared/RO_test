@@ -752,6 +752,12 @@ label {
       <span id="issueTitle">Выдай взыскание</span>
     </h3>
 
+    <div class="form-group">
+      <label for="issueProofUrl">Ссылка на взыскание</label>
+      <input type="text" id="issueProofUrl" placeholder="https://…">
+      <div class="hint">Вставляется в пункт 4 шаблона выдачи.</div>
+    </div>
+
     <div class="template-block" id="issueTemplate">—</div>
 
     <div class="modal-actions" style="justify-content: space-between; margin-top: 16px;">
@@ -818,7 +824,7 @@ label {
           <line x1="12" y1="16" x2="12.01" y2="16"/>
         </svg>
       </span>
-      Сними обжалование в планшете
+      Сними выговор в планшете
     </h3>
 
     <p style="color: var(--muted); font-size: 0.88rem; line-height: 1.55;">
@@ -827,7 +833,7 @@ label {
 
     <label class="checkbox-row" for="appealConfirmCheck" style="margin-top: 14px;">
       <input type="checkbox" id="appealConfirmCheck">
-      <span class="cb-text">Я снял(а) обжалование в планшете</span>
+      <span class="cb-text">Я снял(а) выговор в планшете</span>
     </label>
 
     <div class="modal-actions">
@@ -875,7 +881,6 @@ label {
      СТАТЬИ УСТАВА
      ============================================================ */
   const ARTICLES = [
-    // === УВОЛЬНЕНИЕ (безусловное) ===
     { num: "3.15",  text: "Сотрудник организации обязан пройти переаттестацию в течение 48 часов после ее получения.", cat: "УВОЛЬНЕНИЕ" },
     { num: "3.21",  text: "Медицинский сотрудник обязан пройти ординатуру в течение 3 дней.", cat: "УВОЛЬНЕНИЕ" },
     { num: "3.22",  text: "Сотрудник Больницы, желающий изменить имя и/или фамилию, обязан до изменения персональных данных получить разрешение Руководящего состава.", cat: "УВОЛЬНЕНИЕ" },
@@ -886,7 +891,6 @@ label {
     { num: "5.26",  text: "Сотрудникам, находящимся на должностях «Интерн» и «Санитар», запрещено иметь два строгих выговора.", cat: "УВОЛЬНЕНИЕ" },
     { num: "5.44",  text: "Сотрудники, находящиеся на должностях «Интерн» и «Санитар», в случае увольнения по собственному желанию или отсутствия в городе Москве более 7 дней без оформленного отпуска подлежат занесению в черный список организации.", cat: "УВОЛЬНЕНИЕ" },
 
-    // === УВОЛЬНЕНИЕ (с одобрения) ===
     { num: "2.3",   text: "Младший и Средний составы обязаны подчиняться правомерным требованиям Старшего и Руководящего составов, а также АБ, и иным органам, установленным в законодательстве РО.", cat: "УВОЛЬНЕНИЕ_ОДОБРЕНИЕ" },
     { num: "3.16",  text: "Каждый сотрудник Больницы обязан еженедельно предоставлять отчет о проделанной работе в установленной форме в канале своего отделения — \"Недельный отчет\", в срок с 00:00 четверга до 23:59 субботы текущей недели.", cat: "УВОЛЬНЕНИЕ_ОДОБРЕНИЕ" },
     { num: "3.19",  text: "Каждый сотрудник обязан соблюдать регламент своего отделения.", cat: "УВОЛЬНЕНИЕ_ОДОБРЕНИЕ" },
@@ -917,7 +921,6 @@ label {
     { num: "9.4.1", text: "Последствия неотработки в срок: - Не отработан строгий выговор (2/3) → +1 строгий → увольнение.", cat: "УВОЛЬНЕНИЕ_ОДОБРЕНИЕ" },
     { num: "9.7",   text: "Если сотрудник при увольнении имеет неотработанный строгий выговор, он должен его оплатить по регламентированной системе.", cat: "УВОЛЬНЕНИЕ_ОДОБРЕНИЕ" },
 
-    // === СТРОГИЙ ВЫГОВОР (без степени) ===
     { num: "3.3",   text: "Сотрудники обязаны обеспечивать правильное хранение, учет лекарственных препаратов и оборудования.", cat: "СТРОГИЙ_1" },
     { num: "3.4",   text: "Максимально допустимое количество медикаментов, которое можно иметь при себе, регламентировано для всех сотрудников.", cat: "СТРОГИЙ_1" },
     { num: "3.5",   text: "Сотруднику запрещено за раз брать и иметь при себе большее кол-во медикаментов, регламентированных в пункте 3.4 устава.", cat: "СТРОГИЙ_1" },
@@ -951,17 +954,14 @@ label {
     { num: "12.13", text: "Сотрудники Старшего состава Больницы обязаны находиться на рабочем месте в рабочее время в установленной рабочей форме Больницы, соответствующей занимаемой должности и отделу.", cat: "СТРОГИЙ_1" },
     { num: "13.6.2",text: "Сотрудникам, не имеющим Квалификацию «Ветеринар» запрещено оказывать услуги лечения и профилактики животным.", cat: "СТРОГИЙ_1" },
 
-    // === СТРОГИЙ ВЫГОВОР 2/3 ===
     { num: "5.10",  text: "Сотруднику запрещена клевета, обман, злонамеренное введение кого-либо в заблуждение и преднамеренное укрывательство провинившихся сотрудников.", cat: "СТРОГИЙ_2" },
     { num: "5.12",  text: "Сотруднику запрещено играть в азартные игры в рабочей форме/в рабочее время.", cat: "СТРОГИЙ_2" },
     { num: "5.14",  text: "Сотрудникам запрещено брать оплату за услуги больше или меньше, чем регламентирует прейскурант организации.", cat: "СТРОГИЙ_2" },
 
-    // === ПЕРЕАТТЕСТАЦИЯ ===
     { num: "9.2",   text: "Виды взысканий: - Переаттестация - экзамен на знание устава.", cat: "ПЕРЕАТТЕСТАЦИЯ" },
     { num: "9.3",   text: "Порядок применения: - Переаттестация выдается в случаях грубого несоблюдения устава сотрудником, а также при переводе и восстановлении.", cat: "ПЕРЕАТТЕСТАЦИЯ" },
     { num: "10.7.4",text: "При восстановлении сотрудник обязан пройти переаттестацию.", cat: "ПЕРЕАТТЕСТАЦИЯ" },
 
-    // === ПОНИЖЕНИЕ ===
     { num: "5.21",  text: "Сотруднику запрещено присваивать/терять медикаменты, спец. средства, полученные в организации.", cat: "ПОНИЖЕНИЕ" },
     { num: "10.1.2",text: "Запрещено обходить систему повышенной любым способом.", cat: "ПОНИЖЕНИЕ" },
     { num: "12.9",  text: "Если сотрудник на должности старшего состава не справляется со своими обязанностями, то Главный врач / Заместитель главного врача имеют право понизить сотрудника.", cat: "ПОНИЖЕНИЕ" }
@@ -975,12 +975,11 @@ label {
     staff: [],
     penalties: [],
     activeTab: "main",
-    pendingSubmit: null,       // данные для модалки подтверждения
-    reviewTarget: null,        // объект взыскания для рассмотрения
-    issueTarget: null,         // объект для выдачи/перевыдачи
-    issueMode: "approve",      // "approve" | "reissue"
-    appealTarget: null,
-    expandedRows: new Set()    // id раскрытых строк
+    pendingSubmit: null,
+    reviewTarget: null,
+    issueTarget: null,
+    issueMode: "approve",
+    appealTarget: null
   };
 
   const $ = (id) => document.getElementById(id);
@@ -1093,7 +1092,7 @@ label {
   }
 
   /* ============================================================
-     АВТОКОМПЛИТ
+     АВТОКОМПЛИТ СОТРУДНИКОВ
      ============================================================ */
   function filterStaff(query) {
     const q = String(query || "").trim().toLowerCase();
@@ -1232,20 +1231,20 @@ label {
     const lines = [
       "1. " + (state.user.discord || "") + " " + state.user.login + " | " + (findStaffByName(state.user.login)?.passport || "—"),
       "2. " + data.employeeName + " | " + (data.employeePassport || "—"),
-      "3. Статья " + data.article,
+      "3. Статья " + data.article + (data.articleText ? " — " + data.articleText : ""),
       "4. " + data.proofUrl,
       "5. " + data.level + " — " + data.measure
     ];
     return lines.join("\n");
   }
 
-  function buildIssueTemplate(pen) {
+  function buildIssueTemplate(pen, issueProofUrl) {
     const lines = [
       "1. " + (pen.requestedDiscord || "") + " " + pen.requestedBy + " | —",
       "2. " + pen.employeeName + " | " + (pen.employeePassport || "—"),
-      "3. Статья " + pen.article,
-      "4. " + pen.proofUrl,
-      "5. Текущий уровень: " + pen.level + " — " + pen.measure
+      "3. Статья " + pen.article + (pen.articleText ? " — " + pen.articleText : ""),
+      "4. " + (issueProofUrl || pen.proofUrl || "—"),
+      "5. " + pen.level + " — " + pen.measure
     ];
     return lines.join("\n");
   }
@@ -1324,7 +1323,6 @@ label {
     let list = state.penalties.slice();
     list = list.filter(p => {
       if (!filter) {
-        // Без фильтра — показываем всё, кроме pending/approved/rejected (они в "Запросах")
         return !["pending", "approved", "rejected"].includes(p.status);
       }
       return p.status === filter;
@@ -1368,7 +1366,6 @@ label {
         '<td class="col-actions"></td>';
       tbody.appendChild(tr);
 
-      // Кнопки действий
       const actions = tr.querySelector(".col-actions");
 
       if (canModerate() && (p.status === "active" || p.status === "reissue")) {
@@ -1394,7 +1391,7 @@ label {
       copyBtn.title = "Копировать (шаблон выдачи)";
       copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
       copyBtn.addEventListener("click", async () => {
-        const ok = await copyText(buildIssueTemplate(p));
+        const ok = await copyText(buildIssueTemplate(p, ""));
         showToast(ok ? "Скопировано" : "Не удалось скопировать", ok ? "info" : "alert");
       });
       actions.appendChild(copyBtn);
@@ -1415,7 +1412,6 @@ label {
       expBtn.addEventListener("click", () => toggleDetails(tr, p, "main"));
       actions.appendChild(expBtn);
 
-      // Статус-плашка «Обжаловано» кликабельна → показать причину
       const statusPill = tr.querySelector(".status-pill.appealed");
       if (statusPill) {
         statusPill.addEventListener("click", () => showAppealInfo(p));
@@ -1551,7 +1547,6 @@ label {
       return;
     }
 
-    // Закрываем все открытые в этом контейнере
     const tbody = tr.parentNode;
     tbody.querySelectorAll(".details-row").forEach(r => r.remove());
     tbody.querySelectorAll(".expand-btn.open").forEach(b => b.classList.remove("open"));
@@ -1572,6 +1567,7 @@ label {
           '<div><b>' + (source === "main" ? "Кем выдано" : "Кем запрошено") + ':</b> ' + esc(p.requestedBy || "—") + (p.requestedDiscord ? ' (' + esc(p.requestedDiscord) + ')' : '') + '</div>' +
           '<div><b>Статья:</b> ' + esc(p.article) + ' — ' + esc(p.articleText || "") + '</div>' +
           '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
+          (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
           '<div><b>Мера отработки:</b> ' + esc(p.measure || "—") + '</div>' +
           (p.prevLevel ? '<div><b>Предыдущий уровень:</b> ' + esc(p.prevLevel) + '</div>' : '') +
           flags +
@@ -1639,11 +1635,11 @@ label {
         return;
       }
 
-      // Формируем шаблон для подтверждения
       const tplData = {
         employeeName: staffItem.name,
         employeePassport: staffItem.passport || empPassport,
         article: article,
+        articleText: articleObj ? articleObj.text : "",
         proofUrl: proofUrl,
         level: data.level || level,
         measure: data.measure || measure
@@ -1692,7 +1688,7 @@ label {
     $("reviewWho").innerHTML =
       '<div class="name">' + esc(p.employeeName) + '</div>' +
       '<div class="sub">#' + esc(p.employeePassport || "—") + ' · ' + esc(p.employeeDept || "—") + ' · Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
-    $("reviewTemplate").textContent = buildIssueTemplate(p);
+    $("reviewTemplate").textContent = buildIssueTemplate(p, "");
     $("rejectReason").value = "";
     $("reviewModal").classList.remove("hidden");
   }
@@ -1704,23 +1700,27 @@ label {
 
   async function approveReview() {
     if (!state.reviewTarget) return;
+    const target = state.reviewTarget;
     try {
       const data = await apiPost({
         action: "approvePenalty",
         login: state.user.login,
         hash: state.user.hash,
-        id: state.reviewTarget.id
+        id: target.id
       });
       if (!data.success) return showToast(data.message || "Ошибка", "alert");
       closeReview();
       await loadPenalties();
       renderRequest();
       renderMain();
-      notifyParent("Одобрено", state.reviewTarget.employeeName, "success");
-      showToast("Одобрено", "info");
+      notifyParent("Одобрено", target.employeeName, "success");
+      showToast("Одобрено — выдай взыскание", "info");
+
+      const updated = state.penalties.find(p => p.id === target.id) || target;
+      openIssue(updated, "approve");
     } catch (e) {
       console.error(e);
-      showToast("Ошибка сети", "alert");
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
     }
   }
 
@@ -1745,7 +1745,7 @@ label {
       showToast("Отклонено", "alert");
     } catch (e) {
       console.error(e);
-      showToast("Ошибка сети", "alert");
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
     }
   }
 
@@ -1757,7 +1757,8 @@ label {
     state.issueMode = mode || "approve";
 
     $("issueTitle").textContent = state.issueMode === "reissue" ? "Перевыдать взыскание" : "Выдай взыскание";
-    $("issueTemplate").textContent = buildIssueTemplate(p);
+    $("issueProofUrl").value = "";
+    $("issueTemplate").textContent = buildIssueTemplate(p, "");
 
     $("issueDiscord").checked = false;
     $("issueGame").checked = false;
@@ -1778,6 +1779,7 @@ label {
     const game = $("issueGame").checked;
     if (!discord || !game) return showToast("Отметьте обе галочки", "alert");
 
+    const issueProofUrl = $("issueProofUrl").value.trim();
     const target = state.issueTarget;
     const mode = state.issueMode;
 
@@ -1797,7 +1799,8 @@ label {
           hash: state.user.hash,
           id: target.id,
           discord: true,
-          game: true
+          game: true,
+          issueProofUrl: issueProofUrl
         });
       }
 
@@ -1817,7 +1820,7 @@ label {
       showToast(mode === "reissue" ? "Перевыдано" : "Выдано", "info");
     } catch (e) {
       console.error(e);
-      showToast("Ошибка сети", "alert");
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
     }
   }
 
@@ -1869,7 +1872,7 @@ label {
       showToast("Обжаловано", "info");
     } catch (e) {
       console.error(e);
-      showToast("Ошибка сети", "alert");
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
     }
   }
 
@@ -1911,7 +1914,7 @@ label {
       showToast("Удалено", "info");
     } catch (e) {
       console.error(e);
-      showToast("Ошибка сети", "alert");
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
     }
   }
 
@@ -1940,6 +1943,7 @@ label {
         window.parent.postMessage({
           type: "toast", title: title || "", text: text || "", kind: kind || "success"
         }, "*");
+        window.parent.postMessage({ type: "penalties-changed" }, "*");
       }
     } catch (e) {}
   }
@@ -1960,10 +1964,8 @@ label {
     }
     state.user = user;
 
-    // Вкладки
     $$(".tab-btn").forEach(b => b.addEventListener("click", () => switchTab(b.dataset.tab)));
 
-    // Фильтры
     $("searchMain").addEventListener("input", renderMain);
     $("filterMain").addEventListener("change", renderMain);
     $("searchRequest").addEventListener("input", renderRequest);
@@ -1976,7 +1978,6 @@ label {
       renderRequest();
     });
 
-    // Подача
     $("openSubmitBtn").addEventListener("click", openSubmit);
     $("submitCancel").addEventListener("click", closeSubmit);
     $("submitForm").addEventListener("submit", handleSubmit);
@@ -1988,7 +1989,6 @@ label {
     $("articleInput").addEventListener("blur", () => setTimeout(() => $("articleSuggest").classList.remove("open"), 150));
     $("levelSelect").addEventListener("change", updateMeasureHint);
 
-    // Подтверждение
     $("confirmCancel").addEventListener("click", closeConfirm);
     $("confirmSubmit").addEventListener("click", confirmSubmit);
     $("copyConfirmBtn").addEventListener("click", async () => {
@@ -1999,16 +1999,16 @@ label {
       $("confirmSubmit").disabled = !$("confirmSentDiscord").checked;
     });
 
-    // Рассмотрение
     $("reviewCancel").addEventListener("click", closeReview);
     $("reviewApprove").addEventListener("click", approveReview);
     $("reviewReject").addEventListener("click", rejectReview);
 
-    // Выдача
     $("issueCancel").addEventListener("click", closeIssue);
     $("issueConfirm").addEventListener("click", confirmIssue);
     $("copyIssueBtn").addEventListener("click", async () => {
-      const ok = await copyText(state.issueTarget ? buildIssueTemplate(state.issueTarget) : "");
+      if (!state.issueTarget) return;
+      const issueProofUrl = $("issueProofUrl").value.trim();
+      const ok = await copyText(buildIssueTemplate(state.issueTarget, issueProofUrl));
       showToast(ok ? "Скопировано" : "Ошибка копирования", ok ? "info" : "alert");
     });
     function checkIssueChecks() {
@@ -2017,7 +2017,12 @@ label {
     $("issueDiscord").addEventListener("change", checkIssueChecks);
     $("issueGame").addEventListener("change", checkIssueChecks);
 
-    // Обжалование
+    // Автопересборка шаблона при вводе ссылки
+    $("issueProofUrl").addEventListener("input", () => {
+      if (!state.issueTarget) return;
+      $("issueTemplate").textContent = buildIssueTemplate(state.issueTarget, $("issueProofUrl").value.trim());
+    });
+
     $("appealCancel").addEventListener("click", closeAppeal);
     $("appealOpen").addEventListener("click", openAppealConfirm);
     $("appealConfirmCancel").addEventListener("click", () => $("appealConfirmModal").classList.add("hidden"));
@@ -2026,13 +2031,11 @@ label {
       $("appealConfirmBtn").disabled = !$("appealConfirmCheck").checked;
     });
 
-    // Инфо-модалки
     $("appealInfoClose").addEventListener("click", () => $("appealInfoModal").classList.add("hidden"));
     $("appealModal").addEventListener("click", (e) => { if (e.target === $("appealModal")) closeAppeal(); });
     $("appealConfirmModal").addEventListener("click", (e) => { if (e.target === $("appealConfirmModal")) $("appealConfirmModal").classList.add("hidden"); });
     $("appealInfoModal").addEventListener("click", (e) => { if (e.target === $("appealInfoModal")) $("appealInfoModal").classList.add("hidden"); });
 
-    // Глобальный Escape
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
       if (!$("submitModal").classList.contains("hidden")) closeSubmit();
@@ -2044,14 +2047,12 @@ label {
       $("appealInfoModal").classList.add("hidden");
     });
 
-    // Загрузка
     Promise.all([loadStaff(), loadPenalties()]).then(() => {
       renderMain();
       renderRequest();
       loadPendingCount();
     });
 
-    // Автообновление каждые 60 сек
     setInterval(() => {
       if (document.hidden) return;
       loadPenalties().then(() => {

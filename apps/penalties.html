@@ -17,26 +17,21 @@
   --muted: #8496ab;
   --border: #26344a;
   --border-strong: #3a4d6b;
-
   --accent: #2f9e44;
   --accent-2: #37b24d;
   --accent-bg: rgba(47,158,68,0.12);
   --accent-border: rgba(47,158,68,0.5);
-
   --red: #ef4444;
   --red-bg: rgba(239,68,68,0.12);
   --red-border: rgba(239,68,68,0.5);
   --red-text: #fca5a5;
-
   --amber: #f59e0b;
   --amber-bg: rgba(245,158,11,0.12);
   --amber-border: rgba(245,158,11,0.5);
   --amber-text: #fcd34d;
-
   --blue: #3b82f6;
   --blue-bg: rgba(59,130,246,0.14);
   --blue-border: rgba(59,130,246,0.5);
-
   --purple: #8b5cf6;
   --purple-bg: rgba(139,92,246,0.14);
   --purple-border: rgba(139,92,246,0.5);
@@ -44,9 +39,7 @@
 }
 
 html, body { height: 100%; }
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar { width: 0; display: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -65,26 +58,19 @@ body {
 
 .wrap { max-width: 1100px; width: 100%; }
 
-/* ---------- Заголовок ---------- */
-.page-title {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
-}
+.page-title { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .page-title .brand-icon {
   width: 46px; height: 46px; border-radius: 13px;
   background: linear-gradient(135deg, #ef4444, #7f1d1d);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 18px rgba(239,68,68,0.4);
-  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(239,68,68,0.4); flex-shrink: 0;
 }
 .page-title .brand-icon svg { width: 24px; height: 24px; color: #fff; }
 .page-title .title-text { display: flex; flex-direction: column; }
 .page-title h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
 .page-title .subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
 
-/* ---------- Вкладки ---------- */
-.tabs {
-  display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
-}
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
 .tab-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 14px;
@@ -99,11 +85,7 @@ body {
   transition: background .15s, color .15s, border-color .15s;
 }
 .tab-btn:hover { background: var(--panel-3); color: var(--text); }
-.tab-btn.active {
-  background: var(--red-bg);
-  border-color: var(--red-border);
-  color: #fca5a5;
-}
+.tab-btn.active { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
 .tab-btn svg { width: 15px; height: 15px; }
 .badge-count {
   display: inline-block;
@@ -112,15 +94,12 @@ body {
   border-radius: 999px;
   background: var(--amber);
   color: #1a1207;
-  font-size: 0.7rem;
-  font-weight: 800;
-  line-height: 20px;
-  text-align: center;
+  font-size: 0.7rem; font-weight: 800;
+  line-height: 20px; text-align: center;
   margin-left: 2px;
 }
 .badge-count.hidden { display: none; }
 
-/* ---------- Карточка ---------- */
 .card {
   background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
   border: 1px solid var(--border);
@@ -138,7 +117,6 @@ body {
   display: flex; align-items: center; gap: 8px;
 }
 
-/* ---------- Кнопки ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 5px; padding: 8px 14px;
@@ -178,7 +156,6 @@ body {
 .btn-icon.success:hover { background: var(--accent-bg); border-color: var(--accent-border); color: #86efac; }
 .btn-icon.purple:hover { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple-text); }
 
-/* ---------- Поля ---------- */
 input[type="text"], input[type="number"], select, textarea {
   width: 100%;
   padding: 9px 12px;
@@ -208,7 +185,6 @@ select {
 select option { background: #0c1420; color: var(--text); }
 textarea { resize: vertical; min-height: 70px; }
 
-/* ---------- Таблица ---------- */
 .tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
 .tbl th {
   text-align: left; font-weight: 600; font-size: 0.7rem;
@@ -230,7 +206,6 @@ textarea { resize: vertical; min-height: 70px; }
 .tbl .col-pass { color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; }
 .tbl .col-actions { text-align: right; white-space: nowrap; width: 1%; }
 
-/* ---------- Плашки ---------- */
 .level-pill {
   display: inline-block;
   padding: 3px 9px;
@@ -259,7 +234,6 @@ textarea { resize: vertical; min-height: 70px; }
 .status-pill.rejected { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); cursor: pointer; }
 .status-pill.deleted  { background: rgba(132,150,171,0.12); color: var(--muted); border: 1px solid var(--border); }
 
-/* ---------- Детали (раскрытие строки) ---------- */
 .details-row td {
   padding: 0 !important;
   background: #0a1119 !important;
@@ -269,14 +243,20 @@ textarea { resize: vertical; min-height: 70px; }
   padding: 14px 18px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
   font-size: 0.84rem;
   color: var(--text-soft);
   line-height: 1.5;
 }
-.details-inner b { color: #fff; }
-.details-inner a { color: #93c5fd; text-decoration: none; word-break: break-all; }
-.details-inner a:hover { text-decoration: underline; }
+.details-inner .pen-item {
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border-left: 3px solid var(--border);
+}
+.details-inner .pen-item b { color: #fff; }
+.details-inner .pen-item a { color: #93c5fd; text-decoration: none; word-break: break-all; }
+.details-inner .pen-item a:hover { text-decoration: underline; }
 .details-inner .flag {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 2px 8px; border-radius: 6px;
@@ -300,14 +280,12 @@ textarea { resize: vertical; min-height: 70px; }
 .expand-btn svg { width: 14px; height: 14px; transition: transform .2s; }
 .expand-btn.open svg { transform: rotate(180deg); }
 
-/* ---------- Toolbar ---------- */
 .toolbar {
   display: grid; grid-template-columns: 1fr 220px;
   gap: 8px; margin-bottom: 12px;
 }
 @media (max-width: 720px) { .toolbar { grid-template-columns: 1fr; } }
 
-/* ---------- Модалки ---------- */
 .modal-back {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.72);
@@ -370,7 +348,6 @@ label {
   text-transform: none; letter-spacing: 0; font-weight: 400;
 }
 
-/* Autocomplete */
 .autocomplete-wrap { position: relative; }
 .suggest {
   position: absolute;
@@ -462,7 +439,6 @@ label {
   margin-top: 16px; flex-wrap: wrap;
 }
 
-/* ---------- Toast ---------- */
 .toast {
   position: fixed; top: 14px; left: 50%;
   transform: translate(-50%, -120%);
@@ -490,7 +466,6 @@ label {
 }
 .hidden { display: none !important; }
 
-/* Мобилка */
 @media (max-width: 640px) {
   body { padding: 12px 12px 20px; font-size: 14px; }
   .card { padding: 12px; border-radius: 12px; }
@@ -505,7 +480,6 @@ label {
 
 <div class="wrap">
 
-  <!-- Заголовок -->
   <div class="page-title">
     <div class="brand-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -520,7 +494,6 @@ label {
     </div>
   </div>
 
-  <!-- Вкладки -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="main" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -541,7 +514,6 @@ label {
     </button>
   </div>
 
-  <!-- Вкладка: Главная -->
   <div class="card" id="tab-main">
     <div class="card-head">
       <h2>
@@ -550,7 +522,7 @@ label {
           <line x1="12" y1="9" x2="12" y2="13"/>
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
-        Список взысканий
+        Активные взыскания
       </h2>
       <button class="btn" id="refreshMain" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -566,19 +538,18 @@ label {
     <div class="toolbar">
       <input type="text" id="searchMain" placeholder="🔍 Поиск по имени или паспорту…">
       <select id="filterMain">
-        <option value="">Все статусы</option>
         <option value="active">🟢 Активно</option>
         <option value="reissue">🔁 Перевыдать</option>
         <option value="inactive">⚪ Неактивно</option>
         <option value="appealed">🟣 Обжаловано</option>
         <option value="deleted">🗑 Удалённые</option>
+        <option value="">Все статусы</option>
       </select>
     </div>
 
     <div id="mainContainer"><div class="loading">Загрузка…</div></div>
   </div>
 
-  <!-- Вкладка: Запрос на взыскание -->
   <div class="card hidden" id="tab-request">
     <div class="card-head">
       <h2>
@@ -605,6 +576,7 @@ label {
         <option value="approved">🔵 Одобрено (ждём выдачу)</option>
         <option value="active">🟢 Выдано</option>
         <option value="rejected">🔴 Отклонено</option>
+        <option value="deleted">🗑 Удалённые</option>
         <option value="">Все</option>
       </select>
     </div>
@@ -727,7 +699,7 @@ label {
     <div class="modal-who" id="reviewWho">—</div>
     <div class="template-block" id="reviewTemplate">—</div>
 
-    <div class="form-group" id="rejectReasonGroup" style="margin-top: 14px;">
+    <div class="form-group" style="margin-top: 14px;">
       <label for="rejectReason">Причина отклонения (обязательна для отклонения)</label>
       <textarea id="rejectReason" placeholder="Опишите, почему взыскание отклоняется…"></textarea>
     </div>
@@ -782,6 +754,37 @@ label {
       <input type="checkbox" id="issueGame">
       <span class="cb-text">Выдано в Игре</span>
     </label>
+  </div>
+</div>
+
+<!-- ============ МОДАЛКА: СНЯТЬ ВЗЫСКАНИЕ ============ -->
+<div class="modal-back hidden" id="removeModal">
+  <div class="modal">
+    <h3>
+      <span class="m-icon green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </span>
+      Снять взыскание
+    </h3>
+
+    <div class="modal-who" id="removeWho">—</div>
+
+    <div class="form-group">
+      <label for="removeReason">Причина снятия</label>
+      <input type="text" id="removeReason" value="отработано" placeholder="отработано">
+    </div>
+
+    <label class="checkbox-row" for="removeConfirmCheck" style="margin-top: 14px;">
+      <input type="checkbox" id="removeConfirmCheck">
+      <span class="cb-text">Взыскание снято в планшете</span>
+    </label>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" id="removeCancel">Отмена</button>
+      <button type="button" class="btn btn-success" id="removeConfirmBtn" disabled>✓ Подтвердить</button>
+    </div>
   </div>
 </div>
 
@@ -843,7 +846,7 @@ label {
   </div>
 </div>
 
-<!-- ============ МОДАЛКА: ИНФО ОБ ОБЖАЛОВАНИИ ============ -->
+<!-- ============ МОДАЛКА: ИНФО ============ -->
 <div class="modal-back hidden" id="appealInfoModal">
   <div class="modal">
     <h3>
@@ -854,15 +857,15 @@ label {
           <line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
       </span>
-      Информация об обжаловании
+      Информация
     </h3>
 
     <div class="modal-who" id="appealInfoWho">—</div>
 
-    <label>Причина обжалования</label>
+    <label>Причина</label>
     <div class="template-block" id="appealInfoReason">—</div>
 
-    <label style="margin-top: 12px;">Кто принял обжалование</label>
+    <label style="margin-top: 12px;">Кто принял</label>
     <div class="template-block" id="appealInfoBy">—</div>
 
     <div class="modal-actions">
@@ -877,9 +880,6 @@ label {
 
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
-  /* ============================================================
-     СТАТЬИ УСТАВА
-     ============================================================ */
   const ARTICLES = [
     { num: "3.15",  text: "Сотрудник организации обязан пройти переаттестацию в течение 48 часов после ее получения.", cat: "УВОЛЬНЕНИЕ" },
     { num: "3.21",  text: "Медицинский сотрудник обязан пройти ординатуру в течение 3 дней.", cat: "УВОЛЬНЕНИЕ" },
@@ -967,19 +967,18 @@ label {
     { num: "12.9",  text: "Если сотрудник на должности старшего состава не справляется со своими обязанностями, то Главный врач / Заместитель главного врача имеют право понизить сотрудника.", cat: "ПОНИЖЕНИЕ" }
   ];
 
-  /* ============================================================
-     СОСТОЯНИЕ
-     ============================================================ */
   const state = {
     user: null,
     staff: [],
     penalties: [],
+    groups: [],
     activeTab: "main",
     pendingSubmit: null,
     reviewTarget: null,
     issueTarget: null,
     issueMode: "approve",
-    appealTarget: null
+    appealGroup: null,
+    removeGroup: null
   };
 
   const $ = (id) => document.getElementById(id);
@@ -991,9 +990,6 @@ label {
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  /* ============================================================
-     СЕТЬ
-     ============================================================ */
   async function apiPost(payload) {
     const res = await fetch(API_URL, {
       method: "POST",
@@ -1004,9 +1000,6 @@ label {
     return res.json();
   }
 
-  /* ============================================================
-     СЕССИЯ
-     ============================================================ */
   function loadSession() {
     const p = new URLSearchParams(location.search);
     const pLogin = p.get("login");
@@ -1046,6 +1039,10 @@ label {
     return false;
   }
 
+  function isSuperadmin() {
+    return state.user && state.user.role === "superadmin";
+  }
+
   function isAbOrSuper() {
     if (!state.user) return false;
     if (state.user.role === "superadmin") return true;
@@ -1053,9 +1050,6 @@ label {
     return false;
   }
 
-  /* ============================================================
-     УТИЛИТЫ
-     ============================================================ */
   function formatDateTime(iso) {
     if (!iso) return "—";
     try {
@@ -1091,25 +1085,42 @@ label {
     return state.staff.find(s => String(s.name || "").trim().toLowerCase() === n) || null;
   }
 
-  /* ============================================================
-     АВТОКОМПЛИТ СОТРУДНИКОВ
-     ============================================================ */
-  function filterStaff(query) {
+  function filterStaffByDept(query) {
     const q = String(query || "").trim().toLowerCase();
     if (!q) return [];
+
+    const myDept = String(state.user.department || "").trim();
+    const isUniversal = (myDept === "АБ" || myDept === "Руководство" || state.user.role === "superadmin");
+
     return state.staff.filter(s => {
       const name = String(s.name || "").toLowerCase();
       const pass = String(s.passport || "").toLowerCase();
-      return name.includes(q) || pass.includes(q);
+      if (!name.includes(q) && !pass.includes(q)) return false;
+      if (isUniversal) return true;
+
+      const targetDept = String(s.department || "").trim();
+      const ownBase =
+        myDept === "Инст СМП"  ? "СМП"  :
+        myDept === "Инст ПСЭС" ? "ПСЭС" :
+        myDept === "Инст ИТ"   ? "ИТ"   :
+        myDept === "Инст ОК"   ? "ОК"   :
+        myDept;
+      const targetBase =
+        targetDept === "Инст СМП"  ? "СМП"  :
+        targetDept === "Инст ПСЭС" ? "ПСЭС" :
+        targetDept === "Инст ИТ"   ? "ИТ"   :
+        targetDept === "Инст ОК"   ? "ОК"   :
+        targetDept;
+      return ownBase === targetBase;
     }).slice(0, 8);
   }
 
   function renderStaffSuggest(query) {
     const box = $("empSuggest");
-    const items = filterStaff(query);
+    const items = filterStaffByDept(query);
     if (!query || query.length < 2) { box.classList.remove("open"); box.innerHTML = ""; return; }
     if (!items.length) {
-      box.innerHTML = '<div class="s-empty">Никого не найдено</div>';
+      box.innerHTML = '<div class="s-empty">Никого не найдено в вашем отделе</div>';
       box.classList.add("open");
       return;
     }
@@ -1135,9 +1146,6 @@ label {
     box.classList.add("open");
   }
 
-  /* ============================================================
-     АВТОКОМПЛИТ СТАТЕЙ
-     ============================================================ */
   function filterArticles(query) {
     const q = String(query || "").trim().toLowerCase();
     if (!q) return [];
@@ -1182,9 +1190,6 @@ label {
     hint.classList.remove("hidden");
   }
 
-  /* ============================================================
-     МЕРА ОТРАБОТКИ
-     ============================================================ */
   function getMeasureForStaff(staffItem, level) {
     if (!staffItem) return "";
     const MEASURES = {
@@ -1216,17 +1221,10 @@ label {
     const name = $("empName").value.trim();
     const level = $("levelSelect").value;
     const staffItem = findStaffByName(name);
-    if (!staffItem) {
-      $("measureInput").value = "";
-      return;
-    }
-    const measure = getMeasureForStaff(staffItem, level);
-    $("measureInput").value = measure;
+    if (!staffItem) { $("measureInput").value = ""; return; }
+    $("measureInput").value = getMeasureForStaff(staffItem, level);
   }
 
-  /* ============================================================
-     ШАБЛОНЫ
-     ============================================================ */
   function buildRequestTemplate(data) {
     const lines = [
       "1. " + (state.user.discord || "") + " " + state.user.login + " | " + (findStaffByName(state.user.login)?.passport || "—"),
@@ -1239,8 +1237,11 @@ label {
   }
 
   function buildIssueTemplate(pen, issueProofUrl) {
+    const requester = findStaffByName(pen.requestedBy);
+    const requesterPassport = requester ? (requester.passport || "—") : "—";
+
     const lines = [
-      "1. " + (pen.requestedDiscord || "") + " " + pen.requestedBy + " | —",
+      "1. " + (pen.requestedDiscord || "") + " " + pen.requestedBy + " | " + requesterPassport,
       "2. " + pen.employeeName + " | " + (pen.employeePassport || "—"),
       "3. Статья " + pen.article + (pen.articleText ? " — " + pen.articleText : ""),
       "4. " + (issueProofUrl || pen.proofUrl || "—"),
@@ -1249,9 +1250,6 @@ label {
     return lines.join("\n");
   }
 
-  /* ============================================================
-     TOAST
-     ============================================================ */
   let toastTimer = null;
   function showToast(text, kind) {
     const el = $("toast");
@@ -1262,9 +1260,6 @@ label {
     toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
   }
 
-  /* ============================================================
-     ВКЛАДКИ
-     ============================================================ */
   function switchTab(tab) {
     state.activeTab = tab;
     $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
@@ -1274,9 +1269,6 @@ label {
     if (tab === "request") renderRequest();
   }
 
-  /* ============================================================
-     ЗАГРУЗКА ДАННЫХ
-     ============================================================ */
   async function loadStaff() {
     try {
       const data = await apiPost({ action: "getStaff" });
@@ -1291,9 +1283,14 @@ label {
         login: state.user.login,
         hash: state.user.hash
       });
-      if (data && data.success) state.penalties = data.penalties || [];
-      else state.penalties = [];
-    } catch (e) { console.error("loadPenalties:", e); state.penalties = []; }
+      if (data && data.success) {
+        state.penalties = data.penalties || [];
+        state.groups = data.groups || [];
+      } else {
+        state.penalties = [];
+        state.groups = [];
+      }
+    } catch (e) { console.error("loadPenalties:", e); state.penalties = []; state.groups = []; }
   }
 
   async function loadPendingCount() {
@@ -1314,23 +1311,26 @@ label {
   }
 
   /* ============================================================
-     РЕНДЕР: ГЛАВНАЯ
+     ГЛАВНАЯ — сгруппированные взыскания
      ============================================================ */
   function renderMain() {
     const q = ($("searchMain").value || "").trim().toLowerCase();
     const filter = $("filterMain").value;
 
-    let list = state.penalties.slice();
-    list = list.filter(p => {
-      if (!filter) {
-        return !["pending", "approved", "rejected"].includes(p.status);
-      }
-      return p.status === filter;
-    });
-    if (q) list = list.filter(p =>
-      (p.employeeName || "").toLowerCase().includes(q) ||
-      (p.employeePassport || "").toLowerCase().includes(q)
+    let list = state.groups.slice();
+
+    if (filter) {
+      list = list.filter(g => g.penalties.some(p => p.status === filter));
+    } else {
+      list = list.filter(g => g.penalties.some(p => p.status !== "deleted"));
+    }
+
+    if (q) list = list.filter(g =>
+      (g.employeeName || "").toLowerCase().includes(q) ||
+      (g.employeePassport || "").toLowerCase().includes(q)
     );
+
+    list.sort((a, b) => (b.lastId || 0) - (a.lastId || 0));
 
     const cont = $("mainContainer");
     if (!list.length) {
@@ -1346,80 +1346,85 @@ label {
         '<th>Сотрудник</th>' +
         '<th class="col-hide-sm">Паспорт</th>' +
         '<th class="col-hide-sm">Отдел</th>' +
-        '<th>Статья</th>' +
         '<th>Уровень</th>' +
         '<th>Статус</th>' +
         '<th class="col-actions"></th>' +
       '</tr></thead>';
 
     const tbody = document.createElement("tbody");
-    list.forEach((p, i) => {
+    list.forEach((g, i) => {
       const tr = document.createElement("tr");
       tr.innerHTML =
         '<td class="col-num">' + (i + 1) + '</td>' +
-        '<td class="col-name">' + esc(p.employeeName) + '</td>' +
-        '<td class="col-pass col-hide-sm">' + esc(p.employeePassport || "—") + '</td>' +
-        '<td class="col-hide-sm">' + esc(p.employeeDept || "—") + '</td>' +
-        '<td>' + esc(p.article) + '</td>' +
-        '<td><span class="level-pill ' + levelClass(p.level) + '">' + esc(p.level) + '</span></td>' +
-        '<td><span class="status-pill ' + p.status + '">' + statusLabel(p.status) + '</span></td>' +
+        '<td class="col-name">' + esc(g.employeeName) + '</td>' +
+        '<td class="col-pass col-hide-sm">' + esc(g.employeePassport || "—") + '</td>' +
+        '<td class="col-hide-sm">' + esc(g.employeeDept || "—") + '</td>' +
+        '<td><span class="level-pill ' + levelClass(g.level) + '">' + esc(g.level) + '</span></td>' +
+        '<td><span class="status-pill ' + g.status + '">' + statusLabel(g.status) + '</span></td>' +
         '<td class="col-actions"></td>';
       tbody.appendChild(tr);
 
       const actions = tr.querySelector(".col-actions");
 
-      if (canModerate() && (p.status === "active" || p.status === "reissue")) {
+      // Снять (отработано) — если есть активные
+      if (canModerate() && g.penalties.some(p => ["active", "reissue"].includes(p.status))) {
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn-icon success";
+        removeBtn.title = "Снять взыскание (отработано)";
+        removeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        removeBtn.addEventListener("click", () => openRemove(g));
+        actions.appendChild(removeBtn);
+      }
+
+      // Обжаловать — если есть активные
+      if (canModerate() && g.penalties.some(p => ["active", "reissue"].includes(p.status))) {
         const appealBtn = document.createElement("button");
         appealBtn.className = "btn-icon purple";
         appealBtn.title = "Обжаловать";
         appealBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>';
-        appealBtn.addEventListener("click", () => openAppeal(p));
+        appealBtn.addEventListener("click", () => openAppeal(g));
         actions.appendChild(appealBtn);
       }
 
-      if (p.status === "reissue" && canModerate()) {
+      // Перевыдать — если есть reissue
+      if (canModerate() && g.penalties.some(p => p.status === "reissue")) {
         const reBtn = document.createElement("button");
         reBtn.className = "btn-icon success";
         reBtn.title = "Перевыдать";
         reBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/></svg>';
-        reBtn.addEventListener("click", () => openIssue(p, "reissue"));
+        reBtn.addEventListener("click", () => openIssue(g.penalties.find(p => p.status === "reissue"), "reissue"));
         actions.appendChild(reBtn);
       }
 
-      const copyBtn = document.createElement("button");
-      copyBtn.className = "btn-icon";
-      copyBtn.title = "Копировать (шаблон выдачи)";
-      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-      copyBtn.addEventListener("click", async () => {
-        const ok = await copyText(buildIssueTemplate(p, ""));
-        showToast(ok ? "Скопировано" : "Не удалось скопировать", ok ? "info" : "alert");
-      });
-      actions.appendChild(copyBtn);
-
+      // Удалить (soft)
       if (canModerate()) {
         const delBtn = document.createElement("button");
         delBtn.className = "btn-icon danger";
         delBtn.title = "Удалить";
         delBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>';
-        delBtn.addEventListener("click", () => deletePenalty(p));
+        delBtn.addEventListener("click", () => deleteGroup(g));
         actions.appendChild(delBtn);
+      }
+
+      // Hard-delete — только superadmin
+      if (isSuperadmin() && g.penalties.some(p => p.status === "deleted")) {
+        const hardBtn = document.createElement("button");
+        hardBtn.className = "btn-icon danger";
+        hardBtn.title = "Удалить полностью";
+        hardBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        hardBtn.addEventListener("click", () => hardDeleteGroup(g));
+        actions.appendChild(hardBtn);
       }
 
       const expBtn = document.createElement("button");
       expBtn.className = "expand-btn";
       expBtn.title = "Подробнее";
       expBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
-      expBtn.addEventListener("click", () => toggleDetails(tr, p, "main"));
+      expBtn.addEventListener("click", () => toggleDetails(tr, g, "main"));
       actions.appendChild(expBtn);
 
-      const statusPill = tr.querySelector(".status-pill.appealed");
-      if (statusPill) {
-        statusPill.addEventListener("click", () => showAppealInfo(p));
-      }
-      const rejectedPill = tr.querySelector(".status-pill.rejected");
-      if (rejectedPill) {
-        rejectedPill.addEventListener("click", () => showRejectInfo(p));
-      }
+      const appealedPill = tr.querySelector(".status-pill.appealed");
+      if (appealedPill) appealedPill.addEventListener("click", () => showAppealInfo(g.penalties[0]));
     });
 
     table.appendChild(tbody);
@@ -1428,14 +1433,15 @@ label {
   }
 
   /* ============================================================
-     РЕНДЕР: ЗАПРОСЫ
+     ЗАПРОСЫ
      ============================================================ */
   function renderRequest() {
     const q = ($("searchRequest").value || "").trim().toLowerCase();
     const filter = $("filterRequest").value;
 
-    let list = state.penalties.filter(p => {
-      if (!filter) return true;
+    let list = state.penalties.slice();
+    list = list.filter(p => {
+      if (!filter) return p.status !== "deleted";
       if (filter === "active") return p.status === "active" || p.status === "reissue";
       return p.status === filter;
     });
@@ -1517,11 +1523,20 @@ label {
         actions.appendChild(delBtn);
       }
 
+      if (isSuperadmin()) {
+        const hardBtn = document.createElement("button");
+        hardBtn.className = "btn-icon danger";
+        hardBtn.title = "Удалить полностью";
+        hardBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        hardBtn.addEventListener("click", () => hardDeletePenalty(p));
+        actions.appendChild(hardBtn);
+      }
+
       const expBtn = document.createElement("button");
       expBtn.className = "expand-btn";
       expBtn.title = "Подробнее";
       expBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
-      expBtn.addEventListener("click", () => toggleDetails(tr, p, "request"));
+      expBtn.addEventListener("click", () => toggleDetailsSingle(tr, p, "request"));
       actions.appendChild(expBtn);
 
       const statusPill = tr.querySelector(".status-pill.appealed");
@@ -1536,9 +1551,60 @@ label {
   }
 
   /* ============================================================
-     РАСКРЫТИЕ СТРОКИ
+     ДЕТАЛИ
      ============================================================ */
-  function toggleDetails(tr, p, source) {
+  function toggleDetails(tr, group, source) {
+    const existing = tr.nextElementSibling;
+    if (existing && existing.classList.contains("details-row")) {
+      existing.remove();
+      const btn = tr.querySelector(".expand-btn");
+      if (btn) btn.classList.remove("open");
+      return;
+    }
+
+    const tbody = tr.parentNode;
+    tbody.querySelectorAll(".details-row").forEach(r => r.remove());
+    tbody.querySelectorAll(".expand-btn.open").forEach(b => b.classList.remove("open"));
+
+    const detailsRow = document.createElement("tr");
+    detailsRow.className = "details-row";
+    const colCount = tr.cells.length;
+
+    let itemsHtml = "";
+    group.penalties.forEach((p, i) => {
+      const flags = source === "main"
+        ? '<div style="margin-top:6px;"><span class="flag ' + (p.issuedDiscord ? "yes" : "no") + '">' + (p.issuedDiscord ? "✓" : "✕") + ' Discord</span> ' +
+          '<span class="flag ' + (p.issuedGame ? "yes" : "no") + '">' + (p.issuedGame ? "✓" : "✕") + ' Игра</span></div>'
+        : "";
+
+      itemsHtml +=
+        '<div class="pen-item">' +
+          '<div><b>№' + (i + 1) + ' · Статья ' + esc(p.article) + '</b> — ' + esc(p.level) + ' · ' + esc(statusLabel(p.status)) + '</div>' +
+          '<div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">' + esc(p.articleText || "") + '</div>' +
+          '<div style="margin-top:6px;"><b>Запросил:</b> ' + esc(p.requestedBy || "—") + (p.requestedDiscord ? ' (' + esc(p.requestedDiscord) + ')' : '') + ' · ' + esc(formatDateTime(p.requestedAt)) + '</div>' +
+          '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
+          (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
+          '<div><b>Мера отработки:</b> ' + esc(p.measure || "—") + '</div>' +
+          (p.removedReason ? '<div><b>Снято:</b> ' + esc(p.removedReason) + ' · ' + esc(formatDateTime(p.removedAt)) + '</div>' : '') +
+          (p.appealedReason ? '<div><b>Обжаловано:</b> ' + esc(p.appealedReason) + '</div>' : '') +
+          flags +
+        '</div>';
+    });
+
+    detailsRow.innerHTML =
+      '<td colspan="' + colCount + '">' +
+        '<div class="details-inner">' +
+          '<div><b>Общий уровень:</b> ' + esc(group.level) + ' · <b>Всего записей:</b> ' + group.penalties.length + '</div>' +
+          itemsHtml +
+        '</div>' +
+      '</td>';
+
+    tr.parentNode.insertBefore(detailsRow, tr.nextSibling);
+    const btn = tr.querySelector(".expand-btn");
+    if (btn) btn.classList.add("open");
+  }
+
+  function toggleDetailsSingle(tr, p, source) {
     const existing = tr.nextElementSibling;
     if (existing && existing.classList.contains("details-row")) {
       existing.remove();
@@ -1569,7 +1635,6 @@ label {
           '<div><b>Ссылка:</b> <a href="' + esc(p.proofUrl) + '" target="_blank" rel="noopener">' + esc(p.proofUrl || "—") + '</a></div>' +
           (p.issuedProofUrl ? '<div><b>Ссылка на взыскание:</b> <a href="' + esc(p.issuedProofUrl) + '" target="_blank" rel="noopener">' + esc(p.issuedProofUrl) + '</a></div>' : '') +
           '<div><b>Мера отработки:</b> ' + esc(p.measure || "—") + '</div>' +
-          (p.prevLevel ? '<div><b>Предыдущий уровень:</b> ' + esc(p.prevLevel) + '</div>' : '') +
           flags +
         '</div>' +
       '</td>';
@@ -1580,7 +1645,7 @@ label {
   }
 
   /* ============================================================
-     ПОДАЧА ЗАПРОСА
+     ПОДАЧА
      ============================================================ */
   function openSubmit() {
     if (!state.user) return;
@@ -1592,9 +1657,7 @@ label {
     setTimeout(() => $("empName").focus(), 100);
   }
 
-  function closeSubmit() {
-    $("submitModal").classList.add("hidden");
-  }
+  function closeSubmit() { $("submitModal").classList.add("hidden"); }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -1630,10 +1693,7 @@ label {
 
     try {
       const data = await apiPost(payload);
-      if (!data.success) {
-        showToast(data.message || "Ошибка", "alert");
-        return;
-      }
+      if (!data.success) { showToast(data.message || "Ошибка", "alert"); return; }
 
       const tplData = {
         employeeName: staffItem.name,
@@ -1650,13 +1710,10 @@ label {
       openConfirm();
     } catch (err) {
       console.error(err);
-      showToast("Ошибка сети", "alert");
+      showToast("Ошибка: " + (err.message || String(err)), "alert");
     }
   }
 
-  /* ============================================================
-     ПОДТВЕРЖДЕНИЕ ОТПРАВКИ
-     ============================================================ */
   function openConfirm() {
     if (!state.pendingSubmit) return;
     $("confirmTemplate").textContent = state.pendingSubmit.template;
@@ -1750,7 +1807,7 @@ label {
   }
 
   /* ============================================================
-     ВЫДАЧА / ПЕРЕВЫДАЧА
+     ВЫДАЧА
      ============================================================ */
   function openIssue(p, mode) {
     state.issueTarget = p;
@@ -1779,7 +1836,7 @@ label {
     const game = $("issueGame").checked;
     if (!discord || !game) return showToast("Отметьте обе галочки", "alert");
 
-    const issueProofUrl = $("issueProofUrl").value.trim();
+    const issueProofUrl = String($("issueProofUrl").value || "").replace(/\s+/g, "").trim();
     const target = state.issueTarget;
     const mode = state.issueMode;
 
@@ -1825,20 +1882,78 @@ label {
   }
 
   /* ============================================================
-     ОБЖАЛОВАНИЕ
+     СНЯТИЕ
      ============================================================ */
-  function openAppeal(p) {
-    state.appealTarget = p;
+  function openRemove(group) {
+    state.removeGroup = group;
+    const actives = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
+    if (!actives.length) return showToast("Нет активных взысканий", "alert");
+
+    $("removeWho").innerHTML =
+      '<div class="name">' + esc(group.employeeName) + '</div>' +
+      '<div class="sub">#' + esc(group.employeePassport || "—") + ' · ' + esc(group.employeeDept || "—") + ' · Уровень: ' + esc(group.level) + '</div>';
+
+    $("removeReason").value = "отработано";
+    $("removeConfirmCheck").checked = false;
+    $("removeConfirmBtn").disabled = true;
+
+    $("removeModal").classList.remove("hidden");
+  }
+
+  function closeRemove() {
+    $("removeModal").classList.add("hidden");
+    state.removeGroup = null;
+  }
+
+  async function confirmRemove() {
+    if (!state.removeGroup) return;
+    const reason = $("removeReason").value.trim() || "отработано";
+    const group = state.removeGroup;
+
+    try {
+      const actives = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
+      for (const p of actives) {
+        await apiPost({
+          action: "removePenalty",
+          login: state.user.login,
+          hash: state.user.hash,
+          id: p.id,
+          reason: reason
+        });
+      }
+
+      closeRemove();
+      await loadPenalties();
+      renderMain();
+      renderRequest();
+      notifyParent("Взыскание снято (отработано)", group.employeeName, "success");
+      showToast("Взыскание снято", "info");
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
+    }
+  }
+
+  /* ============================================================
+     ОБЖАЛОВАНИЕ (последнее активное в группе)
+     ============================================================ */
+  function openAppeal(group) {
+    state.appealGroup = group;
+    const actives = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
+    if (!actives.length) return showToast("Нет активных взысканий для обжалования", "alert");
+    actives.sort((a, b) => (b.id || 0) - (a.id || 0));
+    const target = actives[0];
+
     $("appealWho").innerHTML =
-      '<div class="name">' + esc(p.employeeName) + '</div>' +
-      '<div class="sub">#' + esc(p.employeePassport || "—") + ' · ' + esc(p.employeeDept || "—") + ' · Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
+      '<div class="name">' + esc(target.employeeName) + '</div>' +
+      '<div class="sub">#' + esc(target.employeePassport || "—") + ' · ' + esc(target.employeeDept || "—") + ' · Статья ' + esc(target.article) + ' · ' + esc(target.level) + '</div>';
     $("appealReason").value = "";
     $("appealModal").classList.remove("hidden");
   }
 
   function closeAppeal() {
     $("appealModal").classList.add("hidden");
-    state.appealTarget = null;
+    state.appealGroup = null;
   }
 
   function openAppealConfirm() {
@@ -1850,15 +1965,21 @@ label {
   }
 
   async function confirmAppeal() {
-    if (!state.appealTarget) return;
+    if (!state.appealGroup) return;
     const reason = $("appealReason").value.trim();
+    const group = state.appealGroup;
+
+    const actives = group.penalties.filter(p => ["active", "reissue"].includes(p.status));
+    actives.sort((a, b) => (b.id || 0) - (a.id || 0));
+    const target = actives[0];
+    if (!target) return showToast("Нет активных взысканий", "alert");
 
     try {
       const data = await apiPost({
         action: "appealPenalty",
         login: state.user.login,
         hash: state.user.hash,
-        id: state.appealTarget.id,
+        id: target.id,
         reason: reason
       });
       if (!data.success) return showToast(data.message || "Ошибка", "alert");
@@ -1868,35 +1989,69 @@ label {
       await loadPenalties();
       renderMain();
       renderRequest();
-      notifyParent("Обжаловано", state.appealTarget.employeeName, "info");
-      showToast("Обжаловано", "info");
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "staff-changed" }, "*");
+        }
+      } catch (e) {}
+      notifyParent("Обжаловано", target.employeeName, "info");
+      showToast("Обжаловано — уровень снят", "info");
     } catch (e) {
       console.error(e);
       showToast("Ошибка: " + (e.message || String(e)), "alert");
     }
   }
 
-  function showAppealInfo(p) {
-    $("appealInfoWho").innerHTML =
-      '<div class="name">' + esc(p.employeeName) + '</div>' +
-      '<div class="sub">Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
-    $("appealInfoReason").textContent = p.appealedReason || "—";
-    $("appealInfoBy").textContent = p.appealedBy || "—";
-    $("appealInfoModal").classList.remove("hidden");
-  }
-
-  function showRejectInfo(p) {
-    $("appealInfoWho").innerHTML =
-      '<div class="name">' + esc(p.employeeName) + '</div>' +
-      '<div class="sub">Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
-    $("appealInfoReason").textContent = p.rejectedReason || "—";
-    $("appealInfoBy").textContent = p.rejectedBy || "—";
-    $("appealInfoModal").classList.remove("hidden");
-  }
-
   /* ============================================================
      УДАЛЕНИЕ
      ============================================================ */
+  async function deleteGroup(group) {
+    if (!canModerate()) return;
+    if (!confirm("Удалить взыскание «" + group.employeeName + "» (уровень " + group.level + ")?")) return;
+    try {
+      const toDelete = group.penalties.filter(p =>
+        ["active", "reissue", "pending", "approved"].includes(p.status)
+      );
+      for (const p of toDelete) {
+        await apiPost({
+          action: "deletePenalty",
+          login: state.user.login,
+          hash: state.user.hash,
+          id: p.id
+        });
+      }
+      await loadPenalties();
+      renderMain();
+      renderRequest();
+      showToast("Удалено", "info");
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
+    }
+  }
+
+  async function hardDeleteGroup(group) {
+    if (!isSuperadmin()) return;
+    if (!confirm("ПОЛНОСТЬЮ удалить все записи по «" + group.employeeName + "»?\nНеобратимо.")) return;
+    try {
+      for (const p of group.penalties) {
+        await apiPost({
+          action: "hardDeletePenalty",
+          login: state.user.login,
+          hash: state.user.hash,
+          id: p.id
+        });
+      }
+      await loadPenalties();
+      renderMain();
+      renderRequest();
+      showToast("Удалено полностью", "info");
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
+    }
+  }
+
   async function deletePenalty(p) {
     if (!canModerate()) return;
     if (!confirm("Удалить взыскание «" + p.employeeName + "» (статья " + p.article + ")?")) return;
@@ -1918,8 +2073,52 @@ label {
     }
   }
 
+  async function hardDeletePenalty(p) {
+    if (!isSuperadmin()) return;
+    if (!confirm("ПОЛНОСТЬЮ удалить запись по «" + p.employeeName + "»?\nНеобратимо.")) return;
+    try {
+      const data = await apiPost({
+        action: "hardDeletePenalty",
+        login: state.user.login,
+        hash: state.user.hash,
+        id: p.id
+      });
+      if (!data.success) return showToast(data.message || "Ошибка", "alert");
+      await loadPenalties();
+      renderMain();
+      renderRequest();
+      showToast("Удалено полностью", "info");
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка: " + (e.message || String(e)), "alert");
+    }
+  }
+
   /* ============================================================
-     УТИЛИТЫ КОПИРОВАНИЯ
+     ИНФО
+     ============================================================ */
+  function showAppealInfo(p) {
+    if (!p) return;
+    $("appealInfoWho").innerHTML =
+      '<div class="name">' + esc(p.employeeName) + '</div>' +
+      '<div class="sub">Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
+    $("appealInfoReason").textContent = p.appealedReason || "—";
+    $("appealInfoBy").textContent = p.appealedBy || "—";
+    $("appealInfoModal").classList.remove("hidden");
+  }
+
+  function showRejectInfo(p) {
+    if (!p) return;
+    $("appealInfoWho").innerHTML =
+      '<div class="name">' + esc(p.employeeName) + '</div>' +
+      '<div class="sub">Статья ' + esc(p.article) + ' · ' + esc(p.level) + '</div>';
+    $("appealInfoReason").textContent = p.rejectedReason || "—";
+    $("appealInfoBy").textContent = p.rejectedBy || "—";
+    $("appealInfoModal").classList.remove("hidden");
+  }
+
+  /* ============================================================
+     КОПИРОВАНИЕ
      ============================================================ */
   async function copyText(text) {
     try { await navigator.clipboard.writeText(text); return true; }
@@ -1934,9 +2133,6 @@ label {
     }
   }
 
-  /* ============================================================
-     МОСТ С РОДИТЕЛЕМ
-     ============================================================ */
   function notifyParent(title, text, kind) {
     try {
       if (window.parent && window.parent !== window) {
@@ -2007,7 +2203,7 @@ label {
     $("issueConfirm").addEventListener("click", confirmIssue);
     $("copyIssueBtn").addEventListener("click", async () => {
       if (!state.issueTarget) return;
-      const issueProofUrl = $("issueProofUrl").value.trim();
+      const issueProofUrl = String($("issueProofUrl").value || "").replace(/\s+/g, "").trim();
       const ok = await copyText(buildIssueTemplate(state.issueTarget, issueProofUrl));
       showToast(ok ? "Скопировано" : "Ошибка копирования", ok ? "info" : "alert");
     });
@@ -2017,10 +2213,16 @@ label {
     $("issueDiscord").addEventListener("change", checkIssueChecks);
     $("issueGame").addEventListener("change", checkIssueChecks);
 
-    // Автопересборка шаблона при вводе ссылки
     $("issueProofUrl").addEventListener("input", () => {
       if (!state.issueTarget) return;
-      $("issueTemplate").textContent = buildIssueTemplate(state.issueTarget, $("issueProofUrl").value.trim());
+      const clean = String($("issueProofUrl").value || "").replace(/\s+/g, "").trim();
+      $("issueTemplate").textContent = buildIssueTemplate(state.issueTarget, clean);
+    });
+
+    $("removeCancel").addEventListener("click", closeRemove);
+    $("removeConfirmBtn").addEventListener("click", confirmRemove);
+    $("removeConfirmCheck").addEventListener("change", () => {
+      $("removeConfirmBtn").disabled = !$("removeConfirmCheck").checked;
     });
 
     $("appealCancel").addEventListener("click", closeAppeal);
@@ -2035,6 +2237,7 @@ label {
     $("appealModal").addEventListener("click", (e) => { if (e.target === $("appealModal")) closeAppeal(); });
     $("appealConfirmModal").addEventListener("click", (e) => { if (e.target === $("appealConfirmModal")) $("appealConfirmModal").classList.add("hidden"); });
     $("appealInfoModal").addEventListener("click", (e) => { if (e.target === $("appealInfoModal")) $("appealInfoModal").classList.add("hidden"); });
+    $("removeModal").addEventListener("click", (e) => { if (e.target === $("removeModal")) closeRemove(); });
 
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
@@ -2043,6 +2246,7 @@ label {
       if (!$("reviewModal").classList.contains("hidden")) closeReview();
       if (!$("issueModal").classList.contains("hidden")) closeIssue();
       if (!$("appealModal").classList.contains("hidden")) closeAppeal();
+      if (!$("removeModal").classList.contains("hidden")) closeRemove();
       $("appealConfirmModal").classList.add("hidden");
       $("appealInfoModal").classList.add("hidden");
     });

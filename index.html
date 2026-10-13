@@ -1203,21 +1203,6 @@
     user: "Инструктор"
   };
 
-  const ROLE_LABEL_AB = {
-    superadmin: "Суперпользователь",
-    admin: "Сотрудник АБ",
-    user: "Сотрудник АБ"
-  };
-
-  function getRoleLabel(user) {
-    if (!user) return "—";
-    const dept = String(user.department || "").trim();
-    if (dept === "АБ") {
-      return ROLE_LABEL_AB[user.role] || ROLE_LABEL[user.role];
-    }
-    return ROLE_LABEL[user.role] || user.role;
-  }
-
   const DAY_NAMES = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
 
   const HOUR_MESSAGES = {
@@ -1667,13 +1652,6 @@
       color: "green",
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="19" x2="13" y2="19"/></svg>',
       frame: "apps/weekly-reports-pses.html"
-    },
-    penalties: {
-      label: "Взыскания",
-      sub: "Подача · рассмотрение · выдача",
-      color: "red",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-      frame: "apps/penalties.html"
     }
   };
 
@@ -1703,16 +1681,13 @@
       base.splice(base.length - 1, 0, "weeklyReports");
     }
 
-    // Плитка «Взыскания» — на всех рабочих столах (перед «О системе»)
-    base.splice(base.length - 1, 0, "penalties");
-
     return base;
   }
 
   function renderDesk() {
     const dept = state.activeDesk || state.user.department || "—";
     homeGreeting.textContent = "Рабочий стол: " + (DEPT_LABEL[dept] || dept);
-    homeSub.textContent = state.user.login + " · " + getRoleLabel(state.user);
+    homeSub.textContent = state.user.login + " · " + (ROLE_LABEL[state.user.role] || state.user.role);
 
     const apps = getAppsForDesk();
     appGrid.innerHTML = "";
@@ -1737,21 +1712,12 @@
         }
       }
 
-      if (key === "penalties") {
-        const b = document.createElement("div");
-        b.className = "counter-badge hidden";
-        b.id = "penaltiesBadge";
-        b.textContent = "0";
-        tile.appendChild(b);
-      }
-
       tile.addEventListener("click", () => openApp(key));
       appGrid.appendChild(tile);
     });
 
     renderDeskSwitcher();
     renderGosScheduleWidget();
-    checkPendingPenalties();
   }
 
   /* dep / ds сообщения */
@@ -1857,51 +1823,6 @@
           b.remove();
         }
       }
-    }
-  }
-
-  /* ============================================================
-     УВЕДОМЛЕНИЯ О НОВЫХ ВЗЫСКАНИЯХ
-     ============================================================ */
-  let _lastPendingCount = null;
-
-  async function checkPendingPenalties() {
-    if (!state.user) return;
-    if (state.user.role !== "superadmin" && state.user.role !== "admin") return;
-    const dept = String(state.user.department || "").trim();
-    if (dept !== "АБ" && dept !== "Руководство") return;
-
-    try {
-      const data = await apiPost({
-        action: "getPendingPenaltiesCount",
-        login: state.user.login,
-        hash: state.user.hash
-      });
-      if (!data || !data.success) return;
-
-      const count = data.count || 0;
-
-      const badge = document.getElementById("penaltiesBadge");
-      if (badge) {
-        if (count > 0) { badge.textContent = count; badge.classList.remove("hidden"); }
-        else badge.classList.add("hidden");
-      }
-
-      if (_lastPendingCount !== null && count > _lastPendingCount) {
-        const delta = count - _lastPendingCount;
-        showToast({
-          type: "info",
-          title: "⚠️ Новое взыскание",
-          text: delta === 1
-            ? "Появился запрос на взыскание — открой «Взыскания» → «Запрос на взыскание»"
-            : "Появилось " + delta + " новых запросов на взыскание",
-          playSound: true,
-          duration: 8000
-        });
-      }
-      _lastPendingCount = count;
-    } catch (e) {
-      console.error("checkPendingPenalties:", e);
     }
   }
 
@@ -2124,6 +2045,7 @@
         });
       };
 
+      // Для организации "Больница" не напоминаем про /dep
       const isHospitalCheck = String(item.name || "").trim().toLowerCase() === "больница";
       if (!isHospitalCheck) {
         fire(110, "1h50", "Отправь новость о проверке в Дискорд");
@@ -2360,12 +2282,11 @@
       showScreen("desk");
       renderDesk();
       scheduleCheckTickBookings();
-      checkPendingPenalties();
 
       showToast({
         type: "info",
         title: "Добро пожаловать",
-        text: data.login + " · " + getRoleLabel(state.user)
+        text: data.login + " · " + (ROLE_LABEL[data.role] || data.role)
       });
     } catch (err) {
       console.error(err);
@@ -2416,6 +2337,7 @@
 
       notify(fpNotification, "Пароль изменён", "success");
 
+      // Пускаем в планшет сразу
       await loadSchedule();
       await loadVacations();
       await refreshMyBookings();
@@ -2425,7 +2347,6 @@
       showScreen("desk");
       renderDesk();
       scheduleCheckTickBookings();
-      checkPendingPenalties();
 
       showToast({
         type: "success",
@@ -2448,7 +2369,7 @@
       userRole.textContent = "СУПЕРПОЛЬЗОВАТЕЛЬ";
       userRole.className = "role super";
     } else {
-      userRole.textContent = getRoleLabel(state.user);
+      userRole.textContent = ROLE_LABEL[state.user.role] || state.user.role;
       userRole.className = "role " + (state.user.role === "admin" ? "admin" : "user");
     }
     userAvatar.textContent = state.user.login.charAt(0).toUpperCase();
@@ -2857,7 +2778,7 @@
     if (state.serverOk === true) { aboutServer.textContent = "Доступен ✓"; aboutServer.style.color = "#86efac"; }
     else if (state.serverOk === false) { aboutServer.textContent = "Недоступен ✗"; aboutServer.style.color = "#fca5a5"; }
     else { aboutServer.textContent = "Проверка…"; aboutServer.style.color = "var(--text)"; }
-    aboutAuth.textContent = state.user ? state.user.login + " (" + getRoleLabel(state.user) + ")" : "—";
+    aboutAuth.textContent = state.user ? state.user.login + " (" + (ROLE_LABEL[state.user.role] || state.user.role) + ")" : "—";
     aboutDept.textContent = DEPT_LABEL[state.activeDesk] || state.activeDesk || "—";
     if (aboutVacations) {
       const active = getActiveVacations().length;
@@ -2885,8 +2806,6 @@
       refreshMyBookings().then(() => scheduleCheckTickBookings());
     } else if (e.data.type === "vacations-changed") {
       loadVacations();
-    } else if (e.data.type === "penalties-changed") {
-      checkPendingPenalties();
     } else if (e.data.type === "staff-changed") {
       // Ничего не нужно
     }
@@ -2957,7 +2876,6 @@
       state.myBookings = [];
       state.reminderTimers = {};
       state.forcePasswordChange = false;
-      _lastPendingCount = null;
       applySessionToUI();
       userChip.classList.add("hidden");
       deskSwitcher.classList.remove("visible");
@@ -2968,6 +2886,7 @@
 
     const session = loadSession();
     if (session) {
+      // Проверка: если в сессии временный пароль — принудительно требуем смену
       if (session.hash === TEMP_PASSWORD_HASH) {
         state.user = session;
         state.activeDesk = session.department || "Руководство";
@@ -2987,7 +2906,6 @@
           .then(() => {
             renderDesk();
             scheduleCheckTickBookings();
-            checkPendingPenalties();
           });
       }
     } else {
@@ -3011,15 +2929,6 @@
       if (document.hidden) return;
       if (state.user) loadVacations();
     }, 60 * 1000);
-
-    // Проверка новых взысканий — каждые 90 секунд
-    if (state.user) {
-      checkPendingPenalties();
-    }
-    setInterval(() => {
-      if (document.hidden) return;
-      checkPendingPenalties();
-    }, 90000);
   }
 
   document.addEventListener("DOMContentLoaded", init);

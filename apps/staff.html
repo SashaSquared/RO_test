@@ -97,8 +97,10 @@
     border-radius: 999px;
     background: rgba(255,255,255,0.1);
     color: inherit;
-    font-size: 0.7rem; font-weight: 800;
-    line-height: 20px; text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    line-height: 20px;
+    text-align: center;
   }
   .tab-btn.active .count { background: rgba(76,177,216,0.3); }
 
@@ -117,7 +119,9 @@
     font-size: 0.95rem; font-weight: 600;
     display: flex; align-items: center; gap: 8px;
   }
-  .card-head .head-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .card-head .head-actions {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
 
   .toolbar {
     display: grid; grid-template-columns: 1fr 200px 180px;
@@ -125,10 +129,14 @@
   }
   @media (max-width: 720px) { .toolbar { grid-template-columns: 1fr; } }
   input[type="text"], select, textarea {
-    width: 100%; padding: 10px 12px;
-    font-size: 0.9rem; font-family: inherit;
-    color: var(--text); background: #0c1420;
-    border: 1px solid var(--border); border-radius: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #0c1420;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
     -webkit-appearance: none; appearance: none;
@@ -144,7 +152,8 @@
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px;
-    padding-right: 34px; cursor: pointer;
+    padding-right: 34px;
+    cursor: pointer;
   }
   select option { background: #0c1420; color: var(--text); }
 
@@ -184,14 +193,18 @@
     background: linear-gradient(180deg, rgba(76, 177, 216, 0.06) 0%, rgba(76, 177, 216, 0.02) 100%);
   }
   .edit-row-inner {
-    max-height: 0; overflow: hidden; opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
     transition: max-height 0.35s cubic-bezier(.22,1,.36,1),
                 opacity 0.25s ease,
                 padding 0.35s cubic-bezier(.22,1,.36,1);
     padding: 0 16px;
   }
   .edit-row.open .edit-row-inner {
-    max-height: 800px; opacity: 1; padding: 16px;
+    max-height: 800px;
+    opacity: 1;
+    padding: 16px;
   }
   .edit-row-inner .edit-title {
     font-size: 0.86rem; font-weight: 700;
@@ -200,18 +213,28 @@
     display: flex; align-items: center; gap: 8px;
   }
   .edit-row-inner .edit-title svg { width: 15px; height: 15px; }
-  .edit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
   @media (max-width: 720px) { .edit-grid { grid-template-columns: 1fr; } }
   .edit-grid .form-group { margin: 0; }
   .edit-form-group label {
-    display: block; font-size: 0.7rem; font-weight: 600;
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
     color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     margin-bottom: 5px;
   }
   .edit-grid .full { grid-column: 1 / -1; }
   .edit-actions {
-    display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
   }
 
   .pill {
@@ -258,7 +281,9 @@
     color: var(--text-soft);
     cursor: pointer;
     transition: background .15s, color .15s, border-color .15s, transform .08s;
-    margin-left: 5px; padding: 0; font-family: inherit;
+    margin-left: 5px;
+    padding: 0;
+    font-family: inherit;
   }
   .icon-btn:first-child { margin-left: 0; }
   .icon-btn svg { width: 15px; height: 15px; }
@@ -278,11 +303,18 @@
     border-color: var(--red-border);
     color: var(--red-text);
   }
+  .icon-btn.restore:hover {
+    background: var(--good-bg-strong);
+    border-color: var(--good-border);
+    color: var(--good-text);
+  }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 8px 14px;
-    font-size: 0.84rem; font-weight: 600; font-family: inherit;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 0.84rem; font-weight: 600;
+    font-family: inherit;
     background: transparent;
     border: 1px solid var(--border);
     border-radius: 9px;
@@ -293,17 +325,30 @@
   }
   .btn svg { width: 13px; height: 13px; }
   .btn:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
-  .btn-primary { background: var(--accent-bg-strong); border-color: var(--accent-border); color: var(--accent-2); }
+  .btn-primary {
+    background: var(--accent-bg-strong);
+    border-color: var(--accent-border);
+    color: var(--accent-2);
+  }
   .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #071018; }
-  .btn-danger { background: var(--red-bg-strong); border-color: var(--red-border); color: var(--red-text); }
+  .btn-danger {
+    background: var(--red-bg-strong);
+    border-color: var(--red-border);
+    color: var(--red-text);
+  }
   .btn-danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
-  .btn-amber { background: var(--amber-bg); border-color: var(--amber); color: var(--amber-text); }
+  .btn-amber {
+    background: var(--amber-bg);
+    border-color: var(--amber);
+    color: var(--amber-text);
+  }
   .btn-amber:hover { background: var(--amber); border-color: var(--amber); color: #1a1207; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .empty, .loading {
     color: var(--muted); font-size: 0.88rem;
-    text-align: center; padding: 24px 16px;
+    text-align: center;
+    padding: 24px 16px;
     background: var(--panel-2);
     border: 1px dashed var(--border);
     border-radius: 10px;
@@ -332,7 +377,8 @@
   .modal.modal-wide { max-width: 640px; }
   .modal-head {
     display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 10px; margin-bottom: 14px;
+    gap: 10px;
+    margin-bottom: 14px;
   }
   .modal-head h3 {
     font-size: 1.02rem; font-weight: 700;
@@ -341,7 +387,8 @@
   .modal-head h3 .ic {
     width: 30px; height: 30px; border-radius: 8px;
     display: inline-flex; align-items: center; justify-content: center;
-    color: #fff; flex-shrink: 0;
+    color: #fff;
+    flex-shrink: 0;
   }
   .modal-head h3 .ic.fire-icon {
     background: linear-gradient(135deg, #ef4444, #7f1d1d);
@@ -354,7 +401,8 @@
   .modal-head h3 .ic svg { width: 16px; height: 16px; }
   .modal-head .close-x {
     background: transparent; border: none;
-    color: var(--muted); font-size: 1.3rem; line-height: 1;
+    color: var(--muted);
+    font-size: 1.3rem; line-height: 1;
     cursor: pointer;
     padding: 2px 6px; border-radius: 6px;
     transition: background .15s, color .15s;
@@ -362,24 +410,31 @@
   .modal-head .close-x:hover { background: var(--panel-3); color: var(--text); }
 
   .modal-who {
-    padding: 10px 12px; border-radius: 9px;
+    padding: 10px 12px;
+    border-radius: 9px;
     background: var(--panel-3);
     border: 1px solid var(--border-soft);
-    margin-bottom: 12px; font-size: 0.86rem;
+    margin-bottom: 12px;
+    font-size: 0.86rem;
   }
   .modal-who .who-name { font-weight: 700; color: #fff; }
   .modal-who .who-sub { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
 
   .modal-form-group { margin-bottom: 12px; }
   .modal-form-group label {
-    display: block; font-size: 0.72rem; font-weight: 700;
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
     color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     margin-bottom: 6px;
   }
   .modal-hint {
-    font-size: 0.75rem; color: var(--muted);
-    line-height: 1.5; margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 6px;
   }
 
   .check-row {
@@ -388,7 +443,8 @@
     background: var(--red-bg-strong);
     border: 1px solid var(--red-border);
     border-radius: 10px;
-    cursor: pointer; user-select: none;
+    cursor: pointer;
+    user-select: none;
     transition: background .15s;
   }
   .check-row:hover { background: rgba(239, 68, 68, 0.22); }
@@ -417,50 +473,80 @@
   .check-row .check-hint { font-size: 0.72rem; color: #fca5a5; margin-top: 2px; }
 
   .modal-actions {
-    display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;
+    display: flex; justify-content: flex-end; gap: 8px;
+    margin-top: 16px;
   }
 
   .imp-section {
     background: var(--panel-3);
     border: 1px solid var(--border-soft);
     border-radius: 10px;
-    padding: 12px; margin-bottom: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
   }
   .imp-section h4 {
-    font-size: 0.8rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     color: var(--accent-2);
     margin-bottom: 8px;
-    display: flex; align-items: center; gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
   .imp-section h4 svg { width: 14px; height: 14px; }
   .imp-section .btn + .btn { margin-left: 6px; }
   .imp-status {
-    font-size: 0.8rem; color: var(--muted);
-    margin-top: 10px; padding: 8px 10px;
-    background: #0c1420; border-radius: 8px;
-    white-space: pre-line; line-height: 1.5;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: #0c1420;
+    border-radius: 8px;
+    white-space: pre-line;
+    line-height: 1.5;
   }
   .imp-status.ok { color: var(--good-text); }
   .imp-status.err { color: var(--red-text); }
   .imp-status.warn { color: var(--amber-text); }
 
+  .imp-info-row {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 0.82rem;
+    margin-top: 4px;
+  }
+  .imp-info-row > div {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .imp-info-row .label { color: var(--muted); }
+  .imp-info-row .value { color: #86efac; font-weight: 800; }
+  .imp-info-row .value.amber { color: #fcd34d; }
+
   input[type="file"] {
-    width: 100%; padding: 8px 10px;
-    font-size: 0.82rem; color: var(--text-soft);
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    color: var(--text-soft);
     background: #0c1420;
     border: 1px solid var(--border);
-    border-radius: 8px; cursor: pointer;
+    border-radius: 8px;
+    cursor: pointer;
   }
   input[type="file"]::file-selector-button {
-    padding: 6px 12px; margin-right: 10px;
-    background: var(--panel-2); color: var(--text-soft);
+    padding: 6px 12px;
+    margin-right: 10px;
+    background: var(--panel-2);
+    color: var(--text-soft);
     border: 1px solid var(--border);
-    border-radius: 6px; font-family: inherit;
-    font-size: 0.8rem; cursor: pointer;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
   }
   input[type="file"]::file-selector-button:hover {
-    background: var(--panel-3); color: var(--text);
+    background: var(--panel-3);
+    color: var(--text);
   }
 
   .toast {
@@ -481,14 +567,14 @@
   .toast.info  { border-left-color: var(--accent); }
   .toast .toast-ic {
     flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px;
-    background: var(--good);
-    display: flex; align-items: center; justify-content: center;
+    background: var(--good); display: flex; align-items: center; justify-content: center;
   }
   .toast.alert .toast-ic { background: var(--red); }
   .toast.info  .toast-ic { background: var(--accent); }
   .toast .toast-ic svg { width: 12px; height: 12px; color: #071018; }
 
   .hidden { display: none !important; }
+
   @keyframes fadeIn { from { opacity:0; transform: translateY(-4px) } to { opacity:1; transform: translateY(0) } }
 
   @media (max-width: 700px) {
@@ -713,6 +799,26 @@
     <div class="imp-section">
       <h4>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Информация о базе
+      </h4>
+      <div class="imp-info-row">
+        <div>
+          <span class="label">Всего сотрудников:</span>
+          <b class="value" id="impTotalCount">—</b>
+        </div>
+        <div>
+          <span class="label">Последнее обновление:</span>
+          <b class="value amber" id="impLastUpdate">—</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="imp-section">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
@@ -877,6 +983,8 @@
   const impStatus = $("impStatus");
   const impReplaceMode = $("impReplaceMode");
   const impRestoreBtn = $("impRestoreBtn");
+  const impTotalCount = $("impTotalCount");
+  const impLastUpdate = $("impLastUpdate");
 
   async function apiPost(payload) {
     const res = await fetch(API_URL, {
@@ -915,6 +1023,16 @@
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;")
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function formatDateTime(iso) {
+    if (!iso) return "—";
+    try {
+      const d = new Date(iso);
+      const p = (n) => String(n).padStart(2, "0");
+      return p(d.getDate()) + "." + p(d.getMonth() + 1) + "." + d.getFullYear() +
+             " " + p(d.getHours()) + ":" + p(d.getMinutes());
+    } catch (e) { return iso; }
   }
 
   function todayStr() {
@@ -1338,6 +1456,7 @@
           notifyParent("Сотрудник обновлён", fields.newName);
           state.editingStaffRow = null;
           await loadStaff();
+          if (impModal && !impModal.classList.contains("hidden")) loadStaffMeta();
         }
       } catch (err) {
         console.error(err);
@@ -1421,6 +1540,7 @@
         notifyParent("Сотрудник добавлен", fields.newName);
         closeCreate();
         await loadStaff();
+        if (impModal && !impModal.classList.contains("hidden")) loadStaffMeta();
       }
     } catch (err) {
       console.error(err);
@@ -1444,6 +1564,7 @@
       showToast("Удалено", "info");
       notifyParent("Сотрудник удалён", s.name, "info");
       await loadStaff();
+      if (impModal && !impModal.classList.contains("hidden")) loadStaffMeta();
     } catch (e) { console.error(e); showToast("Ошибка сети", "alert"); }
   }
 
@@ -1452,8 +1573,10 @@
     state.firingTarget = s;
     fireWhoName.textContent = s.name || "—";
     fireWhoSub.textContent =
-      "#" + (s.passport || "—") + " · " + (s.position || "—") +
-      " · " + (s.rank || "—") + " · " + (s.department || "—");
+      "#" + (s.passport || "—") +
+      " · " + (s.position || "—") +
+      " · " + (s.rank || "—") +
+      " · " + (s.department || "—");
     fireReason.value = "";
     fireBlacklist.checked = false;
     fireModal.classList.remove("hidden");
@@ -1493,6 +1616,7 @@
       closeFireModal();
       await loadStaff();
       if (state.activeTab === "fired") await loadFired();
+      if (impModal && !impModal.classList.contains("hidden")) loadStaffMeta();
     } catch (err) {
       console.error(err);
       showToast("Ошибка сети", "alert");
@@ -1566,6 +1690,7 @@
     impUploadBtn.disabled = true;
     impReplaceMode.checked = false;
     impModal.classList.remove("hidden");
+    loadStaffMeta();
   }
 
   function closeImpModal() {
@@ -1575,6 +1700,23 @@
   function impSetStatus(text, kind) {
     impStatus.textContent = text;
     impStatus.className = "imp-status" + (kind ? " " + kind : "");
+  }
+
+  async function loadStaffMeta() {
+    try {
+      const data = await apiPost({ action: "getStaffMeta" });
+      if (data && data.success) {
+        impTotalCount.textContent = String(data.total || 0);
+        impLastUpdate.textContent = data.lastUpdate ? formatDateTime(data.lastUpdate) : "неизвестно";
+      } else {
+        impTotalCount.textContent = "—";
+        impLastUpdate.textContent = "—";
+      }
+    } catch (e) {
+      console.error("loadStaffMeta:", e);
+      impTotalCount.textContent = "—";
+      impLastUpdate.textContent = "—";
+    }
   }
 
   async function impExport() {
@@ -1605,6 +1747,7 @@
       URL.revokeObjectURL(url);
 
       impSetStatus('✅ Скачано: ' + staff.length + ' сотрудников', 'ok');
+      await loadStaffMeta();
     } catch (e) {
       console.error(e);
       impSetStatus('❌ Ошибка: ' + e.message, 'err');
@@ -1746,6 +1889,7 @@
       impSetStatus(msg, kind);
 
       await loadStaff();
+      await loadStaffMeta();
     } catch (e) {
       console.error(e);
       impSetStatus('❌ Ошибка: ' + e.message, 'err');
@@ -1754,7 +1898,6 @@
     }
   }
 
-  /* --- Восстановление из резервной копии --- */
   async function impRestore() {
     const ok = confirm(
       "↩ ВОССТАНОВЛЕНИЕ ИЗ РЕЗЕРВНОЙ КОПИИ\n\n" +
@@ -1776,6 +1919,7 @@
       if (!res.success) throw new Error(res.message || "Ошибка");
       impSetStatus('✅ Восстановлено: ' + (res.restored || 0) + ' сотрудников', 'ok');
       await loadStaff();
+      await loadStaffMeta();
     } catch (e) {
       console.error(e);
       impSetStatus('❌ Ошибка: ' + e.message, 'err');

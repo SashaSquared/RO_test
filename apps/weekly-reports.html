@@ -50,12 +50,7 @@
 }
 
 html, body { height: 100%; }
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 0;
-  display: none;
-}
+html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
 
 body {
   font-family: var(--font);
@@ -65,18 +60,13 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   padding: 16px 16px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  display: flex; flex-direction: column; align-items: center;
+  scrollbar-width: none; -ms-overflow-style: none;
 }
 
 .wrap { max-width: 1100px; width: 100%; }
 
-.tabs {
-  display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
-}
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
 .tab-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 14px;
@@ -84,23 +74,13 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text-soft);
-  font-family: inherit;
-  font-size: 0.86rem;
-  font-weight: 600;
+  font-family: inherit; font-size: 0.86rem; font-weight: 600;
   cursor: pointer;
   transition: background .15s, color .15s, border-color .15s;
 }
 .tab-btn:hover { background: var(--panel-3); color: var(--text); }
-.tab-btn.active {
-  background: var(--accent-bg);
-  border-color: var(--accent-border);
-  color: #86efac;
-}
-.tab-btn.tab-debtors.active {
-  background: var(--red-bg);
-  border-color: var(--red-border);
-  color: #fca5a5;
-}
+.tab-btn.active { background: var(--accent-bg); border-color: var(--accent-border); color: #86efac; }
+.tab-btn.tab-debtors.active { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
 .tab-btn svg { width: 15px; height: 15px; }
 .tab-btn .count {
   display: inline-block;
@@ -109,15 +89,12 @@ body {
   border-radius: 999px;
   background: rgba(255,255,255,0.1);
   color: inherit;
-  font-size: 0.7rem;
-  font-weight: 800;
-  line-height: 20px;
-  text-align: center;
+  font-size: 0.7rem; font-weight: 800;
+  line-height: 20px; text-align: center;
 }
 .tab-btn.active .count { background: rgba(47,158,68,0.35); }
 .tab-btn.tab-debtors.active .count { background: rgba(239,68,68,0.35); }
 
-/* ===== Кнопка ПРЕМИИ ===== */
 .btn-bonus-open {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 18px;
@@ -134,7 +111,6 @@ body {
 .btn-bonus-open:active { transform: scale(0.98); }
 .btn-bonus-open svg { width: 15px; height: 15px; }
 
-/* ===== МОДАЛКА ПРЕМИЙ ===== */
 .modal-back {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.72);
@@ -147,8 +123,7 @@ body {
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 
 .modal-bonus {
-  width: 100%;
-  max-width: 900px;
+  width: 100%; max-width: 900px;
   max-height: calc(100vh - 40px);
   background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
   border: 1px solid var(--border-strong);
@@ -156,15 +131,10 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,.75);
   display: flex; flex-direction: column;
   overflow: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-.modal-bonus::-webkit-scrollbar { width: 0; height: 0; display: none; }
-
 .modal-bonus-head {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 10px;
-  padding: 16px 20px;
+  gap: 10px; padding: 16px 20px;
   border-bottom: 1px solid var(--border);
   background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(217,119,6,0.05));
 }
@@ -182,10 +152,8 @@ body {
 .modal-bonus-head h3 .head-icon svg { width: 18px; height: 18px; }
 .modal-close-x {
   background: transparent; border: none;
-  color: var(--muted);
-  font-size: 1.4rem; line-height: 1;
-  cursor: pointer;
-  padding: 4px 8px; border-radius: 6px;
+  color: var(--muted); font-size: 1.4rem; line-height: 1;
+  cursor: pointer; padding: 4px 8px; border-radius: 6px;
   transition: background .15s, color .15s;
 }
 .modal-close-x:hover { background: var(--panel-3); color: var(--text); }
@@ -220,10 +188,7 @@ body {
 
 .modal-bonus-body {
   padding: 18px 20px 20px;
-  overflow-y: auto;
-  flex: 1;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow-y: auto; flex: 1;
 }
 .modal-bonus-body::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
@@ -233,28 +198,15 @@ body {
   color: var(--muted);
   margin-bottom: 8px;
 }
-
 .bonus-instr-input-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  margin-bottom: 14px;
-  align-items: stretch;
+  display: grid; grid-template-columns: 1fr auto; gap: 10px;
+  margin-bottom: 14px; align-items: stretch;
 }
-.bonus-instr-input-row input {
-  padding: 11px 14px;
-  font-size: 0.96rem; font-weight: 700;
-  color: #fff;
-}
+.bonus-instr-input-row input { padding: 11px 14px; font-size: 0.96rem; font-weight: 700; color: #fff; }
 
-.bonus-list {
-  display: flex; flex-direction: column; gap: 6px;
-  margin-bottom: 14px;
-}
-
+.bonus-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .bonus-item {
-  display: grid;
-  grid-template-columns: 44px 1fr auto auto;
+  display: grid; grid-template-columns: 44px 1fr auto auto;
   gap: 12px; align-items: center;
   padding: 10px 12px;
   background: var(--panel-3);
@@ -272,41 +224,25 @@ body {
 .bonus-item.place-1 .b-place { background: linear-gradient(135deg,#fbbf24,#d97706); color:#1a1207; }
 .bonus-item.place-2 .b-place { background: linear-gradient(135deg,#e5e7eb,#9ca3af); color:#1a1207; }
 .bonus-item.place-3 .b-place { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
-
 .bonus-item .b-info { min-width: 0; }
 .bonus-item .b-name { font-weight: 700; color: #fff; font-size: 0.92rem; }
 .bonus-item .b-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
 .bonus-item .b-points {
-  font-weight: 800; font-size: 1rem;
-  color: #86efac;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  font-weight: 800; font-size: 1rem; color: #86efac;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .bonus-item .b-remove {
-  width: 30px; height: 30px;
-  border-radius: 8px;
-  border: 1px solid var(--red-border);
-  background: var(--red-bg);
-  color: var(--red-text);
-  cursor: pointer;
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--red-border); background: var(--red-bg);
+  color: var(--red-text); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   transition: background .15s, color .15s;
 }
 .bonus-item .b-remove:hover { background: rgba(239,68,68,0.28); color: #fff; }
 .bonus-item .b-remove svg { width: 14px; height: 14px; }
 
-.bonus-add-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  margin-bottom: 16px;
-  position: relative;
-}
-.bonus-add-row input,
-.bonus-add-row select {
-  padding: 10px 12px;
-  font-size: 0.9rem;
-}
+.bonus-add-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 16px; position: relative; }
+.bonus-add-row input, .bonus-add-row select { padding: 10px 12px; font-size: 0.9rem; }
 .bonus-add-btn {
   padding: 10px 16px;
   font-size: 0.84rem; font-weight: 700;
@@ -322,30 +258,21 @@ body {
 .bonus-add-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 .bonus-add-suggest {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
   z-index: 20;
   background: var(--panel-2);
   border: 1px solid var(--accent-border);
   border-radius: 10px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 4px;
-  display: none;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  max-height: 260px; overflow-y: auto;
+  padding: 4px; display: none;
 }
-.bonus-add-suggest::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .bonus-add-suggest.open { display: block; }
 .bonus-add-suggest .s-item {
   display: flex; align-items: center; justify-content: space-between;
   gap: 8px; padding: 8px 10px;
   border-radius: 6px; cursor: pointer;
-  transition: background .12s;
-  font-size: 0.86rem;
+  transition: background .12s; font-size: 0.86rem;
 }
 .bonus-add-suggest .s-item:hover { background: var(--accent-bg); }
 .bonus-add-suggest .s-name { font-weight: 600; color: #fff; }
@@ -356,8 +283,7 @@ body {
 .bonus-copy-bar {
   display: flex; align-items: center; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 12px 16px; border-radius: 12px;
   background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(217,119,6,0.06));
   border: 1px solid rgba(251,191,36,0.4);
 }
@@ -379,13 +305,7 @@ body {
 .btn-copy-bonus:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.4); }
 .btn-copy-bonus svg { width: 15px; height: 15px; }
 
-/* Инструкторский блок */
-.instr-coeff-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-}
+.instr-coeff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 @media (max-width: 560px) { .instr-coeff-row { grid-template-columns: 1fr; } }
 .instr-coeff-row .form-group { display: flex; flex-direction: column; gap: 6px; }
 .instr-coeff-row label {
@@ -393,19 +313,11 @@ body {
   text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--muted);
 }
-.instr-coeff-row select {
-  padding: 10px 34px 10px 12px;
-  font-size: 0.92rem;
-  font-weight: 600;
-}
+.instr-coeff-row select { padding: 10px 34px 10px 12px; font-size: 0.92rem; font-weight: 600; }
 
-.instr-list {
-  display: flex; flex-direction: column; gap: 6px;
-  margin-bottom: 14px;
-}
+.instr-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .instr-item {
-  display: grid;
-  grid-template-columns: 44px 1fr auto auto;
+  display: grid; grid-template-columns: 44px 1fr auto auto;
   gap: 12px; align-items: center;
   padding: 12px;
   background: var(--panel-3);
@@ -425,18 +337,8 @@ body {
 .instr-item.place-3 .b-place { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
 .instr-item .i-name { font-weight: 700; color: #fff; font-size: 0.92rem; }
 .instr-item .i-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
-.instr-item .i-points {
-  font-weight: 800; font-size: 1rem;
-  color: #86efac;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.instr-item .i-sum {
-  font-weight: 800; font-size: 1rem;
-  color: #fcd34d;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
+.instr-item .i-points { font-weight: 800; font-size: 1rem; color: #86efac; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.instr-item .i-sum { font-weight: 800; font-size: 1rem; color: #fcd34d; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .instr-total-box {
   padding: 12px 14px;
@@ -451,13 +353,10 @@ body {
 .instr-total-box b { color: #fff; font-weight: 800; }
 .instr-total-box .big { font-size: 1.05rem; color: #fff; font-weight: 800; }
 .instr-total-box .share {
-  display: inline-block;
-  margin-top: 4px;
-  padding: 4px 10px;
-  border-radius: 6px;
+  display: inline-block; margin-top: 4px;
+  padding: 4px 10px; border-radius: 6px;
   background: rgba(255,255,255,0.06);
-  color: #fff;
-  font-weight: 800;
+  color: #fff; font-weight: 800;
 }
 
 .debtor-row.punished { background: rgba(239, 68, 68, 0.15) !important; }
@@ -466,6 +365,11 @@ body {
 .punish-check {
   width: 20px; height: 20px; cursor: pointer;
   accent-color: var(--red); margin: 0 auto; display: block;
+}
+
+.freeze-panel {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  margin-top: 6px; width: 100%;
 }
 
 .week-bar {
@@ -644,7 +548,6 @@ select option { background: #0c1420; color: var(--text); }
 .status-pill.exempt   { background: var(--purple-bg); color: #c4b5fd; border: 1px solid var(--purple-border); }
 .status-pill.vacation { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
 .status-pill.instr    { background: var(--cyan-bg); color: #67e8f9; border: 1px solid var(--cyan-border); }
-
 .status-pill[data-comment] { cursor: pointer; transition: filter 0.15s, transform 0.1s; }
 .status-pill[data-comment]:hover { filter: brightness(1.25); }
 .status-pill[data-comment]:active { transform: scale(0.96); }
@@ -690,17 +593,14 @@ select option { background: #0c1420; color: var(--text); }
 .btn-icon.danger:hover  { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
 .btn-icon.purple:hover  { background: var(--purple-bg); border-color: var(--purple-border); color: #c4b5fd; }
 
-.top-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-}
+.top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 720px) { .top-grid { grid-template-columns: 1fr; } }
 
 .top-list { display: flex; flex-direction: column; gap: 4px; }
 .top-row {
   display: grid;
   grid-template-columns: 44px 1fr auto;
-  gap: 10px;
-  align-items: center;
+  gap: 10px; align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
   background: var(--panel-3);
@@ -734,9 +634,7 @@ select option { background: #0c1420; color: var(--text); }
 }
 .top-points.instr { color: #c4b5fd; }
 
-.week-select-row {
-  display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;
-}
+.week-select-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
 .week-select-row label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
 .week-select-row select { max-width: 260px; }
 
@@ -1031,9 +929,6 @@ select option { background: #0c1420; color: var(--text); }
         </svg>
         Должники рабочей недели
       </h2>
-      <div style="font-size:0.8rem;color:var(--muted);">
-        Отметьте галочку, если взыскание выдано
-      </div>
     </div>
 
     <div class="toolbar">
@@ -1284,7 +1179,6 @@ select option { background: #0c1420; color: var(--text); }
     activeTab: "current",
     exemptTarget: null,
 
-    /* === Премии === */
     bonusModalTab: "general",
     bonusCount: 10,
     bonusGeneralList: [],
@@ -1423,7 +1317,6 @@ select option { background: #0c1420; color: var(--text); }
     return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
   }
 
-  /* ===== Утилиты выслуги ===== */
   function getTopStorageSmp() {
     try {
       if (window.top && window.top !== window) return window.top.localStorage;
@@ -1463,7 +1356,7 @@ select option { background: #0c1420; color: var(--text); }
     renderCurrentTab();
     renderInstrTab();
     renderTopTab();
-    renderDebtorsTab();
+    await renderDebtorsTab();
     renderHistoryTab();
   }
 
@@ -1941,7 +1834,7 @@ select option { background: #0c1420; color: var(--text); }
         renderCurrentTab();
         renderInstrTab();
         renderTopTab();
-        renderDebtorsTab();
+        await renderDebtorsTab();
       } else {
         showToast(data.message || "Ошибка сохранения", "alert");
         btn.innerHTML = oldHtml;
@@ -1976,9 +1869,7 @@ select option { background: #0c1420; color: var(--text); }
   function openExemptInfoModal(name, passport, rank, dept, comment) {
     $("exemptInfoWhoName").textContent = name || "—";
     $("exemptInfoWhoSub").textContent =
-      "#" + (passport || "—") +
-      " · " + (rank || "—") +
-      " · " + (dept || "—");
+      "#" + (passport || "—") + " · " + (rank || "—") + " · " + (dept || "—");
     $("exemptInfoComment").textContent = comment || "(без комментария)";
     $("exemptInfoModal").classList.remove("hidden");
   }
@@ -2017,7 +1908,7 @@ select option { background: #0c1420; color: var(--text); }
         renderCurrentTab();
         renderInstrTab();
         renderTopTab();
-        renderDebtorsTab();
+        await renderDebtorsTab();
       } else {
         showToast(data.message || "Ошибка", "alert");
       }
@@ -2045,7 +1936,7 @@ select option { background: #0c1420; color: var(--text); }
         renderCurrentTab();
         renderInstrTab();
         renderTopTab();
-        renderDebtorsTab();
+        await renderDebtorsTab();
       } else {
         showToast(data.message || "Ошибка", "alert");
       }
@@ -2073,10 +1964,8 @@ select option { background: #0c1420; color: var(--text); }
     const text = lines.join("\n");
 
     let ok = false;
-    try {
-      await navigator.clipboard.writeText(text);
-      ok = true;
-    } catch (e) {
+    try { await navigator.clipboard.writeText(text); ok = true; }
+    catch (e) {
       try {
         const ta = document.createElement("textarea");
         ta.value = text;
@@ -2086,11 +1975,8 @@ select option { background: #0c1420; color: var(--text); }
         ok = true;
       } catch (e2) { ok = false; }
     }
-    if (ok) {
-      showToast("Форма взыскания скопирована: " + staffItem.name, "success");
-    } else {
-      showToast("Не удалось скопировать", "alert");
-    }
+    if (ok) showToast("Форма взыскания скопирована: " + staffItem.name, "success");
+    else showToast("Не удалось скопировать", "alert");
   }
 
   function renderTopTab() {
@@ -2102,9 +1988,8 @@ select option { background: #0c1420; color: var(--text); }
     reports.forEach(r => {
       const key = String(r.name || "").trim().toLowerCase();
       if (!key) return;
-      if (!uniqueMap[key]) {
-        uniqueMap[key] = { ...r };
-      } else {
+      if (!uniqueMap[key]) uniqueMap[key] = { ...r };
+      else {
         const cur = uniqueMap[key];
         cur.points = Math.max(cur.points || 0, r.points || 0);
         cur.instrPoints = Math.max(cur.instrPoints || 0, r.instrPoints || 0);
@@ -2184,25 +2069,61 @@ select option { background: #0c1420; color: var(--text); }
     return row;
   }
 
-  function renderDebtorsTab() {
+  /* ============================================================
+     ДОЛЖНИКИ — с фиксацией
+     ============================================================ */
+  async function renderDebtorsTab() {
     if (!isAdmin()) {
       $("tabDebtorsBtn").classList.add("hidden");
       return;
     }
     $("tabDebtorsBtn").classList.remove("hidden");
 
-    const allStaff = [...getSmpStaff(), ...getInstrStaff()];
-    const debtors = [];
-    allStaff.forEach(s => {
-      const report = findReportFor(s.name);
-      const status = computeStatus(s, report);
-      if (status.key === "missing") {
-        debtors.push({
-          staff: s, report: report,
+    // Загружаем зафиксированный список
+    let frozen = null;
+    try {
+      const data = await apiPost({
+        action: "getFrozenDebtors",
+        weekId: state.weekId
+      });
+      if (data && data.success && data.frozen) frozen = data;
+    } catch (e) {
+      console.error("getFrozenDebtors:", e);
+    }
+
+    let debtors;
+
+    if (frozen) {
+      debtors = frozen.debtors.map(d => {
+        const staffItem = state.staff.find(s =>
+          String(s.name || "").trim().toLowerCase() === String(d.name).trim().toLowerCase()
+        );
+        const report = findReportFor(d.name);
+        return {
+          staff: staffItem || {
+            name: d.name,
+            passport: d.passport,
+            rank: d.rank,
+            department: d.department
+          },
+          report: report,
           punished: report ? !!report.punished : false
-        });
-      }
-    });
+        };
+      });
+    } else {
+      const allStaff = [...getSmpStaff(), ...getInstrStaff()];
+      debtors = [];
+      allStaff.forEach(s => {
+        const report = findReportFor(s.name);
+        const status = computeStatus(s, report);
+        if (status.key === "missing") {
+          debtors.push({
+            staff: s, report: report,
+            punished: report ? !!report.punished : false
+          });
+        }
+      });
+    }
 
     const q = ($("searchDebtors").value || "").trim().toLowerCase();
     const filterP = $("filterDebtors").value;
@@ -2217,6 +2138,8 @@ select option { background: #0c1420; color: var(--text); }
 
     $("totalDebtors").textContent = String(filtered.length);
     $("countDebtors").textContent = String(debtors.length);
+
+    updateDebtorsHeader(frozen);
 
     const cont = $("debtorsContainer");
     if (!filtered.length) {
@@ -2307,6 +2230,113 @@ select option { background: #0c1420; color: var(--text); }
     cont.appendChild(table);
   }
 
+  function updateDebtorsHeader(frozen) {
+    const head = document.querySelector("#tab-debtors .card-head");
+    if (!head) return;
+
+    const old = head.querySelector(".freeze-panel");
+    if (old) old.remove();
+
+    const panel = document.createElement("div");
+    panel.className = "freeze-panel";
+
+    if (frozen) {
+      const when = frozen.frozenAt ? frozen.frozenAt.slice(0, 10) : "";
+      panel.innerHTML =
+        '<span style="font-size:0.78rem;color:#86efac;font-weight:700;">' +
+        '🔒 Зафиксировано ' + esc(formatHuman(when)) +
+        ' · ' + frozen.debtors.length + ' чел.' +
+        (frozen.frozenBy ? ' · ' + esc(frozen.frozenBy) : '') +
+        '</span>' +
+        '<button class="btn btn-warn" id="unfreezeBtn" type="button" style="margin-left:auto;">' +
+        '🔓 Расфиксировать' +
+        '</button>';
+    } else {
+      panel.innerHTML =
+        '<span style="font-size:0.78rem;color:#fcd34d;font-weight:700;">' +
+        '⚠️ Список не зафиксирован — данные могут меняться' +
+        '</span>' +
+        '<button class="btn btn-primary" id="freezeBtn" type="button" style="margin-left:auto;">' +
+        '🔒 Зафиксировать должников' +
+        '</button>';
+    }
+
+    head.appendChild(panel);
+
+    const freezeBtn = document.getElementById("freezeBtn");
+    if (freezeBtn) freezeBtn.addEventListener("click", freezeDebtors);
+
+    const unfreezeBtn = document.getElementById("unfreezeBtn");
+    if (unfreezeBtn) unfreezeBtn.addEventListener("click", unfreezeDebtors);
+  }
+
+  async function freezeDebtors() {
+    if (!isAdmin()) return;
+
+    const allStaff = [...getSmpStaff(), ...getInstrStaff()];
+    const list = [];
+    allStaff.forEach(s => {
+      const report = findReportFor(s.name);
+      const status = computeStatus(s, report);
+      if (status.key === "missing") {
+        list.push({
+          name: s.name,
+          passport: s.passport || "",
+          rank: s.rank || "",
+          department: s.department || ""
+        });
+      }
+    });
+
+    if (!list.length) {
+      if (!confirm("Список должников пуст. Всё равно зафиксировать (пустой список)?")) return;
+    } else {
+      if (!confirm("Зафиксировать " + list.length + " должников на неделю " + formatRange(state.weekId) + "?\n\nПосле этого изменения в недельных отчётах НЕ БУДУТ менять этот список.")) return;
+    }
+
+    try {
+      const data = await apiPost({
+        action: "freezeDebtors",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId,
+        debtors: list
+      });
+      if (data && data.success) {
+        showToast("🔒 Зафиксировано: " + (data.saved || 0), "success");
+        await renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка", "alert");
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
+  async function unfreezeDebtors() {
+    if (!isAdmin()) return;
+    if (!confirm("Расфиксировать список должников?\n\nПосле этого он снова станет «живым».")) return;
+
+    try {
+      const data = await apiPost({
+        action: "unfreezeDebtors",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId
+      });
+      if (data && data.success) {
+        showToast("🔓 Расфиксировано", "info");
+        await renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка", "alert");
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
   function renderHistoryTab() {
     const sel = $("weekSelect");
     sel.innerHTML = "";
@@ -2375,7 +2405,6 @@ select option { background: #0c1420; color: var(--text); }
     if (tab === "instr") renderInstrBonusTab();
   }
 
-  /* ---------- ОБЩАЯ ПРЕМИЯ ---------- */
   function confirmBonusCount() {
     let cnt = parseInt($("bonusCountInput").value, 10);
     if (isNaN(cnt) || cnt < 1) {
@@ -2384,8 +2413,6 @@ select option { background: #0c1420; color: var(--text); }
     }
     state.bonusCount = cnt;
 
-    // Берём всех сотрудников СМП (5+) + Инст СМП с недельным отчётом,
-    // сортируем по общим баллам убыванием, берём топ-N.
     const allCandidates = [...getSmpStaff(), ...getInstrStaff()];
 
     const candidates = allCandidates
@@ -2452,7 +2479,6 @@ select option { background: #0c1420; color: var(--text); }
     $("bonusListCount").textContent = String(state.bonusGeneralList.length);
   }
 
-  /* Пул для ручного добавления: СМП 5+ + Инст СМП */
   function getBonusPool() {
     return [...getSmpStaff(), ...getInstrStaff()];
   }
@@ -2571,7 +2597,6 @@ select option { background: #0c1420; color: var(--text); }
     else showToast("Не удалось скопировать", "alert");
   }
 
-  /* ---------- ПРЕМИЯ ИНСТРУКТОРОВ ---------- */
   function getInstrTop3() {
     const reports = state.reports.filter(r => !r.exempted);
     const uniqueMap = {};
@@ -2786,7 +2811,6 @@ select option { background: #0c1420; color: var(--text); }
       loadHistoryReports($("weekSelect").value);
     });
 
-    // === Премии ===
     $("openBonusBtn").addEventListener("click", openBonusModal);
     $("bonusCloseX").addEventListener("click", closeBonusModal);
     $("bonusModal").addEventListener("click", (e) => {

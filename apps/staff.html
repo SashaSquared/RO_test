@@ -48,8 +48,7 @@
     min-height: 100vh;
     padding: 16px 16px 24px;
     display: flex; flex-direction: column; align-items: center;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: none; -ms-overflow-style: none;
   }
   .tablet { max-width: 1100px; width: 100%; }
 
@@ -98,10 +97,8 @@
     border-radius: 999px;
     background: rgba(255,255,255,0.1);
     color: inherit;
-    font-size: 0.7rem;
-    font-weight: 800;
-    line-height: 20px;
-    text-align: center;
+    font-size: 0.7rem; font-weight: 800;
+    line-height: 20px; text-align: center;
   }
   .tab-btn.active .count { background: rgba(76,177,216,0.3); }
 
@@ -120,9 +117,7 @@
     font-size: 0.95rem; font-weight: 600;
     display: flex; align-items: center; gap: 8px;
   }
-  .card-head .head-actions {
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-  }
+  .card-head .head-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
   .toolbar {
     display: grid; grid-template-columns: 1fr 200px 180px;
@@ -130,14 +125,10 @@
   }
   @media (max-width: 720px) { .toolbar { grid-template-columns: 1fr; } }
   input[type="text"], select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    color: var(--text);
-    background: #0c1420;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    width: 100%; padding: 10px 12px;
+    font-size: 0.9rem; font-family: inherit;
+    color: var(--text); background: #0c1420;
+    border: 1px solid var(--border); border-radius: 8px;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
     -webkit-appearance: none; appearance: none;
@@ -153,8 +144,7 @@
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px;
-    padding-right: 34px;
-    cursor: pointer;
+    padding-right: 34px; cursor: pointer;
   }
   select option { background: #0c1420; color: var(--text); }
 
@@ -182,7 +172,6 @@
 
   .tr-on-vacation { background: rgba(245, 185, 74, 0.06); }
   .tr-on-vacation:hover { background: rgba(245, 185, 74, 0.12); }
-
   .tbl tr.tr-editing {
     background: rgba(76, 177, 216, 0.08);
     box-shadow: inset 3px 0 0 var(--accent);
@@ -195,18 +184,14 @@
     background: linear-gradient(180deg, rgba(76, 177, 216, 0.06) 0%, rgba(76, 177, 216, 0.02) 100%);
   }
   .edit-row-inner {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
+    max-height: 0; overflow: hidden; opacity: 0;
     transition: max-height 0.35s cubic-bezier(.22,1,.36,1),
                 opacity 0.25s ease,
                 padding 0.35s cubic-bezier(.22,1,.36,1);
     padding: 0 16px;
   }
   .edit-row.open .edit-row-inner {
-    max-height: 800px;
-    opacity: 1;
-    padding: 16px;
+    max-height: 800px; opacity: 1; padding: 16px;
   }
   .edit-row-inner .edit-title {
     font-size: 0.86rem; font-weight: 700;
@@ -215,28 +200,18 @@
     display: flex; align-items: center; gap: 8px;
   }
   .edit-row-inner .edit-title svg { width: 15px; height: 15px; }
-  .edit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-  }
+  .edit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   @media (max-width: 720px) { .edit-grid { grid-template-columns: 1fr; } }
   .edit-grid .form-group { margin: 0; }
   .edit-form-group label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 600;
+    display: block; font-size: 0.7rem; font-weight: 600;
     color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: uppercase; letter-spacing: 0.06em;
     margin-bottom: 5px;
   }
   .edit-grid .full { grid-column: 1 / -1; }
   .edit-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 14px;
+    display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;
   }
 
   .pill {
@@ -283,9 +258,7 @@
     color: var(--text-soft);
     cursor: pointer;
     transition: background .15s, color .15s, border-color .15s, transform .08s;
-    margin-left: 5px;
-    padding: 0;
-    font-family: inherit;
+    margin-left: 5px; padding: 0; font-family: inherit;
   }
   .icon-btn:first-child { margin-left: 0; }
   .icon-btn svg { width: 15px; height: 15px; }
@@ -305,18 +278,11 @@
     border-color: var(--red-border);
     color: var(--red-text);
   }
-  .icon-btn.restore:hover {
-    background: var(--good-bg-strong);
-    border-color: var(--good-border);
-    color: var(--good-text);
-  }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px;
-    padding: 8px 14px;
-    font-size: 0.84rem; font-weight: 600;
-    font-family: inherit;
+    gap: 6px; padding: 8px 14px;
+    font-size: 0.84rem; font-weight: 600; font-family: inherit;
     background: transparent;
     border: 1px solid var(--border);
     border-radius: 9px;
@@ -327,30 +293,17 @@
   }
   .btn svg { width: 13px; height: 13px; }
   .btn:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
-  .btn-primary {
-    background: var(--accent-bg-strong);
-    border-color: var(--accent-border);
-    color: var(--accent-2);
-  }
+  .btn-primary { background: var(--accent-bg-strong); border-color: var(--accent-border); color: var(--accent-2); }
   .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #071018; }
-  .btn-danger {
-    background: var(--red-bg-strong);
-    border-color: var(--red-border);
-    color: var(--red-text);
-  }
+  .btn-danger { background: var(--red-bg-strong); border-color: var(--red-border); color: var(--red-text); }
   .btn-danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
-  .btn-amber {
-    background: var(--amber-bg);
-    border-color: var(--amber);
-    color: var(--amber-text);
-  }
+  .btn-amber { background: var(--amber-bg); border-color: var(--amber); color: var(--amber-text); }
   .btn-amber:hover { background: var(--amber); border-color: var(--amber); color: #1a1207; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .empty, .loading {
     color: var(--muted); font-size: 0.88rem;
-    text-align: center;
-    padding: 24px 16px;
+    text-align: center; padding: 24px 16px;
     background: var(--panel-2);
     border: 1px dashed var(--border);
     border-radius: 10px;
@@ -379,8 +332,7 @@
   .modal.modal-wide { max-width: 640px; }
   .modal-head {
     display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 10px; margin-bottom: 14px;
   }
   .modal-head h3 {
     font-size: 1.02rem; font-weight: 700;
@@ -389,8 +341,7 @@
   .modal-head h3 .ic {
     width: 30px; height: 30px; border-radius: 8px;
     display: inline-flex; align-items: center; justify-content: center;
-    color: #fff;
-    flex-shrink: 0;
+    color: #fff; flex-shrink: 0;
   }
   .modal-head h3 .ic.fire-icon {
     background: linear-gradient(135deg, #ef4444, #7f1d1d);
@@ -403,8 +354,7 @@
   .modal-head h3 .ic svg { width: 16px; height: 16px; }
   .modal-head .close-x {
     background: transparent; border: none;
-    color: var(--muted);
-    font-size: 1.3rem; line-height: 1;
+    color: var(--muted); font-size: 1.3rem; line-height: 1;
     cursor: pointer;
     padding: 2px 6px; border-radius: 6px;
     transition: background .15s, color .15s;
@@ -412,31 +362,24 @@
   .modal-head .close-x:hover { background: var(--panel-3); color: var(--text); }
 
   .modal-who {
-    padding: 10px 12px;
-    border-radius: 9px;
+    padding: 10px 12px; border-radius: 9px;
     background: var(--panel-3);
     border: 1px solid var(--border-soft);
-    margin-bottom: 12px;
-    font-size: 0.86rem;
+    margin-bottom: 12px; font-size: 0.86rem;
   }
   .modal-who .who-name { font-weight: 700; color: #fff; }
   .modal-who .who-sub { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
 
   .modal-form-group { margin-bottom: 12px; }
   .modal-form-group label {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 700;
+    display: block; font-size: 0.72rem; font-weight: 700;
     color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: uppercase; letter-spacing: 0.06em;
     margin-bottom: 6px;
   }
   .modal-hint {
-    font-size: 0.75rem;
-    color: var(--muted);
-    line-height: 1.5;
-    margin-top: 6px;
+    font-size: 0.75rem; color: var(--muted);
+    line-height: 1.5; margin-top: 6px;
   }
 
   .check-row {
@@ -445,8 +388,7 @@
     background: var(--red-bg-strong);
     border: 1px solid var(--red-border);
     border-radius: 10px;
-    cursor: pointer;
-    user-select: none;
+    cursor: pointer; user-select: none;
     transition: background .15s;
   }
   .check-row:hover { background: rgba(239, 68, 68, 0.22); }
@@ -475,69 +417,50 @@
   .check-row .check-hint { font-size: 0.72rem; color: #fca5a5; margin-top: 2px; }
 
   .modal-actions {
-    display: flex; justify-content: flex-end; gap: 8px;
-    margin-top: 16px;
+    display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;
   }
 
-  /* Импорт/экспорт */
   .imp-section {
     background: var(--panel-3);
     border: 1px solid var(--border-soft);
     border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 12px; margin-bottom: 12px;
   }
   .imp-section h4 {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
     color: var(--accent-2);
     margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex; align-items: center; gap: 6px;
   }
   .imp-section h4 svg { width: 14px; height: 14px; }
   .imp-section .btn + .btn { margin-left: 6px; }
   .imp-status {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-top: 10px;
-    padding: 8px 10px;
-    background: #0c1420;
-    border-radius: 8px;
-    white-space: pre-line;
-    line-height: 1.5;
+    font-size: 0.8rem; color: var(--muted);
+    margin-top: 10px; padding: 8px 10px;
+    background: #0c1420; border-radius: 8px;
+    white-space: pre-line; line-height: 1.5;
   }
   .imp-status.ok { color: var(--good-text); }
   .imp-status.err { color: var(--red-text); }
   .imp-status.warn { color: var(--amber-text); }
 
   input[type="file"] {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 0.82rem;
-    color: var(--text-soft);
+    width: 100%; padding: 8px 10px;
+    font-size: 0.82rem; color: var(--text-soft);
     background: #0c1420;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
+    border-radius: 8px; cursor: pointer;
   }
   input[type="file"]::file-selector-button {
-    padding: 6px 12px;
-    margin-right: 10px;
-    background: var(--panel-2);
-    color: var(--text-soft);
+    padding: 6px 12px; margin-right: 10px;
+    background: var(--panel-2); color: var(--text-soft);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 0.8rem;
-    cursor: pointer;
+    border-radius: 6px; font-family: inherit;
+    font-size: 0.8rem; cursor: pointer;
   }
   input[type="file"]::file-selector-button:hover {
-    background: var(--panel-3);
-    color: var(--text);
+    background: var(--panel-3); color: var(--text);
   }
 
   .toast {
@@ -558,14 +481,14 @@
   .toast.info  { border-left-color: var(--accent); }
   .toast .toast-ic {
     flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px;
-    background: var(--good); display: flex; align-items: center; justify-content: center;
+    background: var(--good);
+    display: flex; align-items: center; justify-content: center;
   }
   .toast.alert .toast-ic { background: var(--red); }
   .toast.info  .toast-ic { background: var(--accent); }
   .toast .toast-ic svg { width: 12px; height: 12px; color: #071018; }
 
   .hidden { display: none !important; }
-
   @keyframes fadeIn { from { opacity:0; transform: translateY(-4px) } to { opacity:1; transform: translateY(0) } }
 
   @media (max-width: 700px) {
@@ -830,9 +753,40 @@
         </button>
         <button class="btn" id="impClearBtn" type="button">Очистить</button>
       </div>
+      <label class="check-row" for="impReplaceMode" style="background: rgba(239, 68, 68, 0.16); border-color: var(--red-border); margin-top: 10px;">
+        <input type="checkbox" id="impReplaceMode">
+        <div>
+          <div class="check-text">⚠ Полная замена (удалить всех, кого нет в файле)</div>
+          <div class="check-hint">
+            Перед заменой автоматически создаётся резервная копия в <code>staff_backup</code>.
+            Восстановить можно кнопкой ниже.
+          </div>
+        </div>
+      </label>
       <div class="modal-hint">
-        Не меняйте столбец <b>ID</b> — по нему идёт поиск записи. Отдел должен быть из списка (СМП, ПСЭС, АБ, Руководство, ОК, ИТ, Инст …, Ординатор).
-        Строки, которых нет в файле, в БД не трогаются.
+        Не меняйте столбец <b>ID</b> — по нему идёт поиск записи. Отдел должен быть из списка
+        (СМП, ПСЭС, АБ, Руководство, ОК, ИТ, Инст …, Ординатор).
+      </div>
+    </div>
+
+    <div class="imp-section">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        3. Резервная копия
+      </h4>
+      <button class="btn btn-amber" id="impRestoreBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        Восстановить из резервной копии
+      </button>
+      <div class="modal-hint">
+        Восстанавливает таблицу <b>staff</b> из <b>staff_backup</b> — снимка, сделанного
+        перед последней полной заменой. Текущее состояние при этом перезаписывается.
       </div>
     </div>
 
@@ -921,8 +875,9 @@
   const impUploadBtn = $("impUploadBtn");
   const impClearBtn = $("impClearBtn");
   const impStatus = $("impStatus");
+  const impReplaceMode = $("impReplaceMode");
+  const impRestoreBtn = $("impRestoreBtn");
 
-  /* ---------- Сеть ---------- */
   async function apiPost(payload) {
     const res = await fetch(API_URL, {
       method: "POST",
@@ -985,16 +940,10 @@
     const m = s.match(/(\d{1,2})/);
     if (m) {
       const n = parseInt(m[1], 10);
-      if (!isNaN(n)) {
-        if (n < 1) return -1;
-        if (n > 13) return 13;
-        return n;
-      }
+      if (!isNaN(n)) { if (n < 1) return -1; if (n > 13) return 13; return n; }
     }
     if (TEXT_RANKS[s] !== undefined) return TEXT_RANKS[s];
-    for (const key in TEXT_RANKS) {
-      if (s.includes(key)) return TEXT_RANKS[key];
-    }
+    for (const key in TEXT_RANKS) { if (s.includes(key)) return TEXT_RANKS[key]; }
     return -1;
   }
 
@@ -1068,7 +1017,6 @@
     return (a.name || "").localeCompare(b.name || "");
   }
 
-  /* ---------- Загрузка данных ---------- */
   async function loadStaff() {
     staffContainer.innerHTML = '<div class="loading">Загрузка…</div>';
     try {
@@ -1108,7 +1056,6 @@
     }
   }
 
-  /* ---------- Рендер: активные ---------- */
   function renderActive() {
     const q = (searchInput.value || "").trim().toLowerCase();
     const dept = filterDept.value;
@@ -1201,7 +1148,6 @@
     staffContainer.appendChild(table);
   }
 
-  /* ---------- Рендер: уволенные ---------- */
   function renderFired() {
     const q = (searchFired.value || "").trim().toLowerCase();
     const bl = filterFiredBlacklist.value;
@@ -1216,7 +1162,6 @@
     );
 
     list.sort(compareStaff);
-
     countFired.textContent = String(state.fired.length);
 
     if (!list.length) {
@@ -1277,11 +1222,9 @@
     firedContainer.appendChild(table);
   }
 
-  /* ---------- Редактор сотрудника: ВСТРОЕННАЯ ФОРМА ---------- */
   function openEditorInline(s, tr) {
     if (!isAdmin()) return;
     closeInlineEditor();
-
     state.editingStaffRow = s.rowIndex;
     tr.classList.add("tr-editing");
 
@@ -1290,7 +1233,6 @@
     editTr.dataset.editFor = s.rowIndex;
 
     const colCount = tr.cells.length;
-
     const deptOptions = DEPARTMENTS.map(d =>
       '<option value="' + d + '"' + (s.department === d ? ' selected' : '') + '>' + DEPT_LABEL[d] + '</option>'
     ).join('');
@@ -1305,7 +1247,6 @@
             '</svg>' +
             'Редактирование: ' + esc(s.name || "—") +
           '</div>' +
-
           '<div class="edit-grid">' +
             '<div class="edit-form-group">' +
               '<label for="ei_name">Имя Фамилия</label>' +
@@ -1328,7 +1269,6 @@
               '<select id="ei_department">' + deptOptions + '</select>' +
             '</div>' +
           '</div>' +
-
           '<div class="edit-actions">' +
             '<button type="button" class="btn" data-action="edit-cancel">Отмена</button>' +
             '<button type="button" class="btn btn-primary" data-action="edit-save">' +
@@ -1361,14 +1301,10 @@
 
     eiRank.addEventListener("change", () => {
       const r = parseInt(eiRank.value, 10);
-      if (r >= 1 && r <= 12) {
-        eiPosition.value = RANK_TO_POSITION[r];
-      }
+      if (r >= 1 && r <= 12) eiPosition.value = RANK_TO_POSITION[r];
     });
 
-    editTr.querySelector('[data-action="edit-cancel"]').addEventListener("click", () => {
-      closeInlineEditor();
-    });
+    editTr.querySelector('[data-action="edit-cancel"]').addEventListener("click", closeInlineEditor);
 
     editTr.querySelector('[data-action="edit-save"]').addEventListener("click", async () => {
       const fields = {
@@ -1428,15 +1364,12 @@
     const existing = staffContainer.querySelector(".edit-row");
     if (existing) {
       existing.classList.remove("open");
-      setTimeout(() => {
-        existing.remove();
-      }, 350);
+      setTimeout(() => { existing.remove(); }, 350);
     }
     staffContainer.querySelectorAll("tr.tr-editing").forEach(tr => tr.classList.remove("tr-editing"));
     state.editingStaffRow = null;
   }
 
-  /* ---------- Открытие формы создания ---------- */
   function openCreate() {
     if (!isAdmin()) return;
     state.editingStaffRow = null;
@@ -1498,7 +1431,6 @@
     }
   }
 
-  /* ---------- Удалить (hard) ---------- */
   async function deleteStaff(s) {
     if (!isAdmin()) return;
     if (!confirm("Удалить сотрудника «" + s.name + "» без сохранения в базе уволенных?\n\nЕсли нужно уволить с сохранением — используйте кнопку «Уволить».")) return;
@@ -1515,16 +1447,13 @@
     } catch (e) { console.error(e); showToast("Ошибка сети", "alert"); }
   }
 
-  /* ---------- Модалка увольнения ---------- */
   function openFireModal(s) {
     if (!isAdmin()) return;
     state.firingTarget = s;
     fireWhoName.textContent = s.name || "—";
     fireWhoSub.textContent =
-      "#" + (s.passport || "—") +
-      " · " + (s.position || "—") +
-      " · " + (s.rank || "—") +
-      " · " + (s.department || "—");
+      "#" + (s.passport || "—") + " · " + (s.position || "—") +
+      " · " + (s.rank || "—") + " · " + (s.department || "—");
     fireReason.value = "";
     fireBlacklist.checked = false;
     fireModal.classList.remove("hidden");
@@ -1556,20 +1485,10 @@
         reason: reason,
         blacklist: blacklist
       });
-      if (!data.success) {
-        showToast(data.message || "Ошибка", "alert");
-        return;
-      }
+      if (!data.success) { showToast(data.message || "Ошибка", "alert"); return; }
 
-      showToast(
-        "Уволен: " + target.name + (blacklist ? " · 🚫 ЧС" : ""),
-        blacklist ? "alert" : "info"
-      );
-      notifyParent(
-        blacklist ? "Уволен в ЧС" : "Сотрудник уволен",
-        target.name,
-        blacklist ? "alert" : "success"
-      );
+      showToast("Уволен: " + target.name + (blacklist ? " · 🚫 ЧС" : ""), blacklist ? "alert" : "info");
+      notifyParent(blacklist ? "Уволен в ЧС" : "Сотрудник уволен", target.name, blacklist ? "alert" : "success");
 
       closeFireModal();
       await loadStaff();
@@ -1583,7 +1502,6 @@
     }
   }
 
-  /* ---------- Удалить запись из уволенных ---------- */
   async function deleteFired(f) {
     if (!isSuperadmin()) return;
     if (!confirm("Удалить запись об увольнении «" + f.name + "»?\nЭто действие необратимо.")) return;
@@ -1599,7 +1517,6 @@
     } catch (e) { console.error(e); showToast("Ошибка сети", "alert"); }
   }
 
-  /* ---------- Вкладки ---------- */
   function switchTab(tab) {
     state.activeTab = tab;
     document.querySelectorAll(".tab-btn").forEach(b =>
@@ -1609,22 +1526,17 @@
     cardFired.classList.toggle("hidden", tab !== "fired");
     staffFormCard.classList.add("hidden");
     closeInlineEditor();
-
     if (tab === "fired" && isAdmin()) loadFired();
   }
 
-  /* ---------- Мост с родителем ---------- */
   function notifyParent(title, text, kind) {
     try {
       if (window.parent && window.parent !== window) {
-        window.parent.postMessage({
-          type: "toast", title: title || "", text: text || "", kind: kind || "success"
-        }, "*");
+        window.parent.postMessage({ type: "toast", title: title || "", text: text || "", kind: kind || "success" }, "*");
       }
     } catch (e) {}
   }
 
-  /* ---------- Toast ---------- */
   const toastEl = $("toast");
   const toastText = $("toastText");
   const toastIcon = $("toastIcon");
@@ -1652,6 +1564,7 @@
     impStatus.className = 'imp-status';
     impFile.value = '';
     impUploadBtn.disabled = true;
+    impReplaceMode.checked = false;
     impModal.classList.remove("hidden");
   }
 
@@ -1674,12 +1587,8 @@
       const rows = [['ID', 'Имя Фамилия', '№ Паспорта', 'Должность', 'Ранг', 'Отдел']];
       staff.forEach(s => {
         rows.push([
-          s.rowIndex || '',
-          s.name || '',
-          s.passport || '',
-          s.position || '',
-          s.rank || '',
-          s.department || ''
+          s.rowIndex || '', s.name || '', s.passport || '',
+          s.position || '', s.rank || '', s.department || ''
         ]);
       });
 
@@ -1792,27 +1701,47 @@
       return;
     }
 
+    const replaceMode = impReplaceMode.checked;
+
+    if (replaceMode) {
+      const ok = confirm(
+        "⚠ ПОЛНАЯ ЗАМЕНА\n\n" +
+        "Все сотрудники, которых нет в файле, будут УДАЛЕНЫ.\n" +
+        "Перед заменой автоматически создаётся резервная копия в staff_backup.\n\n" +
+        "Продолжить?"
+      );
+      if (!ok) { impSetStatus('Отменено пользователем', 'warn'); return; }
+    }
+
     impUploadBtn.disabled = true;
-    impSetStatus('⏳ Отправка ' + updates.length + ' строк...');
+    impSetStatus('⏳ Отправка ' + updates.length + ' строк' + (replaceMode ? ' (полная замена)' : '') + '...');
 
     try {
+      const action = replaceMode ? "replaceStaff" : "bulkUpdateStaff";
       const res = await apiPost({
-        action: "bulkUpdateStaff",
+        action: action,
         login: state.user.login,
         hash: state.user.hash,
         updates: updates
       });
       if (!res.success) throw new Error(res.message || "Ошибка");
 
-      let msg = '✅ Обновлено строк: ' + (res.updated || 0);
+      let msg;
       let kind = 'ok';
-      if (res.errors && res.errors.length) {
-        msg += '\n⚠️ Ошибок: ' + res.errors.length;
-        res.errors.slice(0, 5).forEach(e => {
-          msg += '\n  • ID ' + e.id + ': ' + e.error;
-        });
-        if (res.errors.length > 5) msg += '\n  … и ещё ' + (res.errors.length - 5);
-        kind = 'warn';
+      if (replaceMode) {
+        msg = '✅ Полная замена выполнена. Вставлено: ' + (res.inserted || 0);
+        if (res.errors && res.errors.length) {
+          msg += '\n⚠️ Ошибок: ' + res.errors.length;
+          kind = 'warn';
+        }
+      } else {
+        msg = '✅ Обновлено: ' + (res.updated || 0) + ', добавлено: ' + (res.inserted || 0);
+        if (res.errors && res.errors.length) {
+          msg += '\n⚠️ Ошибок: ' + res.errors.length;
+          res.errors.slice(0, 5).forEach(e => { msg += '\n  • ID ' + e.id + ': ' + e.error; });
+          if (res.errors.length > 5) msg += '\n  … и ещё ' + (res.errors.length - 5);
+          kind = 'warn';
+        }
       }
       impSetStatus(msg, kind);
 
@@ -1825,7 +1754,36 @@
     }
   }
 
-  /* ---------- Инициализация ---------- */
+  /* --- Восстановление из резервной копии --- */
+  async function impRestore() {
+    const ok = confirm(
+      "↩ ВОССТАНОВЛЕНИЕ ИЗ РЕЗЕРВНОЙ КОПИИ\n\n" +
+      "Текущее состояние staff будет заменено данными из staff_backup.\n" +
+      "Текущие данные тоже сохранятся в staff_backup (можно откатиться ещё раз).\n\n" +
+      "Продолжить?"
+    );
+    if (!ok) { impSetStatus('Отменено пользователем', 'warn'); return; }
+
+    impRestoreBtn.disabled = true;
+    impSetStatus('⏳ Восстановление из резервной копии...');
+
+    try {
+      const res = await apiPost({
+        action: "restoreStaffBackup",
+        login: state.user.login,
+        hash: state.user.hash
+      });
+      if (!res.success) throw new Error(res.message || "Ошибка");
+      impSetStatus('✅ Восстановлено: ' + (res.restored || 0) + ' сотрудников', 'ok');
+      await loadStaff();
+    } catch (e) {
+      console.error(e);
+      impSetStatus('❌ Ошибка: ' + e.message, 'err');
+    } finally {
+      impRestoreBtn.disabled = false;
+    }
+  }
+
   function fillSelects() {
     filterDept.innerHTML = '<option value="">Все отделы</option>';
     DEPARTMENTS.forEach(d => {
@@ -1859,9 +1817,7 @@
       return;
     }
     state.user = user;
-
     if (isAdmin()) tabFired.classList.remove("hidden");
-
     fillSelects();
 
     document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -1874,9 +1830,7 @@
 
     staffRank.addEventListener("change", () => {
       const r = parseInt(staffRank.value, 10);
-      if (r >= 1 && r <= 12) {
-        staffPosition.value = RANK_TO_POSITION[r];
-      }
+      if (r >= 1 && r <= 12) staffPosition.value = RANK_TO_POSITION[r];
     });
 
     searchInput.addEventListener("input", renderActive);
@@ -1894,7 +1848,6 @@
       if (e.key === "Escape" && !impModal.classList.contains("hidden")) closeImpModal();
     });
 
-    /* --- Импорт / экспорт --- */
     importExportBtn.addEventListener("click", openImpModal);
     impCloseX.addEventListener("click", closeImpModal);
     impCloseBtn.addEventListener("click", closeImpModal);
@@ -1910,6 +1863,7 @@
       impSetStatus('');
     });
     impUploadBtn.addEventListener("click", impUpload);
+    impRestoreBtn.addEventListener("click", impRestore);
 
     Promise.all([loadStaff(), loadVacations()]).then(() => renderActive());
 

@@ -255,6 +255,7 @@
   .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
   .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
   .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
+  .dept-pill.dept-ординатор { background: #7c2d12; color: #fed7aa; }
 
   .vacation-badge {
     display: inline-block; margin-left: 6px;
@@ -696,6 +697,7 @@
             <option value="Инст СМП">Инст СМП — Инструктор СМП</option>
             <option value="Инст ИТ">Инст ИТ — Инструктор ИТ</option>
             <option value="Инст ОК">Инст ОК — Инструктор ОК</option>
+            <option value="Ординатор">Ординатор</option>
           </select>
         </div>
       </div>
@@ -829,7 +831,7 @@
         <button class="btn" id="impClearBtn" type="button">Очистить</button>
       </div>
       <div class="modal-hint">
-        Не меняйте столбец <b>ID</b> — по нему идёт поиск записи. Отдел должен быть из списка (СМП, ПСЭС, АБ, Руководство, ОК, ИТ, Инст …).
+        Не меняйте столбец <b>ID</b> — по нему идёт поиск записи. Отдел должен быть из списка (СМП, ПСЭС, АБ, Руководство, ОК, ИТ, Инст …, Ординатор).
         Строки, которых нет в файле, в БД не трогаются.
       </div>
     </div>
@@ -850,12 +852,14 @@
 
   const DEPARTMENTS = [
     "Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС",
-    "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"
+    "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК",
+    "Ординатор"
   ];
   const DEPT_LABEL = {
     "Руководство": "Руководство",
     "АБ": "АБ", "ОК": "ОК", "СМП": "СМП", "ИТ": "ИТ", "ПСЭС": "ПСЭС",
-    "Инст ПСЭС": "Инст ПСЭС", "Инст СМП": "Инст СМП", "Инст ИТ": "Инст ИТ", "Инст ОК": "Инст ОК"
+    "Инст ПСЭС": "Инст ПСЭС", "Инст СМП": "Инст СМП", "Инст ИТ": "Инст ИТ", "Инст ОК": "Инст ОК",
+    "Ординатор": "Ординатор"
   };
 
   const state = {
@@ -1660,7 +1664,6 @@
     impStatus.className = "imp-status" + (kind ? " " + kind : "");
   }
 
-  /* --- Выгрузка --- */
   async function impExport() {
     impSetStatus('⏳ Загрузка данных из БД...');
     try {
@@ -1680,7 +1683,6 @@
         ]);
       });
 
-      // BOM + разделитель ';' (привычнее для русского Excel)
       const csv = '\uFEFF' + rows.map(r =>
         r.map(cell => '"' + String(cell).replace(/"/g, '""') + '"').join(';')
       ).join('\r\n');
@@ -1700,13 +1702,11 @@
     }
   }
 
-  /* --- Парсинг CSV --- */
   function parseCSV(text) {
     if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
     const lines = text.split(/\r?\n/).filter(l => l.trim().length);
     if (lines.length < 2) return [];
 
-    // Определяем разделитель
     const firstLine = lines[0];
     const delim = (firstLine.split(';').length > firstLine.split(',').length) ? ';' : ',';
 
@@ -1715,7 +1715,6 @@
       const cells = parseLine(lines[i], delim);
       if (cells.length < 2) continue;
 
-      // Ищем ID — первая колонка, которая похожа на число
       let id = '';
       let idIndex = -1;
       for (let j = 0; j < cells.length; j++) {
@@ -1758,7 +1757,6 @@
     return out;
   }
 
-  /* --- Загрузка --- */
   async function impUpload() {
     if (!impFile.files.length) return;
     const file = impFile.files[0];

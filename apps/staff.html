@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark" data-theme-mode="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,54 @@
     --purple: #a78bfa;
     --purple-bg: rgba(167, 139, 250, 0.18);
     --purple-border: rgba(167, 139, 250, 0.5);
+
+    --input-bg: #0c1420;
+    --edit-row-bg: linear-gradient(180deg, rgba(76, 177, 216, 0.06) 0%, rgba(76, 177, 216, 0.02) 100%);
+    --modal-bg: linear-gradient(180deg, #151f30 0%, #1b2739 100%);
+    --toast-bg: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
+    --hover-row: rgba(76, 177, 216, 0.05);
   }
+
+  /* ============================================================
+     СВЕТЛАЯ ТЕМА
+     ============================================================ */
+  :root[data-theme="light"] {
+    --bg: #f5f7fa;
+    --panel: #ffffff;
+    --panel-2: #f0f4f8;
+    --panel-3: #e2e8f0;
+    --text: #1a202c;
+    --text-soft: #2d3748;
+    --muted: #64748b;
+    --border: #cbd5e0;
+    --border-soft: #e2e8f0;
+    --border-strong: #94a3b8;
+    --accent: #0891b2;
+    --accent-2: #0e7490;
+    --accent-bg-strong: rgba(8, 145, 178, 0.12);
+    --accent-border: rgba(8, 145, 178, 0.45);
+    --good: #16a34a;
+    --good-bg-strong: rgba(22, 163, 74, 0.12);
+    --good-border: rgba(22, 163, 74, 0.4);
+    --good-text: #166534;
+    --red: #dc2626;
+    --red-bg-strong: rgba(220, 38, 38, 0.1);
+    --red-border: rgba(220, 38, 38, 0.4);
+    --red-text: #991b1b;
+    --amber: #d97706;
+    --amber-bg: rgba(217, 119, 6, 0.1);
+    --amber-text: #b45309;
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.1);
+    --purple-border: rgba(124, 58, 237, 0.4);
+
+    --input-bg: #ffffff;
+    --edit-row-bg: linear-gradient(180deg, rgba(8, 145, 178, 0.06) 0%, rgba(8, 145, 178, 0.02) 100%);
+    --modal-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
+    --toast-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
+    --hover-row: rgba(8, 145, 178, 0.06);
+  }
+
   html, body { height: 100%; }
   html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
   body {
@@ -49,6 +96,7 @@
     padding: 16px 16px 24px;
     display: flex; flex-direction: column; align-items: center;
     scrollbar-width: none; -ms-overflow-style: none;
+    transition: background 0.25s, color 0.25s;
   }
   .tablet { max-width: 1100px; width: 100%; }
 
@@ -95,14 +143,14 @@
     min-width: 20px; height: 20px;
     padding: 0 6px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.1);
+    background: var(--hover-row);
     color: inherit;
     font-size: 0.7rem;
     font-weight: 800;
     line-height: 20px;
     text-align: center;
   }
-  .tab-btn.active .count { background: rgba(76,177,216,0.3); }
+  .tab-btn.active .count { background: var(--accent-bg-strong); }
 
   .card {
     background: var(--panel);
@@ -134,7 +182,7 @@
     font-size: 0.9rem;
     font-family: inherit;
     color: var(--text);
-    background: #0c1420;
+    background: var(--input-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     outline: none;
@@ -144,9 +192,9 @@
   textarea { resize: vertical; min-height: 76px; line-height: 1.45; }
   input:focus, select:focus, textarea:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(76, 177, 216, 0.15);
+    box-shadow: 0 0 0 3px var(--accent-bg-strong);
   }
-  input::placeholder, textarea::placeholder { color: #5b6b80; }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.7; }
   select {
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa3ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
@@ -155,7 +203,7 @@
     padding-right: 34px;
     cursor: pointer;
   }
-  select option { background: #0c1420; color: var(--text); }
+  select option { background: var(--input-bg); color: var(--text); }
 
   .tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
   .tbl th {
@@ -172,25 +220,26 @@
     vertical-align: middle;
   }
   .tbl tr:last-child td { border-bottom: none; }
-  .tbl tbody tr:hover { background: rgba(76, 177, 216, 0.05); }
+  .tbl tbody tr:hover { background: var(--hover-row); }
   .tbl .col-num { color: var(--muted); width: 40px; font-variant-numeric: tabular-nums; }
   .tbl .col-name { font-weight: 600; }
   .tbl .col-pass { color: var(--accent-2); font-weight: 700; font-variant-numeric: tabular-nums; }
   .tbl .col-rank { color: #c4b5fd; font-weight: 700; font-variant-numeric: tabular-nums; }
+  :root[data-theme="light"] .tbl .col-rank { color: #6d28d9; }
   .tbl .col-actions { text-align: right; white-space: nowrap; width: 1%; }
 
-  .tr-on-vacation { background: rgba(245, 185, 74, 0.06); }
-  .tr-on-vacation:hover { background: rgba(245, 185, 74, 0.12); }
+  .tr-on-vacation { background: var(--amber-bg); }
+  .tr-on-vacation:hover { background: var(--amber-bg); }
   .tbl tr.tr-editing {
-    background: rgba(76, 177, 216, 0.08);
+    background: var(--accent-bg-strong);
     box-shadow: inset 3px 0 0 var(--accent);
   }
-  .tbl tr.tr-editing:hover { background: rgba(76, 177, 216, 0.12); }
+  .tbl tr.tr-editing:hover { background: var(--accent-bg-strong); }
 
   .edit-row > td {
     padding: 0 !important;
     border-bottom: 1px solid var(--border-soft);
-    background: linear-gradient(180deg, rgba(76, 177, 216, 0.06) 0%, rgba(76, 177, 216, 0.02) 100%);
+    background: var(--edit-row-bg);
   }
   .edit-row-inner {
     max-height: 0;
@@ -330,7 +379,7 @@
     border-color: var(--accent-border);
     color: var(--accent-2);
   }
-  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #071018; }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn-danger {
     background: var(--red-bg-strong);
     border-color: var(--red-border);
@@ -362,10 +411,11 @@
     padding: 20px;
     animation: fadeIn .18s ease;
   }
+  :root[data-theme="light"] .modal-back { background: rgba(15, 23, 42, 0.55); }
   .modal-back.hidden { display: none !important; }
   .modal {
     width: 100%; max-width: 460px;
-    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    background: var(--modal-bg);
     border: 1px solid var(--border-strong);
     border-radius: 16px;
     padding: 20px;
@@ -374,6 +424,7 @@
     max-height: calc(100vh - 40px);
     overflow-y: auto;
   }
+  :root[data-theme="light"] .modal { box-shadow: 0 20px 60px rgba(15,23,42,.25); }
   .modal.modal-wide { max-width: 640px; }
   .modal-head {
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -417,7 +468,7 @@
     margin-bottom: 12px;
     font-size: 0.86rem;
   }
-  .modal-who .who-name { font-weight: 700; color: #fff; }
+  .modal-who .who-name { font-weight: 700; color: var(--text); }
   .modal-who .who-sub { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
 
   .modal-form-group { margin-bottom: 12px; }
@@ -447,13 +498,13 @@
     user-select: none;
     transition: background .15s;
   }
-  .check-row:hover { background: rgba(239, 68, 68, 0.22); }
+  .check-row:hover { background: var(--red-bg-strong); filter: brightness(1.1); }
   .check-row input[type="checkbox"] {
     appearance: none;
     width: 20px; height: 20px;
     border-radius: 6px;
     border: 1.5px solid var(--red-border);
-    background: #0c1420;
+    background: var(--input-bg);
     cursor: pointer;
     position: relative;
     flex-shrink: 0;
@@ -470,7 +521,7 @@
     transform: rotate(45deg);
   }
   .check-row .check-text { font-size: 0.86rem; color: var(--red-text); font-weight: 600; }
-  .check-row .check-hint { font-size: 0.72rem; color: #fca5a5; margin-top: 2px; }
+  .check-row .check-hint { font-size: 0.72rem; color: var(--red-text); opacity: 0.85; margin-top: 2px; }
 
   .modal-actions {
     display: flex; justify-content: flex-end; gap: 8px;
@@ -502,7 +553,7 @@
     color: var(--muted);
     margin-top: 10px;
     padding: 8px 10px;
-    background: #0c1420;
+    background: var(--input-bg);
     border-radius: 8px;
     white-space: pre-line;
     line-height: 1.5;
@@ -520,15 +571,15 @@
     display: flex; align-items: center; gap: 6px;
   }
   .imp-info-row .label { color: var(--muted); }
-  .imp-info-row .value { color: #86efac; font-weight: 800; }
-  .imp-info-row .value.amber { color: #fcd34d; }
+  .imp-info-row .value { color: var(--good-text); font-weight: 800; }
+  .imp-info-row .value.amber { color: var(--amber-text); }
 
   input[type="file"] {
     width: 100%;
     padding: 8px 10px;
     font-size: 0.82rem;
     color: var(--text-soft);
-    background: #0c1420;
+    background: var(--input-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
@@ -552,7 +603,7 @@
   .toast {
     position: fixed; top: 14px; left: 50%;
     transform: translate(-50%, -120%);
-    background: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
+    background: var(--toast-bg);
     border: 1px solid var(--border-strong); border-left: 4px solid var(--good);
     border-radius: 10px; padding: 10px 14px;
     display: flex; align-items: center; gap: 9px;
@@ -562,6 +613,7 @@
     transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
     max-width: calc(100% - 32px);
   }
+  :root[data-theme="light"] .toast { box-shadow: 0 12px 32px rgba(15,23,42,.15); }
   .toast.show { transform: translate(-50%, 0); opacity: 1; }
   .toast.alert { border-left-color: var(--red); }
   .toast.info  { border-left-color: var(--accent); }
@@ -859,7 +911,7 @@
         </button>
         <button class="btn" id="impClearBtn" type="button">Очистить</button>
       </div>
-      <label class="check-row" for="impReplaceMode" style="background: rgba(239, 68, 68, 0.16); border-color: var(--red-border); margin-top: 10px;">
+      <label class="check-row" for="impReplaceMode" style="background: var(--red-bg-strong); border-color: var(--red-border); margin-top: 10px;">
         <input type="checkbox" id="impReplaceMode">
         <div>
           <div class="check-text">⚠ Полная замена (удалить всех, кого нет в файле)</div>
@@ -908,6 +960,88 @@
 (function () {
   "use strict";
 
+  /* ============================================================
+     ТЕМА (применяется из URL или из postMessage от родителя)
+     ============================================================ */
+  const THEME_KEY = "pref_theme";
+
+  function systemTheme() {
+    try {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } catch (e) {
+      return "dark";
+    }
+  }
+
+  function resolveThemeMode(mode) {
+    if (mode === "auto") return systemTheme();
+    return mode === "light" ? "light" : "dark";
+  }
+
+  function applyThemeMode(mode) {
+    if (!["light","dark","auto"].includes(mode)) mode = "dark";
+    const resolved = resolveThemeMode(mode);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-mode", mode);
+  }
+
+  function initTheme() {
+    // 1. Приоритет — ?theme= из URL
+    const p = new URLSearchParams(location.search);
+    const urlTheme = p.get("theme");
+    if (urlTheme && ["light","dark","auto"].includes(urlTheme)) {
+      applyThemeMode(urlTheme);
+      return;
+    }
+    // 2. Из localStorage
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved && ["light","dark","auto"].includes(saved)) {
+        applyThemeMode(saved);
+        return;
+      }
+    } catch (e) {}
+    // 3. По умолчанию — dark
+    applyThemeMode("dark");
+  }
+
+  // Слушаем сообщения от родителя (index.html)
+  window.addEventListener("message", (e) => {
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.type === "theme" && e.data.mode) {
+      applyThemeMode(e.data.mode);
+    }
+  });
+
+  // Следим за системной темой, если выбрано auto
+  try {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq && mq.addEventListener) {
+      mq.addEventListener("change", () => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    } else if (mq && mq.addListener) {
+      mq.addListener(() => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    }
+  } catch (e) {}
+
+  // Применяем сразу
+  initTheme();
+
+  // Сообщаем родителю, что готовы принять тему
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "theme-request" }, "*");
+    }
+  } catch (e) {}
+
+  /* ============================================================
+     ОСНОВНАЯ ЛОГИКА
+     ============================================================ */
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
   const DEPARTMENTS = [

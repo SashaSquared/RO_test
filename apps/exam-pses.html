@@ -3,31 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Документы</title>
+<title>Шпаргалка — Экзамены ПСЭС</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #060a12;
-    --bg-2: #0a1120;
-    --panel: #131e30;
-    --panel-2: #1a2739;
+    --bg: #070b12;
+    --panel: #151f30;
+    --panel-2: #1b2739;
     --panel-3: #25344b;
     --panel-hover: #202e44;
 
     --text: #eef4fb;
     --text-soft: #c9d5e3;
     --muted: #8fa3ba;
-    --border: #2b3d57;
-    --border-soft: #223147;
+    --border: #31435e;
+    --border-soft: #24334a;
     --border-strong: #43587a;
 
     --accent: #4CB1D8;
     --accent-2: #6FC5E5;
-    --accent-3: #8dd6ef;
     --accent-bg: rgba(76, 177, 216, 0.12);
     --accent-bg-strong: rgba(76, 177, 216, 0.2);
     --accent-border: rgba(76, 177, 216, 0.5);
@@ -40,20 +38,15 @@
     --amber-bg: rgba(245, 185, 74, 0.12);
     --amber-text: #fcd97e;
 
-    --violet: #a78bfa;
-    --violet-bg: rgba(167, 139, 250, 0.14);
-    --violet-border: rgba(167, 139, 250, 0.45);
-
-    --rose: #fb7185;
-    --rose-bg: rgba(251, 113, 133, 0.12);
-
-    --code-bg: #05080e;
-    --body-bg: radial-gradient(1100px 700px at 12% -10%, rgba(76, 177, 216, 0.14), transparent 55%),
-               radial-gradient(900px 600px at 100% 0%, rgba(167, 139, 250, 0.10), transparent 55%),
-               linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-    --toast-bg: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
-    --modal-bg: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 30%), var(--panel);
-    --shadow-modal: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+    --body-bg: var(--bg);
+    --answer-bg: #0c1420;
+    --code-bg: #060a10;
+    --code-text: #c9d5e3;
+    --num-bg: #25344b;
+    --num-text: #8fa3ba;
+    --num-open-bg: #4CB1D8;
+    --num-open-text: #071018;
+    --form-bg: #060a10;
   }
 
   /* ============================================================
@@ -61,7 +54,6 @@
      ============================================================ */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
-    --bg-2: #ffffff;
     --panel: #ffffff;
     --panel-2: #f0f4f8;
     --panel-3: #e2e8f0;
@@ -76,7 +68,6 @@
 
     --accent: #0891b2;
     --accent-2: #0e7490;
-    --accent-3: #155e75;
     --accent-bg: rgba(8, 145, 178, 0.1);
     --accent-bg-strong: rgba(8, 145, 178, 0.15);
     --accent-border: rgba(8, 145, 178, 0.4);
@@ -89,25 +80,24 @@
     --amber-bg: rgba(217, 119, 6, 0.1);
     --amber-text: #b45309;
 
-    --violet: #7c3aed;
-    --violet-bg: rgba(124, 58, 237, 0.1);
-    --violet-border: rgba(124, 58, 237, 0.4);
-
-    --rose: #e11d48;
-    --rose-bg: rgba(225, 29, 72, 0.08);
-
+    --body-bg: var(--bg);
+    --answer-bg: #f8fafc;
     --code-bg: #f1f5f9;
-    --body-bg: radial-gradient(1100px 700px at 12% -10%, rgba(8, 145, 178, 0.08), transparent 55%),
-               radial-gradient(900px 600px at 100% 0%, rgba(124, 58, 237, 0.06), transparent 55%),
-               linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-    --toast-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
-    --modal-bg: var(--panel);
-    --shadow-modal: 0 30px 80px rgba(15,23,42,0.25);
+    --code-text: #1a202c;
+    --num-bg: #e2e8f0;
+    --num-text: #64748b;
+    --num-open-bg: #0891b2;
+    --num-open-text: #ffffff;
+    --form-bg: #f1f5f9;
   }
 
   html, body { height: 100%; }
-  html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; display: none; }
-  html, body { scrollbar-width: none; -ms-overflow-style: none; }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
 
   body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -115,54 +105,372 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--body-bg);
-    background-attachment: fixed;
     color: var(--text);
     font-size: 16px;
     line-height: 1.5;
     min-height: 100vh;
     letter-spacing: -0.005em;
-    padding: 22px 18px 40px;
+    padding: 18px 18px 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     transition: background 0.25s, color 0.25s;
   }
 
-  .tablet { max-width: 1100px; width: 100%; display: flex; flex-direction: column; }
+  .tablet {
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tablet-body { flex: 1; }
 
   /* ============================================================
      PAGE TITLE
      ============================================================ */
   .page-title {
     text-align: center;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    padding: 8px 0 26px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    letter-spacing: -0.015em;
+    padding: 6px 0 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 12px;
   }
   .page-title .brand-icon {
-    width: 46px; height: 46px; border-radius: 13px;
-    background: linear-gradient(135deg, var(--accent-bg-strong), rgba(167, 139, 250, 0.16));
+    width: 34px; height: 34px; border-radius: 9px;
+    background: var(--accent-bg-strong);
     border: 1px solid var(--accent-border);
     display: inline-flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 8px 24px rgba(76, 177, 216, 0.22), inset 0 1px 0 rgba(255,255,255,0.06);
   }
-  .page-title .brand-icon svg { width: 22px; height: 22px; color: var(--accent-2); }
-  .page-title .title-text { display: inline-flex; flex-direction: column; align-items: flex-start; }
+  .page-title .brand-icon svg { width: 18px; height: 18px; color: var(--accent-2); }
   .page-title .subtitle {
     display: block;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--muted);
     letter-spacing: 0;
-    margin-top: 2px;
+    margin-top: 3px;
   }
+
+  /* ============================================================
+     CARD
+     ============================================================ */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .card + .card { margin-top: 14px; }
+
+  .card h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    letter-spacing: -0.015em;
+  }
+  .card h2 .h-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    flex-shrink: 0;
+  }
+  .card h2 .h-icon svg { width: 14px; height: 14px; color: var(--accent-2); }
+
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .card-head h2 { margin-bottom: 0; }
+
+  /* ============================================================
+     TABS
+     ============================================================ */
+  .exam-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .exam-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 9px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+  .exam-tab .tab-rank {
+    font-size: 0.96rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.015em;
+  }
+  .exam-tab .tab-exam {
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .exam-tab:hover {
+    border-color: var(--border-strong);
+    background: var(--panel-hover);
+  }
+  .exam-tab.active {
+    background: var(--accent-bg-strong);
+    border-color: var(--accent);
+  }
+  .exam-tab.active .tab-rank { color: var(--accent-2); }
+  .exam-tab.active .tab-exam { color: var(--accent-2); opacity: 0.9; }
+
+  /* ============================================================
+     QA ACCORDION
+     ============================================================ */
+  .qa-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .qa-item {
+    background: var(--panel-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .qa-item:hover {
+    border-color: var(--border-strong);
+  }
+  .qa-item.open {
+    border-color: var(--accent-border);
+    background: var(--panel-2);
+  }
+
+  .qa-question {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 16px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.45;
+    letter-spacing: -0.008em;
+    transition: background 0.12s;
+  }
+  .qa-question:hover { background: rgba(76, 177, 216, 0.05); }
+
+  .q-num {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: var(--num-bg);
+    color: var(--num-text);
+    font-weight: 600;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    transition: background 0.15s, color 0.15s;
+  }
+  .qa-item.open .q-num {
+    background: var(--num-open-bg);
+    color: var(--num-open-text);
+    font-weight: 700;
+  }
+
+  .q-text { flex: 1; }
+
+  .q-chevron {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    color: var(--muted);
+    transition: transform 0.2s ease, color 0.15s;
+  }
+  .qa-item.open .q-chevron { transform: rotate(180deg); color: var(--accent-2); }
+
+  .qa-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    background: var(--answer-bg);
+    border-top: 1px solid var(--border-soft);
+  }
+  .qa-item.open .qa-answer {
+    border-top-color: var(--accent-border);
+  }
+
+  .qa-answer-inner {
+    padding: 10px 16px 12px 16px;
+    color: var(--text-soft);
+    font-size: 0.96rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  .qa-answer-inner::before {
+    content: "Ответ";
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-2);
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  /* ============================================================
+     GUIDE STEPS
+     ============================================================ */
+  .guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .guide-step {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--panel-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    align-items: flex-start;
+  }
+  .guide-step .step-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--accent-bg-strong);
+    border: 1px solid var(--accent-border);
+    color: var(--accent-2);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+  .guide-step .step-body { flex: 1; min-width: 0; }
+  .guide-step .step-title {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 7px;
+    letter-spacing: -0.01em;
+  }
+  .guide-step .step-text {
+    font-size: 0.94rem;
+    color: var(--text-soft);
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+  }
+  .guide-step .step-text ul {
+    margin: 6px 0 0;
+    padding-left: 20px;
+    list-style: disc;
+  }
+  .guide-step .step-text li { margin: 5px 0; }
+  .guide-step .step-text b { color: var(--text); font-weight: 600; }
+  .guide-step .step-text code {
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+    background: var(--code-bg);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.86rem;
+    color: var(--accent-2);
+    border: 1px solid var(--accent-border);
+    letter-spacing: 0;
+  }
+  .guide-step .step-note {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--amber-bg);
+    border-left: 3px solid var(--amber);
+    color: var(--amber-text);
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .guide-step .step-note.ok {
+    background: var(--good-bg);
+    border-left-color: var(--good);
+    color: var(--good-text);
+  }
+
+  .form-example {
+    margin-top: 10px;
+    padding: 11px 14px;
+    background: var(--form-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 0.85rem;
+    color: var(--code-text);
+    white-space: pre-wrap;
+    line-height: 1.7;
+    letter-spacing: 0;
+  }
+  .form-example .tag { color: var(--accent-2); font-weight: 500; }
+  .form-example .role { color: var(--good-text); font-weight: 500; }
+
+  /* ============================================================
+     BUTTONS
+     ============================================================ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 8px 14px;
+    font-size: 0.85rem; font-weight: 500;
+    font-family: inherit; color: var(--accent-2);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: -0.005em;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+    color: var(--accent-2);
+  }
+  .btn:active { transform: scale(0.98); }
 
   /* ============================================================
      INFO BANNER
@@ -171,928 +479,84 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 13px 16px;
-    background: linear-gradient(180deg, rgba(76,177,216,0.08), rgba(76,177,216,0.02));
+    padding: 12px 16px;
+    background: var(--panel);
     border: 1px solid var(--border);
     border-left: 3px solid var(--accent);
-    border-radius: 11px;
-    margin-bottom: 16px;
-    font-size: 0.93rem;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 0.94rem;
     color: var(--text-soft);
     line-height: 1.5;
-  }
-  :root[data-theme="light"] .info-banner {
-    background: var(--accent-bg);
+    letter-spacing: -0.005em;
   }
   .info-banner .info-icon {
     flex-shrink: 0;
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    background: var(--accent-bg-strong);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .info-banner .info-icon svg { width: 15px; height: 15px; color: var(--accent-2); }
-
-  /* ============================================================
-     CARD
-     ============================================================ */
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.25);
-    transition: background 0.25s, border-color 0.25s;
-  }
-  :root[data-theme="light"] .card {
-    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(15,23,42,0.08);
-  }
-  .card + .card { margin-top: 16px; }
-
-  .card h2 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    color: var(--text);
-    letter-spacing: -0.015em;
-  }
-  .card h2 .h-icon {
-    width: 30px; height: 30px; border-radius: 9px;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: var(--accent-bg-strong);
-    border: 1px solid var(--accent-border);
-    flex-shrink: 0;
-  }
-  .card h2 .h-icon svg { width: 15px; height: 15px; color: var(--accent-2); }
-  .card h2.violet .h-icon {
-    background: var(--violet-bg);
-    border-color: var(--violet-border);
-  }
-  .card h2.violet .h-icon svg { color: var(--violet); }
-
-  /* ============================================================
-     DOCUMENT CARDS
-     ============================================================ */
-  .docs-list { display: flex; flex-direction: column; gap: 8px; }
-
-  .doc-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    background: var(--panel-2);
-    border: 1px solid var(--border-soft);
-    border-radius: 11px;
-    text-decoration: none;
-    color: var(--text);
-    cursor: pointer;
-    transition: border-color 0.18s, background 0.18s, transform 0.12s, box-shadow 0.18s;
-    position: relative;
-    overflow: hidden;
-    font-family: inherit;
-    font-size: inherit;
-    width: 100%;
-    text-align: left;
-  }
-  .doc-link::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--accent-bg), transparent 45%);
-    opacity: 0;
-    transition: opacity 0.18s;
-    pointer-events: none;
-  }
-  .doc-link:hover {
-    border-color: var(--accent-border);
-    background: var(--panel-hover);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.28);
-  }
-  .doc-link:hover::before { opacity: 1; }
-  .doc-link:active { transform: scale(0.995); }
-
-  .doc-icon {
-    flex-shrink: 0;
-    width: 42px; height: 42px;
-    border-radius: 10px;
-    background: var(--accent-bg-strong);
-    border: 1px solid var(--accent-border);
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.18s;
-    position: relative;
-    z-index: 1;
-  }
-  .doc-link:hover .doc-icon { transform: scale(1.05); }
-  .doc-icon svg { width: 20px; height: 20px; color: var(--accent-2); }
-
-  .doc-icon.violet {
-    background: var(--violet-bg);
-    border-color: var(--violet-border);
-  }
-  .doc-icon.violet svg { color: var(--violet); }
-
-  .doc-body { flex: 1; min-width: 0; position: relative; z-index: 1; }
-  .doc-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.01em;
-    line-height: 1.35;
-    margin-bottom: 3px;
-  }
-  .doc-sub {
-    font-size: 0.84rem;
-    font-weight: 400;
-    color: var(--muted);
-    line-height: 1.4;
-  }
-
-  .doc-badge {
-    flex-shrink: 0;
-    padding: 3px 9px;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    background: var(--violet-bg);
-    border: 1px solid var(--violet-border);
-    color: var(--violet);
-    white-space: nowrap;
-    position: relative;
-    z-index: 1;
-  }
-
-  .doc-arrow {
-    flex-shrink: 0;
-    width: 18px; height: 18px;
-    color: var(--muted);
-    transition: transform 0.18s, color 0.18s;
-    position: relative;
-    z-index: 1;
-  }
-  .doc-link:hover .doc-arrow {
-    color: var(--accent-2);
-    transform: translateX(3px);
-  }
-
-  /* ============================================================
-     MACRO CARDS
-     ============================================================ */
-  .macro-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .macro-item {
-    background: var(--panel-2);
-    border: 1px solid var(--border-soft);
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: border-color 0.18s, box-shadow 0.18s;
-  }
-  .macro-item:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.24);
-  }
-  .macro-item.copied {
-    border-color: var(--good);
-    background: var(--good-bg);
-  }
-
-  .macro-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .macro-icon {
-    flex-shrink: 0;
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: var(--accent-bg-strong);
-    border: 1px solid var(--accent-border);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .macro-icon svg { width: 16px; height: 16px; color: var(--accent-2); }
-
-  .macro-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.01em;
-  }
-
-  .macro-code-row {
-    display: flex;
-    align-items: stretch;
-    gap: 8px;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    overflow: hidden;
-  }
-  .macro-code {
-    flex: 1;
-    min-width: 0;
-    padding: 11px 14px;
-    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
-    font-size: 0.86rem;
-    color: var(--accent-2);
-    letter-spacing: 0.02em;
-    user-select: all;
-    word-break: break-all;
-    line-height: 1.5;
-    display: flex;
-    align-items: center;
-    background: transparent;
-    border: none;
-    outline: none;
-  }
-  .macro-copy-btn {
-    flex-shrink: 0;
-    padding: 0 16px;
-    background: var(--accent-bg-strong);
-    border: none;
-    border-left: 1px solid var(--accent-border);
-    color: var(--accent-2);
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.15s, color 0.15s;
-    letter-spacing: -0.005em;
-    white-space: nowrap;
-  }
-  .macro-copy-btn svg { width: 14px; height: 14px; transition: transform 0.15s; }
-  .macro-copy-btn:hover {
-    background: var(--accent);
-    color: #071018;
-  }
-  .macro-copy-btn.copied {
-    background: var(--good);
-    color: #071018;
-  }
-
-  /* ============================================================
-     NOTE
-     ============================================================ */
-  .note {
-    margin-top: 12px;
-    padding: 11px 14px;
-    border-radius: 10px;
-    background: var(--amber-bg);
-    border-left: 3px solid var(--amber);
-    color: var(--amber-text);
-    font-size: 0.88rem;
-    line-height: 1.5;
-  }
-
-  /* ============================================================
-     MODAL
-     ============================================================ */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(3, 6, 12, 0.72);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 1000;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 28px 16px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  :root[data-theme="light"] .modal-overlay {
-    background: rgba(15, 23, 42, 0.55);
-  }
-  .modal-overlay::-webkit-scrollbar { width: 0; height: 0; display: none; }
-  .modal-overlay.show { opacity: 1; pointer-events: auto; }
-
-  .modal {
-    width: 100%;
-    max-width: 780px;
-    background: var(--modal-bg);
-    border: 1px solid var(--border-strong);
-    border-radius: 18px;
-    box-shadow: var(--shadow-modal);
-    overflow: hidden;
-    transform: translateY(24px) scale(0.98);
-    opacity: 0;
-    transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
-    margin: auto;
-  }
-  .modal-overlay.show .modal {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-
-  .modal-head {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--border-soft);
-    background: linear-gradient(180deg, rgba(76,177,216,0.07), transparent);
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    backdrop-filter: blur(10px);
-  }
-  .modal-head .modal-icon {
-    width: 42px; height: 42px;
-    border-radius: 11px;
-    background: var(--accent-bg-strong);
-    border: 1px solid var(--accent-border);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 0 24px rgba(76,177,216,0.25);
-  }
-  .modal-head .modal-icon svg { width: 20px; height: 20px; color: var(--accent-2); }
-  .modal-head.violet .modal-icon {
-    background: var(--violet-bg);
-    border-color: var(--violet-border);
-    box-shadow: 0 0 24px rgba(167,139,250,0.25);
-  }
-  .modal-head.violet .modal-icon svg { color: var(--violet); }
-
-  .modal-head-text { flex: 1; min-width: 0; }
-  .modal-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    line-height: 1.25;
-  }
-  .modal-sub {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  .modal-close {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: var(--panel-3);
-    border: 1px solid var(--border);
-    color: var(--text-soft);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: background 0.15s, color 0.15s, transform 0.15s;
-  }
-  .modal-close:hover {
-    background: var(--rose-bg);
-    border-color: rgba(251,113,133,0.5);
-    color: var(--rose);
-    transform: rotate(90deg);
-  }
-  .modal-close svg { width: 16px; height: 16px; }
-
-  .modal-body {
-    padding: 22px 24px 26px;
-    color: var(--text-soft);
-    font-size: 0.95rem;
-    line-height: 1.65;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .modal-body::-webkit-scrollbar { width: 0; height: 0; display: none; }
-
-  .modal-body h2 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text);
-    margin: 22px 0 10px;
-    letter-spacing: -0.015em;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    line-height: 1.35;
-  }
-  .modal-body h2:first-child { margin-top: 0; }
-  .modal-body h2::before {
-    content: "";
-    width: 4px;
-    height: 18px;
-    border-radius: 2px;
-    background: linear-gradient(180deg, var(--accent-2), var(--accent));
-    flex-shrink: 0;
-  }
-
-  .modal-body h3 {
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: var(--text);
-    margin: 20px 0 10px;
-    letter-spacing: -0.01em;
-  }
-
-  .modal-body p { margin: 10px 0; }
-
-  .modal-body a {
-    color: var(--accent-2);
-    text-decoration: none;
-    font-weight: 500;
-    border-bottom: 1px dashed var(--accent-border);
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .modal-body a:hover {
-    color: var(--accent-3);
-    border-bottom-color: var(--accent-3);
-  }
-
-  .modal-body strong { color: var(--text); font-weight: 700; }
-  :root[data-theme="light"] .modal-body strong { color: #0f172a; }
-
-  .modal-body ol, .modal-body ul {
-    margin: 10px 0 14px;
-    padding-left: 0;
-    list-style: none;
-    counter-reset: list-counter;
-  }
-
-  .modal-body ol li {
-    position: relative;
-    padding: 10px 12px 10px 46px;
-    margin-bottom: 8px;
-    background: var(--panel-2);
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    counter-increment: list-counter;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .modal-body ol li:hover {
-    border-color: var(--accent-border);
-    background: var(--panel-hover);
-  }
-  .modal-body ol li::before {
-    content: counter(list-counter);
-    position: absolute;
-    left: 12px;
-    top: 10px;
-    width: 24px; height: 24px;
+    width: 26px; height: 26px;
     border-radius: 7px;
     background: var(--accent-bg-strong);
-    border: 1px solid var(--accent-border);
-    color: var(--accent-2);
-    font-size: 0.78rem;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    font-family: "JetBrains Mono", monospace;
-  }
-
-  .modal-body ul li {
-    position: relative;
-    padding: 8px 12px 8px 32px;
-    margin-bottom: 6px;
-    border-radius: 8px;
-  }
-  .modal-body ul li::before {
-    content: "";
-    position: absolute;
-    left: 12px;
-    top: 16px;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent-2);
-    box-shadow: 0 0 8px rgba(111,197,229,0.6);
-  }
-
-  .role-mention {
-    display: inline-flex;
-    align-items: center;
-    padding: 1px 8px;
-    border-radius: 6px;
-    background: var(--violet-bg);
-    border: 1px solid var(--violet-border);
-    color: var(--violet);
-    font-weight: 600;
-    font-size: 0.85em;
-    font-family: "JetBrains Mono", monospace;
-    vertical-align: baseline;
-    line-height: 1.5;
-  }
-
-  .callout {
-    display: flex;
-    gap: 12px;
-    padding: 13px 16px;
-    border-radius: 11px;
-    margin: 14px 0;
-    background: var(--panel-2);
-    border-left: 3px solid var(--accent);
-    font-size: 0.92rem;
-    color: var(--text-soft);
-  }
-  .callout.warn {
-    background: var(--amber-bg);
-    border-left-color: var(--amber);
-    color: var(--amber-text);
-  }
-  .callout.danger {
-    background: var(--rose-bg);
-    border-left-color: var(--rose);
-    color: var(--rose);
-  }
-  .callout.good {
-    background: var(--good-bg);
-    border-left-color: var(--good);
-    color: var(--good-text);
-  }
-  .callout .callout-ic {
-    flex-shrink: 0;
-    width: 22px; height: 22px;
     display: flex; align-items: center; justify-content: center;
   }
-  .callout .callout-ic svg { width: 18px; height: 18px; }
+  .info-banner .info-icon svg { width: 14px; height: 14px; color: var(--accent-2); }
+  .info-banner b { color: var(--text); font-weight: 600; }
 
-  .price-grid {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    margin: 12px 0 16px;
-  }
-  .price-item { display: contents; }
-  .price-name, .price-value {
-    background: var(--panel-2);
-    border: 1px solid var(--border-soft);
-    padding: 11px 14px;
-    font-size: 0.9rem;
-  }
-  .price-name {
-    border-radius: 10px 0 0 10px;
-    color: var(--text-soft);
-    line-height: 1.45;
-  }
-  .price-value {
-    border-radius: 0 10px 10px 0;
-    border-left: none;
-    color: var(--accent-2);
-    font-weight: 700;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.92rem;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    letter-spacing: -0.01em;
-  }
-
-  .section-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 22px 0;
+  /* Empty */
+  .empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 28px 0;
   }
 
   /* ============================================================
-     TOAST
+     MOBILE
      ============================================================ */
-  .toast {
-    position: fixed;
-    top: 16px;
-    left: 50%;
-    transform: translate(-50%, -120%);
-    background: var(--toast-bg);
-    border: 1px solid var(--border-strong);
-    border-left: 4px solid var(--good);
-    border-radius: 12px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--text);
-    font-size: 0.9rem;
-    font-weight: 500;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
-    letter-spacing: -0.005em;
-    max-width: calc(100% - 32px);
-  }
-  :root[data-theme="light"] .toast { box-shadow: 0 12px 32px rgba(15,23,42,.15); }
-  .toast.show { transform: translate(-50%, 0); opacity: 1; }
-  .toast .toast-ic {
-    flex-shrink: 0;
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    background: var(--good);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .toast .toast-ic svg { width: 13px; height: 13px; color: #071018; }
-
   @media (max-width: 640px) {
-    body { padding: 14px 12px 30px; font-size: 15px; }
-    .card { padding: 16px; border-radius: 14px; }
-    .page-title { font-size: 1.15rem; gap: 12px; padding-bottom: 22px; }
-    .page-title .brand-icon { width: 40px; height: 40px; border-radius: 11px; }
-    .page-title .brand-icon svg { width: 19px; height: 19px; }
+    body { padding: 14px 12px 24px; font-size: 15px; }
+    .card { padding: 15px; border-radius: 12px; }
+    .page-title { font-size: 1.02rem; }
+    .page-title .brand-icon { width: 30px; height: 30px; }
     .card h2 { font-size: 0.98rem; }
+
+    .exam-tab { padding: 8px 12px; }
+    .exam-tab .tab-rank { font-size: 0.88rem; }
+    .exam-tab .tab-exam { font-size: 0.68rem; }
+
+    .qa-question { padding: 12px 13px; font-size: 0.95rem; gap: 10px; }
+    .q-num { width: 24px; height: 24px; font-size: 0.78rem; }
+    .qa-answer-inner { padding: 10px 13px 12px 13px; font-size: 0.92rem; }
+
+    .guide-step { padding: 12px 13px; gap: 12px; }
+    .guide-step .step-num { width: 26px; height: 26px; font-size: 0.84rem; }
+    .guide-step .step-title { font-size: 0.94rem; }
+    .guide-step .step-text { font-size: 0.9rem; }
+
     .info-banner { padding: 11px 14px; font-size: 0.9rem; gap: 10px; }
-    .doc-link { padding: 12px 13px; gap: 12px; }
-    .doc-icon { width: 38px; height: 38px; }
-    .doc-icon svg { width: 18px; height: 18px; }
-    .doc-title { font-size: 0.94rem; }
-    .doc-sub { font-size: 0.79rem; }
-    .doc-badge { display: none; }
-    .macro-item { padding: 12px 13px; }
-    .macro-title { font-size: 0.95rem; }
-    .macro-code { font-size: 0.75rem; padding: 10px 12px; }
-    .macro-copy-btn { padding: 0 13px; font-size: 0.82rem; }
-    .macro-copy-btn span { display: none; }
-    .modal-overlay { padding: 12px; }
-    .modal { border-radius: 15px; }
-    .modal-head { padding: 14px 16px; gap: 11px; }
-    .modal-head .modal-icon { width: 36px; height: 36px; border-radius: 10px; }
-    .modal-head .modal-icon svg { width: 17px; height: 17px; }
-    .modal-title { font-size: 1.02rem; }
-    .modal-body { padding: 18px 18px 22px; font-size: 0.92rem; }
-    .modal-body h2 { font-size: 1rem; }
-    .modal-body h3 { font-size: 0.95rem; }
-    .modal-body ol li { padding: 10px 12px 10px 42px; }
-    .modal-body ol li::before { left: 10px; }
-    .price-name, .price-value { padding: 10px 12px; font-size: 0.85rem; }
   }
 </style>
 </head>
 <body>
 
-<div class="toast" id="toast">
-  <span class="toast-ic">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
-  </span>
-  <span id="toastText">Скопировано</span>
-</div>
-
 <div class="tablet">
+  <div class="tablet-body">
 
-  <div class="page-title">
-    <span class="brand-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-      </svg>
-    </span>
-    <span class="title-text">
-      Документы
-      <span class="subtitle">ПСЭС · больница · макросы</span>
-    </span>
-  </div>
-
-  <div class="info-banner">
-    <div class="info-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-    </div>
-    <div>Полезные документы и информация отдела. Нажмите на документ — откроется в новой вкладке.</div>
-  </div>
-
-  <!-- ДОКУМЕНТЫ ПСЭС -->
-  <div class="card">
-    <h2>
-      <span class="h-icon">
+    <div class="page-title">
+      <span class="brand-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
         </svg>
       </span>
-      Документы ПСЭС
-    </h2>
-
-    <div class="docs-list" id="docsList"></div>
-  </div>
-
-  <!-- ПРОФИЛИ ДЛЯ МАКРОСОВ -->
-  <div class="card">
-    <h2>
-      <span class="h-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="4" width="16" height="16" rx="2"/>
-          <line x1="9" y1="9" x2="15" y2="9"/>
-          <line x1="9" y1="13" x2="15" y2="13"/>
-          <line x1="9" y1="17" x2="12" y2="17"/>
-        </svg>
+      <span>
+        Шпаргалка — Экзамены ПСЭС
+        <span class="subtitle">Вопросы и ответы · квалификация «Терапевт»</span>
       </span>
-      Профили для макросов
-    </h2>
-
-    <div class="macro-list" id="macroList"></div>
-
-    <div class="note">
-      💡 Нажмите «Копировать» — код попадёт в буфер обмена и его можно вставить в макрос.
     </div>
-  </div>
 
-  <!-- ДОКУМЕНТЫ БОЛЬНИЦЫ -->
-  <div class="card">
-    <h2 class="violet">
-      <span class="h-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 21h18"/>
-          <path d="M5 21V7l7-4 7 4v14"/>
-          <path d="M12 9v6"/>
-          <path d="M9 12h6"/>
-        </svg>
-      </span>
-      Документы больницы
-    </h2>
+    <div class="exam-tabs" id="examTabs"></div>
 
-    <div class="docs-list" id="hospitalDocsList"></div>
-  </div>
+    <div id="content"></div>
 
-</div>
-
-<!-- MODAL: Стажировка -->
-<div class="modal-overlay" id="modalInternship">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="internshipTitle">
-    <div class="modal-head">
-      <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-        </svg>
-      </div>
-      <div class="modal-head-text">
-        <div class="modal-title" id="internshipTitle">Стажировка ПСЭС</div>
-        <div class="modal-sub">Обязательный этап для каждого сотрудника отдела</div>
-      </div>
-      <button class="modal-close" type="button" aria-label="Закрыть" data-close>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="callout">
-        <span class="callout-ic">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-        </span>
-        <div>Каждый сотрудник, попавший в отдел ПСЭС, <strong>обязан пройти стажировку</strong>.</div>
-      </div>
-
-      <div class="callout warn">
-        <span class="callout-ic">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-        </span>
-        <div>На выход из стажировки даётся <strong>3 дня</strong> (исключение — IC/OOC отпуск или предупреждение СС отдела: они передадут информацию, и срок будет помечен).</div>
-      </div>
-
-      <h2>Для прохождения стажировки необходимо:</h2>
-      <ol>
-        <li>
-          Пройти <a href="https://discord.com/channels/1538939092929216603/1542667629599395851" target="_blank" rel="noopener noreferrer">инструктаж</a>.
-          <br><strong>До прохождения инструктажа запрещено сдавать экзамены и выдавать справки.</strong>
-        </li>
-        <li>
-          <a href="https://discord.com/channels/1538939092929216603/1540466220837380217" target="_blank" rel="noopener noreferrer">Сдать экзамен</a> по
-          <a href="https://docs.google.com/document/d/18Y_V7KS62Kqn9X4JdhuoyB0P1qN9BggV/edit?usp=drive_link&ouid=108550228353329707009&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">выдаче мед. справок</a>.
-          <br><strong>Справки запрещено выдавать до сдачи экзамена по их выдаче.</strong>
-        </li>
-        <li>
-          Выдать <strong>20 справок о физическом здоровье</strong> и <strong>20 о психологическом состоянии</strong>.
-          <br><strong>Справки запрещено выдавать до сдачи экзамена по их выдаче.</strong>
-        </li>
-        <li>
-          <a href="https://discord.com/channels/1538939092929216603/1540466220837380217" target="_blank" rel="noopener noreferrer">Сдать экзамен</a> по
-          <a href="https://discord.com/channels/1538939092929216603/1540455147291938999" target="_blank" rel="noopener noreferrer">психологической помощи</a>.
-          <br><strong>Сеансы запрещено проводить до сдачи экзамена по ней.</strong>
-        </li>
-        <li>
-          Заполнить <a href="https://discord.com/channels/1538939092929216603/1538939110469931132" target="_blank" rel="noopener noreferrer">отчёт</a>.
-        </li>
-      </ol>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Сеанс Психотерапии -->
-<div class="modal-overlay" id="modalSession">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sessionTitle">
-    <div class="modal-head violet">
-      <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2a5 5 0 0 0-5 5v1a5 5 0 0 0-2 9.9V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1.1A5 5 0 0 0 17 8V7a5 5 0 0 0-5-5z"/>
-          <path d="M9 21v-2"/>
-          <path d="M15 21v-2"/>
-        </svg>
-      </div>
-      <div class="modal-head-text">
-        <div class="modal-title" id="sessionTitle">Сеанс Психотерапии</div>
-        <div class="modal-sub">Порядок проведения, цены и оформление отчёта</div>
-      </div>
-      <button class="modal-close" type="button" aria-label="Закрыть" data-close>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-    </div>
-    <div class="modal-body">
-
-      <div class="callout warn">
-        <span class="callout-ic">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 7l-7 5 7 5V7z"/>
-            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-          </svg>
-        </span>
-        <div>При составлении отчёта о сеансе <strong>необходимо иметь видеофиксацию</strong>.</div>
-      </div>
-
-      <div class="callout danger">
-        <span class="callout-ic">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-          </svg>
-        </span>
-        <div><strong>Не упоминать родителей.</strong> Заменять словосочетанием «близкие люди»!</div>
-      </div>
-
-      <h2>Заключение оформляется только</h2>
-      <p>
-        <span class="role-mention">&lt;@&amp;1540025113813061744&gt;</span>
-        и
-        <span class="role-mention">&lt;@&amp;1538939093176553499&gt;</span>
-      </p>
-
-      <h2>Оплата и место проведения</h2>
-      <ul>
-        <li>С псих. сеансов <strong>30% оплаты</strong> отправляем в
-          <a href="https://discord.com/channels/1538939092929216603/1538939094153826430" target="_blank" rel="noopener noreferrer">казну</a>.
-        </li>
-        <li>Сеансы проводятся в <strong>ГКБ 1</strong> в кабинетах терапевта.</li>
-      </ul>
-
-      <h2>Стоимость дальнейшего лечения</h2>
-      <p>Если после вторичного сеанса пациенту назначено дальнейшее лечение и он согласен на его прохождение, используются следующие регламентированные цены:</p>
-      <div class="price-grid">
-        <div class="price-name">Консультация по работе больницы и психотерапии</div>
-        <div class="price-value">5,000</div>
-
-        <div class="price-name">Сеанс психотерапии — 25,000 за каждые 15 минут (даже если из 15 минут используется только часть, оплата производится за весь период: 1–15 мин — 25,000; 16–30 мин — 50,000 и т.д.)</div>
-        <div class="price-value">25,000 / 15 мин</div>
-
-        <div class="price-name">Сеанс психотерапии с оформлением заключения — 30,000 за каждые 15 минут (система формирования цены та же)</div>
-        <div class="price-value">30,000 / 15 мин</div>
-      </div>
-
-      <h2>Проведение сеанса</h2>
-      <ol>
-        <li>
-          <strong>Приветствие и установление контакта.</strong>
-          Познакомиться с человеком, представиться и показать удостоверение. Попросить паспорт и взять номер телефона пациента. Рассказать про план проведения сеанса. Огласить цену в размере 25,000/30,000 за каждые 15 минут и подписать договор.
-        </li>
-        <li>
-          <strong>Сбор информации.</strong>
-          Задать пациенту вопросы о его жизни, интересах, работе и других аспектах.
-        </li>
-        <li>
-          <strong>Выявление проблем.</strong>
-          Попросить пациента рассказать о своих проблемах и трудностях, придерживаясь нейтралитета.
-        </li>
-        <li>
-          <strong>Уточнение деталей.</strong>
-          Если пациент нечётко сформулировал проблему — задать уточняющие вопросы. Попросить привести конкретные примеры ситуаций, в которых возникают трудности.
-        </li>
-        <li>
-          <strong>Помощь пациенту.</strong>
-          Говорим с пациентом, разбираем проблемы и с чем они связаны. Даём советы по решению данных проблем.
-        </li>
-        <li>
-          <strong>Завершение сеанса.</strong>
-          Подвести итоги разговора и поблагодарить пациента за откровенность. Назначить дату следующего сеанса.
-        </li>
-        <li>
-          <strong>Составить отчёт.</strong>
-          <a href="https://discord.com/channels/1538939092929216603/1544008184866545684" target="_blank" rel="noopener noreferrer">Открыть канал с отчётами</a>.
-        </li>
-      </ol>
-    </div>
   </div>
 </div>
 
@@ -1168,323 +632,117 @@
   } catch (e) {}
 
   /* ============================================================
-     ДАННЫЕ
+     ДАННЫЕ ЭКЗАМЕНОВ
      ============================================================ */
-  const DOCS = [
-    {
-      title: "Регламент работы отдела ПСЭС",
-      sub: "Основной регламент деятельности отдела",
-      url: "https://docs.google.com/document/d/1fUgepCt8Qr1gACVSbFFsU8AN5okuprhp/edit",
-      icon: "doc"
+  const EXAMS = {
+    "5→6": {
+      label: "Повышение 5 → 6",
+      exam: "Социофобия",
+      questions: [
+        { q: "Назовите минимум 3 физиологических признака характерных для социофобии?",
+          a: "Тошнота, потливость, дрожь в конечностях, затруднение дыхания, изменение сердечного ритма." },
+        { q: "Назовите поведенческие признаки характерные для социофобии?",
+          a: "Тревога, боязнь мнения окружающих, боязнь контакта с людьми, боязнь зрительного контакта." },
+        { q: "Что такое Социофобия и в чем она выражается?",
+          a: "Тип тревожного расстройства, выражающийся излишним страхом или тревогой." },
+        { q: "Как можно лечить социофобию?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Флуоксетин, Дулоксетин, Диазепам, Пропранолол." }
+      ]
     },
-    {
-      title: "Лекции для сотрудников ПСЭС",
-      sub: "Учебные материалы для состава",
-      url: "https://docs.google.com/document/d/1y5jPY6u9AkfKWJPjE7ByDV8xtjONjMIDA6YOBKBlZAU/edit?tab=t.0",
-      icon: "doc"
-    },
-    {
-      title: "Регламент выдачи мед. справок",
-      sub: "Порядок выдачи медицинских справок",
-      url: "https://docs.google.com/document/d/18Y_V7KS62Kqn9X4JdhuoyB0P1qN9BggV/edit?rtpof=true&sd=true",
-      icon: "doc"
-    },
-    {
-      title: "Стажировка ПСЭС",
-      sub: "Обязательный этап для каждого сотрудника отдела",
-      modal: "modalInternship",
-      icon: "study",
-      badge: "Открыть"
-    },
-    {
-      title: "Сеанс Психотерапии",
-      sub: "Порядок проведения, цены и оформление отчёта",
-      modal: "modalSession",
-      icon: "session",
-      badge: "Открыть"
-    }
-  ];
 
-  const HOSPITAL_DOCS = [
-    {
-      title: "Устав больницы",
-      sub: "Внутренний устав ГКБ (переход на сайт форума)",
-      url: "https://forum.russia.online/threads/gkb-vnutrennii-ustav-bol-nitsy.4466/"
+    "6→7": {
+      label: "Повышение 6 → 7",
+      exam: "Депрессия",
+      questions: [
+        { q: "Что такое Депрессия и в чем она выражается?",
+          a: "Психическое расстройство, выражается пессимизмом, резким спадом настроения и активности." },
+        { q: "Назовите минимум 5 характерных признаков для Депрессии?",
+          a: "Низкое настроение, потеря интереса, изменение аппетита, проблемы со сном, усталость, навязчивые мысли, снижение концентрации, чувство вины, физические симптомы, мысли о смерти." },
+        { q: "Как можно лечить Депрессию?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Сертралин, Эсциталопрам, Амитриптилин, Тразодон." },
+        { q: "Каких видов бывает Депрессия?",
+          a: "Клиническая, через расстройство психики." }
+      ]
     },
-    {
-      title: "Правила государственных организаций",
-      sub: "ПГО — общие правила для гос. организаций",
-      url: "https://forum.russia.online/threads/pravila-gosudarstvennykh-organizatsii.11/"
-    },
-    {
-      title: "Трудовой кодекс",
-      sub: "Трудовой кодекс Российской Федерации",
-      url: "https://forum.russia.online/threads/trudovoi-kodeks.1395/"
-    },
-    {
-      title: "Закон города Москвы «О здравоохранении»",
-      sub: "Региональный закон о здравоохранении",
-      url: "https://forum.russia.online/threads/zakon-goroda-moskvy-o-zdravookhranenii.1425/"
-    }
-  ];
 
-  const MACROS = [
-    {
-      title: "Женский профиль",
-      code: "e2ed3080-6594-4aca-b08c-5c341a307128"
+    "7→8": {
+      label: "Повышение 7 → 8",
+      exam: "Биполярка",
+      questions: [
+        { q: "Что такое Биполярное аффективное расстройство?",
+          a: "Хроническое психологическое расстройство." },
+        { q: "Назовите признаки Биполярного расстройства?",
+          a: "Смена маниакальных и депрессивных фаз, раздражительность, нервозность, частая смена тем разговора, низкая потребность в сне или еде, бред, галлюцинации." },
+        { q: "Как расшифровывается аббревиатура БАР?",
+          a: "Биполярное аффективное расстройство." },
+        { q: "Как можно лечить Биполярное аффективное расстройство?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Вальпроат натрия, Карбамазепин, Ламотриджин." },
+        { q: "Что необходимо использовать при лечении через психотерапию?",
+          a: "Психотерапевтические и психосоциальные вмешательства, листы самоконтроля." }
+      ]
     },
-    {
-      title: "Мужской профиль",
-      code: "3ae027b4-e8c4-4f99-a91f-eda7a7514e74"
-    }
-  ];
 
-  /* ============================================================
-     ИКОНКИ
-     ============================================================ */
-  const ICONS = {
-    doc:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
-        '<polyline points="14 2 14 8 20 8"/>' +
-        '<line x1="16" y1="13" x2="8" y2="13"/>' +
-        '<line x1="16" y1="17" x2="8" y2="17"/>' +
-      '</svg>',
-    study:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/>' +
-        '<path d="M6 12v5c3 3 9 3 12 0v-5"/>' +
-      '</svg>',
-    session:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M12 2a5 5 0 0 0-5 5v1a5 5 0 0 0-2 9.9V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1.1A5 5 0 0 0 17 8V7a5 5 0 0 0-5-5z"/>' +
-        '<path d="M9 21v-2"/><path d="M15 21v-2"/>' +
-      '</svg>',
-    arrow:
-      '<svg class="doc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
-        '<line x1="5" y1="12" x2="19" y2="12"/>' +
-        '<polyline points="12 5 19 12 12 19"/>' +
-      '</svg>'
+    "8→9": {
+      label: "Повышение 8 → 9",
+      exam: "Шизофрения",
+      questions: [
+        { q: "Шизофрения это?",
+          a: "Хроническое психическое расстройство, при котором нарушается восприятие, мышление и эмоциональные реакции." },
+        { q: "Назовите признаки Шизофрении?",
+          a: "Нарушение мышления, памяти, планирования, социальных взаимодействий, снижение социального функционирования и эмоциональной экспрессивности." },
+        { q: "Как можно лечить Шизофрению?",
+          a: "Медикаментозно или через психотерапию." },
+        { q: "Какие лекарства назначаются при медикаментозном лечении?",
+          a: "Хлорпромазин, Рисперидон, Зипразидон, Палиперидон." },
+        { q: "Что занимает важное место в лечении шизофрении через психотерапию?",
+          a: "Психосоциальная реабилитация и поддерживающие занятия." },
+        { q: "Какова цель лечения шизофрении через психотерапию?",
+          a: "Восстановление социальных и коммуникативных навыков." }
+      ]
+    }
   };
 
   /* ============================================================
-     РЕНДЕР ДОКУМЕНТОВ ПСЭС
+     ВОПРОСЫ НА КВАЛИФИКАЦИЮ «ТЕРАПЕВТ»
      ============================================================ */
-  const docsList = document.getElementById("docsList");
-
-  DOCS.forEach((doc) => {
-    const isModal = !!doc.modal;
-    const el = document.createElement(isModal ? "button" : "a");
-    el.className = "doc-link";
-    if (isModal) {
-      el.type = "button";
-      el.addEventListener("click", () => openModal(doc.modal));
-    } else {
-      el.href = doc.url;
-      el.target = "_blank";
-      el.rel = "noopener noreferrer";
-    }
-
-    const iconClass = doc.icon === "session" || doc.icon === "study" ? "doc-icon violet" : "doc-icon";
-
-    el.innerHTML =
-      '<div class="' + iconClass + '">' + (ICONS[doc.icon] || ICONS.doc) + '</div>' +
-      '<div class="doc-body">' +
-        '<div class="doc-title">' + esc(doc.title) + '</div>' +
-        '<div class="doc-sub">' + esc(doc.sub) + '</div>' +
-      '</div>' +
-      (doc.badge ? '<span class="doc-badge">' + esc(doc.badge) + '</span>' : '') +
-      ICONS.arrow;
-
-    docsList.appendChild(el);
-  });
+  const THERAPIST_QUESTIONS = [
+    { q: "В какое время можно выдавать мед. справки в Больнице Склифосовского?",
+      a: "В любое время." },
+    { q: "Сколько стоит справка о физическом здоровье, психологическом?",
+      a: "2500 и 5000." },
+    { q: "У какого отдела приоритет на выдачу мед. справок?",
+      a: "ПСЭС." },
+    { q: "Если у человека при осмотре есть простуда или отравление, то что надо сделать?",
+      a: "Провести вакцинацию на месте (можно в том же кабинете)." },
+    { q: "Сколько действительна мед. справка?",
+      a: "30 дней." },
+    { q: "Через какое время можно обновить мед. справку?",
+      a: "7 дней." },
+    { q: "В какой кабинет надо отвести пациента для выдачи мед. справки в ГКБ №2 Склифосовского и в ГКБ №1?",
+      a: "В ГКБ №1 — выдаёт только старший и руководящий составы. В ГКБ №2 — второй этаж, 3 кабинета справа от лестницы на 2 этаже." },
+    { q: "Расскажите как вы будете выдавать мед. справку, с начала до конца.",
+      a: "Тут можете подавить о том, какие бы вопросы задавали, главное — уточнить, чтоб они осознанно отвечали, что зависит выдача мед. справок." }
+  ];
 
   /* ============================================================
-     РЕНДЕР ДОКУМЕНТОВ БОЛЬНИЦЫ
+     СОСТОЯНИЕ
      ============================================================ */
-  const hospitalList = document.getElementById("hospitalDocsList");
+  const TAB_KEY = "shpargalka_last_tab_v3";
+  const DEFAULT_TAB = "5→6";
 
-  HOSPITAL_DOCS.forEach((doc) => {
-    const a = document.createElement("a");
-    a.className = "doc-link";
-    a.href = doc.url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.innerHTML =
-      '<div class="doc-icon violet">' + ICONS.doc + '</div>' +
-      '<div class="doc-body">' +
-        '<div class="doc-title">' + esc(doc.title) + '</div>' +
-        '<div class="doc-sub">' + esc(doc.sub) + '</div>' +
-      '</div>' +
-      ICONS.arrow;
-    hospitalList.appendChild(a);
-  });
+  const state = {
+    activeTab: DEFAULT_TAB,
+    openQuestions: new Set()
+  };
 
-  /* ============================================================
-     РЕНДЕР МАКРОСОВ
-     ============================================================ */
-  const macroList = document.getElementById("macroList");
-
-  MACROS.forEach((m) => {
-    const item = document.createElement("div");
-    item.className = "macro-item";
-
-    const head = document.createElement("div");
-    head.className = "macro-head";
-    head.innerHTML =
-      '<div class="macro-icon">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-          '<circle cx="12" cy="8" r="4"/>' +
-          '<path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>' +
-        '</svg>' +
-      '</div>' +
-      '<div class="macro-title">' + esc(m.title) + '</div>';
-
-    const codeRow = document.createElement("div");
-    codeRow.className = "macro-code-row";
-
-    const codeEl = document.createElement("div");
-    codeEl.className = "macro-code";
-    codeEl.textContent = m.code;
-
-    const copyBtn = document.createElement("button");
-    copyBtn.type = "button";
-    copyBtn.className = "macro-copy-btn";
-    copyBtn.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
-        '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>' +
-        '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>' +
-      '</svg>' +
-      '<span>Копировать</span>';
-
-    copyBtn.addEventListener("click", () => copyMacro(m, item, copyBtn));
-
-    codeRow.appendChild(codeEl);
-    codeRow.appendChild(copyBtn);
-
-    item.appendChild(head);
-    item.appendChild(codeRow);
-    macroList.appendChild(item);
-  });
-
-  /* ============================================================
-     МОДАЛКИ
-     ============================================================ */
-  let activeModal = null;
-
-  function openModal(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    closeModal();
-    activeModal = el;
-    el.classList.add("show");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeModal() {
-    if (activeModal) {
-      activeModal.classList.remove("show");
-      activeModal = null;
-      document.body.style.overflow = "";
-    }
-  }
-
-  document.querySelectorAll(".modal-overlay").forEach((overlay) => {
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) closeModal();
-    });
-    const closeBtn = overlay.querySelector("[data-close]");
-    if (closeBtn) closeBtn.addEventListener("click", closeModal);
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-  });
-
-  /* ============================================================
-     КОПИРОВАНИЕ
-     ============================================================ */
-  function copyMacro(macro, item, btn) {
-    const doFeedback = () => {
-      item.classList.add("copied");
-      btn.classList.add("copied");
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML =
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
-          '<polyline points="20 6 9 17 4 12"/>' +
-        '</svg>' +
-        '<span>Скопировано</span>';
-
-      showToast("Скопировано: " + macro.title);
-      notifyParent("Скопировано", macro.title, "success");
-
-      setTimeout(() => {
-        item.classList.remove("copied");
-        btn.classList.remove("copied");
-        btn.innerHTML = originalHTML;
-      }, 1400);
-    };
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(macro.code)
-        .then(doFeedback)
-        .catch(() => fallbackCopy(macro.code, doFeedback));
-    } else {
-      fallbackCopy(macro.code, doFeedback);
-    }
-  }
-
-  function fallbackCopy(text, cb) {
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      ta.style.top = "0";
-      ta.style.left = "0";
-      document.body.appendChild(ta);
-      ta.select();
-      ta.setSelectionRange(0, text.length);
-      const ok = document.execCommand("copy");
-      document.body.removeChild(ta);
-      if (ok) cb();
-      else showToast("Не удалось скопировать");
-    } catch (e) {
-      showToast("Не удалось скопировать");
-    }
-  }
-
-  /* ============================================================
-     TOAST
-     ============================================================ */
-  const toastEl = document.getElementById("toast");
-  const toastText = document.getElementById("toastText");
-  let toastTimer = null;
-
-  function showToast(text) {
-    toastText.textContent = text;
-    toastEl.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toastEl.classList.remove("show");
-    }, 1800);
-  }
-
-  /* ============================================================
-     МОСТ С РОДИТЕЛЬСКИМ ПЛАНШЕТОМ
-     ============================================================ */
-  function notifyParent(title, text, kind) {
-    try {
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({
-          type: "toast",
-          title: title || "Сообщение",
-          text: text || "",
-          kind: kind || "success"
-        }, "*");
-      }
-    } catch (e) { /* ignore */ }
-  }
+  const tabsEl = document.getElementById("examTabs");
+  const contentEl = document.getElementById("content");
 
   /* ============================================================
      УТИЛИТЫ
@@ -1494,6 +752,335 @@
       .replace(/&/g, "&amp;").replace(/</g, "&lt;")
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
+
+  function saveLastTab() {
+    try { localStorage.setItem(TAB_KEY, state.activeTab); } catch (e) {}
+  }
+  function loadLastTab() {
+    try {
+      const v = localStorage.getItem(TAB_KEY);
+      if (v === "therapist" || EXAMS[v]) return v;
+    } catch (e) {}
+    return DEFAULT_TAB;
+  }
+
+  /* ============================================================
+     РЕНДЕР ВКЛАДОК
+     ============================================================ */
+  function renderTabs() {
+    tabsEl.innerHTML = "";
+
+    Object.keys(EXAMS).forEach((key) => {
+      const e = EXAMS[key];
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "exam-tab" + (state.activeTab === key ? " active" : "");
+      btn.dataset.key = key;
+      btn.innerHTML =
+        '<span class="tab-rank">' + esc(e.label.replace("Повышение ", "")) + '</span>' +
+        '<span class="tab-exam">' + esc(e.exam) + '</span>';
+      btn.addEventListener("click", () => switchTab(key));
+      tabsEl.appendChild(btn);
+    });
+
+    const th = document.createElement("button");
+    th.type = "button";
+    th.className = "exam-tab" + (state.activeTab === "therapist" ? " active" : "");
+    th.dataset.key = "therapist";
+    th.innerHTML =
+      '<span class="tab-rank">Квалификация</span>' +
+      '<span class="tab-exam">Терапевт</span>';
+    th.addEventListener("click", () => switchTab("therapist"));
+    tabsEl.appendChild(th);
+  }
+
+  function switchTab(key) {
+    if (state.activeTab === key) return;
+    state.activeTab = key;
+    state.openQuestions.clear();
+    saveLastTab();
+    renderTabs();
+    renderContent();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ============================================================
+     QA ACCORDION
+     ============================================================ */
+  function buildQAItems(questions, prefix) {
+    const list = document.createElement("div");
+    list.className = "qa-list";
+
+    questions.forEach((item, idx) => {
+      const qid = prefix + idx;
+      const isOpen = state.openQuestions.has(qid);
+
+      const wrap = document.createElement("div");
+      wrap.className = "qa-item" + (isOpen ? " open" : "");
+      wrap.dataset.qid = qid;
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "qa-question";
+      btn.innerHTML =
+        '<span class="q-num">' + (idx + 1) + '</span>' +
+        '<span class="q-text">' + esc(item.q) + '</span>' +
+        '<svg class="q-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+          '<polyline points="6 9 12 15 18 9"/>' +
+        '</svg>';
+
+      const ans = document.createElement("div");
+      ans.className = "qa-answer";
+      ans.innerHTML = '<div class="qa-answer-inner">' + esc(item.a) + '</div>';
+
+      btn.addEventListener("click", () => {
+        const open = wrap.classList.toggle("open");
+        if (open) {
+          state.openQuestions.add(qid);
+          ans.style.maxHeight = ans.scrollHeight + "px";
+        } else {
+          state.openQuestions.delete(qid);
+          ans.style.maxHeight = "0px";
+        }
+      });
+
+      wrap.appendChild(btn);
+      wrap.appendChild(ans);
+
+      if (isOpen) {
+        requestAnimationFrame(() => {
+          ans.style.maxHeight = ans.scrollHeight + "px";
+        });
+      }
+
+      list.appendChild(wrap);
+    });
+
+    return list;
+  }
+
+  /* ============================================================
+     КНОПКА «РАЗВЕРНУТЬ/СВЕРНУТЬ ВСЁ»
+     ============================================================ */
+  function attachToggleAll(container, prefix, questions) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn";
+    const anyOpen = questions.some((_, i) => state.openQuestions.has(prefix + i));
+    btn.textContent = anyOpen ? "Свернуть все" : "Развернуть все";
+
+    btn.addEventListener("click", () => {
+      const items = container.querySelectorAll(".qa-item");
+      const currentlyOpen = [...items].some((el) => el.classList.contains("open"));
+      items.forEach((el) => {
+        const qid = el.dataset.qid;
+        const ans = el.querySelector(".qa-answer");
+        if (currentlyOpen) {
+          el.classList.remove("open");
+          ans.style.maxHeight = "0px";
+          state.openQuestions.delete(qid);
+        } else {
+          el.classList.add("open");
+          ans.style.maxHeight = ans.scrollHeight + "px";
+          state.openQuestions.add(qid);
+        }
+      });
+      btn.textContent = currentlyOpen ? "Развернуть все" : "Свернуть все";
+    });
+
+    return btn;
+  }
+
+  /* ============================================================
+     РЕНДЕР ЭКЗАМЕНА
+     ============================================================ */
+  function renderExam(key) {
+    const e = EXAMS[key];
+    const frag = document.createDocumentFragment();
+
+    const banner = document.createElement("div");
+    banner.className = "info-banner";
+    banner.innerHTML =
+      '<div class="info-icon">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div>Экзамен <b>' + esc(e.label) + '</b> · тема: <b>' + esc(e.exam) + '</b> · вопросов: <b>' + e.questions.length + '</b></div>';
+    frag.appendChild(banner);
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const head = document.createElement("div");
+    head.className = "card-head";
+    head.innerHTML =
+      '<h2>' +
+        '<span class="h-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>' +
+          '</svg>' +
+        '</span>' +
+        'Вопросы к экзамену' +
+      '</h2>';
+
+    head.appendChild(attachToggleAll(card, "q_", e.questions));
+    card.appendChild(head);
+    card.appendChild(buildQAItems(e.questions, "q_"));
+    frag.appendChild(card);
+
+    contentEl.innerHTML = "";
+    contentEl.appendChild(frag);
+  }
+
+  /* ============================================================
+     РЕНДЕР ГАЙДА «ТЕРАПЕВТ»
+     ============================================================ */
+  function stepBlock(num, title, html) {
+    const el = document.createElement("div");
+    el.className = "guide-step";
+    el.innerHTML =
+      '<div class="step-num">' + num + '</div>' +
+      '<div class="step-body">' +
+        '<div class="step-title">' + esc(title) + '</div>' +
+        '<div class="step-text">' + html + '</div>' +
+      '</div>';
+    return el;
+  }
+
+  function renderTherapist() {
+    const frag = document.createDocumentFragment();
+
+    const banner = document.createElement("div");
+    banner.className = "info-banner";
+    banner.innerHTML =
+      '<div class="info-icon">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div>Пошаговая шпаргалка по <b>выдаче квалификации «Терапевт»</b>. Соблюдайте порядок этапов.</div>';
+    frag.appendChild(banner);
+
+    const stepsCard = document.createElement("div");
+    stepsCard.className = "card";
+    stepsCard.innerHTML =
+      '<div class="card-head"><h2>' +
+        '<span class="h-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>' +
+            '<line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>' +
+          '</svg>' +
+        '</span>' +
+        'Порядок действий' +
+      '</h2></div>';
+
+    const steps = document.createElement("div");
+    steps.className = "guide-steps";
+
+    steps.appendChild(stepBlock(1, "Подготовка и проверка", `
+      <ul>
+        <li>Уточняем у человека, ознакомился ли он с <b>«Правилами выдачи мед. карт»</b>.</li>
+        <li>Уточняем, имеется ли у него/неё <b>макрос для выдачи</b>.</li>
+      </ul>
+      <div class="step-note">⚠️ Выдавать справки нужно с некоторым <b>отступом по времени</b>.</div>
+    `));
+
+    steps.appendChild(stepBlock(2, "Оплата 15.000₽", `
+      <ul>
+        <li>Спрашиваем, готов ли человек <b>оплатить 15.000₽</b>.</li>
+      </ul>
+    `));
+
+    steps.appendChild(stepBlock(3, "Отыгровки", `
+      <ul>
+        <li>Отыгровка — <b>дать физ.</b></li>
+        <li>Отыгровка — <b>дать псих.</b></li>
+      </ul>
+    `));
+
+    stepsCard.appendChild(steps);
+    frag.appendChild(stepsCard);
+
+    const qCard = document.createElement("div");
+    qCard.className = "card";
+
+    const qHead = document.createElement("div");
+    qHead.className = "card-head";
+    qHead.innerHTML =
+      '<h2>' +
+        '<span class="h-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>' +
+          '</svg>' +
+        '</span>' +
+        'Вопросы для проверки' +
+      '</h2>';
+
+    qHead.appendChild(attachToggleAll(qCard, "th_", THERAPIST_QUESTIONS));
+    qCard.appendChild(qHead);
+    qCard.appendChild(buildQAItems(THERAPIST_QUESTIONS, "th_"));
+    frag.appendChild(qCard);
+
+    const step5 = document.createElement("div");
+    step5.className = "card";
+    step5.appendChild(stepBlock(5, "Оплата и отчёт в казну", `
+      <ul>
+        <li>Просим оплатить <b>15.000₽</b> на руки (наличкой или на карту).</li>
+        <li>После оплаты заходим в планшет <b>«Баланс фракции»</b> → <b>«Пополнить»</b>.</li>
+        <li>Сумма — <code>4.500₽</code>, причина — <code>квал.Терапевт</code>.</li>
+        <li>Делаем <b>скриншот</b> планшета, где видно пополнение.</li>
+        <li>Переходим сюда и <b>заполняем отчёт в казну</b>.</li>
+        <li>Оставшиеся <b>10.500₽ остаются Вам</b>.</li>
+      </ul>
+      <div class="step-note ok">✅ Сохраните скриншот пополнения — он нужен для отчёта.</div>
+    `));
+    frag.appendChild(step5);
+
+    const step6 = document.createElement("div");
+    step6.className = "card";
+    step6.appendChild(stepBlock(6, "Отчёт в ветку под запросом", `
+      <div>Если человек прошёл, вы пишете в ветку под запросом на квалификацию по форме:</div>
+      <ul>
+        <li><b>1.</b> (тег человека)</li>
+        <li><b>2.</b> + Терапевт (какую роль надо выдать)</li>
+        <li><b>3.</b> Тегаете <b>@Старший состав ПСЭС</b></li>
+      </ul>
+      <div class="form-example"><span class="tag">@Зав.ПСЭС | Прохор Дмитриев | 911</span>  <span class="tag">Прохор Быков | 911</span>
+<span class="role">+ Терапевт</span>
+<span class="tag">@Старший состав ПСЭС</span></div>
+      <div class="step-note">👀 Убираем <b>👀</b> с заявления в канале <b>«заявление на квалификацию»</b> и ставим <b>✅</b>.</div>
+    `));
+    frag.appendChild(step6);
+
+    contentEl.innerHTML = "";
+    contentEl.appendChild(frag);
+  }
+
+  /* ============================================================
+     ОБЩИЙ РЕНДЕР
+     ============================================================ */
+  function renderContent() {
+    if (state.activeTab === "therapist") {
+      renderTherapist();
+    } else if (EXAMS[state.activeTab]) {
+      renderExam(state.activeTab);
+    } else {
+      contentEl.innerHTML = '<div class="empty">Выберите раздел</div>';
+    }
+  }
+
+  /* ============================================================
+     СТАРТ
+     ============================================================ */
+  function init() {
+    state.activeTab = loadLastTab();
+    renderTabs();
+    renderContent();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState !== "loading") init();
 })();
 </script>
 </body>

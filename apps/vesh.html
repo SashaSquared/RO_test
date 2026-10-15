@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark" data-theme-mode="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,9 +17,28 @@
   --busy-bg:#3f3a1a;--busy-text:#fde68a;
   --success-bg:#14532d;--success-text:#bbf7d0;
   --error-bg:#4c1d1d;--error-text:#fecaca;
+  --input-bg:#0d1520;
   --radius:16px;
   --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
+
+/* ============================================================
+   СВЕТЛАЯ ТЕМА
+   ============================================================ */
+:root[data-theme="light"]{
+  --bg:#f5f7fa;--bg2:#ffffff;
+  --panel:#ffffff;--panel-2:#f0f4f8;--panel-3:#e2e8f0;
+  --text:#1a202c;--muted:#64748b;
+  --border:#cbd5e0;
+  --accent:#2f9e44;--accent-2:#268a3a;
+  --blue:#2563eb;--red:#dc2626;--red-hover:#ef4444;
+  --amber:#d97706;
+  --busy-bg:#fef3c7;--busy-text:#78350f;
+  --success-bg:#dcfce7;--success-text:#166534;
+  --error-bg:#fee2e2;--error-text:#991b1b;
+  --input-bg:#ffffff;
+}
+
 html,body{height:100%}
 
 html::-webkit-scrollbar,
@@ -36,6 +55,10 @@ body{
   padding:16px 16px 24px;display:flex;flex-direction:column;align-items:center;
   scrollbar-width:none;
   -ms-overflow-style:none;
+  transition: background 0.25s, color 0.25s;
+}
+:root[data-theme="light"] body{
+  background:radial-gradient(circle at top,#ffffff 0%,var(--bg) 60%);
 }
 .wrap{max-width:1100px;width:100%;display:flex;flex-direction:column}
 
@@ -51,7 +74,6 @@ body{
 .tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .tab-btn svg{width:16px;height:16px}
 
-/* Плашка с рабочей датой */
 .shift-banner{
   display:flex;align-items:center;gap:10px;
   padding:8px 14px;border-radius:10px;
@@ -60,10 +82,20 @@ body{
   color:#c9e9f6;font-size:0.84rem;font-weight:600;
   white-space:nowrap;
 }
+:root[data-theme="light"] .shift-banner{
+  background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(37,99,235,.04));
+  border-color:rgba(37,99,235,.35);
+  color:#1e40af;
+}
 .shift-banner.future{
   background:linear-gradient(135deg,rgba(245,185,74,.18),rgba(245,185,74,.08));
   border-color:rgba(245,185,74,.45);
   color:#fcd97e;
+}
+:root[data-theme="light"] .shift-banner.future{
+  background:linear-gradient(135deg,rgba(217,119,6,.1),rgba(217,119,6,.04));
+  border-color:rgba(217,119,6,.35);
+  color:#b45309;
 }
 .shift-banner svg{width:15px;height:15px}
 
@@ -72,6 +104,7 @@ body{
   border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;box-shadow:0 6px 20px rgba(0,0,0,.3);
 }
+:root[data-theme="light"] .card{box-shadow:0 6px 20px rgba(15,23,42,.08)}
 .card + .card{margin-top:16px}
 .card h3{font-size:0.98rem;font-weight:600;margin-bottom:14px}
 .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
@@ -81,7 +114,7 @@ body{
 label{display:block;font-size:0.78rem;font-weight:600;margin-bottom:6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 select,input[type="text"]{
   width:100%;padding:12px 14px;font-size:.96rem;font-family:inherit;
-  color:var(--text);background:#0d1520;border:1px solid var(--border);
+  color:var(--text);background:var(--input-bg);border:1px solid var(--border);
   border-radius:10px;outline:none;transition:border-color .15s,box-shadow .15s;
   -webkit-appearance:none;appearance:none;
 }
@@ -90,7 +123,7 @@ select{
   background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px;
 }
 select:focus,input:focus{border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(47,158,68,.22)}
-select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-allowed}
+select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);cursor:not-allowed}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
@@ -114,6 +147,7 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
 .btn-icon.copy{color:var(--blue);background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3)}
 .btn-icon.copy:hover{background:rgba(59,130,246,.2);border-color:rgba(59,130,246,.55);color:#93c5fd}
 .btn-icon.copy.copied{color:#86efac;background:rgba(47,158,68,.15);border-color:rgba(47,158,68,.5)}
+:root[data-theme="light"] .btn-icon.copy.copied{color:#166534}
 .btn-icon.del{color:var(--red);background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3)}
 .btn-icon.del:hover{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.6);color:#fca5a5}
 
@@ -142,7 +176,8 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   border-radius:6px;font-weight:600;font-size:.84rem;font-variant-numeric:tabular-nums;
 }
 .time-badge.mine{background:#1e3a2a;color:#86efac;box-shadow:0 0 0 1px rgba(134,239,172,.3)}
-.time-badge.past{background:#2a2f3a;color:#6b7280;text-decoration:line-through}
+:root[data-theme="light"] .time-badge.mine{background:#dcfce7;color:#166534;box-shadow:0 0 0 1px rgba(22,163,74,.3)}
+.time-badge.past{background:var(--panel-3);color:var(--muted);text-decoration:line-through}
 
 .empty,.loading{color:var(--muted);font-size:.86rem;text-align:center;padding:20px 0}
 
@@ -269,18 +304,81 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   "use strict";
 
   /* ============================================================
-   *  КОНФИГУРАЦИЯ
-   * ============================================================ */
+     ТЕМА
+     ============================================================ */
+  const THEME_KEY = "pref_theme";
 
+  function systemTheme() {
+    try {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } catch (e) { return "dark"; }
+  }
+  function resolveThemeMode(mode) {
+    if (mode === "auto") return systemTheme();
+    return mode === "light" ? "light" : "dark";
+  }
+  function applyThemeMode(mode) {
+    if (!["light","dark","auto"].includes(mode)) mode = "dark";
+    const resolved = resolveThemeMode(mode);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-mode", mode);
+  }
+  function initTheme() {
+    const p = new URLSearchParams(location.search);
+    const urlTheme = p.get("theme");
+    if (urlTheme && ["light","dark","auto"].includes(urlTheme)) {
+      applyThemeMode(urlTheme);
+      return;
+    }
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved && ["light","dark","auto"].includes(saved)) {
+        applyThemeMode(saved);
+        return;
+      }
+    } catch (e) {}
+    applyThemeMode("dark");
+  }
+
+  window.addEventListener("message", (e) => {
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.type === "theme" && e.data.mode) {
+      applyThemeMode(e.data.mode);
+    }
+  });
+
+  try {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq && mq.addEventListener) {
+      mq.addEventListener("change", () => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    } else if (mq && mq.addListener) {
+      mq.addListener(() => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    }
+  } catch (e) {}
+
+  initTheme();
+
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "theme-request" }, "*");
+    }
+  } catch (e) {}
+
+  /* ============================================================
+     КОНФИГ
+     ============================================================ */
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
   const HOURS_START = 10;
   const HOURS_END = 22;
   const USER_BOOKING_LIMIT = 2;
 
-  /* Автосброс: после 22:20 открываем следующий день.
-     Эти константы нужны только чтобы локально понимать, что дата сменилась —
-     итоговую дату всё равно берём с сервера. */
   const RESET_HOUR = 22;
   const RESET_MINUTE = 20;
 
@@ -305,7 +403,7 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   const state = {
     user: null,
     bookings: [],
-    activeDate: null    // "YYYY-MM-DD" — берётся с сервера, локальный расчёт только для проверки смены даты
+    activeDate: null
   };
 
   const $ = id => document.getElementById(id);
@@ -327,9 +425,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   const shiftBannerText = $("shiftBannerText");
   const bookingsTitle = $("bookingsTitle");
 
-  /* ============================================================
-   *  ДАТЫ
-   * ============================================================ */
   function todayStr() {
     const d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
@@ -400,9 +495,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     return arr;
   }
 
-  /* ============================================================
-   *  СЕТЬ
-   * ============================================================ */
   function apiPost(payload) {
     return new Promise((resolve, reject) => {
       try {
@@ -425,9 +517,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     });
   }
 
-  /* ============================================================
-   *  СЕССИЯ
-   * ============================================================ */
   function loadUser() {
     const params = new URLSearchParams(location.search);
     const pLogin = params.get("login");
@@ -486,9 +575,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     return true;
   }
 
-  /* ============================================================
-   *  РЕНДЕР
-   * ============================================================ */
   function renderTimeOptions() {
     const busy = {};
     state.bookings.forEach(b => { busy[b.time] = b.employee; });
@@ -681,9 +767,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     }
   }
 
-  /* ============================================================
-   *  КОПИРОВАНИЕ
-   * ============================================================ */
   async function copyHourMessage(time, btnEl) {
     const base = HOUR_MESSAGES[time] || "";
     if (!base) {
@@ -717,9 +800,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     }
   }
 
-  /* ============================================================
-   *  ДЕЙСТВИЯ
-   * ============================================================ */
   async function loadBookings() {
     if (!state.bookings.length) {
       bookingsContainer.innerHTML = '<div class="loading">Загрузка данных…</div>';
@@ -729,7 +809,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
       const data = await apiPost({ action: "getReservations" });
       if (!data || !data.success) throw new Error((data && data.message) || "Сервер вернул ошибку");
 
-      // Сервер — источник правды по активной дате
       if (data.activeDate) state.activeDate = data.activeDate;
 
       state.bookings = data.reservations || [];
@@ -779,7 +858,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
         notify(bookingNotification, data.message || "Не удалось забронировать", "error");
         notifyParent("Ошибка брони", data.message || "", "alert");
       } else {
-        // Сервер мог вернуть актуальную активную дату
         if (data.activeDate) state.activeDate = data.activeDate;
 
         notify(bookingNotification, data.message || "Бронь создана", "success");
@@ -831,9 +909,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     }
   }
 
-  /* ============================================================
-   *  ПРОВЕРКА СМЕНЫ АКТИВНОЙ ДАТЫ (локально + подтягиваем с сервера)
-   * ============================================================ */
   async function checkResetTick() {
     const newActive = computeActiveDate();
     if (newActive !== state.activeDate) {
@@ -843,9 +918,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     }
   }
 
-  /* ============================================================
-   *  ВКЛАДКИ
-   * ============================================================ */
   function switchTab(tab) {
     if (tab === "book") {
       tabBook.classList.add("active");
@@ -866,9 +938,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
   refreshBtn.addEventListener("click", () => loadBookings());
   bookingForm.addEventListener("submit", addReservation);
 
-  /* ============================================================
-   *  МОСТ
-   * ============================================================ */
   function notifyParent(title, text, kind) {
     try {
       if (window.parent && window.parent !== window) {
@@ -894,9 +963,6 @@ select:disabled,input:disabled{background:#0a1119;color:var(--muted);cursor:not-
     el._timer = setTimeout(() => el.classList.remove("show"), 4500);
   }
 
-  /* ============================================================
-   *  ИНИЦИАЛИЗАЦИЯ
-   * ============================================================ */
   function init() {
     const user = loadUser();
     if (!user || !ensureHash(user)) {

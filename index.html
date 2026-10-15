@@ -162,6 +162,47 @@
     font-variant-numeric: tabular-nums; font-size: 0.72rem;
   }
 
+  /* Индикатор смены */
+  .status-bar .shift-indicator {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+    border: 1px solid transparent;
+  }
+  .status-bar .shift-indicator .shift-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+    flex-shrink: 0;
+  }
+  .status-bar .shift-indicator.day {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.45);
+    color: #fcd34d;
+  }
+  :root[data-theme="light"] .status-bar .shift-indicator.day {
+    background: rgba(217, 119, 6, 0.12);
+    border-color: rgba(217, 119, 6, 0.4);
+    color: #b45309;
+  }
+  .status-bar .shift-indicator.night {
+    background: rgba(99, 102, 241, 0.18);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
+  }
+  :root[data-theme="light"] .status-bar .shift-indicator.night {
+    background: rgba(124, 58, 237, 0.12);
+    border-color: rgba(124, 58, 237, 0.4);
+    color: #6d28d9;
+  }
+
   /* Шапка */
   .tablet-header {
     display: flex; align-items: center; gap: 12px;
@@ -956,6 +997,9 @@
     .sched-day { grid-column: 1 / -1; font-size: 0.7rem; }
     .sched-dep-cell, .sched-ds-cell { grid-column: auto; justify-content: center; }
     .theme-btn { width: 28px; height: 26px; }
+    .status-bar .shift-indicator { font-size: 0.64rem; padding: 2px 7px; }
+    .status-bar .shift-indicator #shiftIndicatorText { display: none; }
+    .status-bar .shift-indicator .shift-dot { width: 6px; height: 6px; }
   }
 </style>
 </head>
@@ -980,6 +1024,10 @@
       </span>
     </div>
     <div class="status-right">
+      <span class="shift-indicator day" id="shiftIndicator" title="Текущая смена">
+        <span class="shift-dot"></span>
+        <span id="shiftIndicatorText">Дневная смена</span>
+      </span>
       <span id="statusUser">—</span>
       <span class="battery" title="Заряд батареи">
         <span class="bat-body"><span class="bat-level" id="batLevel" style="width:100%"></span></span>
@@ -1483,6 +1531,8 @@
   const statusNetwork = $("statusNetwork");
   const batLevel = $("batLevel");
   const batText = $("batText");
+  const shiftIndicator = $("shiftIndicator");
+  const shiftIndicatorText = $("shiftIndicatorText");
 
   const deskSwitcher = $("deskSwitcher");
   const deskBtn = $("deskBtn");
@@ -1621,11 +1671,38 @@
     });
   }
 
-  /* Часы */
+  /* Часы + индикатор смены */
+  function getCurrentShift(date) {
+    const d = date || new Date();
+    const day = d.getDay(); // 0 = Вс, 6 = Сб
+    const isWeekend = (day === 0 || day === 6);
+    const h = d.getHours();
+
+    // Дневная смена:
+    //   Пн–Пт: 10:00–22:00
+    //   Сб–Вс: 11:00–22:00
+    // Ночная смена — всё остальное время.
+    if (isWeekend) {
+      if (h >= 11 && h < 22) return "day";
+    } else {
+      if (h >= 10 && h < 22) return "day";
+    }
+    return "night";
+  }
+
+  function renderShiftIndicator() {
+    if (!shiftIndicator || !shiftIndicatorText) return;
+    const shift = getCurrentShift(new Date());
+    shiftIndicator.classList.toggle("day", shift === "day");
+    shiftIndicator.classList.toggle("night", shift === "night");
+    shiftIndicatorText.textContent = shift === "day" ? "Дневная смена" : "Ночная смена";
+  }
+
   function tickClock() {
     const d = new Date();
     const pad = (n) => String(n).padStart(2, "0");
     statusClock.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+    renderShiftIndicator();
   }
   setInterval(tickClock, 1000);
   tickClock();

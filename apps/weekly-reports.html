@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="dark" data-theme-mode="dark">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,58 +46,7 @@
 
   --gold: #fbbf24;
 
-  --input-bg: #0c1420;
-  --toast-bg: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
-  --modal-bg: linear-gradient(180deg, #16202e 0%, #1c2839 100%);
-
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* ============================================================
-   СВЕТЛАЯ ТЕМА
-   ============================================================ */
-:root[data-theme="light"] {
-  --bg: #f5f7fa;
-  --bg-2: #ffffff;
-  --panel: #ffffff;
-  --panel-2: #f0f4f8;
-  --panel-3: #e2e8f0;
-  --text: #1a202c;
-  --text-soft: #2d3748;
-  --muted: #64748b;
-  --border: #cbd5e0;
-  --border-strong: #94a3b8;
-
-  --accent: #16a34a;
-  --accent-2: #15803d;
-  --accent-bg: rgba(22,163,74,0.12);
-  --accent-border: rgba(22,163,74,0.4);
-
-  --blue: #2563eb;
-  --blue-bg: rgba(37,99,235,0.1);
-  --blue-border: rgba(37,99,235,0.4);
-
-  --amber: #d97706;
-  --amber-bg: rgba(217,119,6,0.1);
-  --amber-border: rgba(217,119,6,0.4);
-
-  --red: #dc2626;
-  --red-bg: rgba(220,38,38,0.1);
-  --red-border: rgba(220,38,38,0.4);
-
-  --purple: #7c3aed;
-  --purple-bg: rgba(124,58,237,0.1);
-  --purple-border: rgba(124,58,237,0.4);
-
-  --cyan: #0891b2;
-  --cyan-bg: rgba(8,145,178,0.1);
-  --cyan-border: rgba(8,145,178,0.4);
-
-  --gold: #f59e0b;
-
-  --input-bg: #ffffff;
-  --toast-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
-  --modal-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
 }
 
 html, body { height: 100%; }
@@ -113,10 +62,6 @@ body {
   padding: 16px 16px 24px;
   display: flex; flex-direction: column; align-items: center;
   scrollbar-width: none; -ms-overflow-style: none;
-  transition: background 0.25s, color 0.25s;
-}
-:root[data-theme="light"] body {
-  background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 60%);
 }
 
 .wrap { max-width: 1100px; width: 100%; }
@@ -134,8 +79,8 @@ body {
   transition: background .15s, color .15s, border-color .15s;
 }
 .tab-btn:hover { background: var(--panel-3); color: var(--text); }
-.tab-btn.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent-2); }
-.tab-btn.tab-debtors.active { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+.tab-btn.active { background: var(--accent-bg); border-color: var(--accent-border); color: #86efac; }
+.tab-btn.tab-debtors.active { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
 .tab-btn svg { width: 15px; height: 15px; }
 .tab-btn .count {
   display: inline-block;
@@ -147,8 +92,8 @@ body {
   font-size: 0.7rem; font-weight: 800;
   line-height: 20px; text-align: center;
 }
-.tab-btn.active .count { background: var(--accent-bg); }
-.tab-btn.tab-debtors.active .count { background: var(--red-bg); }
+.tab-btn.active .count { background: rgba(47,158,68,0.35); }
+.tab-btn.tab-debtors.active .count { background: rgba(239,68,68,0.35); }
 
 .btn-bonus-open {
   display: inline-flex; align-items: center; gap: 8px;
@@ -174,21 +119,19 @@ body {
   padding: 20px;
   animation: fadeIn .18s ease;
 }
-:root[data-theme="light"] .modal-back { background: rgba(15,23,42,0.55); }
 .modal-back.hidden { display: none !important; }
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 
 .modal-bonus {
   width: 100%; max-width: 900px;
   max-height: calc(100vh - 40px);
-  background: var(--modal-bg);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,.75);
   display: flex; flex-direction: column;
   overflow: hidden;
 }
-:root[data-theme="light"] .modal-bonus { box-shadow: 0 20px 60px rgba(15,23,42,.25); }
 .modal-bonus-head {
   display: flex; align-items: center; justify-content: space-between;
   gap: 10px; padding: 16px 20px;
@@ -219,7 +162,7 @@ body {
   display: flex; gap: 4px;
   padding: 10px 20px 0;
   border-bottom: 1px solid var(--border);
-  background: var(--panel-2);
+  background: rgba(0,0,0,0.15);
 }
 .modal-bonus-tab {
   display: inline-flex; align-items: center; gap: 8px;
@@ -239,7 +182,7 @@ body {
   background: var(--panel-2);
   border-color: var(--border);
   border-bottom: 1px solid var(--panel-2);
-  color: var(--gold);
+  color: #fcd34d;
 }
 .modal-bonus-tab svg { width: 15px; height: 15px; }
 
@@ -247,6 +190,7 @@ body {
   padding: 18px 20px 20px;
   overflow-y: auto; flex: 1;
 }
+.modal-bonus-body::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 .bonus-section-title {
   font-size: 0.72rem; font-weight: 800;
@@ -258,7 +202,7 @@ body {
   display: grid; grid-template-columns: 1fr auto; gap: 10px;
   margin-bottom: 14px; align-items: stretch;
 }
-.bonus-instr-input-row input { padding: 11px 14px; font-size: 0.96rem; font-weight: 700; color: var(--text); }
+.bonus-instr-input-row input { padding: 11px 14px; font-size: 0.96rem; font-weight: 700; color: #fff; }
 
 .bonus-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .bonus-item {
@@ -281,20 +225,20 @@ body {
 .bonus-item.place-2 .b-place { background: linear-gradient(135deg,#e5e7eb,#9ca3af); color:#1a1207; }
 .bonus-item.place-3 .b-place { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
 .bonus-item .b-info { min-width: 0; }
-.bonus-item .b-name { font-weight: 700; color: var(--text); font-size: 0.92rem; }
+.bonus-item .b-name { font-weight: 700; color: #fff; font-size: 0.92rem; }
 .bonus-item .b-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
 .bonus-item .b-points {
-  font-weight: 800; font-size: 1rem; color: var(--accent-2);
+  font-weight: 800; font-size: 1rem; color: #86efac;
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .bonus-item .b-remove {
   width: 30px; height: 30px; border-radius: 8px;
   border: 1px solid var(--red-border); background: var(--red-bg);
-  color: var(--red); cursor: pointer;
+  color: var(--red-text); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   transition: background .15s, color .15s;
 }
-.bonus-item .b-remove:hover { background: var(--red-bg); filter: brightness(1.2); color: #fff; }
+.bonus-item .b-remove:hover { background: rgba(239,68,68,0.28); color: #fff; }
 .bonus-item .b-remove svg { width: 14px; height: 14px; }
 
 .bonus-add-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 16px; position: relative; }
@@ -303,7 +247,7 @@ body {
   padding: 10px 16px;
   font-size: 0.84rem; font-weight: 700;
   font-family: inherit;
-  color: var(--accent-2);
+  color: #86efac;
   background: var(--accent-bg);
   border: 1px solid var(--accent-border);
   border-radius: 10px;
@@ -323,7 +267,6 @@ body {
   max-height: 260px; overflow-y: auto;
   padding: 4px; display: none;
 }
-:root[data-theme="light"] .bonus-add-suggest { box-shadow: 0 12px 32px rgba(15,23,42,.15); }
 .bonus-add-suggest.open { display: block; }
 .bonus-add-suggest .s-item {
   display: flex; align-items: center; justify-content: space-between;
@@ -332,9 +275,9 @@ body {
   transition: background .12s; font-size: 0.86rem;
 }
 .bonus-add-suggest .s-item:hover { background: var(--accent-bg); }
-.bonus-add-suggest .s-name { font-weight: 600; color: var(--text); }
+.bonus-add-suggest .s-name { font-weight: 600; color: #fff; }
 .bonus-add-suggest .s-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-.bonus-add-suggest .s-pass { color: var(--accent-2); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bonus-add-suggest .s-pass { color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .bonus-add-suggest .s-empty { padding: 10px; color: var(--muted); font-size: 0.8rem; text-align: center; }
 
 .bonus-copy-bar {
@@ -344,8 +287,8 @@ body {
   background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(217,119,6,0.06));
   border: 1px solid rgba(251,191,36,0.4);
 }
-.bonus-copy-bar .bar-info { font-size: 0.88rem; color: var(--gold); font-weight: 600; }
-.bonus-copy-bar .bar-info b { color: var(--text); font-weight: 800; }
+.bonus-copy-bar .bar-info { font-size: 0.88rem; color: #fcd34d; font-weight: 600; }
+.bonus-copy-bar .bar-info b { color: #fff; font-weight: 800; }
 
 .btn-copy-bonus {
   display: inline-flex; align-items: center; gap: 8px;
@@ -392,33 +335,33 @@ body {
 .instr-item.place-1 .b-place { background: linear-gradient(135deg,#fbbf24,#d97706); color:#1a1207; }
 .instr-item.place-2 .b-place { background: linear-gradient(135deg,#e5e7eb,#9ca3af); color:#1a1207; }
 .instr-item.place-3 .b-place { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
-.instr-item .i-name { font-weight: 700; color: var(--text); font-size: 0.92rem; }
+.instr-item .i-name { font-weight: 700; color: #fff; font-size: 0.92rem; }
 .instr-item .i-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
-.instr-item .i-points { font-weight: 800; font-size: 1rem; color: var(--accent-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.instr-item .i-sum { font-weight: 800; font-size: 1rem; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.instr-item .i-points { font-weight: 800; font-size: 1rem; color: #86efac; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.instr-item .i-sum { font-weight: 800; font-size: 1rem; color: #fcd34d; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .instr-total-box {
   padding: 12px 14px;
   background: rgba(251,191,36,0.08);
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid #fbbf24;
   border-radius: 8px;
   margin-bottom: 12px;
   font-size: 0.9rem;
-  color: var(--gold);
+  color: #fcd34d;
   line-height: 1.6;
 }
-.instr-total-box b { color: var(--text); font-weight: 800; }
-.instr-total-box .big { font-size: 1.05rem; color: var(--text); font-weight: 800; }
+.instr-total-box b { color: #fff; font-weight: 800; }
+.instr-total-box .big { font-size: 1.05rem; color: #fff; font-weight: 800; }
 .instr-total-box .share {
   display: inline-block; margin-top: 4px;
   padding: 4px 10px; border-radius: 6px;
-  background: var(--panel-3);
-  color: var(--text); font-weight: 800;
+  background: rgba(255,255,255,0.06);
+  color: #fff; font-weight: 800;
 }
 
-.debtor-row.punished { background: var(--red-bg) !important; }
-.debtor-row.punished td { color: var(--red); }
-.debtor-row.punished .col-name { color: var(--red) !important; }
+.debtor-row.punished { background: rgba(239, 68, 68, 0.15) !important; }
+.debtor-row.punished td { color: #fca5a5; }
+.debtor-row.punished .col-name { color: #fecaca !important; }
 .punish-check {
   width: 20px; height: 20px; cursor: pointer;
   accent-color: var(--red); margin: 0 auto; display: block;
@@ -434,35 +377,34 @@ body {
   gap: 12px; flex-wrap: wrap;
   padding: 12px 16px;
   border-radius: 12px;
-  background: var(--modal-bg);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
   border: 1px solid var(--border);
   border-left: 4px solid var(--blue);
   margin-bottom: 14px;
 }
 .week-info { display: flex; flex-direction: column; gap: 2px; }
 .week-info .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
-.week-info .value { font-size: 1rem; font-weight: 700; color: var(--text); }
+.week-info .value { font-size: 1rem; font-weight: 700; color: #fff; }
 .week-info .sub { font-size: 0.78rem; color: var(--text-soft); }
 .week-status {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 14px;
   border-radius: 999px;
   font-size: 0.84rem; font-weight: 700; letter-spacing: 0.02em;
-  background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border);
+  background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border);
 }
-.week-status.open { background: var(--accent-bg); color: var(--accent-2); border-color: var(--accent-border); }
+.week-status.open { background: var(--accent-bg); color: #86efac; border-color: var(--accent-border); }
 .week-status .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .week-status.open .dot { animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.35 } }
 
 .card {
-  background: var(--modal-bg);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
-:root[data-theme="light"] .card { box-shadow: 0 6px 20px rgba(15,23,42,.08); }
 .card + .card { margin-top: 14px; }
 
 .card-head {
@@ -483,7 +425,7 @@ input[type="text"], input[type="number"], select {
   font-size: 0.88rem;
   font-family: inherit;
   color: var(--text);
-  background: var(--input-bg);
+  background: #0c1420;
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
@@ -492,9 +434,9 @@ input[type="text"], input[type="number"], select {
 }
 input:focus, select:focus {
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px var(--accent-bg);
+  box-shadow: 0 0 0 3px rgba(47,158,68,0.15);
 }
-input::placeholder { color: var(--muted); opacity: 0.7; }
+input::placeholder { color: #5b6b80; }
 select {
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238496ab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
@@ -503,7 +445,7 @@ select {
   padding-right: 34px;
   cursor: pointer;
 }
-select option { background: var(--input-bg); color: var(--text); }
+select option { background: #0c1420; color: var(--text); }
 
 .tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
 .tbl th {
@@ -523,8 +465,8 @@ select option { background: var(--input-bg); color: var(--text); }
 .tbl tr:hover { background: rgba(47,158,68,0.04); }
 .tbl .col-num { color: var(--muted); width: 40px; font-variant-numeric: tabular-nums; }
 .tbl .col-name { font-weight: 600; }
-.tbl .col-pass { color: var(--accent-2); font-weight: 700; font-variant-numeric: tabular-nums; }
-.tbl .col-rank { color: var(--purple); font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
+.tbl .col-pass { color: #86efac; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tbl .col-rank { color: #c4b5fd; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
 .tbl .col-points { text-align: center; }
 .tbl .col-norm { text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tbl .col-status { text-align: center; white-space: nowrap; }
@@ -534,38 +476,38 @@ select option { background: var(--input-bg); color: var(--text); }
   width: 90px;
   padding: 6px 10px;
   font-size: 0.9rem; font-weight: 700; text-align: center;
-  background: var(--input-bg);
+  background: #0d1520;
   border: 1px solid var(--border);
   border-radius: 8px;
-  color: var(--text);
+  color: #fff;
   font-variant-numeric: tabular-nums;
 }
 .tbl .points-input:focus {
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px var(--accent-bg);
+  box-shadow: 0 0 0 3px rgba(47,158,68,0.2);
 }
 .tbl .points-input[readonly] {
   background: transparent; border-color: transparent;
-  color: var(--text); cursor: default;
+  color: #fff; cursor: default;
 }
 .tbl .points-input.dirty {
   border-color: var(--amber);
-  box-shadow: 0 0 0 3px var(--amber-bg);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
 }
 
 .tbl .seniority-input {
   width: 90px;
   padding: 6px 10px;
   font-size: 0.9rem; font-weight: 700; text-align: center;
-  background: var(--input-bg);
+  background: #0d1520;
   border: 1px solid var(--border);
   border-radius: 8px;
-  color: var(--accent-2);
+  color: #86efac;
   font-variant-numeric: tabular-nums;
 }
 .tbl .seniority-input:focus {
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px var(--accent-bg);
+  box-shadow: 0 0 0 3px rgba(47,158,68,0.2);
 }
 
 .points-cell { display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
@@ -584,10 +526,10 @@ select option { background: var(--input-bg); color: var(--text); }
 .save-btn:not(:disabled):hover {
   border-color: var(--accent-2);
   background: var(--accent-bg);
-  color: var(--accent-2);
+  color: #86efac;
 }
-.save-btn.saving { border-color: var(--amber); color: var(--amber); }
-.save-btn.saved-ok { border-color: var(--accent); background: var(--accent-bg); color: var(--accent-2); }
+.save-btn.saving { border-color: var(--amber); color: #fcd34d; }
+.save-btn.saved-ok { border-color: var(--accent); background: var(--accent-bg); color: #86efac; }
 .save-btn svg { width: 15px; height: 15px; }
 .save-btn .spin { animation: spin 1s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -599,15 +541,15 @@ select option { background: var(--input-bg); color: var(--text); }
   font-size: 0.74rem; font-weight: 700;
   letter-spacing: 0.02em; white-space: nowrap;
 }
-.status-pill.ok       { background: var(--accent-bg); color: var(--accent-2); border: 1px solid var(--accent-border); }
-.status-pill.warn     { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-.status-pill.bad      { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
-.status-pill.norm     { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
-.status-pill.exempt   { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
-.status-pill.vacation { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
-.status-pill.instr    { background: var(--cyan-bg); color: var(--cyan); border: 1px solid var(--cyan-border); }
+.status-pill.ok       { background: var(--accent-bg); color: #86efac; border: 1px solid var(--accent-border); }
+.status-pill.warn     { background: var(--amber-bg); color: #fcd34d; border: 1px solid var(--amber-border); }
+.status-pill.bad      { background: var(--red-bg); color: #fca5a5; border: 1px solid var(--red-border); }
+.status-pill.norm     { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
+.status-pill.exempt   { background: var(--purple-bg); color: #c4b5fd; border: 1px solid var(--purple-border); }
+.status-pill.vacation { background: var(--blue-bg); color: #93c5fd; border: 1px solid var(--blue-border); }
+.status-pill.instr    { background: var(--cyan-bg); color: #67e8f9; border: 1px solid var(--cyan-border); }
 .status-pill[data-comment] { cursor: pointer; transition: filter 0.15s, transform 0.1s; }
-.status-pill[data-comment]:hover { filter: brightness(1.15); }
+.status-pill[data-comment]:hover { filter: brightness(1.25); }
 .status-pill[data-comment]:active { transform: scale(0.96); }
 
 .btn {
@@ -626,11 +568,11 @@ select option { background: var(--input-bg); color: var(--text); }
 .btn svg { width: 13px; height: 13px; }
 .btn:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-primary { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent-2); }
+.btn-primary { background: var(--accent-bg); border-color: var(--accent-border); color: #86efac; }
 .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-.btn-warn { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
-.btn-warn:hover { background: var(--amber); border-color: var(--amber); color: #fff; }
-.btn-danger { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+.btn-warn { background: var(--amber-bg); border-color: var(--amber-border); color: #fcd34d; }
+.btn-warn:hover { background: var(--amber); border-color: var(--amber); color: #1a1207; }
+.btn-danger { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
 .btn-danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
 .btn-icon {
   width: 30px; height: 30px; padding: 0;
@@ -647,9 +589,9 @@ select option { background: var(--input-bg); color: var(--text); }
 .btn-icon:first-child { margin-left: 0; }
 .btn-icon svg { width: 14px; height: 14px; }
 .btn-icon:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
-.btn-icon.warn:hover    { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
-.btn-icon.danger:hover  { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
-.btn-icon.purple:hover  { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
+.btn-icon.warn:hover    { background: var(--amber-bg); border-color: var(--amber-border); color: #fcd34d; }
+.btn-icon.danger:hover  { background: var(--red-bg); border-color: var(--red-border); color: #fca5a5; }
+.btn-icon.purple:hover  { background: var(--purple-bg); border-color: var(--purple-border); color: #c4b5fd; }
 
 .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 720px) { .top-grid { grid-template-columns: 1fr; } }
@@ -687,10 +629,10 @@ select option { background: var(--input-bg); color: var(--text); }
 .top-sub  { font-size: 0.72rem; color: var(--muted); }
 .top-points {
   font-weight: 800; font-size: 1.05rem;
-  color: var(--accent-2);
+  color: #86efac;
   font-variant-numeric: tabular-nums;
 }
-.top-points.instr { color: var(--purple); }
+.top-points.instr { color: #c4b5fd; }
 
 .week-select-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
 .week-select-row label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
@@ -698,13 +640,12 @@ select option { background: var(--input-bg); color: var(--text); }
 
 .modal {
   width: 100%; max-width: 460px;
-  background: var(--modal-bg);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
   border: 1px solid var(--border-strong);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 20px 60px rgba(0,0,0,.7);
 }
-:root[data-theme="light"] .modal { box-shadow: 0 20px 60px rgba(15,23,42,.25); }
 .modal h3 {
   font-size: 1.05rem; font-weight: 700;
   display: flex; align-items: center; gap: 10px;
@@ -713,11 +654,11 @@ select option { background: var(--input-bg); color: var(--text); }
 .modal h3 .m-icon {
   width: 34px; height: 34px; border-radius: 10px;
   display: inline-flex; align-items: center; justify-content: center;
-  background: var(--amber-bg); color: var(--amber);
+  background: var(--amber-bg); color: #fcd34d;
   flex-shrink: 0;
 }
 .modal h3 .m-icon svg { width: 18px; height: 18px; }
-.modal h3 .m-icon.purple { background: var(--purple-bg); color: var(--purple); }
+.modal h3 .m-icon.purple { background: var(--purple-bg); color: #c4b5fd; }
 .modal-who {
   padding: 10px 12px;
   border-radius: 9px;
@@ -726,7 +667,7 @@ select option { background: var(--input-bg); color: var(--text); }
   margin-bottom: 12px;
   font-size: 0.86rem;
 }
-.modal-who .name { font-weight: 700; color: var(--text); }
+.modal-who .name { font-weight: 700; color: #fff; }
 .modal-who .sub { color: var(--muted); font-size: 0.76rem; margin-top: 2px; }
 .modal label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
 .modal textarea {
@@ -734,18 +675,18 @@ select option { background: var(--input-bg); color: var(--text); }
   padding: 10px 12px;
   font-family: inherit;
   font-size: 0.9rem;
-  background: var(--input-bg);
+  background: #0d1520;
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 8px;
   resize: vertical;
   outline: none;
 }
-.modal textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px var(--accent-bg); }
+.modal textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(47,158,68,0.2); }
 .modal-read-block {
   padding: 12px 14px;
   border-radius: 10px;
-  background: var(--input-bg);
+  background: #0d1520;
   border: 1px solid var(--border);
   font-size: 0.9rem;
   line-height: 1.55;
@@ -759,7 +700,7 @@ select option { background: var(--input-bg); color: var(--text); }
 .toast {
   position: fixed; top: 14px; left: 50%;
   transform: translate(-50%, -120%);
-  background: var(--toast-bg);
+  background: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
   border: 1px solid var(--border-strong);
   border-left: 4px solid var(--accent);
   border-radius: 10px; padding: 10px 14px;
@@ -770,7 +711,6 @@ select option { background: var(--input-bg); color: var(--text); }
   transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
   max-width: calc(100% - 32px);
 }
-:root[data-theme="light"] .toast { box-shadow: 0 12px 32px rgba(15,23,42,.15); }
 .toast.show { transform: translate(-50%, 0); opacity: 1; }
 .toast.alert { border-left-color: var(--red); }
 .toast.info  { border-left-color: var(--blue); }
@@ -869,7 +809,7 @@ select option { background: var(--input-bg); color: var(--text); }
   <div class="card" id="tab-current">
     <div class="card-head">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
           <circle cx="9" cy="7" r="4"/>
         </svg>
@@ -898,7 +838,7 @@ select option { background: var(--input-bg); color: var(--text); }
         <option value="vacation">🌴 В отпуске</option>
       </select>
       <div style="display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:0.82rem;">
-        Всего: <b id="totalSmp" style="margin-left:6px;color:var(--accent-2);">0</b>
+        Всего: <b id="totalSmp" style="margin-left:6px;color:#86efac;">0</b>
       </div>
     </div>
 
@@ -908,7 +848,7 @@ select option { background: var(--input-bg); color: var(--text); }
   <div class="card hidden" id="tab-instr">
     <div class="card-head">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
         Инструкторы СМП (любой ранг)
@@ -926,7 +866,7 @@ select option { background: var(--input-bg); color: var(--text); }
         <option value="vacation">🌴 В отпуске</option>
       </select>
       <div style="display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:0.82rem;">
-        Всего: <b id="totalInstr" style="margin-left:6px;color:var(--purple);">0</b>
+        Всего: <b id="totalInstr" style="margin-left:6px;color:#c4b5fd;">0</b>
       </div>
     </div>
 
@@ -937,7 +877,7 @@ select option { background: var(--input-bg); color: var(--text); }
     <div class="card" style="margin-bottom:14px;">
       <div class="card-head" style="margin-bottom:0;">
         <h2>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z"/>
           </svg>
           Премии недели
@@ -955,7 +895,7 @@ select option { background: var(--input-bg); color: var(--text); }
       <div class="card">
         <div class="card-head">
           <h2>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
               <path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
             </svg>
@@ -968,7 +908,7 @@ select option { background: var(--input-bg); color: var(--text); }
       <div class="card">
         <div class="card-head">
           <h2>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
             </svg>
             Топ-5 по инструкторским
@@ -982,16 +922,13 @@ select option { background: var(--input-bg); color: var(--text); }
   <div class="card hidden" id="tab-debtors">
     <div class="card-head">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
           <line x1="12" y1="9" x2="12" y2="13"/>
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
         Должники рабочей недели
       </h2>
-      <div style="font-size:0.8rem;color:var(--muted);">
-        Отметьте галочку, если взыскание выдано
-      </div>
     </div>
 
     <div class="toolbar">
@@ -1002,7 +939,7 @@ select option { background: var(--input-bg); color: var(--text); }
         <option value="punished">С взысканием</option>
       </select>
       <div style="display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:0.82rem;">
-        Всего: <b id="totalDebtors" style="margin-left:6px;color:var(--red);">0</b>
+        Всего: <b id="totalDebtors" style="margin-left:6px;color:#fca5a5;">0</b>
       </div>
     </div>
 
@@ -1012,7 +949,7 @@ select option { background: var(--input-bg); color: var(--text); }
   <div class="card hidden" id="tab-history">
     <div class="card-head">
       <h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
         История недель
@@ -1071,6 +1008,7 @@ select option { background: var(--input-bg); color: var(--text); }
     </div>
 
     <div class="modal-bonus-body">
+      <!-- =============== ВКЛАДКА: ОБЩАЯ ПРЕМИЯ =============== -->
       <div id="bonusTabGeneral">
         <div class="bonus-section-title">Сколько премий выдать на этой неделе</div>
         <div class="bonus-instr-input-row">
@@ -1104,6 +1042,7 @@ select option { background: var(--input-bg); color: var(--text); }
         </div>
       </div>
 
+      <!-- =============== ВКЛАДКА: ПРЕМИЯ ИНСТРУКТОРОВ =============== -->
       <div id="bonusTabInstr" class="hidden">
         <div class="instr-coeff-row">
           <div class="form-group">
@@ -1218,76 +1157,6 @@ select option { background: var(--input-bg); color: var(--text); }
 (function () {
   "use strict";
 
-  /* ============================================================
-     ТЕМА
-     ============================================================ */
-  const THEME_KEY = "pref_theme";
-
-  function systemTheme() {
-    try {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    } catch (e) { return "dark"; }
-  }
-  function resolveThemeMode(mode) {
-    if (mode === "auto") return systemTheme();
-    return mode === "light" ? "light" : "dark";
-  }
-  function applyThemeMode(mode) {
-    if (!["light","dark","auto"].includes(mode)) mode = "dark";
-    const resolved = resolveThemeMode(mode);
-    document.documentElement.setAttribute("data-theme", resolved);
-    document.documentElement.setAttribute("data-theme-mode", mode);
-  }
-  function initTheme() {
-    const p = new URLSearchParams(location.search);
-    const urlTheme = p.get("theme");
-    if (urlTheme && ["light","dark","auto"].includes(urlTheme)) {
-      applyThemeMode(urlTheme);
-      return;
-    }
-    try {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved && ["light","dark","auto"].includes(saved)) {
-        applyThemeMode(saved);
-        return;
-      }
-    } catch (e) {}
-    applyThemeMode("dark");
-  }
-
-  window.addEventListener("message", (e) => {
-    if (!e.data || typeof e.data !== "object") return;
-    if (e.data.type === "theme" && e.data.mode) {
-      applyThemeMode(e.data.mode);
-    }
-  });
-
-  try {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    if (mq && mq.addEventListener) {
-      mq.addEventListener("change", () => {
-        const mode = document.documentElement.getAttribute("data-theme-mode");
-        if (mode === "auto") applyThemeMode("auto");
-      });
-    } else if (mq && mq.addListener) {
-      mq.addListener(() => {
-        const mode = document.documentElement.getAttribute("data-theme-mode");
-        if (mode === "auto") applyThemeMode("auto");
-      });
-    }
-  } catch (e) {}
-
-  initTheme();
-
-  try {
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ type: "theme-request" }, "*");
-    }
-  } catch (e) {}
-
-  /* ============================================================
-     ОСНОВНАЯ ЛОГИКА
-     ============================================================ */
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
 
   const NORM_SMP = 300;
@@ -1683,7 +1552,7 @@ select option { background: var(--input-bg); color: var(--text); }
         '<td class="col-hide-sm" style="text-align:center;">' +
           (canEdit
             ? '<input type="number" min="0" step="1" class="seniority-input" data-name="' + esc(x.staff.name) + '" value="' + esc(seniorityVal) + '" placeholder="0">'
-            : '<span style="color:var(--accent-2);font-weight:700;">' + (seniorityVal || "—") + '</span>'
+            : '<span style="color:#86efac;font-weight:700;">' + (seniorityVal || "—") + '</span>'
           ) +
         '</td>' +
         '<td class="col-points">' +
@@ -1807,7 +1676,7 @@ select option { background: var(--input-bg); color: var(--text); }
         '<td class="col-hide-sm" style="text-align:center;">' +
           (canEdit
             ? '<input type="number" min="0" step="1" class="seniority-input" data-name="' + esc(x.staff.name) + '" value="' + esc(seniorityVal) + '" placeholder="0">'
-            : '<span style="color:var(--accent-2);font-weight:700;">' + (seniorityVal || "—") + '</span>'
+            : '<span style="color:#86efac;font-weight:700;">' + (seniorityVal || "—") + '</span>'
           ) +
         '</td>' +
         '<td class="col-points">' +
@@ -2200,25 +2069,61 @@ select option { background: var(--input-bg); color: var(--text); }
     return row;
   }
 
-  function renderDebtorsTab() {
+  /* ============================================================
+     ДОЛЖНИКИ — с фиксацией
+     ============================================================ */
+  async function renderDebtorsTab() {
     if (!isAdmin()) {
       $("tabDebtorsBtn").classList.add("hidden");
       return;
     }
     $("tabDebtorsBtn").classList.remove("hidden");
 
-    const allStaff = [...getSmpStaff(), ...getInstrStaff()];
-    const debtors = [];
-    allStaff.forEach(s => {
-      const report = findReportFor(s.name);
-      const status = computeStatus(s, report);
-      if (status.key === "missing") {
-        debtors.push({
-          staff: s, report: report,
+    // Загружаем зафиксированный список
+    let frozen = null;
+    try {
+      const data = await apiPost({
+        action: "getFrozenDebtors",
+        weekId: state.weekId
+      });
+      if (data && data.success && data.frozen) frozen = data;
+    } catch (e) {
+      console.error("getFrozenDebtors:", e);
+    }
+
+    let debtors;
+
+    if (frozen) {
+      debtors = frozen.debtors.map(d => {
+        const staffItem = state.staff.find(s =>
+          String(s.name || "").trim().toLowerCase() === String(d.name).trim().toLowerCase()
+        );
+        const report = findReportFor(d.name);
+        return {
+          staff: staffItem || {
+            name: d.name,
+            passport: d.passport,
+            rank: d.rank,
+            department: d.department
+          },
+          report: report,
           punished: report ? !!report.punished : false
-        });
-      }
-    });
+        };
+      });
+    } else {
+      const allStaff = [...getSmpStaff(), ...getInstrStaff()];
+      debtors = [];
+      allStaff.forEach(s => {
+        const report = findReportFor(s.name);
+        const status = computeStatus(s, report);
+        if (status.key === "missing") {
+          debtors.push({
+            staff: s, report: report,
+            punished: report ? !!report.punished : false
+          });
+        }
+      });
+    }
 
     const q = ($("searchDebtors").value || "").trim().toLowerCase();
     const filterP = $("filterDebtors").value;
@@ -2233,6 +2138,8 @@ select option { background: var(--input-bg); color: var(--text); }
 
     $("totalDebtors").textContent = String(filtered.length);
     $("countDebtors").textContent = String(debtors.length);
+
+    updateDebtorsHeader(frozen);
 
     const cont = $("debtorsContainer");
     if (!filtered.length) {
@@ -2323,6 +2230,113 @@ select option { background: var(--input-bg); color: var(--text); }
     cont.appendChild(table);
   }
 
+  function updateDebtorsHeader(frozen) {
+    const head = document.querySelector("#tab-debtors .card-head");
+    if (!head) return;
+
+    const old = head.querySelector(".freeze-panel");
+    if (old) old.remove();
+
+    const panel = document.createElement("div");
+    panel.className = "freeze-panel";
+
+    if (frozen) {
+      const when = frozen.frozenAt ? frozen.frozenAt.slice(0, 10) : "";
+      panel.innerHTML =
+        '<span style="font-size:0.78rem;color:#86efac;font-weight:700;">' +
+        '🔒 Зафиксировано ' + esc(formatHuman(when)) +
+        ' · ' + frozen.debtors.length + ' чел.' +
+        (frozen.frozenBy ? ' · ' + esc(frozen.frozenBy) : '') +
+        '</span>' +
+        '<button class="btn btn-warn" id="unfreezeBtn" type="button" style="margin-left:auto;">' +
+        '🔓 Расфиксировать' +
+        '</button>';
+    } else {
+      panel.innerHTML =
+        '<span style="font-size:0.78rem;color:#fcd34d;font-weight:700;">' +
+        '⚠️ Список не зафиксирован — данные могут меняться' +
+        '</span>' +
+        '<button class="btn btn-primary" id="freezeBtn" type="button" style="margin-left:auto;">' +
+        '🔒 Зафиксировать должников' +
+        '</button>';
+    }
+
+    head.appendChild(panel);
+
+    const freezeBtn = document.getElementById("freezeBtn");
+    if (freezeBtn) freezeBtn.addEventListener("click", freezeDebtors);
+
+    const unfreezeBtn = document.getElementById("unfreezeBtn");
+    if (unfreezeBtn) unfreezeBtn.addEventListener("click", unfreezeDebtors);
+  }
+
+  async function freezeDebtors() {
+    if (!isAdmin()) return;
+
+    const allStaff = [...getSmpStaff(), ...getInstrStaff()];
+    const list = [];
+    allStaff.forEach(s => {
+      const report = findReportFor(s.name);
+      const status = computeStatus(s, report);
+      if (status.key === "missing") {
+        list.push({
+          name: s.name,
+          passport: s.passport || "",
+          rank: s.rank || "",
+          department: s.department || ""
+        });
+      }
+    });
+
+    if (!list.length) {
+      if (!confirm("Список должников пуст. Всё равно зафиксировать (пустой список)?")) return;
+    } else {
+      if (!confirm("Зафиксировать " + list.length + " должников на неделю " + formatRange(state.weekId) + "?\n\nПосле этого изменения в недельных отчётах НЕ БУДУТ менять этот список.")) return;
+    }
+
+    try {
+      const data = await apiPost({
+        action: "freezeDebtors",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId,
+        debtors: list
+      });
+      if (data && data.success) {
+        showToast("🔒 Зафиксировано: " + (data.saved || 0), "success");
+        await renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка", "alert");
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
+  async function unfreezeDebtors() {
+    if (!isAdmin()) return;
+    if (!confirm("Расфиксировать список должников?\n\nПосле этого он снова станет «живым».")) return;
+
+    try {
+      const data = await apiPost({
+        action: "unfreezeDebtors",
+        login: state.user.login,
+        hash: state.user.hash,
+        weekId: state.weekId
+      });
+      if (data && data.success) {
+        showToast("🔓 Расфиксировано", "info");
+        await renderDebtorsTab();
+      } else {
+        showToast(data.message || "Ошибка", "alert");
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
   function renderHistoryTab() {
     const sel = $("weekSelect");
     sel.innerHTML = "";
@@ -2362,6 +2376,9 @@ select option { background: var(--input-bg); color: var(--text); }
     }
   }
 
+  /* ============================================================
+     МОДАЛКА ПРЕМИЙ
+     ============================================================ */
   function openBonusModal() {
     if (!isAdmin()) return;
     state.bonusModalTab = "general";

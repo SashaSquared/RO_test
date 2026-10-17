@@ -623,19 +623,22 @@
   }
   @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
 
+  /* ===== Изменено: iframe-wrap теперь растягивается под содержимое ===== */
   .iframe-wrap {
     width: 100%;
-    height: calc(100vh - 200px);
-    min-height: 520px;
+    height: auto;
+    min-height: 600px;
     background: var(--bg-2);
     border: 1px solid var(--border);
     border-radius: 16px;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
     box-shadow: var(--card-shadow);
   }
   .iframe-wrap iframe {
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
     border: 0; display: block;
     background: var(--bg-2);
   }
@@ -1030,7 +1033,7 @@
     .toast .toast-icon svg { width: 18px; height: 18px; }
     .toast .toast-title { font-size: 0.8rem; }
     .toast .toast-text { font-size: 0.75rem; }
-    .iframe-wrap { height: calc(100vh - 260px); min-height: 400px; }
+    .iframe-wrap { min-height: 400px; }
     .sched-item { grid-template-columns: 1fr auto; gap: 8px; padding: 10px 12px; }
     .sched-day { grid-column: 1 / -1; font-size: 0.7rem; }
     .sched-dep-cell, .sched-ds-cell { grid-column: auto; justify-content: center; }
@@ -3417,6 +3420,10 @@
       loadVacations();
     } else if (e.data.type === "staff-changed") {
       // Ничего не нужно
+    } else if (e.data.type === "resize-iframe") {
+      if (appIframe) {
+        appIframe.style.height = e.data.height + "px";
+      }
     } else if (e.data.type === "theme-request") {
       broadcastTheme();
     }

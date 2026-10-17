@@ -408,6 +408,10 @@
     color: var(--muted); font-style: italic; font-size: 0.82rem;
   }
   .report-remarks strong { color: var(--text); font-style: normal; }
+  
+  /* ============================================================
+     BOTTOM BAR
+     ============================================================ */
   .bottombar {
     position: sticky; bottom: 8px; z-index: 30; width: 100%; margin-top: 14px;
     background: var(--bottombar-bg);
@@ -440,6 +444,7 @@
   .summary-item .mark.bad { color: #fca5a5; }
   :root[data-theme="light"] .summary-item .mark.bad { color: #991b1b; }
   .summary-item .norm { font-size: 0.7rem; color: var(--muted); }
+  
   .hidden { display: none !important; }
   .row-hidden { display: none !important; }
   .draft-badge {
@@ -507,14 +512,53 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }
+
+  /* ============================================================
+     MOBILE / ADAPTIVE
+     ============================================================ */
   @media (max-width: 640px) {
     body { padding: 12px 12px 20px; }
     .card { padding: 14px; border-radius: 14px; }
     th, td { padding: 8px 6px; font-size: 0.78rem; }
-    .bottombar { padding: 10px 12px; border-radius: 14px; }
-    .bottombar-buttons .btn { padding: 9px 12px; font-size: 0.78rem; }
-    .bottombar-summary { gap: 14px; }
+    
+    /* Исправленная нижняя панель */
+    .bottombar { 
+      padding: 12px; 
+      border-radius: 14px; 
+    }
+    .bottombar-inner { 
+      flex-direction: column; 
+      align-items: stretch; 
+      gap: 12px; 
+    }
+    .bottombar-buttons { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 8px;
+      width: 100%;
+    }
+    .bottombar-buttons .btn { 
+      padding: 10px 8px; 
+      font-size: 0.8rem; 
+      width: 100%;
+      justify-content: center;
+    }
+    .bottombar-buttons .btn:first-child {
+      grid-column: 1 / -1;
+    }
+    .bottombar-summary { 
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .summary-item {
+      align-items: center;
+    }
     .summary-item .val { font-size: 1.1rem; }
+
     .btn { padding: 10px 14px; font-size: 0.86rem; }
     .draft-badge { top: 8px; right: 8px; font-size: 0.7rem; }
   }
@@ -1054,7 +1098,7 @@
 
   function isPromo() { return mode !== "weekly"; }
 
-  /* ============ ВЫСЛУГА ЛЕТ — мост через localStorage (свой + top + session) ============ */
+  /* ============ ВЫСЛУГА ЛЕТ — мост через localStorage ============ */
   function getTopStorageSmp() {
     try {
       if (window.top && window.top !== window) return window.top.localStorage;
@@ -1096,7 +1140,7 @@
   }
 
   /* ============================================================
-     ОЧИСТКА НУЛЯ ПРИ ФОКУСЕ (Вариант A)
+     ОЧИСТКА НУЛЯ ПРИ ФОКУСЕ
      ============================================================ */
   function attachZeroClear(input) {
     if (!input || input._zeroClearAttached) return;

@@ -86,19 +86,15 @@
     --save-btn-border: #94a3b8;
   }
 
-  /* ===== Изменено: гибкая высота вместо фиксированной ===== */
-  html, body { min-height: 100%; height: auto; }
+  html, body { height: 100%; }
   html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
-  
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background: var(--body-bg); color: var(--text); line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    padding: 16px 16px 100px; /* увеличен нижний отступ под панель */
+    padding: 16px 16px 24px;
     display: flex; flex-direction: column; align-items: center;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: none; -ms-overflow-style: none;
+    overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;
     transition: background 0.25s, color 0.25s;
   }
   .tablet { max-width: 1100px; width: 100%; display: flex; flex-direction: column; }
@@ -412,17 +408,8 @@
     color: var(--muted); font-style: italic; font-size: 0.82rem;
   }
   .report-remarks strong { color: var(--text); font-style: normal; }
-
-  /* ===== Изменено: панель фиксируется по низу окна ===== */
   .bottombar {
-    position: fixed;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 32px);
-    max-width: 1100px;
-    z-index: 100;
-
+    position: sticky; bottom: 8px; z-index: 30; width: 100%; margin-top: 14px;
     background: var(--bottombar-bg);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border); border-radius: 16px;
@@ -521,7 +508,7 @@
     to { transform: rotate(360deg); }
   }
   @media (max-width: 640px) {
-    body { padding: 12px 12px 100px; }
+    body { padding: 12px 12px 20px; }
     .card { padding: 14px; border-radius: 14px; }
     th, td { padding: 8px 6px; font-size: 0.78rem; }
     .bottombar { padding: 10px 12px; border-radius: 14px; }
@@ -2827,29 +2814,6 @@
   }
 
   init();
-
-  // ===== Изменено: автоматическая подстройка высоты для родительского окна =====
-  function sendHeightToParent() {
-    if (window.parent && window.parent !== window) {
-      const height = Math.max(
-        document.body.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.clientHeight,
-        document.documentElement.scrollHeight,
-        document.documentElement.offsetHeight
-      );
-      window.parent.postMessage({ type: "resize-iframe", height: height }, "*");
-    }
-  }
-
-  window.addEventListener("load", sendHeightToParent);
-  window.addEventListener("resize", sendHeightToParent);
-  
-  try {
-    const observer = new MutationObserver(sendHeightToParent);
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-  } catch (e) {}
-
 })();
 </script>
 

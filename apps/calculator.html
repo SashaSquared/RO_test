@@ -410,7 +410,7 @@
   .report-remarks strong { color: var(--text); font-style: normal; }
   
   /* ============================================================
-     BOTTOM BAR (ИСПРАВЛЕНА)
+     BOTTOM BAR (АДАПТИВНЫЙ GRID)
      ============================================================ */
   .bottombar {
     position: sticky; bottom: 8px; z-index: 30; width: 100%; margin-top: 14px;
@@ -423,30 +423,30 @@
   :root[data-theme="light"] .bottombar { box-shadow: 0 -8px 24px rgba(15,23,42,0.1); }
   
   .bottombar-inner {
-    display: flex; 
-    flex-wrap: wrap; 
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    justify-content: space-between; 
     gap: 16px;
+    width: 100%;
   }
   
   .bottombar-buttons { 
     display: flex; 
     flex-wrap: wrap; 
     gap: 8px; 
-    flex: 1 1 auto;
   }
   .bottombar-buttons .btn { 
     white-space: normal; 
     text-align: center;
     line-height: 1.2;
+    flex: 1 1 auto;
+    min-width: 130px;
   }
 
   .bottombar-summary { 
     display: flex; 
     gap: 22px; 
     align-items: center; 
-    flex-wrap: wrap;
     justify-content: flex-end;
   }
   .summary-item { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
@@ -538,20 +538,25 @@
   /* ============================================================
      MOBILE / ADAPTIVE
      ============================================================ */
+  @media (max-width: 900px) {
+    .bottombar-inner {
+      grid-template-columns: 1fr;
+    }
+    .bottombar-summary {
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+  }
+
   @media (max-width: 640px) {
     body { padding: 12px 12px 20px; }
     .card { padding: 14px; border-radius: 14px; }
     th, td { padding: 8px 6px; font-size: 0.78rem; }
     
-    /* Перестройка нижней панели */
     .bottombar { 
       padding: 12px; 
       border-radius: 14px; 
-    }
-    .bottombar-inner { 
-      flex-direction: column; 
-      align-items: stretch; 
-      gap: 12px; 
     }
     .bottombar-buttons { 
       display: grid; 
@@ -564,6 +569,7 @@
       font-size: 0.8rem; 
       width: 100%;
       justify-content: center;
+      min-width: 0; /* Сбрасываем min-width для мобилок */
     }
     /* Кнопка "Сформировать" на всю ширину */
     .bottombar-buttons .btn:first-child {
@@ -574,8 +580,6 @@
       justify-content: space-around;
       width: 100%;
       gap: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
     }
     .summary-item {
       align-items: center;

@@ -557,48 +557,76 @@
   .btn-danger { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
   .btn-danger:hover:not(:disabled) { background: rgba(239, 68, 68, 0.28); color: #fff; }
 
-  /* ===== НОВЫЕ СТИЛИ (для доработки) ===== */
+  /* ===== Кнопка "Принять с замечанием" ===== */
   .btn-warn { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
   .btn-warn:hover:not(:disabled) { background: var(--amber); color: #1a1207; }
 
+  /* ===== Дежурство: интервалы (улучшенный дизайн) ===== */
   .duty-intervals { display: flex; flex-direction: column; gap: 8px; }
+  
   .duty-interval-row {
     display: grid;
-    grid-template-columns: auto auto auto 1fr auto auto;
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto auto auto;
+    gap: 12px;
     align-items: center;
-    padding: 8px 10px;
-    background: var(--panel-3);
+    padding: 10px 14px;
+    background: var(--panel-2);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    transition: border-color 0.15s, background 0.15s;
+    border-radius: 12px;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
   }
+  
+  .duty-interval-row:hover { border-color: var(--accent-soft); }
   .duty-interval-row.duty-over { border-color: var(--red); background: var(--red-bg); }
   .duty-interval-row.duty-under { border-color: var(--amber); background: var(--amber-bg); }
+
   .duty-interval-row input[type="time"] {
-    width: auto;
-    padding: 6px 8px;
-    font-size: 0.85rem;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 0.95rem;
     font-weight: 600;
+    text-align: center;
     background: var(--input-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text);
     font-family: inherit;
+    outline: none;
   }
-  .duty-interval-row input[type="time"]:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .duty-dash { color: var(--muted); font-weight: 700; }
-  .duty-diff { font-weight: 700; font-size: 0.85rem; color: var(--text); font-variant-numeric: tabular-nums; }
-  .duty-over .duty-diff { color: var(--red-text); }
-  .duty-under .duty-diff { color: var(--amber-text); }
-  .duty-check-label {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 0.78rem; color: var(--muted); cursor: pointer; user-select: none;
+  .duty-interval-row input[type="time"]:focus { border-color: var(--accent-2); }
+  .duty-interval-row input[type="time"]::-webkit-calendar-picker-indicator { opacity: 0.6; cursor: pointer; }
+
+  .duty-dash { color: var(--muted); font-weight: 700; font-size: 1.1rem; }
+
+  .duty-diff {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: var(--panel-3);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
+    min-width: 75px;
+    border: 1px solid transparent;
   }
+  .duty-over .duty-diff { background: rgba(239, 68, 68, 0.15); color: var(--red-text); border-color: var(--red-border); }
+  .duty-under .duty-diff { background: rgba(245, 185, 74, 0.15); color: var(--amber-text); border-color: var(--amber-border); }
+
+  .duty-check-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.8rem; font-weight: 600; color: var(--text-soft); cursor: pointer; user-select: none;
+    background: var(--input-bg); padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border);
+    transition: border-color 0.15s;
+  }
+  .duty-check-label:hover { border-color: var(--accent); }
   .duty-check-label input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; }
+
   .duty-remove-btn {
-    width: 28px; height: 28px; padding: 0;
+    width: 32px; height: 32px; padding: 0;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 8px; border: 1px solid var(--border);
     background: transparent; color: var(--muted); cursor: pointer;
@@ -606,18 +634,53 @@
     transition: background 0.15s, color 0.15s, border-color 0.15s;
   }
   .duty-remove-btn:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+
   .duty-summary {
-    margin-top: 12px;
-    padding: 10px 14px;
-    background: var(--accent-soft);
-    border-radius: 10px;
-    border-left: 3px solid var(--accent);
-    display: flex; flex-direction: column; gap: 4px;
-    font-size: 0.88rem; color: var(--text-soft);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
   }
-  .duty-summary-row { display: flex; justify-content: space-between; align-items: center; }
-  .duty-summary-row b { color: var(--accent-2); font-weight: 800; font-variant-numeric: tabular-nums; }
-  /* ===== /НОВЫЕ СТИЛИ ===== */
+  
+  .duty-stat {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 12px; border-radius: 12px; background: var(--input-bg); border: 1px solid var(--border); text-align: center;
+  }
+  
+  .duty-stat .ds-lbl {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); font-weight: 700; margin-bottom: 6px;
+  }
+  .duty-stat .ds-val {
+    font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .duty-stat .ds-val small { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+
+  .duty-stat.highlight { border-color: var(--accent); background: var(--accent-soft); }
+  .duty-stat.highlight .ds-val { color: var(--accent-2); }
+
+  .duty-stat.success { border-color: var(--good-border); background: var(--good-bg); }
+  .duty-stat.success .ds-val { color: var(--good-text); }
+
+  @media (max-width: 640px) {
+    .duty-interval-row {
+      grid-template-columns: 1fr auto 1fr 32px;
+      grid-template-areas: 
+        "start dash end remove"
+        "diff check check check";
+      gap: 8px;
+    }
+    .duty-start { grid-area: start; }
+    .duty-end { grid-area: end; }
+    .duty-dash { grid-area: dash; }
+    .duty-diff { grid-area: diff; justify-self: start; }
+    .duty-check-label { grid-area: check; justify-self: end; }
+    .duty-remove-btn { grid-area: remove; }
+    .duty-summary { grid-template-columns: 1fr; }
+    .duty-stat { flex-direction: row; justify-content: space-between; padding: 10px 16px; }
+    .duty-stat .ds-lbl { margin-bottom: 0; }
+  }
+  /* ===== /Дежурство ===== */
 
   .btn.copy-success {
     background: var(--good) !important; color: #0d1520 !important;
@@ -669,8 +732,6 @@
     .lunch-toggle .toggle-switch { width: 36px; height: 20px; }
     .lunch-toggle .toggle-switch::after { width: 12px; height: 12px; }
     .lunch-toggle.active .toggle-switch::after { left: calc(100% - 15px); }
-    .duty-interval-row { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-    .duty-interval-row .duty-diff { grid-column: 3; text-align: right; }
   }
 
   input[type="number"]::-webkit-outer-spin-button,
@@ -868,7 +929,7 @@
       <div class="extra-total" id="extraTotal"></div>
     </div>
 
-    <!-- ============ ДЕЖУРСТВО НА ПОСТУ (переработано) ============ -->
+    <!-- ============ ДЕЖУРСТВО НА ПОСТУ ============ -->
     <div class="card">
       <h2>
         <span class="h-icon">
@@ -879,19 +940,28 @@
         </span>
         Дежурство на посту
       </h2>
-      <p class="bodi-info" style="margin-top:0;margin-bottom:10px;">
-        Введите интервалы между скриншотами. Норма — 15 минут (± 4 минуты). Интервалы вне нормы подсвечиваются — снимите галочку «учитывать», если считаете время фиктивным.
+      <p class="bodi-info" style="margin-top:0;margin-bottom:12px;">
+        Норма — 15 минут (± 4 мин). Интервалы вне нормы подсвечиваются. Снимите галочку «учитывать», если считаете время фиктивным.
       </p>
       <div class="duty-intervals" id="dutyIntervals"></div>
-      <button type="button" class="btn" id="addDutyIntervalBtn" style="margin-top:8px;">+ Добавить интервал</button>
+      <button type="button" class="btn btn-ghost" id="addDutyIntervalBtn" style="margin-top:10px; font-size:0.8rem; padding:8px 14px;">+ Добавить интервал</button>
+      
       <div class="duty-summary">
-        <div class="duty-summary-row"><span>Жадный итог (все интервалы):</span> <b id="dutyGreedy">0</b> мин</div>
-        <div class="duty-summary-row"><span>Зачтено (выбранные):</span> <b id="dutyCounted">0</b> мин</div>
-        <div class="duty-summary-row"><span>Баллы за дежурство:</span> <b id="dutyPoints">0</b></div>
+        <div class="duty-stat">
+          <span class="ds-lbl">Жадный итог</span>
+          <span class="ds-val"><span id="dutyGreedy">0</span> <small>мин</small></span>
+        </div>
+        <div class="duty-stat highlight">
+          <span class="ds-lbl">Зачтено</span>
+          <span class="ds-val"><span id="dutyCounted">0</span> <small>мин</small></span>
+        </div>
+        <div class="duty-stat success">
+          <span class="ds-lbl">Баллы</span>
+          <span class="ds-val"><span id="dutyPoints">0</span> <small>б.</small></span>
+        </div>
       </div>
       <p class="bodi-info" id="dutyNote">⏱ 20 баллов за каждые 30 минут. В недельник — идёт в баллы, в повышение — как требование.</p>
     </div>
-    <!-- ============ /ДЕЖУРСТВО НА ПОСТУ ============ -->
 
     <div class="card hidden" id="instrCard">
       <h2>
@@ -1346,7 +1416,7 @@ function attachZeroClearAll(scope) {
 }
 
 /* ============================================================
-   ДЕЖУРСТВО НА ПОСТУ — ИНТЕРВАЛЫ (НОВОЕ)
+   ДЕЖУРСТВО НА ПОСТУ — ИНТЕРВАЛЫ
    ============================================================ */
 function parseTimeToMinutes(str) {
   if (!str || !/^\d{2}:\d{2}$/.test(str)) return null;
@@ -1417,7 +1487,9 @@ function addDutyIntervalRow(start, end, checked) {
       '<span>учитывать</span>' +
     '</label>' +
     '<button type="button" class="duty-remove-btn" title="Удалить">×</button>';
+    
   dutyIntervals.appendChild(row);
+  
   row.querySelector('.duty-start').addEventListener('input', () => { updateDutyTotals(); updateAll(); });
   row.querySelector('.duty-end').addEventListener('input', () => { updateDutyTotals(); updateAll(); });
   row.querySelector('.duty-check').addEventListener('change', () => { updateDutyTotals(); updateAll(); });
@@ -1426,9 +1498,9 @@ function addDutyIntervalRow(start, end, checked) {
     updateDutyTotals();
     updateAll();
   });
+  
   updateDutyTotals();
 }
-/* ============================================================ */
 
 /* ============================================================
    МОСТ "ВЫСЛУГА ЛЕТ"
@@ -2064,14 +2136,12 @@ function renderDashboard(r){
   const fails = getFailures(r);
   const verdictOk = fails.length === 0;
 
-  // === НОВОЕ: кнопка «Принять с замечанием» — только для старшего состава и только для недельника ===
   const acceptBtn = document.getElementById('acceptWithRemarkBtn');
   if (acceptBtn) {
     const role = getCalcRole();
     const canAccept = role === 'admin' || role === 'superadmin';
     acceptBtn.classList.toggle('hidden', !(canAccept && weekly && fails.length > 0));
   }
-  // === /НОВОЕ ===
 
   const m = r.merged;
   const hasSub = r.gos2mp > 0 || r.mp2gos > 0;
@@ -2386,7 +2456,6 @@ window.generateReport = function(forceAccept){
     lines.push('');
     lines.push('**ИТОГО: ' + r.total + ' баллов**');
     lines.push('');
-    // === НОВОЕ: если forceAccept — принимаем с замечанием ===
     const acceptedWithRemark = forceAccept && fails.length > 0;
     if (acceptedWithRemark) {
       lines.push('# ✅ ОТЧЁТ ПРИНЯТ С ЗАМЕЧАНИЕМ #');
@@ -2397,7 +2466,6 @@ window.generateReport = function(forceAccept){
       lines.push(fails.length === 0 ? '# ✅ ОТЧЁТ ОДОБРЕН #' : '# ❌ ОТЧЁТ ОТКЛОНЁН #');
       if (fails.length) fails.forEach(f => lines.push('• ' + f));
     }
-    // === /НОВОЕ ===
   } else {
     lines.push('# ОТЧЁТ НА ПОВЫШЕНИЕ ' + promo.value + ' #');
     lines.push('');
@@ -2445,14 +2513,12 @@ window.generateReport = function(forceAccept){
   saveState();
 };
 
-// === НОВОЕ: обработчик кнопки «Принять с замечанием» ===
 window.acceptWithRemark = function() {
   window.generateReport(true);
   notifyParent('Отчёт принят с замечанием', 'Текст сформирован — скопируйте его в отчётность', 'success');
   const outEl = document.getElementById('out');
   if (outEl) outEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
-// === /НОВОЕ ===
 
 window.copyReport = function(){
   if (!out.value) generateReport();
@@ -2529,7 +2595,6 @@ fullname.addEventListener("change", () => {
   fillSeniorityFromStorage(fullname.value.trim());
 });
 
-// === Кнопка «+ Добавить интервал» ===
 addDutyIntervalBtn.addEventListener('click', () => {
   addDutyIntervalRow('10:00', '10:15', true);
   updateAll();

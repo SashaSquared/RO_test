@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark" data-theme-mode="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Отпуска</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #070b12;
+    --panel: #151f30;
+    --panel-2: #1b2739;
+    --panel-3: #25344b;
+    --text: #eef4fb;
+    --text-soft: #c9d5e3;
+    --muted: #8fa3ba;
+    --border: #31435e;
+    --border-soft: #24334a;
+    --border-strong: #43587a;
+    --accent: #4CB1D8;
+    --accent-2: #6FC5E5;
+    --accent-bg-strong: rgba(76, 177, 216, 0.2);
+    --accent-border: rgba(76, 177, 216, 0.5);
+    --good: #4ade80;
+    --good-bg-strong: rgba(74, 222, 128, 0.16);
+    --good-border: rgba(74, 222, 128, 0.5);
+    --good-text: #a7f3c4;
+    --red: #ef4444;
+    --red-bg-strong: rgba(239, 68, 68, 0.16);
+    --red-border: rgba(239, 68, 68, 0.5);
+    --red-text: #fca5a5;
+    --amber: #f5b94a;
+    --amber-bg: rgba(245, 185, 74, 0.12);
+    --amber-text: #fcd97e;
+    --purple: #a78bfa;
+    --purple-bg: rgba(167, 139, 250, 0.18);
+    --purple-border: rgba(167, 139, 250, 0.5);
+
+    --input-bg: #0c1420;
+    --card-bg: #151f30;
+    --vac-row-bg: #1b2739;
+    --toast-bg: linear-gradient(180deg, #1f2a3d 0%, #16202e 100%);
+    --modal-bg: linear-gradient(180deg, #151f30 0%, #1b2739 100%);
+    --suggest-bg: #1b2739;
+  }
+
+  /* ============================================================
+     СВЕТЛАЯ ТЕМА
+     ============================================================ */
+  :root[data-theme="light"] {
+    --bg: #f5f7fa;
+    --panel: #ffffff;
+    --panel-2: #f0f4f8;
+    --panel-3: #e2e8f0;
+    --text: #1a202c;
+    --text-soft: #2d3748;
+    --muted: #64748b;
+    --border: #cbd5e0;
+    --border-soft: #e2e8f0;
+    --border-strong: #94a3b8;
+    --accent: #0891b2;
+    --accent-2: #0e7490;
+    --accent-bg-strong: rgba(8, 145, 178, 0.12);
+    --accent-border: rgba(8, 145, 178, 0.45);
+    --good: #16a34a;
+    --good-bg-strong: rgba(22, 163, 74, 0.12);
+    --good-border: rgba(22, 163, 74, 0.4);
+    --good-text: #166534;
+    --red: #dc2626;
+    --red-bg-strong: rgba(220, 38, 38, 0.1);
+    --red-border: rgba(220, 38, 38, 0.4);
+    --red-text: #991b1b;
+    --amber: #d97706;
+    --amber-bg: rgba(217, 119, 6, 0.1);
+    --amber-text: #b45309;
+    --purple: #7c3aed;
+    --purple-bg: rgba(124, 58, 237, 0.1);
+    --purple-border: rgba(124, 58, 237, 0.4);
+
+    --input-bg: #ffffff;
+    --card-bg: #ffffff;
+    --vac-row-bg: #f0f4f8;
+    --toast-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
+    --modal-bg: linear-gradient(180deg, #ffffff 0%, #f0f4f8 100%);
+    --suggest-bg: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 16px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    transition: background 0.25s, color 0.25s;
+  }
+  .tablet { max-width: 1100px; width: 100%; }
+  .page-title {
+    text-align: center; font-size: 1.05rem; font-weight: 600;
+    color: var(--accent-2); padding: 4px 0 14px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .page-title .brand-icon {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, #4CB1D8 0%, #2A7A96 100%);
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(76, 177, 216, 0.3);
+  }
+  .page-title .brand-icon svg { width: 17px; height: 17px; color: #fff; }
+  .page-title .subtitle {
+    display: block; font-size: 0.72rem; font-weight: 500;
+    color: var(--muted); margin-top: 2px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .card + .card { margin-top: 10px; }
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .card-head h2 { font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .filters {
+    display: grid; grid-template-columns: 1fr 160px 160px;
+    gap: 8px; margin-bottom: 10px;
+  }
+  @media (max-width: 720px) { .filters { grid-template-columns: 1fr; } }
+  input[type="text"], input[type="date"], select {
+    width: 100%; padding: 9px 12px; font-size: 0.88rem; font-family: inherit;
+    color: var(--text); background: var(--input-bg);
+    border: 1px solid var(--border); border-radius: 8px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg-strong);
+  }
+  input::placeholder { color: var(--muted); opacity: 0.7; }
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa3ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 34px;
+    cursor: pointer;
+  }
+  select option { background: var(--input-bg); color: var(--text); }
+  .vac-list { display: flex; flex-direction: column; gap: 6px; }
+  .vac-row {
+    display: grid; grid-template-columns: auto 1fr auto auto auto;
+    align-items: center; gap: 12px; padding: 10px 14px;
+    background: var(--vac-row-bg);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--border-strong);
+    border-radius: 10px;
+  }
+  .vac-row.active   { background: var(--good-bg-strong); border-color: var(--good-border); border-left-color: var(--good); }
+  .vac-row.overdue  { background: var(--red-bg-strong);  border-color: var(--red-border);  border-left-color: var(--red); }
+  .vac-row.upcoming, .vac-row.completed, .vac-row.cancelled { opacity: 0.82; }
+  .vac-row.cancelled { background: var(--red-bg-strong); border-color: var(--red-border); border-left-color: var(--red-border); }
+  .vac-avatar {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #4CB1D8 0%, #2A7A96 100%);
+    color: #fff; font-size: 0.82rem; font-weight: 700;
+  }
+  .vac-row.active .vac-avatar  { background: linear-gradient(135deg, #4ade80 0%, #15803d 100%); }
+  .vac-row.overdue .vac-avatar { background: linear-gradient(135deg, #f87171 0%, #991b1b 100%); }
+  .vac-row.cancelled .vac-avatar { background: linear-gradient(135deg, #6b7280 0%, #374151 100%); }
+  .vac-main { min-width: 0; }
+  .vac-name-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; line-height: 1.3; }
+  .vac-name { font-size: 0.92rem; font-weight: 600; }
+  .vac-static { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
+  .vac-sub { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 3px; font-size: 0.76rem; color: var(--muted); }
+  .vac-sub .dot-sep { color: var(--border-strong); }
+  .type-pill, .dept-pill {
+    display: inline-block; padding: 2px 7px; border-radius: 5px;
+    font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .type-pill.ic  { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; }
+  .type-pill.ooc { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+  :root[data-theme="light"] .type-pill.ic  { background: rgba(124, 58, 237, 0.12); color: #6d28d9; }
+  :root[data-theme="light"] .type-pill.ooc { background: rgba(217, 119, 6, 0.12); color: #b45309; }
+  .dept-pill.dept-руководство { background: #4c1d95; color: #ddd6fe; }
+  .dept-pill.dept-аб { background: #7c2d12; color: #fed7aa; }
+  .dept-pill.dept-ок { background: #78350f; color: #fde68a; }
+  .dept-pill.dept-смп { background: #991b1b; color: #fecaca; }
+  .dept-pill.dept-ит { background: #14532d; color: #bbf7d0; }
+  .dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
+  .dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
+  .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
+  .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
+  .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
+  .vac-dates {
+    font-size: 0.78rem; font-weight: 500; color: var(--text-soft);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .vac-dates .sep { color: var(--border-strong); margin: 0 2px; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border-radius: 6px;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap;
+  }
+  .status-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .status-badge.active    { background: var(--good); color: #052e16; }
+  .status-badge.overdue   { background: var(--red); color: #fff; }
+  .status-badge.upcoming  { background: var(--accent-bg-strong); color: var(--accent-2); border: 1px solid var(--accent-border); }
+  .status-badge.completed { background: var(--panel-3); color: var(--muted); border: 1px solid var(--border); }
+  .status-badge.cancelled { background: var(--red-bg-strong); color: var(--red-text); border: 1px solid var(--red-border); cursor: pointer; transition: filter 0.15s, transform 0.1s; }
+  .status-badge.cancelled:hover { filter: brightness(1.1); }
+  .status-badge.cancelled:active { transform: scale(0.96); }
+  .vac-note { font-size: 0.76rem; font-weight: 600; white-space: nowrap; }
+  .vac-note.green { color: var(--good-text); }
+  .vac-note.red   { color: var(--red-text); }
+  .vac-note.muted { color: var(--muted); font-weight: 500; }
+  .vac-actions { display: flex; gap: 4px; flex-shrink: 0; }
+  .icon-btn {
+    width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: 1px solid transparent; border-radius: 6px;
+    color: var(--muted); cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .icon-btn svg { width: 14px; height: 14px; }
+  .icon-btn:hover { background: var(--panel-3); color: var(--text); }
+  .icon-btn.finish:hover { background: var(--good-bg-strong); color: var(--good-text); border-color: var(--good-border); }
+  .icon-btn.delete:hover { background: var(--red-bg-strong); color: var(--red-text); border-color: var(--red-border); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 5px; padding: 7px 12px; font-size: 0.8rem; font-weight: 500;
+    font-family: inherit; background: transparent;
+    border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text-soft); cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .btn svg { width: 13px; height: 13px; }
+  .btn:hover { border-color: var(--border-strong); background: var(--panel-3); color: var(--text); }
+  .btn-primary {
+    background: var(--accent-bg-strong); border-color: var(--accent-border); color: var(--accent-2);
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
+  .form-group label {
+    font-size: 0.68rem; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .autocomplete-wrap { position: relative; }
+  .suggest-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    z-index: 30;
+    background: var(--suggest-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 4px;
+    display: none;
+  }
+  :root[data-theme="light"] .suggest-list { box-shadow: 0 12px 32px rgba(15,23,42,.15); }
+  .suggest-list.open { display: block; }
+  .suggest-item {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; padding: 8px 10px;
+    border-radius: 6px; cursor: pointer;
+    transition: background 0.12s;
+    font-size: 0.85rem;
+  }
+  .suggest-item:hover, .suggest-item.active { background: var(--accent-bg-strong); }
+  .suggest-item .s-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .suggest-item .s-name {
+    font-weight: 600; color: var(--text); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .suggest-item .s-sub {
+    font-size: 0.72rem; color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .suggest-item .s-dept { flex-shrink: 0; }
+  .suggest-empty {
+    padding: 10px 12px; font-size: 0.82rem;
+    color: var(--muted); text-align: center;
+  }
+  .suggest-hint {
+    padding: 6px 10px; font-size: 0.7rem; color: var(--muted);
+    border-top: 1px dashed var(--border);
+    display: flex; justify-content: space-between;
+  }
+  .duration-display {
+    grid-column: 1 / -1; padding: 9px 12px;
+    background: var(--panel-3); border: 1px solid var(--border-soft);
+    border-radius: 8px; font-size: 0.85rem; color: var(--text-soft);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .duration-display b { color: var(--accent-2); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .duration-display.warn { border-color: var(--amber); background: var(--amber-bg); color: var(--amber-text); }
+  .duration-display.warn b { color: var(--amber-text); }
+  .duration-display.err { border-color: var(--red); background: var(--red-bg-strong); color: var(--red-text); }
+  .duration-display.err b { color: var(--red-text); }
+  .form-warnings { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 5px; }
+  .form-warning {
+    padding: 7px 11px; border-radius: 7px; font-size: 0.8rem; line-height: 1.4;
+    background: var(--amber-bg); border-left: 3px solid var(--amber); color: var(--amber-text);
+  }
+  .form-warning.err { background: var(--red-bg-strong); border-left-color: var(--red); color: var(--red-text); }
+  .form-actions {
+    grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; margin-top: 2px;
+  }
+  .empty {
+    color: var(--muted); font-size: 0.88rem; text-align: center;
+    padding: 24px 16px; background: var(--panel-2);
+    border: 1px dashed var(--border); border-radius: 10px; line-height: 1.5;
+  }
+  .empty b { color: var(--text-soft); font-weight: 600; }
+  .toast {
+    position: fixed; top: 14px; left: 50%;
+    transform: translate(-50%, -120%);
+    background: var(--toast-bg);
+    border: 1px solid var(--border-strong); border-left: 4px solid var(--good);
+    border-radius: 10px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 9px;
+    color: var(--text); font-size: 0.85rem; font-weight: 500;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    z-index: 9999; opacity: 0; pointer-events: none;
+    transition: transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
+    max-width: calc(100% - 32px);
+  }
+  :root[data-theme="light"] .toast { box-shadow: 0 12px 32px rgba(15,23,42,.15); }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+  .toast.alert { border-left-color: var(--red); }
+  .toast.info  { border-left-color: var(--accent); }
+  .toast .toast-ic {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 5px;
+    background: var(--good); display: flex; align-items: center; justify-content: center;
+  }
+  .toast.alert .toast-ic { background: var(--red); }
+  .toast.info  .toast-ic { background: var(--accent); }
+  .toast .toast-ic svg { width: 12px; height: 12px; color: #071018; }
+  .hidden { display: none !important; }
+
+  /* ============ МОДАЛКИ ============ */
+  .modal-back {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn .18s ease;
+  }
+  :root[data-theme="light"] .modal-back { background: rgba(15, 23, 42, 0.55); }
+  .modal-back.hidden { display: none !important; }
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+  .modal {
+    width: 100%; max-width: 460px;
+    background: var(--modal-bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  }
+  :root[data-theme="light"] .modal { box-shadow: 0 20px 60px rgba(15,23,42,.25); }
+  .modal h3 {
+    font-size: 1.05rem; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .modal h3 .m-icon {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--good-bg-strong); color: var(--good-text);
+    flex-shrink: 0;
+  }
+  .modal h3 .m-icon svg { width: 18px; height: 18px; }
+  .modal h3 .m-icon.purple {
+    background: var(--purple-bg); color: var(--purple);
+  }
+  .modal-who {
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: var(--panel-3);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    font-size: 0.86rem;
+  }
+  .modal-who .name { font-weight: 700; color: var(--text); }
+  .modal-who .sub { color: var(--muted); font-size: 0.76rem; margin-top: 2px; }
+  .modal label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .modal textarea {
+    width: 100%; min-height: 80px;
+    padding: 10px 12px; font-family: inherit; font-size: 0.9rem;
+    background: var(--input-bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    resize: vertical; outline: none;
+  }
+  .modal textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg-strong); }
+  .modal-read-block {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-soft);
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 56px;
+  }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+  @media (max-width: 640px) {
+    body { padding: 12px 12px 20px; font-size: 14px; }
+    .card { padding: 12px; border-radius: 10px; }
+    .vac-row { grid-template-columns: auto 1fr auto; gap: 10px; padding: 10px 12px; }
+    .vac-note { grid-column: 2 / -1; }
+    .vac-actions { grid-row: 1; grid-column: 3; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">
+  <span class="toast-ic" id="toastIcon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </span>
+  <span id="toastText">Готово</span>
+</div>
+
+<div class="tablet">
+  <div class="page-title">
+    <span class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+    </span>
+    <span>
+      Отпуска
+      <span class="subtitle">IC — до 3 дней · OOC — до 14 дней · Суммарно IC + OOC ≤ 14 дней / 30 дней</span>
+    </span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span id="titleCount">Список отпусков</span>
+      </h2>
+      <button class="btn btn-primary" id="addBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Добавить
+      </button>
+    </div>
+
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="🔍 Поиск по имени или № паспорта…">
+      <select id="filterDept"><option value="">Все отделы</option></select>
+      <select id="filterStatus">
+        <option value="">Все статусы</option>
+        <option value="active">🟢 В отпуске</option>
+        <option value="overdue">🔴 Просрочен</option>
+        <option value="upcoming">⚪ Запланирован</option>
+        <option value="cancelled">🔄 Отменён</option>
+      </select>
+    </div>
+
+    <div class="vac-list" id="vacList">
+      <div class="empty">Загрузка…</div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="formCard">
+    <div class="card-head">
+      <h2 id="formTitle">Новый отпуск</h2>
+      <button class="btn" id="cancelBtn">Отмена</button>
+    </div>
+
+    <form id="vacForm" autocomplete="off">
+      <input type="hidden" id="editRowIndex">
+      <input type="hidden" id="editId">
+
+      <div class="form-grid">
+        <div class="form-group autocomplete-wrap">
+          <label for="fName">Имя Фамилия</label>
+          <input type="text" id="fName" placeholder="Начните вводить…" required autocomplete="off">
+          <div class="suggest-list" id="nameSuggest"></div>
+        </div>
+
+        <div class="form-group autocomplete-wrap">
+          <label for="fPassport">№ Паспорта</label>
+          <input type="text" id="fPassport" placeholder="Начните вводить…" autocomplete="off">
+          <div class="suggest-list" id="passportSuggest"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="fDept">Отдел <span style="color:var(--accent-2);text-transform:none;letter-spacing:0;">(автоматически из БД)</span></label>
+          <select id="fDept" required></select>
+        </div>
+        <div class="form-group">
+          <label for="fType">Тип отпуска</label>
+          <select id="fType" required>
+            <option value="IC">IC — до 3 дней</option>
+            <option value="OOC">OOC — до 14 дней</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fStart">Дата начала</label>
+          <input type="date" id="fStart" required>
+        </div>
+        <div class="form-group">
+          <label for="fEnd">Дата окончания</label>
+          <input type="date" id="fEnd" required>
+        </div>
+
+        <div class="duration-display" id="durationDisplay">
+          <span>📅 Длительность:</span>
+          <b id="durationVal">—</b>
+        </div>
+
+        <div class="form-warnings" id="formWarnings"></div>
+
+        <div class="form-actions">
+          <button type="button" class="btn" id="cancelBtn2">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="saveBtnText">Сохранить</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ МОДАЛКА ВОЗВРАТА ИЗ ОТПУСКА ============ -->
+<div class="modal-back hidden" id="finishModal">
+  <div class="modal">
+    <h3>
+      <span class="m-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 14 4 9 9 4"/>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+        </svg>
+      </span>
+      Возврат из отпуска
+    </h3>
+
+    <div class="modal-who">
+      <div class="name" id="finishWhoName">—</div>
+      <div class="sub" id="finishWhoSub">—</div>
+    </div>
+
+    <label for="finishReason">Причина возврата (обязательно)</label>
+    <textarea id="finishReason" placeholder="Например: вернулся раньше по личным обстоятельствам"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn" type="button" id="finishCancel">Отмена</button>
+      <button class="btn btn-primary" type="button" id="finishConfirm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Отметить возврат
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ МОДАЛКА ИНФОРМАЦИИ О ВОЗВРАТЕ ============ -->
+<div class="modal-back hidden" id="finishInfoModal">
+  <div class="modal">
+    <h3>
+      <span class="m-icon purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+      </span>
+      Информация о возврате
+    </h3>
+
+    <div class="modal-who">
+      <div class="name" id="finishInfoWhoName">—</div>
+      <div class="sub" id="finishInfoWhoSub">—</div>
+    </div>
+
+    <label>Причина возврата</label>
+    <div class="modal-read-block" id="finishInfoComment">—</div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" type="button" id="finishInfoClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Понятно
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     ТЕМА
+     ============================================================ */
+  const THEME_KEY = "pref_theme";
+
+  function systemTheme() {
+    try {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } catch (e) { return "dark"; }
+  }
+  function resolveThemeMode(mode) {
+    if (mode === "auto") return systemTheme();
+    return mode === "light" ? "light" : "dark";
+  }
+  function applyThemeMode(mode) {
+    if (!["light","dark","auto"].includes(mode)) mode = "dark";
+    const resolved = resolveThemeMode(mode);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-mode", mode);
+  }
+  function initTheme() {
+    const p = new URLSearchParams(location.search);
+    const urlTheme = p.get("theme");
+    if (urlTheme && ["light","dark","auto"].includes(urlTheme)) {
+      applyThemeMode(urlTheme);
+      return;
+    }
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved && ["light","dark","auto"].includes(saved)) {
+        applyThemeMode(saved);
+        return;
+      }
+    } catch (e) {}
+    applyThemeMode("dark");
+  }
+
+  window.addEventListener("message", (e) => {
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.type === "theme" && e.data.mode) {
+      applyThemeMode(e.data.mode);
+    }
+  });
+
+  try {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq && mq.addEventListener) {
+      mq.addEventListener("change", () => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    } else if (mq && mq.addListener) {
+      mq.addListener(() => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    }
+  } catch (e) {}
+
+  initTheme();
+
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "theme-request" }, "*");
+    }
+  } catch (e) {}
+
+  /* ============================================================
+     ОСНОВНАЯ ЛОГИКА
+     ============================================================ */
+  const API_URL = "https://hospital-api.asdulgok.workers.dev";
+
+  const DEPARTMENTS = [
+    "Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС",
+    "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"
+  ];
+  const DEPT_LABEL = {
+    "Руководство":"Руководство","АБ":"АБ","ОК":"ОК","СМП":"СМП","ИТ":"ИТ","ПСЭС":"ПСЭС",
+    "Инст ПСЭС":"Инст ПСЭС", "Инст СМП":"Инст СМП", "Инст ИТ":"Инст ИТ", "Инст ОК":"Инст ОК"
+  };
+
+  const LIMIT_IC_DAYS = 3;
+  const LIMIT_OOC_DAYS = 14;
+  const LIMIT_TOTAL_DAYS = 14;
+  const LIMIT_WINDOW_DAYS = 30;
+
+  const state = {
+    user: null,
+    vacations: [],
+    staff: [],
+    staffLoaded: false,
+    editingRowIndex: null,
+    selectedStaff: null,
+    finishTarget: null,
+    activeSuggest: { name: -1, passport: -1 }
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  const vacList      = $("vacList");
+  const formCard     = $("formCard");
+  const formTitle    = $("formTitle");
+  const vacForm      = $("vacForm");
+  const editRowIndex = $("editRowIndex");
+  const fName        = $("fName");
+  const fPassport    = $("fPassport");
+  const fDept        = $("fDept");
+  const fType        = $("fType");
+  const fStart       = $("fStart");
+  const fEnd         = $("fEnd");
+  const durationDisp = $("durationDisplay");
+  const durationVal  = $("durationVal");
+  const formWarnings = $("formWarnings");
+  const saveBtnText  = $("saveBtnText");
+  const searchInput  = $("searchInput");
+  const filterDept   = $("filterDept");
+  const filterStatus = $("filterStatus");
+  const titleCount   = $("titleCount");
+  const nameSuggest  = $("nameSuggest");
+  const passportSuggest = $("passportSuggest");
+
+  async function apiPost(payload) {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();
+  }
+
+  function loadSession() {
+    const p = new URLSearchParams(location.search);
+    const pLogin = p.get("login");
+    const pRole  = p.get("role");
+    const pDept  = p.get("dept");
+    if (pLogin && pRole) {
+      const raw = localStorage.getItem("hospital_session");
+      let hash = null;
+      try { hash = raw ? (JSON.parse(raw).hash || null) : null; } catch (e) {}
+      return { login: pLogin, role: pRole, department: pDept || "", hash: hash };
+    }
+    try {
+      const raw = localStorage.getItem("hospital_session");
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data && data.login && data.role && data.hash) return data;
+    } catch (e) {}
+    return null;
+  }
+
+  function isAdmin() {
+    return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
+  }
+
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function parseDate(s) {
+    if (!s) return null;
+    const p = s.split("-").map(Number);
+    if (p.length !== 3) return null;
+    return new Date(p[0], p[1]-1, p[2]);
+  }
+  function fmtShort(s) {
+    if (!s) return "—";
+    const d = parseDate(s);
+    if (!d) return s;
+    return String(d.getDate()).padStart(2,"0") + "." +
+           String(d.getMonth()+1).padStart(2,"0") + "." +
+           String(d.getFullYear()).slice(2);
+  }
+  function daysBetween(a, b) {
+    const da = parseDate(a), db = parseDate(b);
+    if (!da || !db) return 0;
+    return Math.round((db - da) / 86400000) + 1;
+  }
+  function daysFromToday(dateStr) {
+    const d = parseDate(dateStr);
+    if (!d) return 0;
+    const t = new Date(); t.setHours(0,0,0,0);
+    d.setHours(0,0,0,0);
+    return Math.round((t - d) / 86400000);
+  }
+  function daysBetweenStrict(a, b) {
+    const da = parseDate(a), db = parseDate(b);
+    if (!da || !db) return 0;
+    return Math.round((db - da) / 86400000);
+  }
+
+  function getStatus(v) {
+    if (v.returned) return "cancelled";
+    const today = todayStr();
+    if (today < v.start) return "upcoming";
+    if (today <= v.end) return "active";
+    return "overdue";
+  }
+  function statusLabel(s) {
+    return { active:"В отпуске", overdue:"Просрочен", upcoming:"Запланирован", cancelled:"Отменён" }[s] || s;
+  }
+
+  function validate(v, editingRow) {
+    const w = [];
+    if (!v.start || !v.end) return w;
+    if (v.end < v.start) {
+      w.push({ kind:"err", text:"Дата окончания раньше начала." });
+      return w;
+    }
+
+    const dur = daysBetween(v.start, v.end);
+
+    if (v.type === "IC" && dur > LIMIT_IC_DAYS) {
+      w.push({ kind:"err", text:"IC: " + dur + " дн. (макс. " + LIMIT_IC_DAYS + ")." });
+    }
+    if (v.type === "OOC" && dur > LIMIT_OOC_DAYS) {
+      w.push({ kind:"err", text:"OOC: " + dur + " дн. (макс. " + LIMIT_OOC_DAYS + ")." });
+    }
+
+    if (v.type === "IC") {
+      const prevIC = state.vacations
+        .filter(x => x.rowIndex !== editingRow && x.type === "IC" && x.end < v.start)
+        .sort((a, b) => b.end.localeCompare(a.end));
+      if (prevIC.length) {
+        const last = prevIC[0];
+        const gap = daysBetweenStrict(last.end, v.start);
+        if (gap < 14) {
+          w.push({
+            kind: gap < 0 ? "err" : "warn",
+            text: "IC: после «" + last.name + "» прошло " + gap + " дн. (нужно 14)."
+          });
+        }
+      }
+    }
+
+    const windowStart = (() => {
+      const d = parseDate(v.start);
+      if (!d) return v.start;
+      d.setDate(d.getDate() - (LIMIT_WINDOW_DAYS - 1));
+      return d.getFullYear() + "-" +
+             String(d.getMonth()+1).padStart(2,"0") + "-" +
+             String(d.getDate()).padStart(2,"0");
+    })();
+    const windowEnd = v.end;
+
+    const sameName = (v.name || "").trim().toLowerCase();
+    const overlapping = state.vacations.filter(x => {
+      if (x.rowIndex === editingRow) return false;
+      if (!sameName) return false;
+      if ((x.name || "").trim().toLowerCase() !== sameName) return false;
+      if (x.end < windowStart) return false;
+      if (x.start > windowEnd) return false;
+      return true;
+    });
+
+    let usedDays = 0;
+    overlapping.forEach(x => {
+      const s = x.start > windowStart ? x.start : windowStart;
+      const e = x.end < windowEnd ? x.end : windowEnd;
+      const d = daysBetween(s, e);
+      if (d > 0) usedDays += d;
+    });
+
+    const newDays = dur;
+
+    if (usedDays + newDays > LIMIT_TOTAL_DAYS) {
+      w.push({
+        kind: "err",
+        text: "Общий лимит: за 30 дней у «" + (v.name || "—") + "» уже " +
+              usedDays + " дн., вместе с новым (" + newDays + ") будет " +
+              (usedDays + newDays) + " дн. (макс. " + LIMIT_TOTAL_DAYS + ")."
+      });
+    } else if (usedDays + newDays > LIMIT_TOTAL_DAYS - 3) {
+      w.push({
+        kind: "warn",
+        text: "Общий лимит: за 30 дней будет " + (usedDays + newDays) +
+              " из " + LIMIT_TOTAL_DAYS + " дн."
+      });
+    }
+
+    return w;
+  }
+
+  function hasBlockingErrors(warns) {
+    return warns.some(w => w.kind === "err");
+  }
+
+  async function loadVacations() {
+    vacList.innerHTML = '<div class="empty">Загрузка…</div>';
+    try {
+      const data = await apiPost({ action: "getVacations" });
+      if (!data || !data.success) throw new Error((data && data.message) || "Ошибка");
+      state.vacations = data.vacations || [];
+      render();
+    } catch (err) {
+      console.error(err);
+      vacList.innerHTML = '<div class="empty">Не удалось загрузить: ' + err.message + '</div>';
+    }
+  }
+
+  async function loadStaff() {
+    if (state.staffLoaded) return;
+    try {
+      const data = await apiPost({ action: "getStaff" });
+      if (data && data.success) {
+        state.staff = data.staff || [];
+        state.staffLoaded = true;
+      }
+    } catch (e) {
+      console.error("loadStaff:", e);
+    }
+  }
+
+  function render() {
+    const q = (searchInput.value || "").trim().toLowerCase();
+    const dept = filterDept.value;
+    const sf = filterStatus.value;
+
+    let list = state.vacations.map(v => ({ ...v, _status: getStatus(v) }));
+    if (dept) list = list.filter(v => v.department === dept);
+    if (sf) list = list.filter(v => v._status === sf);
+    if (q) list = list.filter(v =>
+      (v.name || "").toLowerCase().includes(q) ||
+      (v.staticId || "").toLowerCase().includes(q)
+    );
+
+    const order = { active:0, overdue:1, upcoming:2, cancelled:3 };
+    list.sort((a, b) => {
+      const oa = order[a._status] ?? 9, ob = order[b._status] ?? 9;
+      if (oa !== ob) return oa - ob;
+      return (a.start || "").localeCompare(b.start || "");
+    });
+
+    titleCount.textContent = state.vacations.length
+      ? "Отпуска (" + list.length + "/" + state.vacations.length + ")"
+      : "Список отпусков";
+
+    vacList.innerHTML = "";
+    if (!list.length) {
+      const e = document.createElement("div");
+      e.className = "empty";
+      e.innerHTML = state.vacations.length === 0
+        ? "Пока нет ни одного отпуска.<br><b>Нажмите «Добавить»</b>."
+        : "Ничего не найдено.";
+      vacList.appendChild(e);
+      return;
+    }
+    list.forEach(v => vacList.appendChild(buildRow(v)));
+  }
+
+  function buildRow(v) {
+    const s = v._status;
+    const dur = daysBetween(v.start, v.end);
+    const deptCls = "dept-" + String(v.department || "").toLowerCase().replace(/\s+/g, "-");
+    const initial = (v.name || "?").trim().charAt(0).toUpperCase();
+
+    let noteHtml = "";
+    if (s === "active") {
+      const left = daysFromToday(v.end) * -1;
+      noteHtml = '<span class="vac-note green">⏳ ' + left + ' дн. осталось</span>';
+    } else if (s === "overdue") {
+      const late = daysFromToday(v.end);
+      noteHtml = '<span class="vac-note red">⚠️ просрочен ' + late + ' дн.</span>';
+    } else if (s === "upcoming") {
+      const until = daysFromToday(v.start) * -1;
+      noteHtml = '<span class="vac-note muted">через ' + until + ' дн.</span>';
+    } else if (s === "cancelled") {
+      noteHtml = '<span class="vac-note muted">🔄 возврат отмечен</span>';
+    } else {
+      noteHtml = '<span class="vac-note muted">завершён</span>';
+    }
+
+    const canEdit = isAdmin();
+
+    const row = document.createElement("div");
+    row.className = "vac-row " + s;
+
+    row.innerHTML =
+      '<div class="vac-avatar">' + esc(initial) + '</div>' +
+      '<div class="vac-main">' +
+        '<div class="vac-name-line">' +
+          '<span class="vac-name">' + esc(v.name || "—") + '</span>' +
+          (v.staticId ? '<span class="vac-static">#' + esc(v.staticId) + '</span>' : '') +
+          '<span class="type-pill ' + v.type.toLowerCase() + '">' + esc(v.type) + '</span>' +
+        '</div>' +
+        '<div class="vac-sub">' +
+          '<span class="dept-pill ' + deptCls + '">' + esc(DEPT_LABEL[v.department] || v.department || "—") + '</span>' +
+          '<span class="vac-dates">' + fmtShort(v.start) + '<span class="sep">→</span>' + fmtShort(v.end) + ' · ' + dur + ' дн.</span>' +
+        '</div>' +
+      '</div>' +
+      (s === "cancelled"
+        ? '<span class="status-badge cancelled" data-name="' + esc(v.name) + '" data-passport="' + esc(v.staticId || "") + '" data-reason="' + esc(v.returnReason || "") + '" title="Нажмите, чтобы увидеть причину">🔄 Отменён ℹ️</span>'
+        : '<span class="status-badge ' + s + '"><span class="dot"></span>' + statusLabel(s) + '</span>') +
+      '<div>' + noteHtml + '</div>' +
+      '<div class="vac-actions">' +
+        (canEdit && (s === "active" || s === "overdue")
+          ? '<button class="icon-btn finish" data-action="finish" title="Отметить возврат">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+            '</button>' : '') +
+        (canEdit
+          ? '<button class="icon-btn" data-action="edit" title="Изменить">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>' +
+            '</button>' +
+            '<button class="icon-btn delete" data-action="delete" title="Удалить">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>' +
+            '</button>' : '') +
+      '</div>';
+
+    const statusBadge = row.querySelector(".status-badge.cancelled");
+    if (statusBadge) {
+      statusBadge.addEventListener("click", () => openFinishInfoModal(
+        statusBadge.dataset.name,
+        statusBadge.dataset.passport,
+        statusBadge.dataset.reason
+      ));
+    }
+
+    row.querySelector('[data-action="finish"]')?.addEventListener("click", () => finish(v));
+    row.querySelector('[data-action="edit"]')?.addEventListener("click", () => openEdit(v));
+    row.querySelector('[data-action="delete"]')?.addEventListener("click", () => del(v));
+
+    return row;
+  }
+
+  function finish(v) {
+    if (!isAdmin()) { showToast("Только для администраторов", "alert"); return; }
+    state.finishTarget = v;
+    $("finishWhoName").textContent = v.name || "—";
+    $("finishWhoSub").textContent = "#" + (v.staticId || "—") +
+      " · " + (v.department || "—") +
+      " · " + (v.type || "—") +
+      " · " + (v.start || "—") + " → " + (v.end || "—");
+    $("finishReason").value = "";
+    $("finishModal").classList.remove("hidden");
+    setTimeout(() => $("finishReason").focus(), 60);
+  }
+
+  function closeFinishModal() {
+    state.finishTarget = null;
+    $("finishModal").classList.add("hidden");
+  }
+
+  async function confirmFinish() {
+    if (!state.finishTarget) return;
+    const reason = $("finishReason").value.trim();
+    if (!reason) {
+      showToast("Введите причину возврата", "alert");
+      $("finishReason").focus();
+      return;
+    }
+    const v = state.finishTarget;
+    $("finishConfirm").disabled = true;
+
+    try {
+      const data = await apiPost({
+        action: "finishVacation",
+        login: state.user.login,
+        hash: state.user.hash,
+        targetRowIndex: v.rowIndex,
+        reason: reason
+      });
+      if (!data.success) {
+        showToast(data.message || "Ошибка", "alert");
+        return;
+      }
+      v.returned = true;
+      v.returnReason = reason;
+      showToast("Возврат: " + v.name, "success");
+      notifyParent("Возврат отмечен", v.name, "success");
+      closeFinishModal();
+      await loadVacations();
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка сети", "alert");
+    } finally {
+      $("finishConfirm").disabled = false;
+    }
+  }
+
+  function openFinishInfoModal(name, passport, reason) {
+    $("finishInfoWhoName").textContent = name || "—";
+    $("finishInfoWhoSub").textContent = "#" + (passport || "—");
+    $("finishInfoComment").textContent = reason || "(без комментария)";
+    $("finishInfoModal").classList.remove("hidden");
+  }
+
+  function closeFinishInfoModal() {
+    $("finishInfoModal").classList.add("hidden");
+  }
+
+  async function del(v) {
+    if (!isAdmin()) { showToast("Только для администраторов", "alert"); return; }
+    if (!confirm("Удалить отпуск «" + v.name + "»?")) return;
+    try {
+      const data = await apiPost({
+        action: "deleteVacation",
+        login: state.user.login, hash: state.user.hash,
+        targetRowIndex: v.rowIndex
+      });
+      if (!data.success) { showToast(data.message || "Ошибка", "alert"); return; }
+      showToast("Удалено", "info");
+      notifyParent("Удалено", v.name, "info");
+      await loadVacations();
+    } catch (e) {
+      console.error(e);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
+  function openEdit(v) {
+    if (!isAdmin()) return;
+    state.editingRowIndex = v.rowIndex;
+    state.selectedStaff = null;
+    editRowIndex.value = v.rowIndex;
+    formTitle.textContent = "Редактирование: " + v.name;
+    saveBtnText.textContent = "Сохранить";
+    fName.value = v.name || "";
+    fPassport.value = v.staticId || "";
+    fDept.value = v.department || "СМП";
+    fType.value = v.type || "IC";
+    fStart.value = v.start || "";
+    fEnd.value = v.end || "";
+    formCard.classList.remove("hidden");
+    updateCalc();
+    formCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openCreate() {
+    if (!isAdmin()) { showToast("Только для администраторов", "alert"); return; }
+    state.editingRowIndex = null;
+    state.selectedStaff = null;
+    editRowIndex.value = "";
+    formTitle.textContent = "Новый отпуск";
+    saveBtnText.textContent = "Добавить";
+    vacForm.reset();
+    fDept.value = "СМП";
+    fType.value = "IC";
+    fStart.value = todayStr();
+    formCard.classList.remove("hidden");
+    updateCalc();
+    formCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    loadStaff();
+  }
+
+  function closeForm() {
+    state.editingRowIndex = null;
+    state.selectedStaff = null;
+    editRowIndex.value = "";
+    vacForm.reset();
+    formWarnings.innerHTML = "";
+    durationDisp.className = "duration-display";
+    durationVal.textContent = "—";
+    formCard.classList.add("hidden");
+    closeSuggest(nameSuggest);
+    closeSuggest(passportSuggest);
+  }
+
+  function updateCalc() {
+    const start = fStart.value, end = fEnd.value;
+    if (!start || !end) {
+      durationVal.textContent = "—";
+      durationDisp.className = "duration-display";
+    } else if (end < start) {
+      durationVal.textContent = "некорректно";
+      durationDisp.className = "duration-display err";
+    } else {
+      const d = daysBetween(start, end);
+      durationVal.textContent = d + " дн.";
+      const lim = fType.value === "IC" ? LIMIT_IC_DAYS : LIMIT_OOC_DAYS;
+      durationDisp.className = "duration-display" + (d > lim ? " err" : d === lim ? " warn" : "");
+    }
+
+    formWarnings.innerHTML = "";
+    if (!start || !end || end < start) return;
+
+    const pseudo = {
+      name: fName.value.trim() || "—",
+      staticId: fPassport.value.trim(),
+      department: fDept.value,
+      type: fType.value,
+      start, end
+    };
+    validate(pseudo, state.editingRowIndex).forEach(w => {
+      const div = document.createElement("div");
+      div.className = "form-warning" + (w.kind === "err" ? " err" : "");
+      div.textContent = (w.kind === "err" ? "⛔ " : "⚠️ ") + w.text;
+      formWarnings.appendChild(div);
+    });
+  }
+
+  function normalize(s) { return String(s || "").trim().toLowerCase(); }
+
+  function staffMatches(query, field) {
+    const q = normalize(query);
+    if (!q || q.length < 2) return [];
+    return state.staff
+      .filter(s => {
+        const hay = field === "name" ? (s.name || "") : (s.passport || "");
+        return normalize(hay).includes(q);
+      })
+      .slice(0, 15);
+  }
+
+  function renderSuggest(listEl, items, field) {
+    listEl.innerHTML = "";
+    if (!items.length) {
+      listEl.innerHTML = '<div class="suggest-empty">Никого не найдено</div>';
+      listEl.classList.add("open");
+      return;
+    }
+    items.forEach((s, i) => {
+      const el = document.createElement("div");
+      el.className = "suggest-item";
+      el.dataset.idx = i;
+
+      const deptCls = "dept-" + String(s.department || "").toLowerCase().replace(/\s+/g, "-");
+
+      el.innerHTML =
+        '<div class="s-main">' +
+          '<div class="s-name">' + esc(s.name || "—") + '</div>' +
+          '<div class="s-sub">' +
+            (s.passport ? '#' + esc(s.passport) : 'без паспорта') +
+            (s.position ? ' · ' + esc(s.position) : '') +
+            (s.rank ? ' · ' + esc(s.rank) : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="s-dept"><span class="dept-pill ' + deptCls + '">' +
+          esc(DEPT_LABEL[s.department] || s.department || "—") +
+        '</span></div>';
+
+      el.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        pickStaff(s, field);
+      });
+
+      listEl.appendChild(el);
+    });
+
+    const hint = document.createElement("div");
+    hint.className = "suggest-hint";
+    hint.innerHTML = '<span>Найдено: ' + items.length + '</span><span>↑↓ · Enter — выбрать</span>';
+    listEl.appendChild(hint);
+
+    listEl.classList.add("open");
+    state.activeSuggest[field] = 0;
+    highlightSuggest(listEl, 0);
+  }
+
+  function highlightSuggest(listEl, idx) {
+    const items = listEl.querySelectorAll(".suggest-item");
+    items.forEach((it, i) => it.classList.toggle("active", i === idx));
+  }
+
+  function closeSuggest(listEl) {
+    listEl.classList.remove("open");
+    listEl.innerHTML = "";
+  }
+
+  function pickStaff(s, field) {
+    state.selectedStaff = s;
+
+    fName.value = s.name || "";
+    fPassport.value = s.passport || "";
+    if (s.department && DEPARTMENTS.indexOf(s.department) !== -1) {
+      fDept.value = s.department;
+    }
+
+    closeSuggest(nameSuggest);
+    closeSuggest(passportSuggest);
+
+    showToast("Выбран: " + s.name + " · " + (DEPT_LABEL[s.department] || s.department), "info");
+
+    [fName, fPassport].forEach(el => {
+      el.style.transition = "border-color 0.2s";
+      el.style.borderColor = "var(--good)";
+      setTimeout(() => { el.style.borderColor = ""; }, 900);
+    });
+
+    updateCalc();
+  }
+
+  function attachSuggest(inputEl, listEl, field) {
+    inputEl.addEventListener("input", () => {
+      state.selectedStaff = null;
+      const q = inputEl.value.trim();
+      if (q.length < 2) { closeSuggest(listEl); return; }
+      const items = staffMatches(q, field);
+      renderSuggest(listEl, items, field);
+      updateCalc();
+    });
+
+    inputEl.addEventListener("focus", () => {
+      const q = inputEl.value.trim();
+      if (q.length >= 2) {
+        const items = staffMatches(q, field);
+        if (items.length) renderSuggest(listEl, items, field);
+      }
+    });
+
+    inputEl.addEventListener("blur", () => {
+      setTimeout(() => closeSuggest(listEl), 150);
+    });
+
+    inputEl.addEventListener("keydown", (e) => {
+      const open = listEl.classList.contains("open");
+      if (!open) return;
+      const items = listEl.querySelectorAll(".suggest-item");
+      if (!items.length) return;
+      const cur = state.activeSuggest[field] || 0;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = Math.min(items.length - 1, cur + 1);
+        state.activeSuggest[field] = next;
+        highlightSuggest(listEl, next);
+        items[next].scrollIntoView({ block: "nearest" });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prev = Math.max(0, cur - 1);
+        state.activeSuggest[field] = prev;
+        highlightSuggest(listEl, prev);
+        items[prev].scrollIntoView({ block: "nearest" });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const el = items[cur];
+        if (el) el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closeSuggest(listEl);
+      }
+    });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!isAdmin()) { showToast("Только для администраторов", "alert"); return; }
+
+    const name = fName.value.trim();
+    const staticId = fPassport.value.trim();
+    const department = fDept.value;
+    const type = fType.value;
+    const start = fStart.value;
+    const end = fEnd.value;
+
+    if (!name || !start || !end) { showToast("Заполните обязательные поля", "alert"); return; }
+    if (end < start) { showToast("Дата окончания раньше начала", "alert"); return; }
+
+    const pseudo = { name, staticId, department, type, start, end };
+    const warns = validate(pseudo, state.editingRowIndex);
+    const errs = warns.filter(w => w.kind === "err");
+
+    if (hasBlockingErrors(warns)) {
+      showToast("Сохранение невозможно: лимит нарушен", "alert");
+      formWarnings.innerHTML = "";
+      errs.forEach(w => {
+        const div = document.createElement("div");
+        div.className = "form-warning err";
+        div.textContent = "⛔ " + w.text;
+        formWarnings.appendChild(div);
+      });
+      formWarnings.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      return;
+    }
+
+    try {
+      let data;
+      if (state.editingRowIndex) {
+        data = await apiPost({
+          action: "updateVacation",
+          login: state.user.login, hash: state.user.hash,
+          targetRowIndex: state.editingRowIndex,
+          name, staticId, department, type, start, end
+        });
+      } else {
+        data = await apiPost({
+          action: "addVacation",
+          login: state.user.login, hash: state.user.hash,
+          name, staticId, department, type, start, end
+        });
+      }
+
+      if (!data.success) { showToast(data.message || "Ошибка", "alert"); return; }
+
+      showToast(state.editingRowIndex ? "Обновлено" : ("Добавлено: " + name), "success");
+      notifyParent(state.editingRowIndex ? "Отпуск обновлён" : "Отпуск добавлен", name, "success");
+      notifyParentReservationsChanged();
+      closeForm();
+      await loadVacations();
+    } catch (err) {
+      console.error(err);
+      showToast("Ошибка сети", "alert");
+    }
+  }
+
+  function notifyParent(title, text, kind) {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: "toast", title: title || "", text: text || "", kind: kind || "success"
+        }, "*");
+      }
+    } catch (e) {}
+  }
+  function notifyParentReservationsChanged() {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: "vacations-changed" }, "*");
+      }
+    } catch (e) {}
+  }
+
+  const toastEl = $("toast");
+  const toastText = $("toastText");
+  const toastIcon = $("toastIcon");
+  let toastTimer = null;
+  const I_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const I_ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  const I_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+
+  function showToast(text, kind) {
+    kind = kind || "success";
+    toastEl.className = "toast " + (kind === "alert" ? "alert" : kind === "info" ? "info" : "");
+    toastText.textContent = text;
+    toastIcon.innerHTML = kind === "alert" ? I_ALERT : kind === "info" ? I_INFO : I_OK;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2400);
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function fillSelects() {
+    fDept.innerHTML = "";
+    DEPARTMENTS.forEach(d => {
+      const o = document.createElement("option");
+      o.value = d; o.textContent = DEPT_LABEL[d]; fDept.appendChild(o);
+    });
+    filterDept.innerHTML = '<option value="">Все отделы</option>';
+    DEPARTMENTS.forEach(d => {
+      const o = document.createElement("option");
+      o.value = d; o.textContent = DEPT_LABEL[d]; filterDept.appendChild(o);
+    });
+  }
+
+  function init() {
+    const user = loadSession();
+    if (!user) {
+      document.querySelector(".tablet").innerHTML =
+        '<div class="card" style="text-align:center;padding:40px 20px;">' +
+          '<div style="font-size:2rem;margin-bottom:10px;">🔒</div>' +
+          '<div style="font-weight:600;margin-bottom:6px;">Нет активной сессии</div>' +
+          '<div class="empty">Войдите в планшет заново</div>' +
+        '</div>';
+      return;
+    }
+    state.user = user;
+
+    fillSelects();
+
+    if (!isAdmin()) {
+      const addBtnEl = document.getElementById("addBtn");
+      if (addBtnEl) addBtnEl.classList.add("hidden");
+    }
+
+    $("addBtn").addEventListener("click", openCreate);
+    $("cancelBtn").addEventListener("click", closeForm);
+    $("cancelBtn2").addEventListener("click", closeForm);
+    vacForm.addEventListener("submit", handleSubmit);
+
+    searchInput.addEventListener("input", render);
+    filterDept.addEventListener("change", render);
+    filterStatus.addEventListener("change", render);
+
+    [fStart, fEnd, fType, fDept].forEach(el => {
+      el.addEventListener("input", updateCalc);
+      el.addEventListener("change", updateCalc);
+    });
+
+    attachSuggest(fName, nameSuggest, "name");
+    attachSuggest(fPassport, passportSuggest, "passport");
+
+    $("finishCancel").addEventListener("click", closeFinishModal);
+    $("finishConfirm").addEventListener("click", confirmFinish);
+    $("finishModal").addEventListener("click", (e) => {
+      if (e.target === $("finishModal")) closeFinishModal();
+    });
+
+    $("finishInfoClose").addEventListener("click", closeFinishInfoModal);
+    $("finishInfoModal").addEventListener("click", (e) => {
+      if (e.target === $("finishInfoModal")) closeFinishInfoModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (!$("finishModal").classList.contains("hidden")) closeFinishModal();
+        if (!$("finishInfoModal").classList.contains("hidden")) closeFinishInfoModal();
+      }
+    });
+
+    loadVacations();
+    loadStaff();
+
+    setInterval(() => {
+      if (document.hidden) return;
+      loadVacations();
+    }, 60000);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

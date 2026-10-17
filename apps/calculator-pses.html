@@ -6,6 +6,7 @@
 <title>ПСЭС — Калькулятор отчётов</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
     --bg: #0d1520;
     --panel: #16202e;
@@ -49,6 +50,9 @@
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
+  /* ============================================================
+     СВЕТЛАЯ ТЕМА
+     ============================================================ */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --panel: #ffffff;
@@ -93,17 +97,20 @@
 
   html, body { height: 100%; }
   html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
+  
   body {
     font-family: var(--font);
     background: var(--body-bg); color: var(--text); line-height: 1.5;
-    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
     padding: 16px 16px 24px;
     display: flex; flex-direction: column; align-items: center;
-    scrollbar-width: none; -ms-overflow-style: none;
+    overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;
     transition: background 0.25s, color 0.25s;
   }
+  
   .tablet { max-width: 1100px; width: 100%; display: flex; flex-direction: column; }
   .tablet-body { flex: 1; padding-bottom: 90px; }
+  
   .page-title {
     text-align: center; font-size: 1.1rem; font-weight: 700;
     color: var(--accent-2); letter-spacing: 0.02em; padding: 8px 0 18px;
@@ -123,6 +130,7 @@
     display: block; font-size: 0.72rem; font-weight: 500;
     color: var(--muted); letter-spacing: 0; margin-top: 2px;
   }
+  
   .card {
     background: var(--card-bg);
     border: 1px solid var(--border); border-radius: 16px; padding: 20px;
@@ -141,6 +149,7 @@
   }
   .card h2 .h-icon svg { width: 15px; height: 15px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  
   label {
     display: block; font-size: 0.72rem; font-weight: 600;
     margin-bottom: 6px; color: var(--muted);
@@ -165,6 +174,7 @@
     background-size: 18px; padding-right: 40px; cursor: pointer;
   }
   select option { background: var(--input-bg); color: var(--text); }
+  
   input[type="checkbox"] {
     appearance: none; -webkit-appearance: none;
     width: 18px; height: 18px; min-width: 18px;
@@ -179,6 +189,7 @@
     color: #fff; font-size: 12px; font-weight: 700; line-height: 1;
   }
   input[type="checkbox"]:hover { border-color: var(--accent); }
+  
   .checkbox-group {
     display: inline-flex; align-items: center;
     gap: 4px; padding: 7px 12px; border-radius: 10px;
@@ -187,6 +198,7 @@
   }
   .checkbox-group:hover { border-color: var(--accent); }
   .checkbox-group .label-text { user-select: none; }
+  
   .autocomplete-wrap { position: relative; }
   .autocomplete-list {
     position: absolute; top: calc(100% + 4px); left: 0; right: 0;
@@ -218,6 +230,7 @@
   .autocomplete-list .loading {
     padding: 12px; color: var(--muted); font-size: 0.82rem; text-align: center;
   }
+  
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
   th {
@@ -241,6 +254,7 @@
   td .sum { color: var(--accent-2); }
   .act-name { font-weight: 500; }
   .act-note { display: block; font-size: 0.7rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  
   .lunch-toggle-wrap { display: flex; justify-content: center; margin: 14px 0 0; }
   .lunch-toggle {
     display: inline-flex; align-items: center; gap: 12px;
@@ -316,6 +330,7 @@
   .card.lunch h2 .h-icon { background: rgba(245, 158, 11, 0.14); }
   .card.lunch h2 .h-icon svg { color: var(--lunch); }
   .card.lunch td .sum { color: var(--lunch-text); }
+  
   .subs-grid { display: grid; gap: 10px; }
   .sub-row {
     display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
@@ -338,6 +353,7 @@
   .sub-info.err  { background: var(--red-bg);   border-left-color: var(--red);   color: var(--red-text); }
   .sub-info b { color: var(--text); }
   .sub-info .sub-title { font-weight: 700; margin-bottom: 4px; display: block; }
+  
   .extras-list { display: flex; flex-wrap: wrap; gap: 8px; }
   .extra-item {
     display: inline-flex; align-items: center; gap: 6px;
@@ -376,6 +392,7 @@
     font-size: 0.85rem; color: var(--accent-2); font-weight: 700; display: none;
   }
   .extra-total.visible { display: block; }
+  
   .bodi-info { margin-top: 10px; color: var(--muted); font-size: 0.78rem; }
   .bodi-warn {
     margin-top: 10px; padding: 10px 14px; border-radius: 10px;
@@ -387,6 +404,7 @@
     background: var(--good-bg); border-left: 3px solid var(--good);
     color: var(--good-text); font-size: 0.82rem; line-height: 1.5;
   }
+  
   .progress { height: 8px; background: var(--panel-3); border-radius: 999px; overflow: hidden; margin: 4px 0 12px; }
   .fill {
     height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -397,6 +415,7 @@
     color: var(--muted); font-size: 0.82rem; margin-bottom: 4px;
   }
   .progress-label .val { color: var(--text); font-weight: 600; }
+  
   .req-list { display: grid; gap: 6px; }
   .req-row {
     display: flex; align-items: center; gap: 12px; padding: 9px 14px;
@@ -413,6 +432,7 @@
   .req-row.ok  .val { color: var(--good-text); }
   .req-row.no  .val { color: var(--red-text); }
   .req-row.sub .val, .req-row.extra .val { color: var(--accent-2); }
+  
   .total-box {
     text-align: center; padding: 18px 14px; border-radius: 14px;
     background: var(--accent-soft);
@@ -426,6 +446,7 @@
     font-size: 0.72rem; color: var(--muted);
     text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px;
   }
+  
   .remark-buttons {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 6px; margin-top: 10px;
@@ -441,6 +462,7 @@
     background: var(--accent-soft);
     border-color: var(--accent); color: var(--accent-2); font-weight: 600;
   }
+  
   #visualReport {
     margin-top: 14px; background: var(--out-bg);
     border: 1px solid var(--border); border-radius: 14px; padding: 16px;
@@ -501,6 +523,7 @@
     color: var(--muted); font-style: italic; font-size: 0.82rem; white-space: pre-wrap;
   }
   .report-remarks strong { color: var(--text); font-style: normal; }
+  
   textarea#out {
     background: var(--out-bg); border: 1px solid var(--border);
     color: var(--text-soft);
@@ -510,6 +533,7 @@
     resize: vertical; width: 100%; min-height: 140px;
     transition: background 0.25s, color 0.25s;
   }
+  
   .bottombar {
     position: sticky; bottom: 0; z-index: 30; width: 100%; margin-top: 14px;
     background: var(--modal-bg);
@@ -541,6 +565,7 @@
   .summary-item .mark.ok  { color: var(--good-text); }
   .summary-item .mark.bad { color: var(--red-text); }
   .summary-item .norm { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+  
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
     gap: 6px; padding: 10px 16px; font-size: 0.85rem; font-weight: 600;
@@ -556,136 +581,13 @@
   .btn-ghost:hover:not(:disabled) { background: var(--panel-3); color: var(--text); }
   .btn-danger { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
   .btn-danger:hover:not(:disabled) { background: rgba(239, 68, 68, 0.28); color: #fff; }
-
-  /* ===== Кнопка "Принять с замечанием" ===== */
   .btn-warn { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
   .btn-warn:hover:not(:disabled) { background: var(--amber); color: #1a1207; }
-
-  /* ===== Дежурство: интервалы (улучшенный дизайн) ===== */
-  .duty-intervals { display: flex; flex-direction: column; gap: 8px; }
-  
-  .duty-interval-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto auto auto;
-    gap: 12px;
-    align-items: center;
-    padding: 10px 14px;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-  }
-  
-  .duty-interval-row:hover { border-color: var(--accent-soft); }
-  .duty-interval-row.duty-over { border-color: var(--red); background: var(--red-bg); }
-  .duty-interval-row.duty-under { border-color: var(--amber); background: var(--amber-bg); }
-
-  .duty-interval-row input[type="time"] {
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-align: center;
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: inherit;
-    outline: none;
-  }
-  .duty-interval-row input[type="time"]:focus { border-color: var(--accent-2); }
-  .duty-interval-row input[type="time"]::-webkit-calendar-picker-indicator { opacity: 0.6; cursor: pointer; }
-
-  .duty-dash { color: var(--muted); font-weight: 700; font-size: 1.1rem; }
-
-  .duty-diff {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 10px;
-    border-radius: 6px;
-    background: var(--panel-3);
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-soft);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    min-width: 75px;
-    border: 1px solid transparent;
-  }
-  .duty-over .duty-diff { background: rgba(239, 68, 68, 0.15); color: var(--red-text); border-color: var(--red-border); }
-  .duty-under .duty-diff { background: rgba(245, 185, 74, 0.15); color: var(--amber-text); border-color: var(--amber-border); }
-
-  .duty-check-label {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 0.8rem; font-weight: 600; color: var(--text-soft); cursor: pointer; user-select: none;
-    background: var(--input-bg); padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border);
-    transition: border-color 0.15s;
-  }
-  .duty-check-label:hover { border-color: var(--accent); }
-  .duty-check-label input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; }
-
-  .duty-remove-btn {
-    width: 32px; height: 32px; padding: 0;
-    display: inline-flex; align-items: center; justify-content: center;
-    border-radius: 8px; border: 1px solid var(--border);
-    background: transparent; color: var(--muted); cursor: pointer;
-    font-size: 1.1rem; line-height: 1;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-  }
-  .duty-remove-btn:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
-
-  .duty-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 16px;
-  }
-  
-  .duty-stat {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 12px; border-radius: 12px; background: var(--input-bg); border: 1px solid var(--border); text-align: center;
-  }
-  
-  .duty-stat .ds-lbl {
-    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
-    color: var(--muted); font-weight: 700; margin-bottom: 6px;
-  }
-  .duty-stat .ds-val {
-    font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1;
-  }
-  .duty-stat .ds-val small { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
-
-  .duty-stat.highlight { border-color: var(--accent); background: var(--accent-soft); }
-  .duty-stat.highlight .ds-val { color: var(--accent-2); }
-
-  .duty-stat.success { border-color: var(--good-border); background: var(--good-bg); }
-  .duty-stat.success .ds-val { color: var(--good-text); }
-
-  @media (max-width: 640px) {
-    .duty-interval-row {
-      grid-template-columns: 1fr auto 1fr 32px;
-      grid-template-areas: 
-        "start dash end remove"
-        "diff check check check";
-      gap: 8px;
-    }
-    .duty-start { grid-area: start; }
-    .duty-end { grid-area: end; }
-    .duty-dash { grid-area: dash; }
-    .duty-diff { grid-area: diff; justify-self: start; }
-    .duty-check-label { grid-area: check; justify-self: end; }
-    .duty-remove-btn { grid-area: remove; }
-    .duty-summary { grid-template-columns: 1fr; }
-    .duty-stat { flex-direction: row; justify-content: space-between; padding: 10px 16px; }
-    .duty-stat .ds-lbl { margin-bottom: 0; }
-  }
-  /* ===== /Дежурство ===== */
-
   .btn.copy-success {
     background: var(--good) !important; color: #0d1520 !important;
     box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.35);
   }
+  
   .save-week-btn {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
@@ -697,6 +599,7 @@
   .save-week-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
   .save-week-btn .spin { animation: spin 1s linear infinite; }
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  
   .draft-badge {
     position: fixed; top: 12px; right: 12px; z-index: 100;
     display: none; align-items: center; gap: 6px;
@@ -708,13 +611,109 @@
   }
   .draft-badge.show { display: flex; opacity: 1; }
   .draft-badge svg { width: 12px; height: 12px; }
+  
   .topic-box {
     margin-top: 12px; padding: 10px 14px;
     background: var(--accent-soft); border-radius: 10px;
     border-left: 3px solid var(--accent); font-size: 0.85rem; color: var(--text);
   }
   .topic-box b { color: var(--accent-2); }
+  
   .hidden { display: none !important; }
+
+  /* ============================================================
+     ДЕЖУРСТВО — СТИЛИ (ИСПРАВЛЕННЫЕ)
+     ============================================================ */
+  .duty-intervals { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  
+  .duty-interval-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    flex-wrap: wrap;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .duty-interval-row.duty-over { border-color: var(--red); background: var(--red-bg); }
+  .duty-interval-row.duty-under { border-color: var(--amber); background: var(--amber-bg); }
+  
+  .duty-interval-row input[type="time"] {
+    width: 110px;
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .duty-interval-row input[type="time"]:focus { border-color: var(--accent-2); }
+  .duty-dash { color: var(--muted); font-weight: 700; }
+  
+  .duty-diff {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--panel-3);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    min-width: 70px;
+  }
+  .duty-over .duty-diff { background: rgba(239, 68, 68, 0.2); color: var(--red-text); }
+  .duty-under .duty-diff { background: rgba(245, 185, 74, 0.2); color: var(--amber-text); }
+
+  .duty-check-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.78rem; font-weight: 600; color: var(--text-soft); cursor: pointer; user-select: none;
+    background: var(--input-bg); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
+    margin-left: auto;
+  }
+  .duty-check-label input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; }
+
+  .duty-remove-btn {
+    width: 28px; height: 28px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+    font-size: 1rem; line-height: 1;
+    transition: 0.15s;
+  }
+  .duty-remove-btn:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+
+  .duty-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+    width: 100%;
+  }
+  .duty-stat {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 12px 8px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--border); text-align: center;
+  }
+  .duty-stat .ds-lbl {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); font-weight: 700; margin-bottom: 6px;
+  }
+  .duty-stat .ds-val {
+    font-size: 1.3rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .duty-stat .ds-val small { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+  .duty-stat.highlight { border-color: var(--accent); background: var(--accent-soft); }
+  .duty-stat.highlight .ds-val { color: var(--accent-2); }
+  .duty-stat.success { border-color: var(--good-border); background: var(--good-bg); }
+  .duty-stat.success .ds-val { color: var(--good-text); }
+
   @media (max-width: 640px) {
     body { padding: 12px 12px 20px; }
     .card { padding: 14px; border-radius: 14px; }
@@ -732,6 +731,14 @@
     .lunch-toggle .toggle-switch { width: 36px; height: 20px; }
     .lunch-toggle .toggle-switch::after { width: 12px; height: 12px; }
     .lunch-toggle.active .toggle-switch::after { left: calc(100% - 15px); }
+    
+    /* Мобильный вид дежурства */
+    .duty-summary { grid-template-columns: 1fr; }
+    .duty-stat { flex-direction: row; justify-content: space-between; padding: 10px 14px; }
+    .duty-stat .ds-lbl { margin-bottom: 0; }
+    .duty-check-label { margin-left: 0; width: 100%; justify-content: center; margin-top: 4px; }
+    .duty-interval-row input[type="time"] { flex: 1; width: auto; }
+    .duty-diff { width: 100%; text-align: center; margin-top: 4px; }
   }
 
   input[type="number"]::-webkit-outer-spin-button,
@@ -929,7 +936,7 @@
       <div class="extra-total" id="extraTotal"></div>
     </div>
 
-    <!-- ============ ДЕЖУРСТВО НА ПОСТУ ============ -->
+    <!-- ДЕЖУРСТВО НА ПОСТУ -->
     <div class="card">
       <h2>
         <span class="h-icon">

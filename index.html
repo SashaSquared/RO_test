@@ -1489,6 +1489,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/js-sha256@0.11.0/src/sha256.min.js"></script>
 <script>
 (function () {
   "use strict";
@@ -1956,11 +1957,27 @@
     }
   }
 
-  /* Крипто */
+  /* Крипто с fallback для Opera / HTTP / file:// */
   async function sha256Hex(text) {
-    const enc = new TextEncoder();
-    const buf = await crypto.subtle.digest("SHA-256", enc.encode(text));
-    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    // 1. Встроенный Web Crypto (только в secure context: https, localhost)
+    if (window.crypto && window.crypto.subtle) {
+      try {
+        const enc = new TextEncoder();
+        const buf = await crypto.subtle.digest("SHA-256", enc.encode(text));
+        return Array.from(new Uint8Array(buf))
+          .map((b) => b.toString(16).padStart(2, "0")).join("");
+      } catch (e) {
+        /* пробуем fallback */
+      }
+    }
+    // 2. Fallback через js-sha256 (работает всегда, в т.ч. на file:// и HTTP)
+    if (typeof window.sha256 === "function") {
+      return window.sha256(text);
+    }
+    // 3. Совсем плохо — библиотека не загрузилась
+    throw new Error(
+      "SHA-256 недоступен. Откройте сайт по HTTPS или через http://localhost."
+    );
   }
 
   /* Сессия */
@@ -2228,8 +2245,20 @@
       const data = await apiPost({ action: "getSchedule" });
       state.schedule = (data && data.success && Array.isArray(data.schedule)) ? data.schedule : [];
     } catch (err) {
-      console.error("Не удалось загрузить расписание:", err);
-      state.schedule = [];
+      console.error(err);
+      if (String(err.message || "").includes("SHA-256")) {
+        notify(
+          authNotification,
+          "Браузер не поддерживает шифрование. Откройте сайт по HTTPS или через http://localhost.",
+          "error"
+        );
+      } else {
+        setNetworkStatus(false);
+        notify(authNotification, "Ошибка сети. Попробуйте позже.", "error");
+      }
+    } finally {
+      authSubmit.disabled = false;
+      authSubmit.textContent = original;
     }
   }
 

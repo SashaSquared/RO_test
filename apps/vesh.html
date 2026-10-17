@@ -400,6 +400,12 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
     "22:00": "Дневная смена завершена. Напоминаю, что в ночную смену вы получаете увеличенное количество баллов за ПМП. Ночная смена не является обязательной."
   };
 
+  /* Часы, для которых используется префикс /f вместо /fb */
+  const F_PREFIX_HOURS = new Set([
+    "11:00", "12:00", "13:00", "15:00", "16:00",
+    "17:00", "19:00", "20:00", "21:00"
+  ]);
+
   const state = {
     user: null,
     bookings: [],
@@ -773,7 +779,8 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
       notify(bookingNotification, "Для этого времени нет текста", "error");
       return;
     }
-    const text = "/fb " + base;
+    const prefix = F_PREFIX_HOURS.has(time) ? "/f " : "/fb ";
+    const text = prefix + base;
     let ok = false;
     try {
       await navigator.clipboard.writeText(text);

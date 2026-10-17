@@ -49,9 +49,6 @@
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
-  /* ============================================================
-     СВЕТЛАЯ ТЕМА
-     ============================================================ */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --panel: #ffffff;
@@ -559,6 +556,69 @@
   .btn-ghost:hover:not(:disabled) { background: var(--panel-3); color: var(--text); }
   .btn-danger { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
   .btn-danger:hover:not(:disabled) { background: rgba(239, 68, 68, 0.28); color: #fff; }
+
+  /* ===== НОВЫЕ СТИЛИ (для доработки) ===== */
+  .btn-warn { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
+  .btn-warn:hover:not(:disabled) { background: var(--amber); color: #1a1207; }
+
+  .duty-intervals { display: flex; flex-direction: column; gap: 8px; }
+  .duty-interval-row {
+    display: grid;
+    grid-template-columns: auto auto auto 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--panel-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .duty-interval-row.duty-over { border-color: var(--red); background: var(--red-bg); }
+  .duty-interval-row.duty-under { border-color: var(--amber); background: var(--amber-bg); }
+  .duty-interval-row input[type="time"] {
+    width: auto;
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .duty-interval-row input[type="time"]:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .duty-dash { color: var(--muted); font-weight: 700; }
+  .duty-diff { font-weight: 700; font-size: 0.85rem; color: var(--text); font-variant-numeric: tabular-nums; }
+  .duty-over .duty-diff { color: var(--red-text); }
+  .duty-under .duty-diff { color: var(--amber-text); }
+  .duty-check-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.78rem; color: var(--muted); cursor: pointer; user-select: none;
+    white-space: nowrap;
+  }
+  .duty-check-label input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; }
+  .duty-remove-btn {
+    width: 28px; height: 28px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+    font-size: 1.1rem; line-height: 1;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .duty-remove-btn:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+  .duty-summary {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--accent-soft);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: 0.88rem; color: var(--text-soft);
+  }
+  .duty-summary-row { display: flex; justify-content: space-between; align-items: center; }
+  .duty-summary-row b { color: var(--accent-2); font-weight: 800; font-variant-numeric: tabular-nums; }
+  /* ===== /НОВЫЕ СТИЛИ ===== */
+
   .btn.copy-success {
     background: var(--good) !important; color: #0d1520 !important;
     box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.35);
@@ -609,9 +669,10 @@
     .lunch-toggle .toggle-switch { width: 36px; height: 20px; }
     .lunch-toggle .toggle-switch::after { width: 12px; height: 12px; }
     .lunch-toggle.active .toggle-switch::after { left: calc(100% - 15px); }
+    .duty-interval-row { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .duty-interval-row .duty-diff { grid-column: 3; text-align: right; }
   }
 
-  /* ===== Очистка нулей при фокусе ===== */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -807,6 +868,7 @@
       <div class="extra-total" id="extraTotal"></div>
     </div>
 
+    <!-- ============ ДЕЖУРСТВО НА ПОСТУ (переработано) ============ -->
     <div class="card">
       <h2>
         <span class="h-icon">
@@ -817,18 +879,19 @@
         </span>
         Дежурство на посту
       </h2>
-      <div class="grid">
-        <div>
-          <label for="dutyMinutes">Минут на посту</label>
-          <input id="dutyMinutes" type="number" min="0" value="0" step="1" placeholder="0">
-        </div>
-        <div>
-          <label>Баллы за дежурство</label>
-          <div style="padding:11px 14px;background:var(--panel-3);border-radius:10px;border:1px solid var(--border);font-weight:700;color:var(--accent-2)" id="dutyPoints">0</div>
-        </div>
+      <p class="bodi-info" style="margin-top:0;margin-bottom:10px;">
+        Введите интервалы между скриншотами. Норма — 15 минут (± 4 минуты). Интервалы вне нормы подсвечиваются — снимите галочку «учитывать», если считаете время фиктивным.
+      </p>
+      <div class="duty-intervals" id="dutyIntervals"></div>
+      <button type="button" class="btn" id="addDutyIntervalBtn" style="margin-top:8px;">+ Добавить интервал</button>
+      <div class="duty-summary">
+        <div class="duty-summary-row"><span>Жадный итог (все интервалы):</span> <b id="dutyGreedy">0</b> мин</div>
+        <div class="duty-summary-row"><span>Зачтено (выбранные):</span> <b id="dutyCounted">0</b> мин</div>
+        <div class="duty-summary-row"><span>Баллы за дежурство:</span> <b id="dutyPoints">0</b></div>
       </div>
       <p class="bodi-info" id="dutyNote">⏱ 20 баллов за каждые 30 минут. В недельник — идёт в баллы, в повышение — как требование.</p>
     </div>
+    <!-- ============ /ДЕЖУРСТВО НА ПОСТУ ============ -->
 
     <div class="card hidden" id="instrCard">
       <h2>
@@ -919,6 +982,7 @@
       <div class="bottombar-inner">
         <div class="bottombar-buttons">
           <button class="btn" onclick="generateReport()">📄 Сформировать отчёт</button>
+          <button class="btn btn-warn hidden" id="acceptWithRemarkBtn" onclick="acceptWithRemark()">✅ Принять с замечанием</button>
           <button class="btn save-week-btn hidden" id="saveWeekBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -1216,7 +1280,11 @@ const promo          = $('promo');
 const exam           = $('exam');
 const penalty        = $('penalty');
 const isInstructor   = $('isInstructor');
-const dutyMinutes    = $('dutyMinutes');
+const dutyIntervals  = $('dutyIntervals');
+const addDutyIntervalBtn = $('addDutyIntervalBtn');
+const dutyGreedy     = $('dutyGreedy');
+const dutyCounted    = $('dutyCounted');
+const dutyPointsEl   = $('dutyPoints');
 const remarks        = $('remarks');
 const out            = $('out');
 const visualReport   = $('visualReport');
@@ -1244,7 +1312,7 @@ let showLunch = false;
 let extras = [];
 
 /* ============================================================
-   ОЧИСТКА НУЛЯ ПРИ ФОКУСЕ (Вариант A)
+   ОЧИСТКА НУЛЯ ПРИ ФОКУСЕ
    ============================================================ */
 function attachZeroClear(input) {
   if (!input || input._zeroClearAttached) return;
@@ -1276,6 +1344,91 @@ function attachZeroClearAll(scope) {
     'input[type="number"], .qty, .bodi, .sub-input, .extra-val'
   ).forEach(attachZeroClear);
 }
+
+/* ============================================================
+   ДЕЖУРСТВО НА ПОСТУ — ИНТЕРВАЛЫ (НОВОЕ)
+   ============================================================ */
+function parseTimeToMinutes(str) {
+  if (!str || !/^\d{2}:\d{2}$/.test(str)) return null;
+  const [h, m] = str.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function getDutyIntervalsData() {
+  const rows = [];
+  dutyIntervals.querySelectorAll('.duty-interval-row').forEach(row => {
+    rows.push({
+      start: row.querySelector('.duty-start').value,
+      end: row.querySelector('.duty-end').value,
+      checked: row.querySelector('.duty-check').checked
+    });
+  });
+  return rows;
+}
+
+function getDutyCountedMinutes() {
+  let counted = 0;
+  dutyIntervals.querySelectorAll('.duty-interval-row').forEach(row => {
+    const start = parseTimeToMinutes(row.querySelector('.duty-start').value);
+    const end = parseTimeToMinutes(row.querySelector('.duty-end').value);
+    if (start !== null && end !== null) {
+      let diff = end - start;
+      if (diff < 0) diff = 0;
+      if (row.querySelector('.duty-check').checked) counted += diff;
+    }
+  });
+  return counted;
+}
+
+function updateDutyTotals() {
+  let greedy = 0;
+  let counted = 0;
+  dutyIntervals.querySelectorAll('.duty-interval-row').forEach(row => {
+    const start = parseTimeToMinutes(row.querySelector('.duty-start').value);
+    const end = parseTimeToMinutes(row.querySelector('.duty-end').value);
+    let diff = 0;
+    if (start !== null && end !== null) {
+      diff = end - start;
+      if (diff < 0) diff = 0;
+    }
+    greedy += diff;
+    if (row.querySelector('.duty-check').checked) counted += diff;
+    const diffEl = row.querySelector('.duty-diff');
+    diffEl.textContent = diff + ' мин';
+    const over = diff > 19;
+    const under = diff > 0 && diff < 11;
+    row.classList.toggle('duty-over', over);
+    row.classList.toggle('duty-under', under);
+  });
+  dutyGreedy.textContent = greedy;
+  dutyCounted.textContent = counted;
+}
+
+function addDutyIntervalRow(start, end, checked) {
+  const row = document.createElement('div');
+  row.className = 'duty-interval-row';
+  row.innerHTML =
+    '<input type="time" class="duty-start" value="' + (start || '10:00') + '">' +
+    '<span class="duty-dash">—</span>' +
+    '<input type="time" class="duty-end" value="' + (end || '10:15') + '">' +
+    '<span class="duty-diff">15 мин</span>' +
+    '<label class="duty-check-label">' +
+      '<input type="checkbox" class="duty-check" ' + (checked !== false ? 'checked' : '') + '>' +
+      '<span>учитывать</span>' +
+    '</label>' +
+    '<button type="button" class="duty-remove-btn" title="Удалить">×</button>';
+  dutyIntervals.appendChild(row);
+  row.querySelector('.duty-start').addEventListener('input', () => { updateDutyTotals(); updateAll(); });
+  row.querySelector('.duty-end').addEventListener('input', () => { updateDutyTotals(); updateAll(); });
+  row.querySelector('.duty-check').addEventListener('change', () => { updateDutyTotals(); updateAll(); });
+  row.querySelector('.duty-remove-btn').addEventListener('click', () => {
+    row.remove();
+    updateDutyTotals();
+    updateAll();
+  });
+  updateDutyTotals();
+}
+/* ============================================================ */
 
 /* ============================================================
    МОСТ "ВЫСЛУГА ЛЕТ"
@@ -1458,7 +1611,7 @@ function captureState(){
     penalty:  penalty.checked,
     isInstructor: isInstructor.checked,
     showLunch:    showLunch,
-    dutyMinutes:  dutyMinutes.value,
+    dutyIntervals: getDutyIntervalsData(),
     subGosToMp:   subGosToMp.value,
     subMpToGos:   subMpToGos.value,
     extras:       extras.slice(),
@@ -1482,7 +1635,15 @@ function restoreState(s){
   penalty.checked       = !!s.penalty;
   isInstructor.checked  = !!s.isInstructor;
   showLunch             = !!s.showLunch;
-  dutyMinutes.value     = s.dutyMinutes ?? 0;
+
+  if (Array.isArray(s.dutyIntervals) && s.dutyIntervals.length) {
+    dutyIntervals.innerHTML = '';
+    s.dutyIntervals.forEach(d => addDutyIntervalRow(d.start, d.end, d.checked));
+  } else {
+    dutyIntervals.innerHTML = '';
+    addDutyIntervalRow('10:00', '10:15', true);
+  }
+
   subGosToMp.value      = s.subGosToMp ?? 0;
   subMpToGos.value      = s.subMpToGos ?? 0;
   remarks.value         = s.remarks  || '';
@@ -1670,7 +1831,7 @@ function calc(){
   const spr   = (merged.sprD?.accepted || 0) + (merged.sprN?.accepted || 0);
   const gos   = finalGos;
   const mp    = finalMp;
-  const min   = parseInt(dutyMinutes.value) || 0;
+  const min   = getDutyCountedMinutes();
 
   const bodiMain  = bodiTotal(mainReg);
   const bodiLunch = bodiTotal(mainLunch);
@@ -1902,6 +2063,16 @@ function renderDashboard(r){
   const norm = r.norm;
   const fails = getFailures(r);
   const verdictOk = fails.length === 0;
+
+  // === НОВОЕ: кнопка «Принять с замечанием» — только для старшего состава и только для недельника ===
+  const acceptBtn = document.getElementById('acceptWithRemarkBtn');
+  if (acceptBtn) {
+    const role = getCalcRole();
+    const canAccept = role === 'admin' || role === 'superadmin';
+    acceptBtn.classList.toggle('hidden', !(canAccept && weekly && fails.length > 0));
+  }
+  // === /НОВОЕ ===
+
   const m = r.merged;
   const hasSub = r.gos2mp > 0 || r.mp2gos > 0;
 
@@ -2156,7 +2327,7 @@ async function saveToWeeklyReport() {
   }
 }
 
-window.generateReport = function(){
+window.generateReport = function(forceAccept){
   const r = calc();
   const weekly = isWeekly();
   const norm = r.norm;
@@ -2215,8 +2386,18 @@ window.generateReport = function(){
     lines.push('');
     lines.push('**ИТОГО: ' + r.total + ' баллов**');
     lines.push('');
-    lines.push(fails.length === 0 ? '# ✅ ОТЧЁТ ОДОБРЕН #' : '# ❌ ОТЧЁТ ОТКЛОНЁН #');
-    if (fails.length) fails.forEach(f => lines.push('• ' + f));
+    // === НОВОЕ: если forceAccept — принимаем с замечанием ===
+    const acceptedWithRemark = forceAccept && fails.length > 0;
+    if (acceptedWithRemark) {
+      lines.push('# ✅ ОТЧЁТ ПРИНЯТ С ЗАМЕЧАНИЕМ #');
+      lines.push('');
+      lines.push('> В связи с невыполнением установленных нормативов в текущем отчётном периоде, отчёт принимается с замечанием.');
+      lines.push('> Данное послабление предоставляется однократно. При повторном невыполнении нормативов к сотруднику будут применены меры дисциплинарного воздействия в полном объёме.');
+    } else {
+      lines.push(fails.length === 0 ? '# ✅ ОТЧЁТ ОДОБРЕН #' : '# ❌ ОТЧЁТ ОТКЛОНЁН #');
+      if (fails.length) fails.forEach(f => lines.push('• ' + f));
+    }
+    // === /НОВОЕ ===
   } else {
     lines.push('# ОТЧЁТ НА ПОВЫШЕНИЕ ' + promo.value + ' #');
     lines.push('');
@@ -2264,6 +2445,15 @@ window.generateReport = function(){
   saveState();
 };
 
+// === НОВОЕ: обработчик кнопки «Принять с замечанием» ===
+window.acceptWithRemark = function() {
+  window.generateReport(true);
+  notifyParent('Отчёт принят с замечанием', 'Текст сформирован — скопируйте его в отчётность', 'success');
+  const outEl = document.getElementById('out');
+  if (outEl) outEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+// === /НОВОЕ ===
+
 window.copyReport = function(){
   if (!out.value) generateReport();
   navigator.clipboard.writeText(out.value).then(() => {
@@ -2290,7 +2480,8 @@ window.resetForm = function(){
   penalty.checked= false;
   isInstructor.checked = false;
   showLunch      = false;
-  dutyMinutes.value = 0;
+  dutyIntervals.innerHTML = '';
+  addDutyIntervalRow('10:00', '10:15', true);
   subGosToMp.value = 0;
   subMpToGos.value = 0;
   extras = [];
@@ -2306,7 +2497,7 @@ window.resetForm = function(){
   notifyParent('Форма сброшена', 'Черновик удалён', 'info');
 };
 
-[fullname, staticId, seniority, exam, penalty, isInstructor, dutyMinutes, subGosToMp, subMpToGos, remarks].forEach(el => {
+[fullname, staticId, seniority, exam, penalty, isInstructor, subGosToMp, subMpToGos, remarks].forEach(el => {
   el.addEventListener('input',  updateAll);
   el.addEventListener('change', updateAll);
 });
@@ -2319,6 +2510,9 @@ remarks.addEventListener('input', () => {
 /* Инициализация */
 attachZeroClearAll(document);
 loadSavedState();
+if (!dutyIntervals.querySelector('.duty-interval-row')) {
+  addDutyIntervalRow('10:00', '10:15', true);
+}
 renderExtras();
 updateAll();
 applyLunchVisibility();
@@ -2333,6 +2527,13 @@ seniority.addEventListener("input", syncSeniorityToStorage);
 seniority.addEventListener("change", syncSeniorityToStorage);
 fullname.addEventListener("change", () => {
   fillSeniorityFromStorage(fullname.value.trim());
+});
+
+// === Кнопка «+ Добавить интервал» ===
+addDutyIntervalBtn.addEventListener('click', () => {
+  addDutyIntervalRow('10:00', '10:15', true);
+  updateAll();
+  debounceSave();
 });
 
 loadStaff();

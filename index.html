@@ -40,9 +40,7 @@
     --hover-bg: rgba(255,255,255,0.06);
   }
 
-  /* ============================================================
-     СВЕТЛАЯ ТЕМА (мягкая)
-     ============================================================ */
+  /* СВЕТЛАЯ ТЕМА */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --bg-2: #ffffff;
@@ -80,12 +78,7 @@
   }
 
   html, body { height: 100%; }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    width: 0;
-    display: none;
-  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -228,9 +221,7 @@
   .tablet-title h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
   .tablet-title .sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
 
-  /* ============================================================
-     ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (в шапке)
-     ============================================================ */
+  /* ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ */
   .theme-switcher {
     display: inline-flex;
     align-items: center;
@@ -263,8 +254,6 @@
     box-shadow: 0 2px 6px rgba(47, 158, 68, 0.35);
   }
   .theme-btn svg { width: 15px; height: 15px; }
-
-  /* Скрываем переключатель в шапке, пока не залогинен */
   #themeSwitcherHeader.hidden { display: none; }
 
   .user-chip {
@@ -623,10 +612,11 @@
   }
   @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
 
+  /* Исправленный iframe-wrap */
   .iframe-wrap {
     width: 100%;
-    height: calc(100vh - 200px);
-    min-height: 520px;
+    height: calc(100vh - 160px);
+    min-height: 700px; /* Увеличили мин. высоту, чтобы кнопки не сжимались */
     background: var(--bg-2);
     border: 1px solid var(--border);
     border-radius: 16px;
@@ -1030,7 +1020,8 @@
     .toast .toast-icon svg { width: 18px; height: 18px; }
     .toast .toast-title { font-size: 0.8rem; }
     .toast .toast-text { font-size: 0.75rem; }
-    .iframe-wrap { height: calc(100vh - 260px); min-height: 400px; }
+    /* Уменьшаем мин. высоту для мобилок, чтобы не было пустоты */
+    .iframe-wrap { height: calc(100vh - 260px); min-height: 450px; }
     .sched-item { grid-template-columns: 1fr auto; gap: 8px; padding: 10px 12px; }
     .sched-day { grid-column: 1 / -1; font-size: 0.7rem; }
     .sched-dep-cell, .sched-ds-cell { grid-column: auto; justify-content: center; }
@@ -1083,7 +1074,7 @@
       <div class="sub">Россия Онлайн · Служба здравоохранения</div>
     </div>
 
-    <!-- ================= ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ================= -->
+    <!-- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ -->
     <div class="theme-switcher hidden" id="themeSwitcherHeader" title="Тема оформления">
       <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая тема" aria-label="Светлая тема">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

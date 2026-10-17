@@ -1,0 +1,2613 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark" data-theme-mode="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПСЭС — Калькулятор отчётов</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1520;
+    --panel: #16202e;
+    --panel-2: #1c2839;
+    --panel-3: #223147;
+    --text: #e6eef7;
+    --text-soft: #c9d5e3;
+    --muted: #7f93a8;
+    --border: #26344a;
+    --accent: #4CB1D8;
+    --accent-2: #6FC5E5;
+    --accent-dark: #2A7A96;
+    --accent-soft: rgba(76, 177, 216, 0.22);
+    --good: #4ade80;
+    --good-bg: rgba(74, 222, 128, 0.1);
+    --good-border: rgba(74, 222, 128, 0.28);
+    --good-text: #86efac;
+    --amber: #f5b94a;
+    --amber-bg: rgba(245, 185, 74, 0.1);
+    --amber-border: rgba(245, 185, 74, 0.28);
+    --amber-text: #fcd34d;
+    --lunch: #f59e0b;
+    --lunch-bg: rgba(245, 158, 11, 0.08);
+    --lunch-border: rgba(245, 158, 11, 0.32);
+    --lunch-text: #fcd34d;
+    --red: #ef4444;
+    --red-2: #f56565;
+    --red-bg: rgba(239, 68, 68, 0.1);
+    --red-border: rgba(239, 68, 68, 0.28);
+    --red-text: #fca5a5;
+    --purple: #8b5cf6;
+    --input-bg: #0d1520;
+    --body-bg: #0d1520;
+    --card-bg: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    --modal-bg: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    --out-bg: #0a1119;
+    --panel-hover: #1f2c40;
+    --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    --card-shadow-top: -6px 0 20px rgba(0, 0, 0, 0.4);
+    --report-row-bg: rgba(255, 255, 255, 0.02);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* ============================================================
+     СВЕТЛАЯ ТЕМА
+     ============================================================ */
+  :root[data-theme="light"] {
+    --bg: #f5f7fa;
+    --panel: #ffffff;
+    --panel-2: #f0f4f8;
+    --panel-3: #e2e8f0;
+    --text: #1a202c;
+    --text-soft: #2d3748;
+    --muted: #64748b;
+    --border: #cbd5e0;
+    --accent: #0891b2;
+    --accent-2: #0e7490;
+    --accent-dark: #155e75;
+    --accent-soft: rgba(8, 145, 178, 0.15);
+    --good: #16a34a;
+    --good-bg: rgba(22, 163, 74, 0.1);
+    --good-border: rgba(22, 163, 74, 0.35);
+    --good-text: #166534;
+    --amber: #d97706;
+    --amber-bg: rgba(217, 119, 6, 0.1);
+    --amber-border: rgba(217, 119, 6, 0.35);
+    --amber-text: #b45309;
+    --lunch: #d97706;
+    --lunch-bg: rgba(217, 119, 6, 0.08);
+    --lunch-border: rgba(217, 119, 6, 0.35);
+    --lunch-text: #b45309;
+    --red: #dc2626;
+    --red-2: #ef4444;
+    --red-bg: rgba(220, 38, 38, 0.08);
+    --red-border: rgba(220, 38, 38, 0.35);
+    --red-text: #991b1b;
+    --purple: #7c3aed;
+    --input-bg: #ffffff;
+    --body-bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --modal-bg: #ffffff;
+    --out-bg: #f8fafc;
+    --panel-hover: #e8eef5;
+    --card-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    --card-shadow-top: -6px 0 20px rgba(15, 23, 42, 0.1);
+    --report-row-bg: var(--panel-2);
+  }
+
+  html, body { height: 100%; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
+  
+  body {
+    font-family: var(--font);
+    background: var(--body-bg); color: var(--text); line-height: 1.5;
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    padding: 16px 16px 24px;
+    display: flex; flex-direction: column; align-items: center;
+    scrollbar-width: none; -ms-overflow-style: none;
+    transition: background 0.25s, color 0.25s;
+  }
+  
+  .tablet { max-width: 1100px; width: 100%; display: flex; flex-direction: column; flex: 1; }
+  .tablet-body { flex: 1; padding-bottom: 90px; }
+  
+  .page-title {
+    text-align: center; font-size: 1.1rem; font-weight: 700;
+    color: var(--accent-2); letter-spacing: 0.02em; padding: 8px 0 18px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .page-title .brand-icon {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(76, 177, 216, 0.35);
+  }
+  :root[data-theme="light"] .page-title .brand-icon {
+    box-shadow: 0 3px 10px rgba(8, 145, 178, 0.28);
+  }
+  .page-title .brand-icon svg { width: 18px; height: 18px; color: #fff; }
+  .page-title .subtitle {
+    display: block; font-size: 0.72rem; font-weight: 500;
+    color: var(--muted); letter-spacing: 0; margin-top: 2px;
+  }
+  
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+    box-shadow: var(--card-shadow);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .card + .card { margin-top: 14px; }
+  .card h2 {
+    font-size: 0.95rem; font-weight: 600; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card h2 .h-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel-3); flex-shrink: 0;
+  }
+  .card h2 .h-icon svg { width: 15px; height: 15px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  
+  label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    margin-bottom: 6px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  input, select, textarea {
+    width: 100%; padding: 11px 14px;
+    font-size: 0.9rem; font-family: inherit;
+    color: var(--text); background: var(--input-bg);
+    border: 1px solid var(--border); border-radius: 10px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.25s;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  input::placeholder { color: var(--muted); opacity: 0.7; }
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237f93a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat; background-position: right 12px center;
+    background-size: 18px; padding-right: 40px; cursor: pointer;
+  }
+  select option { background: var(--input-bg); color: var(--text); }
+  
+  input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none;
+    width: 18px; height: 18px; min-width: 18px;
+    border: 2px solid var(--accent-soft); border-radius: 6px;
+    background: var(--panel-2); cursor: pointer; position: relative;
+    transition: 0.2s; margin-right: 7px; flex-shrink: 0; padding: 0;
+  }
+  input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
+  input[type="checkbox"]:checked::after {
+    content: "✓"; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff; font-size: 12px; font-weight: 700; line-height: 1;
+  }
+  input[type="checkbox"]:hover { border-color: var(--accent); }
+  
+  .checkbox-group {
+    display: inline-flex; align-items: center;
+    gap: 4px; padding: 7px 12px; border-radius: 10px;
+    background: var(--panel-3); border: 1px solid var(--border);
+    margin: 4px 6px 4px 0; cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+  }
+  .checkbox-group:hover { border-color: var(--accent); }
+  .checkbox-group .label-text { user-select: none; }
+  
+  .autocomplete-wrap { position: relative; }
+  .autocomplete-list {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+    max-height: 280px; overflow-y: auto; z-index: 900; display: none;
+  }
+  :root[data-theme="light"] .autocomplete-list { box-shadow: 0 12px 32px rgba(15,23,42,0.15); }
+  .autocomplete-list.open { display: block; }
+  .autocomplete-list .item {
+    padding: 10px 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; border-bottom: 1px solid var(--border);
+    transition: background 0.12s; font-size: 0.86rem;
+  }
+  .autocomplete-list .item:last-child { border-bottom: none; }
+  .autocomplete-list .item:hover { background: var(--accent-soft); }
+  .autocomplete-list .item .item-body { min-width: 0; flex: 1; }
+  .autocomplete-list .item .item-name {
+    font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .autocomplete-list .item .item-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+  .autocomplete-list .item .item-static {
+    color: var(--accent-2); font-weight: 700;
+    font-variant-numeric: tabular-nums; font-size: 0.82rem; white-space: nowrap;
+  }
+  .autocomplete-list .empty,
+  .autocomplete-list .loading {
+    padding: 12px; color: var(--muted); font-size: 0.82rem; text-align: center;
+  }
+  
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  th {
+    text-align: left; font-weight: 600; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); padding: 8px 10px;
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  td {
+    padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover:not(.section-row) { background: var(--accent-soft); }
+  td input[type="number"] {
+    padding: 6px 8px; font-size: 0.85rem; border-radius: 8px;
+    background: var(--input-bg); text-align: center;
+  }
+  td .sum, td .acc, td .pts {
+    font-variant-numeric: tabular-nums; font-weight: 700; text-align: right;
+  }
+  td .sum { color: var(--accent-2); }
+  .act-name { font-weight: 500; }
+  .act-note { display: block; font-size: 0.7rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  
+  .lunch-toggle-wrap { display: flex; justify-content: center; margin: 14px 0 0; }
+  .lunch-toggle {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 12px 22px 12px 18px; border-radius: 999px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(251, 146, 60, 0.08));
+    border: 1.5px solid rgba(245, 158, 11, 0.5);
+    color: var(--lunch-text); font-weight: 700; font-size: 0.92rem;
+    letter-spacing: 0.02em; font-family: inherit; cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+    position: relative; overflow: hidden;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.18);
+  }
+  .lunch-toggle > * { position: relative; z-index: 1; }
+  .lunch-toggle:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 26px rgba(245, 158, 11, 0.35);
+    border-color: rgba(245, 158, 11, 0.8); color: var(--lunch);
+  }
+  .lunch-toggle:active { transform: translateY(0) scale(0.98); }
+  .lunch-toggle .toggle-emoji { font-size: 1.2rem; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block; }
+  .lunch-toggle.active .toggle-emoji { transform: rotate(15deg) scale(1.15); }
+  .lunch-toggle .toggle-label { user-select: none; }
+  .lunch-toggle .toggle-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 32px; height: 22px; padding: 0 9px; border-radius: 999px;
+    background: rgba(245, 158, 11, 0.25); color: var(--lunch-text);
+    font-size: 0.75rem; font-weight: 800;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    font-variant-numeric: tabular-nums; transition: all 0.25s ease;
+  }
+  .lunch-toggle.active .toggle-badge {
+    background: linear-gradient(135deg, #fbbf24, #f97316);
+    color: #1f2937; border-color: transparent;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.6);
+  }
+  .lunch-toggle .toggle-switch {
+    position: relative; width: 40px; height: 22px; border-radius: 999px;
+    background: rgba(245, 158, 11, 0.22);
+    border: 1.5px solid rgba(245, 158, 11, 0.45);
+    transition: all 0.25s ease; flex-shrink: 0;
+  }
+  .lunch-toggle .toggle-switch::after {
+    content: ""; position: absolute; top: 50%; left: 3px;
+    transform: translateY(-50%); width: 14px; height: 14px;
+    border-radius: 50%; background: var(--lunch-text);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.55);
+  }
+  .lunch-toggle.active .toggle-switch {
+    background: linear-gradient(135deg, #fbbf24, #f97316);
+    border-color: #fbbf24; box-shadow: 0 0 14px rgba(245, 158, 11, 0.55);
+  }
+  .lunch-toggle.active .toggle-switch::after {
+    left: calc(100% - 17px); background: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+  .lunch-toggle.has-value { animation: lunchPulse 2s infinite; }
+  @keyframes lunchPulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(245, 158, 11, 0.18); }
+    50%      { box-shadow: 0 6px 24px rgba(245, 158, 11, 0.5); }
+  }
+  .card.lunch {
+    border-color: var(--lunch-border);
+    background: linear-gradient(180deg, var(--lunch-bg) 0%, var(--panel-2) 100%);
+    display: none;
+  }
+  .card.lunch.visible { display: block; animation: lunchReveal 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards; }
+  @keyframes lunchReveal {
+    0%   { opacity: 0; transform: translateY(-14px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .card.lunch h2 { color: var(--lunch-text); }
+  .card.lunch h2 .h-icon { background: rgba(245, 158, 11, 0.14); }
+  .card.lunch h2 .h-icon svg { color: var(--lunch); }
+  .card.lunch td .sum { color: var(--lunch-text); }
+  
+  .subs-grid { display: grid; gap: 10px; }
+  .sub-row {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+    padding: 12px 14px; background: var(--panel-3);
+    border: 1px solid var(--border); border-radius: 10px; transition: 0.15s;
+  }
+  .sub-row:hover { border-color: var(--accent); }
+  .sub-ico { font-size: 0.85rem; font-weight: 700; color: var(--accent-2); letter-spacing: 0.02em; }
+  .sub-desc { font-size: 0.85rem; line-height: 1.4; color: var(--text); }
+  .sub-desc b { color: var(--accent-2); }
+  .sub-input { width: 90px; padding: 8px 12px; text-align: center; font-weight: 700; font-size: 0.95rem; }
+  .sub-info {
+    margin-top: 12px; padding: 10px 14px; border-radius: 10px;
+    font-size: 0.82rem; line-height: 1.5;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent); color: var(--text);
+  }
+  .sub-info.ok   { background: var(--good-bg);  border-left-color: var(--good);  color: var(--good-text); }
+  .sub-info.warn { background: var(--amber-bg); border-left-color: var(--amber); color: var(--amber-text); }
+  .sub-info.err  { background: var(--red-bg);   border-left-color: var(--red);   color: var(--red-text); }
+  .sub-info b { color: var(--text); }
+  .sub-info .sub-title { font-weight: 700; margin-bottom: 4px; display: block; }
+  
+  .extras-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .extra-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 6px 5px 5px; background: var(--panel-3);
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .extra-item .extra-val {
+    width: 100px; padding: 7px 10px; text-align: center;
+    font-weight: 700; font-size: 0.95rem; font-variant-numeric: tabular-nums;
+  }
+  .extra-item .extra-del {
+    width: 30px; height: 30px; border: none;
+    background: var(--red-bg); color: var(--red-text);
+    border-radius: 8px; cursor: pointer; font-size: 1.1rem;
+    display: grid; place-items: center;
+    transition: 0.15s; line-height: 1; font-family: inherit;
+  }
+  .extra-item .extra-del:hover { background: rgba(239, 68, 68, 0.28); color: #fff; }
+  .extra-add {
+    margin-top: 10px; padding: 9px 16px; background: transparent;
+    border: 1.5px dashed var(--accent-soft); border-radius: 10px;
+    color: var(--accent-2); font-weight: 600; font-size: 0.82rem;
+    cursor: pointer; transition: 0.15s; font-family: inherit; width: 100%;
+  }
+  .extra-add:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+  .extra-empty {
+    padding: 12px 14px; text-align: center; color: var(--muted);
+    font-size: 0.82rem; background: var(--accent-soft);
+    border-radius: 10px; border: 1px dashed var(--accent-soft); width: 100%;
+  }
+  .extra-total {
+    margin-top: 10px; padding: 10px 14px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.85rem; color: var(--accent-2); font-weight: 700; display: none;
+  }
+  .extra-total.visible { display: block; }
+  
+  .bodi-info { margin-top: 10px; color: var(--muted); font-size: 0.78rem; }
+  .bodi-warn {
+    margin-top: 10px; padding: 10px 14px; border-radius: 10px;
+    background: var(--red-bg); border-left: 3px solid var(--red);
+    color: var(--red-text); font-size: 0.82rem; line-height: 1.5;
+  }
+  .bodi-ok {
+    margin-top: 10px; padding: 10px 14px; border-radius: 10px;
+    background: var(--good-bg); border-left: 3px solid var(--good);
+    color: var(--good-text); font-size: 0.82rem; line-height: 1.5;
+  }
+  
+  .progress { height: 8px; background: var(--panel-3); border-radius: 999px; overflow: hidden; margin: 4px 0 12px; }
+  .fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 999px; transition: width 0.5s ease; width: 0%;
+  }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    color: var(--muted); font-size: 0.82rem; margin-bottom: 4px;
+  }
+  .progress-label .val { color: var(--text); font-weight: 600; }
+  
+  .req-list { display: grid; gap: 6px; }
+  .req-row {
+    display: flex; align-items: center; gap: 12px; padding: 9px 14px;
+    border-radius: 10px; background: var(--panel-3);
+    border-left: 3px solid var(--border); font-size: 0.85rem;
+  }
+  .req-row.ok    { border-left-color: var(--good); background: var(--good-bg); }
+  .req-row.no    { border-left-color: var(--red);  background: var(--red-bg); }
+  .req-row.sub   { border-left-color: var(--accent-2); background: var(--accent-soft); }
+  .req-row.extra { border-left-color: var(--accent-2); background: var(--accent-soft); }
+  .req-row .ico { font-size: 0.95rem; width: 18px; text-align: center; }
+  .req-row .txt { flex: 1; }
+  .req-row .val { font-weight: 700; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+  .req-row.ok  .val { color: var(--good-text); }
+  .req-row.no  .val { color: var(--red-text); }
+  .req-row.sub .val, .req-row.extra .val { color: var(--accent-2); }
+  
+  .total-box {
+    text-align: center; padding: 18px 14px; border-radius: 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft); margin: 14px 0 6px;
+  }
+  .total-box .big {
+    font-size: 2.2rem; font-weight: 800; color: var(--accent-2);
+    line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .total-box .lbl {
+    font-size: 0.72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px;
+  }
+  
+  .remark-buttons {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px; margin-top: 10px;
+  }
+  .remark-btn {
+    padding: 7px 12px; border: 1px solid var(--border);
+    border-radius: 999px; background: var(--panel-3);
+    color: var(--muted); font-size: 0.78rem; cursor: pointer;
+    transition: 0.15s; text-align: center; font-family: inherit;
+  }
+  .remark-btn:hover { border-color: var(--accent); color: var(--text); }
+  .remark-btn.active {
+    background: var(--accent-soft);
+    border-color: var(--accent); color: var(--accent-2); font-weight: 600;
+  }
+  
+  #visualReport {
+    margin-top: 14px; background: var(--out-bg);
+    border: 1px solid var(--border); border-radius: 14px; padding: 16px;
+    transition: background 0.25s;
+  }
+  .report-header {
+    display: flex; justify-content: space-between; flex-wrap: wrap;
+    gap: 10px; margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .report-header .name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .report-header .meta { display: flex; gap: 6px; flex-wrap: wrap; align-self: center; }
+  .report-header .static, .report-header .seniority {
+    font-size: 0.78rem; padding: 3px 12px; border-radius: 999px;
+    background: var(--panel-3); border: 1px solid var(--border);
+    color: var(--muted); white-space: nowrap;
+  }
+  .report-header .seniority {
+    color: var(--good-text); border-color: var(--good-border); background: var(--good-bg);
+  }
+  .report-subhead {
+    color: var(--accent-2); font-weight: 700; font-size: 0.72rem;
+    margin: 12px 0 6px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .report-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; margin: 3px 0;
+    background: var(--report-row-bg);
+    border-radius: 8px; border-left: 3px solid var(--border); font-size: 0.85rem;
+  }
+  .report-row .label { color: var(--muted); }
+  .report-row .value { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .report-total {
+    font-size: 1rem; font-weight: 700; text-align: center;
+    padding: 12px; margin: 10px 0;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft); border-radius: 12px;
+  }
+  .report-total .total-val { color: var(--accent-2); font-size: 1.25rem; font-weight: 800; }
+  .report-errors {
+    background: var(--red-bg); border: 1px solid var(--red-border);
+    border-radius: 10px; padding: 10px 14px; margin: 10px 0; font-size: 0.85rem;
+  }
+  .report-errors .label {
+    color: var(--red-text); font-weight: 700; margin-bottom: 4px;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .report-errors ul { margin: 0; padding-left: 18px; color: var(--red-text); }
+  .report-errors li { margin: 3px 0; }
+  .report-ok {
+    background: var(--good-bg); border: 1px solid var(--good-border);
+    border-radius: 10px; padding: 12px 14px; margin: 10px 0;
+    color: var(--good-text); font-weight: 700; text-align: center; font-size: 0.9rem;
+  }
+  .report-remarks {
+    margin-top: 10px; padding: 10px 12px;
+    background: var(--report-row-bg); border-radius: 8px;
+    color: var(--muted); font-style: italic; font-size: 0.82rem; white-space: pre-wrap;
+  }
+  .report-remarks strong { color: var(--text); font-style: normal; }
+  
+  textarea#out {
+    background: var(--out-bg); border: 1px solid var(--border);
+    color: var(--text-soft);
+    font-family: ui-monospace, "SF Mono", Consolas, "Courier New", monospace;
+    font-size: 0.84rem; line-height: 1.55;
+    padding: 14px; border-radius: 12px; margin-top: 14px;
+    resize: vertical; width: 100%; min-height: 140px;
+    transition: background 0.25s, color 0.25s;
+  }
+  
+  .bottombar {
+    position: sticky; bottom: 0; z-index: 30; width: 100%; margin-top: 14px;
+    background: var(--modal-bg);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 12px 18px; box-shadow: var(--card-shadow-top);
+    transition: background 0.25s;
+  }
+  .bottombar-inner {
+    display: flex; flex-wrap: wrap;
+    align-items: center; justify-content: space-between; gap: 14px;
+  }
+  .bottombar-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+  .bottombar-summary { display: flex; gap: 22px; align-items: center; }
+  .summary-item { display: flex; flex-direction: column; line-height: 1.15; }
+  .summary-item .lbl {
+    font-size: 0.68rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px;
+  }
+  .summary-item .val-row { display: flex; align-items: baseline; gap: 6px; }
+  .summary-item .val {
+    font-weight: 800; font-size: 1.3rem;
+    letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums;
+  }
+  .summary-item .val.total { color: var(--accent-2); }
+  .summary-item .val.instr { color: var(--amber-text); }
+  .summary-item .val.neutral { color: var(--text); }
+  .summary-item .mark { font-size: 1rem; font-weight: 800; line-height: 1; }
+  .summary-item .mark.ok  { color: var(--good-text); }
+  .summary-item .mark.bad { color: var(--red-text); }
+  .summary-item .norm { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+  
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 10px 16px; font-size: 0.85rem; font-weight: 600;
+    font-family: inherit; color: #fff; background: var(--accent);
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: background 0.15s, transform 0.05s, opacity 0.15s;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn:hover:not(:disabled) { background: var(--accent-2); color: #0d1520; }
+  :root[data-theme="light"] .btn:hover:not(:disabled) { color: #fff; }
+  .btn:active:not(:disabled) { transform: scale(0.98); }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-ghost:hover:not(:disabled) { background: var(--panel-3); color: var(--text); }
+  .btn-danger { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
+  .btn-danger:hover:not(:disabled) { background: rgba(239, 68, 68, 0.28); color: #fff; }
+  .btn-warn { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
+  .btn-warn:hover:not(:disabled) { background: var(--amber); color: #1a1207; }
+  .btn.copy-success {
+    background: var(--good) !important; color: #0d1520 !important;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.35);
+  }
+  
+  .save-week-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+  .save-week-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5); color: #fff !important;
+  }
+  .save-week-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .save-week-btn .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  
+  .draft-badge {
+    position: fixed; top: 12px; right: 12px; z-index: 100;
+    display: none; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft); border-radius: 999px;
+    color: var(--accent-2); font-size: 0.74rem; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .draft-badge.show { display: flex; opacity: 1; }
+  .draft-badge svg { width: 12px; height: 12px; }
+  
+  .topic-box {
+    margin-top: 12px; padding: 10px 14px;
+    background: var(--accent-soft); border-radius: 10px;
+    border-left: 3px solid var(--accent); font-size: 0.85rem; color: var(--text);
+  }
+  .topic-box b { color: var(--accent-2); }
+  
+  .hidden { display: none !important; }
+
+  /* ============================================================
+     ДЕЖУРСТВО — СТИЛИ (ИСПРАВЛЕННЫЕ)
+     ============================================================ */
+  .duty-intervals { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  
+  .duty-interval-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    flex-wrap: wrap;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .duty-interval-row.duty-over { border-color: var(--red); background: var(--red-bg); }
+  .duty-interval-row.duty-under { border-color: var(--amber); background: var(--amber-bg); }
+  
+  .duty-interval-row input[type="time"] {
+    width: 110px;
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .duty-interval-row input[type="time"]:focus { border-color: var(--accent-2); }
+  .duty-dash { color: var(--muted); font-weight: 700; }
+  
+  .duty-diff {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--panel-3);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    min-width: 70px;
+  }
+  .duty-over .duty-diff { background: rgba(239, 68, 68, 0.2); color: var(--red-text); }
+  .duty-under .duty-diff { background: rgba(245, 185, 74, 0.2); color: var(--amber-text); }
+
+  .duty-check-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.78rem; font-weight: 600; color: var(--text-soft); cursor: pointer; user-select: none;
+    background: var(--input-bg); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
+    margin-left: auto;
+  }
+  .duty-check-label input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; }
+
+  .duty-remove-btn {
+    width: 28px; height: 28px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+    font-size: 1rem; line-height: 1;
+    transition: 0.15s;
+  }
+  .duty-remove-btn:hover { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+
+  .duty-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+    width: 100%;
+  }
+  .duty-stat {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 12px 8px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--border); text-align: center;
+  }
+  .duty-stat .ds-lbl {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); font-weight: 700; margin-bottom: 6px;
+  }
+  .duty-stat .ds-val {
+    font-size: 1.3rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .duty-stat .ds-val small { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+  .duty-stat.highlight { border-color: var(--accent); background: var(--accent-soft); }
+  .duty-stat.highlight .ds-val { color: var(--accent-2); }
+  .duty-stat.success { border-color: var(--good-border); background: var(--good-bg); }
+  .duty-stat.success .ds-val { color: var(--good-text); }
+
+  @media (max-width: 640px) {
+    body { padding: 12px 12px 20px; }
+    .card { padding: 14px; border-radius: 14px; }
+    th, td { padding: 8px 6px; font-size: 0.78rem; }
+    .bottombar { padding: 10px 12px; border-radius: 14px; }
+    .bottombar-buttons .btn { padding: 9px 12px; font-size: 0.78rem; }
+    .bottombar-summary { gap: 14px; }
+    .summary-item .val { font-size: 1.1rem; }
+    .btn { padding: 10px 14px; font-size: 0.84rem; }
+    .draft-badge { top: 8px; right: 8px; font-size: 0.7rem; }
+    .sub-row { grid-template-columns: 1fr; gap: 8px; }
+    .page-title { font-size: 0.98rem; }
+    .extra-item .extra-val { width: 80px; }
+    .lunch-toggle { font-size: 0.85rem; padding: 10px 18px 10px 14px; gap: 9px; }
+    .lunch-toggle .toggle-switch { width: 36px; height: 20px; }
+    .lunch-toggle .toggle-switch::after { width: 12px; height: 12px; }
+    .lunch-toggle.active .toggle-switch::after { left: calc(100% - 15px); }
+    
+    /* Мобильный вид дежурства */
+    .duty-summary { grid-template-columns: 1fr; }
+    .duty-stat { flex-direction: row; justify-content: space-between; padding: 10px 14px; }
+    .duty-stat .ds-lbl { margin-bottom: 0; }
+    .duty-check-label { margin-left: 0; width: 100%; justify-content: center; margin-top: 4px; }
+    .duty-interval-row input[type="time"] { flex: 1; width: auto; }
+    .duty-diff { width: 100%; text-align: center; margin-top: 4px; }
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] { -moz-appearance: textfield; }
+</style>
+</head>
+<body>
+
+<div class="draft-badge" id="draftBadge">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  Черновик сохранён
+</div>
+
+<div class="tablet">
+  <div class="tablet-body">
+
+    <div class="page-title">
+      <span class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3v18M3 9h18"/>
+        </svg>
+      </span>
+      <span>
+        Калькулятор отчётов ПСЭС
+        <span class="subtitle">Отдел психологической и санитарно-эпидемиологической службы</span>
+      </span>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </span>
+        Сотрудник
+      </h2>
+      <div class="grid">
+        <div>
+          <label for="fullname">Имя Фамилия</label>
+          <div class="autocomplete-wrap">
+            <input id="fullname" placeholder="Иван Иванов" autocomplete="off">
+            <div class="autocomplete-list" id="acName"></div>
+          </div>
+        </div>
+        <div>
+          <label for="static">Статический ID</label>
+          <div class="autocomplete-wrap">
+            <input id="static" placeholder="12345" inputmode="numeric" autocomplete="off">
+            <div class="autocomplete-list" id="acStatic"></div>
+          </div>
+        </div>
+        <div id="seniorityWrap" class="hidden">
+          <label for="seniority">Выслуга лет</label>
+          <input id="seniority" type="number" min="0" step="1" inputmode="numeric" placeholder="0" autocomplete="off">
+        </div>
+        <div>
+          <label for="promo">Тип отчёта</label>
+          <select id="promo">
+            <option value="5→6" selected>Повышение 5 → 6</option>
+            <option value="6→7">Повышение 6 → 7</option>
+            <option value="7→8">Повышение 7 → 8</option>
+            <option value="8→9">Повышение 8 → 9</option>
+            <option value="Недельный отчёт">Недельный отчёт (600 б.)</option>
+          </select>
+        </div>
+        <div>
+          <label>Статусы</label>
+          <div id="statusBlock">
+            <div id="promoStatuses">
+              <label class="checkbox-group"><input type="checkbox" id="exam"><span class="label-text">✅ Экзамен</span></label>
+              <label class="checkbox-group"><input type="checkbox" id="penalty"><span class="label-text">⚠️ Взыскание</span></label>
+            </div>
+            <div id="weeklyStatuses" class="hidden">
+              <label class="checkbox-group"><input type="checkbox" id="isInstructor"><span class="label-text">👨‍🏫 Инструктор</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="examTopicBox" class="topic-box">
+        📖 <b>Тема экзамена:</b> <span id="examTopic">Социофобия</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </span>
+        Основные действия
+      </h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Действие</th>
+              <th style="width:100px;text-align:center;">Кол-во</th>
+              <th style="width:100px;text-align:center;">Без боди</th>
+              <th style="width:80px;text-align:right;">Баллы</th>
+            </tr>
+          </thead>
+          <tbody id="mainActions"></tbody>
+        </table>
+      </div>
+      <p class="bodi-info">📌 Максимум 100 таблеток засчитывается в отчёте. ПМП — без ограничений.</p>
+      <div id="mainBodiWarn"></div>
+    </div>
+
+    <div class="lunch-toggle-wrap">
+      <button type="button" class="lunch-toggle" id="lunchToggle">
+        <span class="toggle-emoji">🍽</span>
+        <span class="toggle-label">Работа в обед ×2</span>
+        <span class="toggle-badge" id="lunchBadge">0 б.</span>
+        <span class="toggle-switch"></span>
+      </button>
+    </div>
+
+    <div class="card lunch" id="mainLunchCard">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </span>
+        Работа в обед (×2 балла)
+      </h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Действие</th>
+              <th style="width:100px;text-align:center;">Кол-во</th>
+              <th style="width:100px;text-align:center;">Без боди</th>
+              <th style="width:80px;text-align:right;">Баллы</th>
+            </tr>
+          </thead>
+          <tbody id="mainActionsLunch"></tbody>
+        </table>
+      </div>
+      <p class="bodi-info">⏰ Работа с 14:00 до 15:00 оплачивается в двойном размере.</p>
+      <div id="lunchBodiWarn"></div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 1l4 4-4 4"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+        </span>
+        Замены (ГО ↔ МП)
+      </h2>
+      <div class="subs-grid">
+        <div class="sub-row">
+          <div class="sub-ico">🏛 → 📢</div>
+          <div class="sub-desc"><b>1 проверка ГО</b> = <b>1 проведение МП</b></div>
+          <input type="number" min="0" value="0" class="sub-input" id="subGosToMp">
+        </div>
+        <div class="sub-row">
+          <div class="sub-ico">📢 → 🏛</div>
+          <div class="sub-desc"><b>1 проведение МП</b> = <b>1 проверка ГО</b></div>
+          <input type="number" min="0" value="0" class="sub-input" id="subMpToGos">
+        </div>
+      </div>
+      <div id="subInfo"></div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </span>
+        Дополнительные баллы
+      </h2>
+      <p class="bodi-info" style="margin-top:0;margin-bottom:10px;">Впиши баллы — они прибавятся к общему итогу.</p>
+      <div class="extras-list" id="extrasList"></div>
+      <button type="button" class="extra-add" onclick="addExtra()">+ Добавить баллы</button>
+      <div class="extra-total" id="extraTotal"></div>
+    </div>
+
+    <!-- ДЕЖУРСТВО НА ПОСТУ -->
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </span>
+        Дежурство на посту
+      </h2>
+      <p class="bodi-info" style="margin-top:0;margin-bottom:12px;">
+        Норма — 30 минут (± 4 мин). Интервалы вне нормы подсвечиваются. Снимите галочку «учитывать», если считаете время фиктивным.
+      </p>
+      <div class="duty-intervals" id="dutyIntervals"></div>
+      <button type="button" class="btn btn-ghost" id="addDutyIntervalBtn" style="margin-top:10px; font-size:0.8rem; padding:8px 14px;">+ Добавить интервал</button>
+      
+      <div class="duty-summary">
+        <div class="duty-stat">
+          <span class="ds-lbl">Итого</span>
+          <span class="ds-val"><span id="dutyGreedy">0</span> <small>мин</small></span>
+        </div>
+        <div class="duty-stat highlight">
+          <span class="ds-lbl">Зачтено</span>
+          <span class="ds-val"><span id="dutyCounted">0</span> <small>мин</small></span>
+        </div>
+        <div class="duty-stat success">
+          <span class="ds-lbl">Баллы</span>
+          <span class="ds-val"><span id="dutyPoints">0</span> <small>б.</small></span>
+        </div>
+      </div>
+      <p class="bodi-info" id="dutyNote">⏱ 20 баллов за каждые 30 минут. В недельник — идёт в баллы, в повышение — как требование.</p>
+    </div>
+
+    <div class="card hidden" id="instrCard">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </span>
+        Инструкторская работа
+      </h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Действие</th>
+              <th style="width:100px;text-align:center;">Кол-во</th>
+              <th style="width:100px;text-align:center;">Без боди</th>
+              <th style="width:80px;text-align:right;">Баллы</th>
+            </tr>
+          </thead>
+          <tbody id="instrActions"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        Выполнение требований
+      </h2>
+      <div class="req-list" id="reqList"></div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="6"/>
+            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+          </svg>
+        </span>
+        Итог
+      </h2>
+      <div class="progress-label"><span>⭐ Баллы</span><span class="val" id="progressVal">0 / 300</span></div>
+      <div class="progress"><div class="fill" id="progressBar"></div></div>
+      <div class="total-box">
+        <div class="big" id="totalPoints">0</div>
+        <div class="lbl">Всего баллов</div>
+      </div>
+      <div id="globalBodiWarn"></div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </span>
+        Замечания (для отчёта)
+      </h2>
+      <textarea id="remarks" rows="3" placeholder="Заполни, если отчёт отклоняется..."></textarea>
+      <div class="remark-buttons" id="remarkButtons"></div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="h-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </span>
+        Готовый отчёт
+      </h2>
+      <div id="visualReport"></div>
+      <textarea id="out" rows="18" readonly placeholder="Нажми «Сформировать», чтобы получить текст отчёта..."></textarea>
+    </div>
+
+    <div class="bottombar">
+      <div class="bottombar-inner">
+        <div class="bottombar-buttons">
+          <button class="btn" onclick="generateReport()">📄 Сформировать отчёт</button>
+          <button class="btn btn-warn hidden" id="acceptWithRemarkBtn" onclick="acceptWithRemark()">✅ Принять с замечанием</button>
+          <button class="btn save-week-btn hidden" id="saveWeekBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Записать в отчёт
+          </button>
+          <button class="btn btn-ghost" id="copyBtn" onclick="copyReport()">📋 Копировать</button>
+          <button class="btn btn-danger" onclick="resetForm()">🔄 Сбросить</button>
+        </div>
+        <div class="bottombar-summary">
+          <div class="summary-item">
+            <span class="lbl">Итого</span>
+            <div class="val-row">
+              <span class="val total" id="topTotal">0</span>
+              <span class="mark bad" id="topTotalMark">✕</span>
+            </div>
+            <span class="norm">норма <span id="topTotalNorm">300</span> баллов</span>
+          </div>
+          <div class="summary-item" id="topSecondWrap">
+            <span class="lbl" id="topSecondLbl">📄 Справки</span>
+            <div class="val-row">
+              <span class="val neutral" id="topSecond">0</span>
+              <span class="mark bad" id="topSecondMark">✕</span>
+            </div>
+            <span class="norm" id="topSecondNormWrap">норма <span id="topSecondNorm">30</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ТЕМА
+   ============================================================ */
+(function () {
+  "use strict";
+  const THEME_KEY = "pref_theme";
+
+  function systemTheme() {
+    try {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } catch (e) { return "dark"; }
+  }
+  function resolveThemeMode(mode) {
+    if (mode === "auto") return systemTheme();
+    return mode === "light" ? "light" : "dark";
+  }
+  function applyThemeMode(mode) {
+    if (!["light","dark","auto"].includes(mode)) mode = "dark";
+    const resolved = resolveThemeMode(mode);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-mode", mode);
+  }
+  function initTheme() {
+    const p = new URLSearchParams(location.search);
+    const urlTheme = p.get("theme");
+    if (urlTheme && ["light","dark","auto"].includes(urlTheme)) {
+      applyThemeMode(urlTheme);
+      return;
+    }
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved && ["light","dark","auto"].includes(saved)) {
+        applyThemeMode(saved);
+        return;
+      }
+    } catch (e) {}
+    applyThemeMode("dark");
+  }
+
+  window.addEventListener("message", (e) => {
+    if (!e.data || typeof e.data !== "object") return;
+    if (e.data.type === "theme" && e.data.mode) {
+      applyThemeMode(e.data.mode);
+    }
+  });
+
+  try {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq && mq.addEventListener) {
+      mq.addEventListener("change", () => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    } else if (mq && mq.addListener) {
+      mq.addListener(() => {
+        const mode = document.documentElement.getAttribute("data-theme-mode");
+        if (mode === "auto") applyThemeMode("auto");
+      });
+    }
+  } catch (e) {}
+
+  initTheme();
+
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "theme-request" }, "*");
+    }
+  } catch (e) {}
+})();
+
+/* ============================================================
+   СПРАВОЧНИК ПЕРСОНАЛА
+   ============================================================ */
+
+const API_URL = "https://hospital-api.asdulgok.workers.dev";
+
+let STAFF = [];
+let STAFF_LOADED = false;
+let STAFF_ERROR = null;
+
+function escHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function norm(s){ return String(s || '').toLowerCase().trim(); }
+
+async function loadStaff(){
+  try{
+    const res = await fetch(API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'getStaff'})
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if(data && data.success && Array.isArray(data.staff)){
+      STAFF = data.staff;
+      STAFF_LOADED = true;
+    } else {
+      throw new Error((data && data.message) || 'Некорректный ответ сервера');
+    }
+  }catch(e){
+    console.error('Не удалось загрузить справочник:', e);
+    STAFF_ERROR = e.message || String(e);
+  }
+}
+
+function filterByName(q){
+  const s = norm(q);
+  if(!s) return [];
+  return STAFF.filter(x => norm(x.name).includes(s)).slice(0, 8);
+}
+function filterByStatic(q){
+  const s = String(q || '').trim();
+  if(!s) return [];
+  return STAFF.filter(x => String(x.passport || '').includes(s)).slice(0, 8);
+}
+
+function renderAutocomplete(el, items, pick){
+  el.innerHTML = '';
+  if(!STAFF_LOADED){
+    el.innerHTML = STAFF_ERROR
+      ? '<div class="empty">Ошибка загрузки справочника</div>'
+      : '<div class="loading">Загрузка справочника…</div>';
+    el.classList.add('open');
+    return;
+  }
+  if(!items.length){
+    el.innerHTML = '<div class="empty">Никого не найдено</div>';
+    el.classList.add('open');
+    return;
+  }
+  items.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML =
+      '<div class="item-body">' +
+        '<div class="item-name">' + escHtml(s.name || '—') + '</div>' +
+        '<div class="item-meta">' + escHtml(s.position || '') +
+          (s.department ? ' · ' + escHtml(s.department) : '') + '</div>' +
+      '</div>' +
+      '<div class="item-static">' + escHtml(s.passport || '—') + '</div>';
+    div.addEventListener('mousedown', ev => {
+      ev.preventDefault();
+      pick(s);
+    });
+    el.appendChild(div);
+  });
+  el.classList.add('open');
+}
+
+function attachAutocomplete(input, list, filterFn, onPick){
+  let t = null;
+  function update(){
+    const q = input.value.trim();
+    if(!q){ list.classList.remove('open'); return; }
+    if(!STAFF_LOADED && !STAFF_ERROR){
+      list.innerHTML = '<div class="loading">Загрузка справочника…</div>';
+      list.classList.add('open');
+      const iv = setInterval(() => {
+        if(STAFF_LOADED || STAFF_ERROR){
+          clearInterval(iv);
+          renderAutocomplete(list, filterFn(input.value), onPick);
+        }
+      }, 150);
+      return;
+    }
+    renderAutocomplete(list, filterFn(q), onPick);
+  }
+  input.addEventListener('input', () => {
+    clearTimeout(t);
+    t = setTimeout(update, 120);
+  });
+  input.addEventListener('focus', () => { if(input.value.trim()) update(); });
+  input.addEventListener('blur', () => {
+    setTimeout(() => list.classList.remove('open'), 150);
+  });
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Escape') list.classList.remove('open');
+  });
+}
+
+function notifyParent(title, text, kind){
+  try{
+    if(window.parent && window.parent !== window){
+      window.parent.postMessage({
+        type: 'toast',
+        title: title || 'Сообщение',
+        text: text || '',
+        kind: kind || 'success'
+      }, '*');
+    }
+  }catch(e){}
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+const MAIN_ACTIONS = [
+  { id:'tab',  name:'💊 Выдача таблетки',                pts:1,  max:100, note:'макс. 100 в отчёте' },
+  { id:'vac',  name:'💉 Выдача вакцины',                 pts:3 },
+  { id:'sprD', name:'📄 Мед. справка (день)',            pts:4 },
+  { id:'sprN', name:'📄 Мед. справка (ночь)',            pts:6 },
+  { id:'gos',  name:'🏛 Проверка гос. организации',      pts:50, note:'можно заменить на МП' },
+  { id:'psy',  name:'🧠 Псих. помощь (с видео-откатом)', pts:70 },
+  { id:'pmp',  name:'🚑 Оказание ПМП',                   pts:2,  note:'без ограничений' },
+  { id:'mp',   name:'📢 Проведение МП',                  pts:50, note:'можно заменить на ГО' },
+];
+
+const INSTR_ACTIONS = [
+  { id:'qual',    name:'📋 Выдача квал. «Терапевт»',                pts:10 },
+  { id:'chkRep',  name:'✅ Проверка недельника / отчёта на повышение', pts:20 },
+  { id:'audit',   name:'🔍 Кадровый аудит',                         pts:5 },
+  { id:'instr',   name:'🎓 Инструктаж стажёра',                     pts:20 },
+  { id:'exam',    name:'📝 Внутренний экзамен',                     pts:30 },
+  { id:'chkPsy',  name:'🧠 Проверка отчёта псих. помощи',           pts:30 },
+  { id:'helpPsy', name:'🤝 Помощь в псих. помощи (инстр-пациент)',  pts:20 },
+  { id:'gosChk',  name:'🏛 Проведение проверки ГО (доп. к присут.)',pts:20 },
+];
+
+const MAIN_ACTIONS_LUNCH = MAIN_ACTIONS.map(a => ({...a, pts: a.pts * 2}));
+const MAX_BODI = 5;
+
+const NORMS = {
+  '5→6':            { pts:300, spr:30, min:30,  gos:1, exam:'Социофобия',   weekly:false },
+  '6→7':            { pts:350, spr:40, min:60,  gos:1, exam:'Депрессия',    weekly:false },
+  '7→8':            { pts:400, spr:50, min:90,  gos:1, exam:'Биполярка',    weekly:false },
+  '8→9':            { pts:450, spr:80, min:120, gos:2, exam:'Шизофрения',   weekly:false },
+  'Недельный отчёт':{ pts:600, spr:0,  min:0,   gos:3, exam:'—',            weekly:true },
+};
+
+const REMARK_BUTTONS = [
+  { label:'🔗 Только Google/Яндекс.Диск',    text:'- Ссылки принимаются только с Google Drive / Яндекс.Диск' },
+  { label:'⏳ Дежурства — скрин каждые 30 мин', text:'- На дежурствах скриншоты делаются каждые 30 минут' },
+  { label:'📄 1 скрин = 1 справка',          text:'- Один скрин выдачи = одна справка' },
+  { label:'✍️ Пустые поля без «-»',          text:'- Незадействованные графы оставляйте пустыми, без «-» и «0»' },
+  { label:'📊 Недостаточно баллов',          text:'- Недостаточно баллов для нормы' },
+  { label:'📖 Нет экзамена',                 text:'- Не сдан экзамен по лекции' },
+  { label:'⚠️ Активное взыскание',           text:'- Есть активное взыскание' },
+  { label:'📑 Нет ссылок на справки',        text:'- Не приложены ссылки на выданные справки' },
+  { label:'🏛 Мало гос. проверок',           text:'- Недостаточно присутствий на гос. проверках' },
+  { label:'🍽 Обед не выделен отдельно',     text:'- Работа в обед не выделена отдельной папкой / не указано что это ×2' },
+  { label:'🎥 Без боди-камеры',              text:'- Много действий выполнено без боди-камеры' },
+  { label:'🔄 Не указаны замены',            text:'- Не указаны замены ГО / МП (если применялись)' },
+  { label:'⭐ Не указаны доп. баллы',        text:'- Не указаны дополнительные баллы (если начислялись)' },
+];
+
+/* ============================================================
+   DOM REFS
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const qsa = (sel, ctx=document) => [...ctx.querySelectorAll(sel)];
+
+const fullname       = $('fullname');
+const staticId       = $('static');
+const seniority      = $('seniority');
+const seniorityWrap  = $('seniorityWrap');
+const promo          = $('promo');
+const exam           = $('exam');
+const penalty        = $('penalty');
+const isInstructor   = $('isInstructor');
+const dutyIntervals  = $('dutyIntervals');
+const addDutyIntervalBtn = $('addDutyIntervalBtn');
+const dutyGreedy     = $('dutyGreedy');
+const dutyCounted    = $('dutyCounted');
+const dutyPointsEl   = $('dutyPoints');
+const remarks        = $('remarks');
+const out            = $('out');
+const visualReport   = $('visualReport');
+const examTopic      = $('examTopic');
+const examTopicBox   = $('examTopicBox');
+const copyBtn        = $('copyBtn');
+const promoStatuses  = $('promoStatuses');
+const weeklyStatuses = $('weeklyStatuses');
+const instrCard      = $('instrCard');
+const mainLunchCard  = $('mainLunchCard');
+const lunchToggle    = $('lunchToggle');
+const lunchBadge     = $('lunchBadge');
+const mainBodiWarn   = $('mainBodiWarn');
+const lunchBodiWarn  = $('lunchBodiWarn');
+const globalBodiWarn = $('globalBodiWarn');
+const subGosToMp     = $('subGosToMp');
+const subMpToGos     = $('subMpToGos');
+const subInfo        = $('subInfo');
+const extrasList     = $('extrasList');
+const extraTotal     = $('extraTotal');
+const draftBadge     = $('draftBadge');
+const saveWeekBtn    = $('saveWeekBtn');
+
+let showLunch = false;
+let extras = [];
+
+/* ============================================================
+   ОЧИСТКА НУЛЯ ПРИ ФОКУСЕ
+   ============================================================ */
+function attachZeroClear(input) {
+  if (!input || input._zeroClearAttached) return;
+  input._zeroClearAttached = true;
+
+  input.addEventListener("focus", () => {
+    if (input.value === "0" || input.value === "0.0") {
+      input.value = "";
+      input.dataset.wasZero = "1";
+    } else {
+      input.dataset.wasZero = "";
+    }
+    setTimeout(() => {
+      try { input.setSelectionRange(0, 0); } catch (e) {}
+    }, 0);
+  });
+
+  input.addEventListener("blur", () => {
+    const v = String(input.value || "").trim();
+    if (v === "" || v === "-") {
+      input.value = "0";
+    }
+  });
+}
+
+function attachZeroClearAll(scope) {
+  const root = scope || document;
+  root.querySelectorAll(
+    'input[type="number"], .qty, .bodi, .sub-input, .extra-val'
+  ).forEach(attachZeroClear);
+}
+
+/* ============================================================
+   ДЕЖУРСТВО НА ПОСТУ — ИНТЕРВАЛЫ
+   ============================================================ */
+function parseTimeToMinutes(str) {
+  if (!str || !/^\d{2}:\d{2}$/.test(str)) return null;
+  const [h, m] = str.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function getDutyIntervalsData() {
+  const rows = [];
+  dutyIntervals.querySelectorAll('.duty-interval-row').forEach(row => {
+    rows.push({
+      start: row.querySelector('.duty-start').value,
+      end: row.querySelector('.duty-end').value,
+      checked: row.querySelector('.duty-check').checked
+    });
+  });
+  return rows;
+}
+
+function getDutyCountedMinutes() {
+  let counted = 0;
+  dutyIntervals.querySelectorAll('.duty-interval-row').forEach(row => {
+    const start = parseTimeToMinutes(row.querySelector('.duty-start').value);
+    const end = parseTimeToMinutes(row.querySelector('.duty-end').value);
+    if (start !== null && end !== null) {
+      let diff = end - start;
+      if (diff < 0) diff = 0;
+      if (row.querySelector('.duty-check').checked) counted += diff;
+    }
+  });
+  return counted;
+}
+
+function updateDutyTotals() {
+  let greedy = 0;
+  let counted = 0;
+  dutyIntervals.querySelectorAll('.duty-interval-row').forEach(row => {
+    const start = parseTimeToMinutes(row.querySelector('.duty-start').value);
+    const end = parseTimeToMinutes(row.querySelector('.duty-end').value);
+    let diff = 0;
+    if (start !== null && end !== null) {
+      diff = end - start;
+      if (diff < 0) diff = 0;
+    }
+    greedy += diff;
+    if (row.querySelector('.duty-check').checked) counted += diff;
+    const diffEl = row.querySelector('.duty-diff');
+    diffEl.textContent = diff + ' мин';
+    const over = diff > 34;
+    const under = diff > 0 && diff < 26;
+    row.classList.toggle('duty-over', over);
+    row.classList.toggle('duty-under', under);
+  });
+  dutyGreedy.textContent = greedy;
+  dutyCounted.textContent = counted;
+}
+
+function addDutyIntervalRow(start, end, checked) {
+  const row = document.createElement('div');
+  row.className = 'duty-interval-row';
+  row.innerHTML =
+    '<input type="time" class="duty-start" value="' + (start || '10:00') + '">' +
+    '<span class="duty-dash">—</span>' +
+    '<input type="time" class="duty-end" value="' + (end || '10:30') + '">' +
+    '<span class="duty-diff">30 мин</span>' +
+    '<label class="duty-check-label">' +
+      '<input type="checkbox" class="duty-check" ' + (checked !== false ? 'checked' : '') + '>' +
+      '<span>учитывать</span>' +
+    '</label>' +
+    '<button type="button" class="duty-remove-btn" title="Удалить">×</button>';
+    
+  dutyIntervals.appendChild(row);
+  
+  row.querySelector('.duty-start').addEventListener('input', () => { updateDutyTotals(); updateAll(); });
+  row.querySelector('.duty-end').addEventListener('input', () => { updateDutyTotals(); updateAll(); });
+  row.querySelector('.duty-check').addEventListener('change', () => { updateDutyTotals(); updateAll(); });
+  row.querySelector('.duty-remove-btn').addEventListener('click', () => {
+    row.remove();
+    updateDutyTotals();
+    updateAll();
+  });
+  
+  updateDutyTotals();
+}
+
+/* ============================================================
+   МОСТ "ВЫСЛУГА ЛЕТ"
+   ============================================================ */
+function getTopStorage() {
+  try {
+    if (window.top && window.top !== window) return window.top.localStorage;
+  } catch (e) {}
+  return null;
+}
+
+function seniorityKey(name) {
+  return "pses_seniority_" + String(name || "").trim().toLowerCase();
+}
+
+function writeSeniorityEverywhere(name, value) {
+  if (!name) return;
+  const key = seniorityKey(name);
+  const val = String(value == null ? "" : value).trim();
+
+  try {
+    if (val === "") localStorage.removeItem(key);
+    else localStorage.setItem(key, val);
+  } catch (e) {}
+
+  try {
+    const topLs = getTopStorage();
+    if (topLs) {
+      if (val === "") topLs.removeItem(key);
+      else topLs.setItem(key, val);
+    }
+  } catch (e) {}
+
+  try {
+    if (val === "") sessionStorage.removeItem(key);
+    else sessionStorage.setItem(key, val);
+  } catch (e) {}
+}
+
+function readSeniorityEverywhere(name) {
+  if (!name) return "";
+  const key = seniorityKey(name);
+
+  try {
+    const v = localStorage.getItem(key);
+    if (v !== null) return v;
+  } catch (e) {}
+
+  try {
+    const topLs = getTopStorage();
+    if (topLs) {
+      const v = topLs.getItem(key);
+      if (v !== null) return v;
+    }
+  } catch (e) {}
+
+  try {
+    const v = sessionStorage.getItem(key);
+    if (v !== null) return v;
+  } catch (e) {}
+
+  return "";
+}
+
+function syncSeniorityToStorage() {
+  const nm = String(fullname.value || "").trim();
+  if (!nm) return;
+  writeSeniorityEverywhere(nm, seniority.value);
+}
+
+function fillSeniorityFromStorage(name) {
+  const v = readSeniorityEverywhere(name);
+  if (v) seniority.value = v;
+}
+
+attachAutocomplete(fullname, $('acName'), filterByName, s => {
+  fullname.value = s.name || '';
+  staticId.value = s.passport || '';
+  fillSeniorityFromStorage(s.name);
+  $('acName').classList.remove('open');
+  $('acStatic').classList.remove('open');
+  updateAll();
+  debounceSave();
+  notifyParent('Подставлено из справочника', (s.name || '') + (s.passport ? ' · ' + s.passport : ''), 'info');
+});
+attachAutocomplete(staticId, $('acStatic'), filterByStatic, s => {
+  fullname.value = s.name || '';
+  staticId.value = s.passport || '';
+  fillSeniorityFromStorage(s.name);
+  $('acName').classList.remove('open');
+  $('acStatic').classList.remove('open');
+  updateAll();
+  debounceSave();
+  notifyParent('Подставлено из справочника', (s.name || '') + (s.passport ? ' · ' + s.passport : ''), 'info');
+});
+document.addEventListener('click', e => {
+  if(!e.target.closest('.autocomplete-wrap')){
+    $('acName').classList.remove('open');
+    $('acStatic').classList.remove('open');
+  }
+});
+
+/* ============================================================
+   LUNCH TOGGLE
+   ============================================================ */
+function applyLunchVisibility(){
+  mainLunchCard.classList.toggle('visible', showLunch);
+  lunchToggle.classList.toggle('active', showLunch);
+}
+lunchToggle.addEventListener('click', () => {
+  showLunch = !showLunch;
+  applyLunchVisibility();
+  debounceSave();
+});
+
+/* ============================================================
+   EXTRAS
+   ============================================================ */
+function renderExtras(){
+  if (!extras.length){
+    extrasList.innerHTML = `<div class="extra-empty">Нет дополнительных баллов.</div>`;
+    return;
+  }
+  extrasList.innerHTML = extras.map((v, i) => `
+    <div class="extra-item" data-i="${i}">
+      <input type="number" class="extra-val" min="0" step="1" value="${v || 0}" placeholder="0">
+      <button type="button" class="extra-del" title="Удалить">×</button>
+    </div>`).join('');
+
+  extrasList.querySelectorAll('.extra-item').forEach(row => {
+    const i = +row.dataset.i;
+    const inp = row.querySelector('.extra-val');
+    attachZeroClear(inp);
+    inp.addEventListener('input', ev => {
+      let v = parseInt(ev.target.value) || 0; if (v < 0) v = 0;
+      extras[i] = v;
+      updateAll();
+      debounceSave();
+    });
+    row.querySelector('.extra-del').addEventListener('click', () => {
+      extras.splice(i, 1);
+      renderExtras();
+      updateAll();
+      debounceSave();
+    });
+  });
+}
+
+window.addExtra = function(){
+  extras.push(0);
+  renderExtras();
+  updateAll();
+  debounceSave();
+};
+
+function calcExtrasTotal(){
+  return extras.reduce((s, v) => s + (parseInt(v) || 0), 0);
+}
+
+/* ============================================================
+   SAVE / LOAD
+   ============================================================ */
+let saveTimeout = null;
+let draftBadgeTimer = null;
+
+function showDraftBadge(){
+  if(!draftBadge) return;
+  draftBadge.classList.add('show');
+  clearTimeout(draftBadgeTimer);
+  draftBadgeTimer = setTimeout(() => draftBadge.classList.remove('show'), 1200);
+}
+
+function captureState(){
+  return {
+    fullname: fullname.value,
+    static:   staticId.value,
+    seniority: seniority.value,
+    promo:    promo.value,
+    exam:     exam.checked,
+    penalty:  penalty.checked,
+    isInstructor: isInstructor.checked,
+    showLunch:    showLunch,
+    dutyIntervals: getDutyIntervalsData(),
+    subGosToMp:   subGosToMp.value,
+    subMpToGos:   subMpToGos.value,
+    extras:       extras.slice(),
+    remarks:  remarks.value,
+    main:       qsa('#mainActions input.qty').map(i => i.value),
+    mainBodi:   qsa('#mainActions input.bodi').map(i => i.value),
+    mainLunch:  qsa('#mainActionsLunch input.qty').map(i => i.value),
+    mainLunchBodi: qsa('#mainActionsLunch input.bodi').map(i => i.value),
+    instr:      qsa('#instrActions input.qty').map(i => i.value),
+    instrBodi:  qsa('#instrActions input.bodi').map(i => i.value),
+    ts: Date.now(),
+  };
+}
+function restoreState(s){
+  if (!s) return;
+  fullname.value        = s.fullname || '';
+  staticId.value        = s.static   || '';
+  seniority.value       = s.seniority || '';
+  promo.value           = s.promo    || '5→6';
+  exam.checked          = !!s.exam;
+  penalty.checked       = !!s.penalty;
+  isInstructor.checked  = !!s.isInstructor;
+  showLunch             = !!s.showLunch;
+
+  if (Array.isArray(s.dutyIntervals) && s.dutyIntervals.length) {
+    dutyIntervals.innerHTML = '';
+    s.dutyIntervals.forEach(d => addDutyIntervalRow(d.start, d.end, d.checked));
+  } else {
+    dutyIntervals.innerHTML = '';
+    addDutyIntervalRow('10:00', '10:30', true);
+  }
+
+  subGosToMp.value      = s.subGosToMp ?? 0;
+  subMpToGos.value      = s.subMpToGos ?? 0;
+  remarks.value         = s.remarks  || '';
+  extras = Array.isArray(s.extras)
+    ? s.extras.map(e => {
+        if (typeof e === 'number') return e;
+        if (e && typeof e === 'object') return (parseInt(e.pts)||0) * (parseInt(e.qty)||0);
+        return 0;
+      })
+    : [];
+  renderExtras();
+  const setVals = (sel, cls, vals) => {
+    const ins = qsa(sel + ' input.' + cls);
+    (vals || []).forEach((v,i)=>{ if(ins[i]) ins[i].value = v; });
+  };
+  setVals('#mainActions',      'qty',  s.main);
+  setVals('#mainActions',      'bodi', s.mainBodi);
+  setVals('#mainActionsLunch', 'qty',  s.mainLunch);
+  setVals('#mainActionsLunch', 'bodi', s.mainLunchBodi);
+  setVals('#instrActions',     'qty',  s.instr);
+  setVals('#instrActions',     'bodi', s.instrBodi);
+}
+function saveState(){
+  try{
+    localStorage.setItem('pses-calc', JSON.stringify(captureState()));
+    showDraftBadge();
+  }catch(e){}
+}
+function debounceSave(){
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(saveState, 500);
+}
+function loadSavedState(){
+  try{
+    const raw = localStorage.getItem('pses-calc');
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (Date.now() - (s.ts || 0) > 7*24*60*60*1000) return false;
+    restoreState(s);
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ============================================================
+   RENDER ACTION ROWS
+   ============================================================ */
+function renderActionRows(tbodyId, list){
+  const tb = $(tbodyId);
+  tb.innerHTML = list.map(a => `
+    <tr data-id="${a.id}" data-pts="${a.pts}" data-max="${a.max||''}">
+      <td>
+        <span class="act-name">${a.name}</span>
+        ${a.note?`<span class="act-note">${a.note}</span>`:''}
+      </td>
+      <td style="text-align:center"><input type="number" min="0" value="0" class="qty"></td>
+      <td style="text-align:center"><input type="number" min="0" value="0" class="bodi"></td>
+      <td class="sum">0</td>
+    </tr>`).join('');
+
+  tb.querySelectorAll('input.qty').forEach(inp => {
+    attachZeroClear(inp);
+    inp.addEventListener('input', () => {
+      const tr = inp.closest('tr');
+      clampInput(inp, true);
+      const bodi = tr.querySelector('input.bodi');
+      if (bodi && (+bodi.value) > (+inp.value)) bodi.value = inp.value;
+      updateAll();
+    });
+  });
+
+  tb.querySelectorAll('input.bodi').forEach(inp => {
+    attachZeroClear(inp);
+    inp.addEventListener('input', () => {
+      const tr = inp.closest('tr');
+      let v = parseInt(inp.value) || 0;
+      if (v < 0) v = 0;
+      const qty = parseInt(tr.querySelector('input.qty').value) || 0;
+      if (v > qty) v = qty;
+      if (String(v) !== inp.value) inp.value = v;
+      updateAll();
+    });
+  });
+}
+renderActionRows('mainActions',      MAIN_ACTIONS);
+renderActionRows('mainActionsLunch', MAIN_ACTIONS_LUNCH);
+renderActionRows('instrActions',     INSTR_ACTIONS);
+
+function clampInput(inp, allowMax){
+  let v = parseInt(inp.value) || 0;
+  if (v < 0) v = 0;
+  const tr = inp.closest('tr');
+  const max = tr?.dataset.max;
+  if (allowMax && max && v > +max) v = +max;
+  if (String(v) !== inp.value) inp.value = v;
+}
+
+/* ============================================================
+   REMARK BUTTONS
+   ============================================================ */
+function renderRemarkButtons(){
+  const box = $('remarkButtons');
+  box.innerHTML = REMARK_BUTTONS.map(b =>
+    `<button type="button" class="remark-btn" data-text="${b.text}">${b.label}</button>`).join('');
+  box.querySelectorAll('.remark-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.text;
+      const lines = remarks.value.split('\n').filter(l => l.trim());
+      const i = lines.indexOf(t);
+      if (i === -1) lines.push(t); else lines.splice(i,1);
+      remarks.value = lines.join('\n');
+      btn.classList.toggle('active', i === -1);
+      debounceSave();
+      updateAll();
+    });
+  });
+}
+renderRemarkButtons();
+
+/* ============================================================
+   CALC
+   ============================================================ */
+function isWeekly(){ return promo.value === 'Недельный отчёт'; }
+function getNorm(){ return NORMS[promo.value]; }
+
+function collect(tbodyId){
+  const r = {};
+  $(tbodyId).querySelectorAll('tr').forEach(tr => {
+    const id  = tr.dataset.id;
+    const qtyInp = tr.querySelector('input.qty');
+    if (!qtyInp) return;
+    const q    = parseInt(qtyInp.value) || 0;
+    const bodiInp = tr.querySelector('input.bodi');
+    const bodi = bodiInp ? (parseInt(bodiInp.value) || 0) : 0;
+    const accepted = Math.max(0, q - bodi);
+    const pts  = accepted * (+tr.dataset.pts);
+    tr.querySelector('.sum').textContent = pts;
+    r[id] = { q, bodi, accepted, pts };
+  });
+  return r;
+}
+
+function bodiTotal(coll){
+  let s = 0;
+  for (const k in coll) s += (coll[k].bodi || 0);
+  return s;
+}
+
+function calc(){
+  const weekly = isWeekly();
+  const mainReg   = collect('mainActions');
+  const mainLunch = collect('mainActionsLunch');
+
+  const merged = {};
+  const ids = new Set([...Object.keys(mainReg), ...Object.keys(mainLunch)]);
+  ids.forEach(id => {
+    const a = mainReg[id]   || { q:0, bodi:0, accepted:0, pts:0 };
+    const b = mainLunch[id] || { q:0, bodi:0, accepted:0, pts:0 };
+    merged[id] = {
+      q:        a.q + b.q,
+      bodi:     a.bodi + b.bodi,
+      accepted: a.accepted + b.accepted,
+      pts:      a.pts + b.pts,
+    };
+  });
+
+  const instrOn = weekly && isInstructor.checked;
+  const instr = instrOn ? collect('instrActions') : {};
+
+  const wantedGosToMp = parseInt(subGosToMp.value) || 0;
+  const wantedMpToGos = parseInt(subMpToGos.value) || 0;
+
+  const acceptedGos = merged.gos?.accepted || 0;
+  const acceptedMp  = merged.mp?.accepted  || 0;
+
+  const gos2mp = Math.min(wantedGosToMp, acceptedGos);
+  const mp2gos = Math.min(wantedMpToGos, acceptedMp);
+
+  const finalGos = acceptedGos - gos2mp + mp2gos;
+  const finalMp  = acceptedMp  - mp2gos + gos2mp;
+
+  const mainPts  = Object.values(merged).reduce((s,x)=>s+x.pts, 0);
+  const instrPts = Object.values(instr).reduce((s,x)=>s+x.pts, 0);
+  const extraPts = calcExtrasTotal();
+
+  const spr   = (merged.sprD?.accepted || 0) + (merged.sprN?.accepted || 0);
+  const gos   = finalGos;
+  const mp    = finalMp;
+  const min   = getDutyCountedMinutes();
+
+  const bodiMain  = bodiTotal(mainReg);
+  const bodiLunch = bodiTotal(mainLunch);
+  const bodiInstr = instrOn ? bodiTotal(instr) : 0;
+  const bodiAll   = bodiMain + bodiLunch + bodiInstr;
+
+  const dutyPts = weekly ? Math.floor(min/30) * 20 : 0;
+  $('dutyPoints').textContent = dutyPts;
+  $('dutyNote').innerHTML = weekly
+    ? '⏱ 20 баллов за каждые 30 минут. Учитывается в баллах этого отчёта.'
+    : '⏱ 20 баллов за каждые 30 минут. В повышении — как требование «отстоять N минут», в баллы не входит.';
+
+  const total = mainPts + instrPts + dutyPts + extraPts;
+  const norm  = getNorm();
+
+  examTopicBox.classList.toggle('hidden', weekly);
+  if (!weekly) examTopic.textContent = norm.exam;
+
+  return {
+    mainReg, mainLunch, merged, instr, instrOn,
+    extraPts, extras,
+    spr, gos, mp, min, dutyPts,
+    mainPts, instrPts, total, norm,
+    bodiMain, bodiLunch, bodiInstr, bodiAll,
+    acceptedGos, acceptedMp, gos2mp, mp2gos, finalGos, finalMp,
+    wantedGosToMp, wantedMpToGos,
+  };
+}
+
+function updateSubInfo(r){
+  const hasAny = (r.acceptedGos || r.acceptedMp);
+  const wasSub = (r.gos2mp > 0 || r.mp2gos > 0);
+
+  if (!hasAny && !r.wantedGosToMp && !r.wantedMpToGos){
+    subInfo.className = 'sub-info';
+    subInfo.innerHTML = `ℹ️ Введи количество замен, если ты использовал их в отчёте. <b>1 ГО = 1 МП</b>.`;
+    return;
+  }
+
+  if (!wasSub && (r.wantedGosToMp || r.wantedMpToGos)){
+    subInfo.className = 'sub-info err';
+    const parts = [];
+    if (r.wantedGosToMp > 0 && r.acceptedGos === 0) parts.push(`нельзя заменить ГО — их <b>0</b> в зачёт`);
+    if (r.wantedMpToGos > 0 && r.acceptedMp === 0) parts.push(`нельзя заменить МП — их <b>0</b> в зачёт`);
+    subInfo.innerHTML = `<span class="sub-title">⛔ Нет данных для замены</span>${parts.join('<br>')}`;
+    return;
+  }
+
+  let html = '<span class="sub-title">📊 Результат замен</span>';
+  html += `Обычные: ГО <b>${r.acceptedGos}</b> → <b>${r.finalGos}</b>, МП <b>${r.acceptedMp}</b> → <b>${r.finalMp}</b>`;
+  html += `<br>`;
+  const parts = [];
+  if (r.gos2mp > 0) parts.push(`🏛 → 📢 <b>${r.gos2mp}</b> замен (ГО → МП)`);
+  if (r.mp2gos > 0) parts.push(`📢 → 🏛 <b>${r.mp2gos}</b> замен (МП → ГО)`);
+  if (parts.length) html += parts.join('<br>');
+  subInfo.className = 'sub-info ok';
+  subInfo.innerHTML = html;
+}
+
+function bodiWarnHTML(text, kind){
+  const cls = kind === 'ok' ? 'bodi-ok' : 'bodi-warn';
+  return `<div class="${cls}">${text}</div>`;
+}
+function updateBodiWarnings(r){
+  if (r.bodiMain > 0){
+    mainBodiWarn.innerHTML = bodiWarnHTML(
+      `🎥 В основных действиях <b>${r.bodiMain}</b> шт. без боди-камеры — не пойдут в зачёт.`,
+      r.bodiMain > MAX_BODI ? 'bad' : 'ok');
+  } else mainBodiWarn.innerHTML = '';
+
+  if (showLunch && r.bodiLunch > 0){
+    lunchBodiWarn.innerHTML = bodiWarnHTML(
+      `🎥 В работе в обед <b>${r.bodiLunch}</b> шт. без боди-камеры — не пойдут в зачёт.`,
+      r.bodiLunch > MAX_BODI ? 'bad' : 'ok');
+  } else lunchBodiWarn.innerHTML = '';
+
+  if (r.bodiAll > MAX_BODI){
+    globalBodiWarn.innerHTML = bodiWarnHTML(
+      `⛔ Всего <b>${r.bodiAll}</b> скриншотов без боди-камеры (макс. ${MAX_BODI}) — <b>отчёт будет отклонён</b>.`,
+      'bad');
+  } else if (r.bodiAll > 0){
+    globalBodiWarn.innerHTML = bodiWarnHTML(
+      `✅ Без боди-камеры: <b>${r.bodiAll}</b> из ${MAX_BODI} допустимых.`, 'ok');
+  } else globalBodiWarn.innerHTML = '';
+}
+
+function updateBottomSummary(r){
+  const weekly = isWeekly();
+  const instrOn = weekly && isInstructor.checked;
+  const norm = weekly ? 600 : r.norm.pts;
+
+  $('topTotal').textContent = r.total;
+  $('topTotalNorm').textContent = norm;
+  const totalOk = r.total >= norm;
+  const mark1 = $('topTotalMark');
+  mark1.textContent = totalOk ? '✓' : '✕';
+  mark1.className = 'mark ' + (totalOk ? 'ok' : 'bad');
+
+  const lbl = $('topSecondLbl');
+  const val = $('topSecond');
+  const mark2 = $('topSecondMark');
+  const normEl = $('topSecondNorm');
+  const normWrap = $('topSecondNormWrap');
+
+  if (instrOn){
+    lbl.textContent = '👨‍🏫 Инстр. работа';
+    val.textContent = r.instrPts;
+    val.className = 'val instr';
+    mark2.textContent = r.instrPts > 0 ? '✓' : '✕';
+    mark2.className = 'mark ' + (r.instrPts > 0 ? 'ok' : 'bad');
+    normWrap.style.visibility = 'hidden';
+  } else if (weekly){
+    lbl.textContent = '🏛 Гос. проверки';
+    val.textContent = r.gos;
+    val.className = 'val neutral';
+    const ok = r.gos >= 3;
+    mark2.textContent = ok ? '✓' : '✕';
+    mark2.className = 'mark ' + (ok ? 'ok' : 'bad');
+    normEl.textContent = '3';
+    normWrap.style.visibility = '';
+  } else {
+    lbl.textContent = '📄 Справки';
+    val.textContent = r.spr;
+    val.className = 'val neutral';
+    const ok = r.spr >= r.norm.spr;
+    mark2.textContent = ok ? '✓' : '✕';
+    mark2.className = 'mark ' + (ok ? 'ok' : 'bad');
+    normEl.textContent = r.norm.spr;
+    normWrap.style.visibility = '';
+  }
+}
+
+function toggleMode(){
+  const weekly = isWeekly();
+  promoStatuses.classList.toggle('hidden',  weekly);
+  weeklyStatuses.classList.toggle('hidden', !weekly);
+  seniorityWrap.classList.toggle('hidden', !weekly);
+  const showInstr = weekly && isInstructor.checked;
+  instrCard.classList.toggle('hidden', !showInstr);
+
+  if (saveWeekBtn) {
+    const role = getCalcRole();
+    const canSave = weekly && (role === "admin" || role === "superadmin");
+    saveWeekBtn.classList.toggle("hidden", !canSave);
+  }
+
+  if (weekly) {
+    exam.checked = false;
+    penalty.checked = false;
+    if (fullname.value.trim()) fillSeniorityFromStorage(fullname.value.trim());
+  } else {
+    isInstructor.checked = false;
+    seniority.value = '';
+  }
+
+  applyLunchVisibility();
+}
+
+function updateAll(){
+  toggleMode();
+  const r = calc();
+  const norm = isWeekly() ? 600 : r.norm.pts;
+
+  $('totalPoints').textContent = r.total;
+  const pct = Math.min(100, Math.round(r.total / norm * 100));
+  $('progressBar').style.width = pct + '%';
+  $('progressVal').textContent = r.total + ' / ' + norm;
+
+  const lunchPts = Object.values(r.mainLunch).reduce((s,x)=>s+x.pts, 0);
+  lunchBadge.textContent = lunchPts > 0 ? '+' + lunchPts + ' б.' : '0 б.';
+  lunchToggle.classList.toggle('has-value', lunchPts > 0);
+
+  if (r.extraPts > 0){
+    extraTotal.classList.add('visible');
+    extraTotal.textContent = `⭐ Итого доп. баллов: ${r.extraPts}`;
+  } else {
+    extraTotal.classList.remove('visible');
+  }
+
+  updateSubInfo(r);
+  updateBodiWarnings(r);
+  renderRequirements(r);
+  renderDashboard(r);
+  updateBottomSummary(r);
+  updateSaveButtonState();
+  debounceSave();
+}
+
+function updateSaveButtonState(){
+  if (!saveWeekBtn) return;
+  const canSave = fullname.value.trim() !== "";
+  saveWeekBtn.disabled = !canSave;
+}
+
+function renderRequirements(r){
+  const box = $('reqList');
+  const html = [];
+  const weekly = isWeekly();
+  const n = r.norm;
+
+  if (weekly){
+    html.push(reqRow(r.total >= 600, '⭐', 'Баллы', r.total, 600));
+    html.push(reqRow(r.gos   >= 3,   '🏛', 'Гос. проверки (с учётом замен)', r.gos, 3));
+    if (r.gos2mp > 0 || r.mp2gos > 0) html.push(reqRow(true, '🔄', 'Применено замен: ГО↔МП', r.gos2mp + r.mp2gos, r.gos2mp + r.mp2gos, 'sub'));
+  } else {
+    html.push(reqRow(r.total >= n.pts, '⭐', 'Баллы', r.total, n.pts));
+    html.push(reqRow(r.spr   >= n.spr, '📄', 'Мед. справки', r.spr, n.spr));
+    html.push(reqRow(r.min   >= n.min, '⏱', 'Минут на посту', r.min, n.min));
+    html.push(reqRow(r.gos   >= n.gos, '🏛', 'Гос. проверки (с учётом замен)', r.gos, n.gos));
+    html.push(reqRow(exam.checked,     '📖', 'Экзамен «' + n.exam + '»', exam.checked?1:0, 1));
+    html.push(reqRow(!penalty.checked, '⚠️', 'Нет активных взысканий', penalty.checked?0:1, 1));
+    if (r.gos2mp > 0 || r.mp2gos > 0) html.push(reqRow(true, '🔄', 'Применено замен: ГО↔МП', r.gos2mp + r.mp2gos, r.gos2mp + r.mp2gos, 'sub'));
+  }
+  if (r.extraPts > 0) html.push(reqRow(true, '⭐', 'Доп. баллы', r.extraPts, r.extraPts, 'extra'));
+  html.push(reqRow(r.bodiAll <= MAX_BODI, '🎥', 'Скриншотов без боди (макс. ' + MAX_BODI + ')', r.bodiAll, MAX_BODI));
+  box.innerHTML = html.join('');
+}
+function reqRow(ok, ico, label, have, need, extraCls){
+  const cls = (ok?'ok':'no') + (extraCls ? ' ' + extraCls : '');
+  return `<div class="req-row ${cls}">
+    <span class="ico">${ok?'✅':'❌'}</span>
+    <span class="txt">${ico} ${label}</span>
+    <span class="val">${have} / ${need}</span>
+  </div>`;
+}
+
+function renderDashboard(r){
+  const weekly = isWeekly();
+  const norm = r.norm;
+  const fails = getFailures(r);
+  const verdictOk = fails.length === 0;
+
+  const acceptBtn = document.getElementById('acceptWithRemarkBtn');
+  if (acceptBtn) {
+    const role = getCalcRole();
+    const canAccept = role === 'admin' || role === 'superadmin';
+    acceptBtn.classList.toggle('hidden', !(canAccept && weekly && fails.length > 0));
+  }
+
+  const m = r.merged;
+  const hasSub = r.gos2mp > 0 || r.mp2gos > 0;
+
+  const addIf = (val, label) => val > 0 ? cat(label, val) : '';
+
+  let html = '';
+  html += `<div class="report-header">
+    <div class="name">${escHtml(fullname.value || '—')}</div>
+    <div class="meta">
+      ${staticId.value ? '<div class="static">Статик: ' + escHtml(staticId.value) + '</div>' : ''}
+      ${weekly && seniority.value.trim() ? '<div class="seniority">Выслуга: ' + escHtml(seniority.value.trim()) + '</div>' : ''}
+    </div>
+  </div>`;
+
+  if (weekly){
+    html += `<div class="report-subhead">📋 Недельный отчёт ПСЭС${isInstructor.checked ? ' · 👨‍🏫 Инструктор' : ''}</div>`;
+    html += cat('⭐ Баллы', r.total);
+    html += addIf(m.tab?.accepted,  '💊 Таблетки');
+    html += addIf(m.vac?.accepted,  '💉 Вакцины');
+    html += addIf(m.sprD?.accepted, '📄 Справки день');
+    html += addIf(m.sprN?.accepted, '📄 Справки ночь');
+    html += addIf(r.finalGos, '🏛 Проверки ГО' + (hasSub ? ' (с заменой)' : ''));
+    html += addIf(r.finalMp,  '📢 Проведение МП' + (hasSub ? ' (с заменой)' : ''));
+    html += addIf(m.psy?.accepted, '🧠 Псих. помощь');
+    html += addIf(m.pmp?.accepted, '🚑 ПМП');
+    if (hasSub) html += cat('🔄 Замены ГО↔МП', `${r.gos2mp} ⇄ ${r.mp2gos}`);
+    if (r.extraPts > 0) html += cat('⭐ Доп. баллы', r.extraPts);
+    if (r.min > 0) html += cat('🏥 Дежурство', r.min + ' мин (' + r.dutyPts + ' б.)');
+    if (r.bodiAll > 0) html += cat('🎥 Без боди-камеры', r.bodiAll + ' шт.');
+    if (r.instrOn && r.instrPts > 0) html += cat('👨‍🏫 Инструкторская работа', r.instrPts + ' б.');
+    html += `<div class="report-total">Итого: <span class="total-val">${r.total}</span></div>`;
+  } else {
+    html += `<div class="report-subhead">📈 Повышение ${promo.value}</div>`;
+    if (exam.checked)    html += cat('✅ Экзамен', 'Сдан');
+    if (penalty.checked) html += cat('⚠️ Взыскание', 'Есть');
+
+    const ptsPct = Math.min(100, norm.pts ? r.total/norm.pts*100 : 0);
+    const sprPct = Math.min(100, norm.spr ? r.spr/norm.spr*100 : 0);
+    const minPct = Math.min(100, norm.min ? r.min/norm.min*100 : 0);
+    const gosPct = Math.min(100, norm.gos ? r.gos/norm.gos*100 : 0);
+
+    let progressHtml = '';
+    if (r.total > 0) progressHtml +=
+      `<div class="progress-label"><span>⭐ Баллы</span><span class="val">${r.total} / ${norm.pts}</span></div>
+       <div class="progress"><div class="fill" style="width:${ptsPct}%"></div></div>`;
+    if (r.spr > 0) progressHtml +=
+      `<div class="progress-label"><span>📄 Справки</span><span class="val">${r.spr} / ${norm.spr}</span></div>
+       <div class="progress"><div class="fill" style="width:${sprPct}%"></div></div>`;
+    if (r.min > 0) progressHtml +=
+      `<div class="progress-label"><span>⏱ Минут на посту</span><span class="val">${r.min} / ${norm.min}</span></div>
+       <div class="progress"><div class="fill" style="width:${minPct}%"></div></div>`;
+    if (r.gos > 0) progressHtml +=
+      `<div class="progress-label"><span>🏛 Гос. проверки</span><span class="val">${r.gos} / ${norm.gos}</span></div>
+       <div class="progress"><div class="fill" style="width:${gosPct}%"></div></div>`;
+    if (progressHtml) html += `<div style="margin:14px 0">${progressHtml}</div>`;
+
+    if (hasSub) html += cat('🔄 Замены ГО↔МП', `${r.gos2mp} ⇄ ${r.mp2gos}`);
+    if (r.extraPts > 0) html += cat('⭐ Доп. баллы', r.extraPts);
+    if (r.bodiAll > 0) html += cat('🎥 Без боди-камеры', r.bodiAll + ' шт.');
+    html += `<div class="report-total">Итого: <span class="total-val">${r.total}</span> / ${norm.pts}</div>`;
+  }
+
+  if (verdictOk){
+    html += `<div class="report-ok">✅ ОТЧЁТ ОДОБРЕН</div>`;
+  } else {
+    html += `<div class="report-errors"><div class="label">❌ Ошибки / недочёты</div><ul>`;
+    fails.forEach(f => html += `<li>${escHtml(f)}</li>`);
+    html += `</ul></div>`;
+  }
+
+  const rem = remarks.value.trim();
+  if (rem) html += `<div class="report-remarks"><strong>📝 Замечания:</strong>\n${escHtml(rem)}</div>`;
+
+  visualReport.innerHTML = html;
+}
+function cat(label, val){
+  return `<div class="report-row">
+    <span class="label">${label}</span><span class="value">${val}</span>
+  </div>`;
+}
+
+function getFailures(r){
+  const fails = [];
+  const weekly = isWeekly();
+  const n = r.norm;
+
+  if (!staticId.value.trim()) fails.push('Не указан статический ID персонажа');
+  if (r.bodiAll > MAX_BODI)   fails.push(`Слишком много скриншотов без боди-камеры (${r.bodiAll}, макс. ${MAX_BODI})`);
+
+  if (weekly){
+    if (!seniority.value.trim()) fails.push('Не указана выслуга лет');
+    if (r.total < 600) fails.push(`Недостаточно баллов (${r.total}/600)`);
+    if (r.gos < 3)     fails.push(`Недостаточно гос. проверок (${r.gos}/3, с учётом замен)`);
+    return fails;
+  }
+
+  if (penalty.checked) fails.push('Активное взыскание');
+  if (!exam.checked)   fails.push('Не сдан экзамен по лекции «' + n.exam + '»');
+  if (r.total < n.pts) fails.push(`Недостаточно баллов (${r.total}/${n.pts})`);
+  if (r.spr < n.spr)   fails.push(`Недостаточно мед. справок (${r.spr}/${n.spr})`);
+  if (r.min < n.min)   fails.push(`Недостаточно минут на посту (${r.min}/${n.min})`);
+  if (r.gos < n.gos)   fails.push(`Недостаточно гос. проверок (${r.gos}/${n.gos}, с учётом замен)`);
+  return fails;
+}
+
+/* ============================================================
+   СОХРАНЕНИЕ В НЕДЕЛЬНЫЙ ОТЧЁТ ПСЭС
+   ============================================================ */
+function getCalcSession() {
+  try {
+    const raw = localStorage.getItem("hospital_session");
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (d && d.login && d.hash) return d;
+  } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  const pLogin = p.get("login");
+  const pRole = p.get("role");
+  if (!pLogin || !pRole) return null;
+  let hash = null;
+  try {
+    const raw = localStorage.getItem("hospital_session");
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && d.login === pLogin) hash = d.hash;
+    }
+  } catch (e) {}
+  if (!hash) return null;
+  return { login: pLogin, role: pRole, hash: hash };
+}
+
+function getCalcRole() {
+  const s = getCalcSession();
+  return s ? s.role : null;
+}
+
+let _weekIdCache = null;
+async function fetchWorkingWeekId() {
+  if (_weekIdCache) return _weekIdCache;
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "getWeekList" })
+    });
+    const data = await res.json();
+    if (data && data.success && data.currentWeekId) {
+      _weekIdCache = data.currentWeekId;
+      return _weekIdCache;
+    }
+  } catch (e) { console.error("fetchWorkingWeekId:", e); }
+  return null;
+}
+
+function findStaffByName(name) {
+  const target = String(name || "").trim().toLowerCase();
+  if (!target) return null;
+  return STAFF.find(s => String(s.name || "").trim().toLowerCase() === target) || null;
+}
+
+const ALLOWED_DEPTS = ["ПСЭС", "Инст ПСЭС"];
+
+async function saveToWeeklyReport() {
+  const session = getCalcSession();
+  if (!session) {
+    notifyParent("Ошибка", "Нет активной сессии", "alert");
+    return;
+  }
+
+  const name = fullname.value.trim();
+  if (!name) {
+    notifyParent("Ошибка", "Укажите имя сотрудника", "alert");
+    return;
+  }
+
+  const staffItem = findStaffByName(name);
+  if (!staffItem) {
+    notifyParent("Ошибка", "Сотрудник не найден в справочнике", "alert");
+    return;
+  }
+
+  const dept = String(staffItem.department || "").trim();
+
+  if (!ALLOWED_DEPTS.includes(dept)) {
+    notifyParent("Ошибка", "Можно записывать отчёты только для отдела ПСЭС и Инст ПСЭС", "alert");
+    return;
+  }
+
+  if (getCalcRole() === "user" && dept === "Инст ПСЭС") {
+    notifyParent("Ошибка", "Только старший состав может вносить отчёты инструкторов ПСЭС", "alert");
+    return;
+  }
+
+  const weekId = await fetchWorkingWeekId();
+  if (!weekId) {
+    notifyParent("Ошибка", "Не удалось определить рабочую неделю", "alert");
+    return;
+  }
+
+  syncSeniorityToStorage();
+
+  const r = calc();
+  const points = r.total || 0;
+
+  const btn = saveWeekBtn;
+  if (!btn) return;
+  const oldHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2 a10 10 0 0 1 10 10"/></svg> Сохранение…';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "saveWeeklyPoints",
+        login: session.login,
+        hash: session.hash,
+        weekId: weekId,
+        name: staffItem.name,
+        passport: staffItem.passport || "",
+        department: staffItem.department || "",
+        rank: staffItem.rank || "",
+        points: points,
+        instrPoints: 0,
+        seniority: String(seniority.value || "").trim()
+      })
+    });
+    const data = await res.json();
+
+    if (data && data.success) {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Сохранено!';
+      notifyParent(
+        "Недельный отчёт ПСЭС записан",
+        staffItem.name + " · " + points + " баллов · выслуга " + (seniority.value || "0"),
+        "success"
+      );
+      setTimeout(() => {
+        btn.innerHTML = oldHtml;
+        btn.disabled = false;
+      }, 2000);
+    } else {
+      btn.innerHTML = oldHtml;
+      btn.disabled = false;
+      notifyParent("Ошибка", (data && data.message) || "Не удалось сохранить", "alert");
+    }
+  } catch (err) {
+    console.error(err);
+    btn.innerHTML = oldHtml;
+    btn.disabled = false;
+    notifyParent("Ошибка сети", String(err.message || err), "alert");
+  }
+}
+
+window.generateReport = function(forceAccept){
+  const r = calc();
+  const weekly = isWeekly();
+  const norm = r.norm;
+  const fails = getFailures(r);
+  const fio = fullname.value.trim() || '—';
+  const st  = staticId.value.trim()  || '—';
+
+  const lines = [];
+  lines.push(`*** Работник: *** *${fio}*`);
+  lines.push(`*** Статик: *** *${st}*`);
+  if (weekly && seniority.value.trim()) {
+    lines.push(`*** Выслуга лет: *** *${seniority.value.trim()}*`);
+  }
+  lines.push('');
+  const m = r.merged;
+  const hasSub = r.gos2mp > 0 || r.mp2gos > 0;
+
+  if (weekly){
+    lines.push('# НЕДЕЛЬНЫЙ ОТЧЁТ ПСЭС #');
+    if (isInstructor.checked) lines.push('**👨‍🏫 Инструктор**');
+    lines.push('');
+    lines.push('## Баллы ##');
+    if (m.tab?.accepted > 0)  lines.push('> 💊 Таблетки: '         + m.tab.accepted);
+    if (m.vac?.accepted > 0)  lines.push('> 💉 Вакцины: '          + m.vac.accepted);
+    if (m.sprD?.accepted > 0) lines.push('> 📄 Справки день: '     + m.sprD.accepted);
+    if (m.sprN?.accepted > 0) lines.push('> 📄 Справки ночь: '     + m.sprN.accepted);
+    if (r.finalGos > 0)       lines.push('> 🏛 Проверки ГО: '      + r.finalGos);
+    if (r.finalMp > 0)        lines.push('> 📢 Проведение МП: '    + r.finalMp);
+    if (m.psy?.accepted > 0)  lines.push('> 🧠 Псих. помощь: '     + m.psy.accepted);
+    if (m.pmp?.accepted > 0)  lines.push('> 🚑 ПМП: '              + m.pmp.accepted);
+    if (hasSub) {
+      lines.push('');
+      lines.push('## 🔄 Замены ##');
+      if (r.gos2mp > 0) lines.push('> 🏛 → 📢 ' + r.gos2mp + ' проверок ГО заменены на ' + r.gos2mp + ' МП');
+      if (r.mp2gos > 0) lines.push('> 📢 → 🏛 ' + r.mp2gos + ' проведений МП заменены на ' + r.mp2gos + ' ГО');
+      lines.push('> Итого: ГО ' + r.acceptedGos + ' → ' + r.finalGos + ', МП ' + r.acceptedMp + ' → ' + r.finalMp);
+    }
+    if (r.extraPts > 0) lines.push('> ⭐ Доп. баллов: ' + r.extraPts);
+    if (r.min > 0)     lines.push('> 🏥 Дежурство: ' + r.min + ' мин (' + r.dutyPts + ' б.)');
+    if (r.bodiAll > 0) lines.push('> 🎥 Без боди-камеры: ' + r.bodiAll + ' шт.');
+
+    if (r.instrOn && r.instrPts > 0){
+      lines.push('');
+      lines.push('## 👨‍🏫 Инструкторская работа ##');
+      if (r.instr.qual?.accepted)     lines.push('> 📋 Выдача квал. «Терапевт»: '        + r.instr.qual.accepted);
+      if (r.instr.chkRep?.accepted)   lines.push('> ✅ Проверка отчётов: '              + r.instr.chkRep.accepted);
+      if (r.instr.audit?.accepted)    lines.push('> 🔍 Кадровый аудит: '                + r.instr.audit.accepted);
+      if (r.instr.instr?.accepted)    lines.push('> 🎓 Инструктаж стажёров: '           + r.instr.instr.accepted);
+      if (r.instr.exam?.accepted)     lines.push('> 📝 Внутренний экзамен: '            + r.instr.exam.accepted);
+      if (r.instr.chkPsy?.accepted)   lines.push('> 🧠 Проверка отчёта псих. помощи: '  + r.instr.chkPsy.accepted);
+      if (r.instr.helpPsy?.accepted)  lines.push('> 🤝 Помощь в псих. помощи: '         + r.instr.helpPsy.accepted);
+      if (r.instr.gosChk?.accepted)   lines.push('> 🏛 Проведение проверки ГО: '        + r.instr.gosChk.accepted);
+      lines.push('> 👨‍🏫 Итого инструкторских: ' + r.instrPts + ' б.');
+    }
+
+    lines.push('');
+    lines.push('**Итого: ' + r.total + ' баллов**');
+    lines.push('');
+    const acceptedWithRemark = forceAccept && fails.length > 0;
+    if (acceptedWithRemark) {
+      lines.push('# ✅ ОТЧЁТ ПРИНЯТ С ЗАМЕЧАНИЕМ #');
+      lines.push('');
+      lines.push('> В связи с невыполнением установленных нормативов в текущем отчётном периоде, отчёт принимается с замечанием.');
+      lines.push('> Данное послабление предоставляется однократно. При повторном невыполнении нормативов к сотруднику будут применены меры дисциплинарного воздействия в полном объёме.');
+    } else {
+      lines.push(fails.length === 0 ? '# ✅ ОТЧЁТ ОДОБРЕН #' : '# ❌ ОТЧЁТ ОТКЛОНЁН #');
+      if (fails.length) fails.forEach(f => lines.push('• ' + f));
+    }
+  } else {
+    lines.push('# ОТЧЁТ НА ПОВЫШЕНИЕ ' + promo.value + ' #');
+    lines.push('');
+    lines.push('## Выполнение требований ##');
+    if (r.spr > 0) lines.push('> 📄 Мед. справки: ' + r.spr + ' / ' + norm.spr);
+    if (r.min > 0) lines.push('> ⏱ На посту: ' + r.min + ' мин / ' + norm.min + ' мин');
+    if (r.gos > 0) lines.push('> 🏛 Гос. проверки: ' + r.gos + ' / ' + norm.gos + (hasSub ? ' (с учётом замен)' : ''));
+    if (exam.checked) lines.push('> 📖 Экзамен «' + norm.exam + '»: Сдан');
+    lines.push('');
+    lines.push('## Баллы ##');
+    if (m.tab?.accepted > 0)  lines.push('> 💊 Таблетки: '         + m.tab.accepted);
+    if (m.vac?.accepted > 0)  lines.push('> 💉 Вакцины: '          + m.vac.accepted);
+    if (m.sprD?.accepted > 0) lines.push('> 📄 Справки день: '     + m.sprD.accepted);
+    if (m.sprN?.accepted > 0) lines.push('> 📄 Справки ночь: '     + m.sprN.accepted);
+    if (r.finalGos > 0)       lines.push('> 🏛 Проверки ГО: '      + r.finalGos);
+    if (r.finalMp > 0)        lines.push('> 📢 Проведение МП: '    + r.finalMp);
+    if (m.psy?.accepted > 0)  lines.push('> 🧠 Псих. помощь: '     + m.psy.accepted);
+    if (m.pmp?.accepted > 0)  lines.push('> 🚑 ПМП: '              + m.pmp.accepted);
+    if (hasSub) {
+      lines.push('');
+      lines.push('## 🔄 Замены ##');
+      if (r.gos2mp > 0) lines.push('> 🏛 → 📢 ' + r.gos2mp + ' проверок ГО заменены на ' + r.gos2mp + ' МП');
+      if (r.mp2gos > 0) lines.push('> 📢 → 🏛 ' + r.mp2gos + ' проведений МП заменены на ' + r.mp2gos + ' ГО');
+      lines.push('> Итого: ГО ' + r.acceptedGos + ' → ' + r.finalGos + ', МП ' + r.acceptedMp + ' → ' + r.finalMp);
+    }
+    if (r.extraPts > 0) lines.push('> ⭐ Доп. баллов: ' + r.extraPts);
+    if (r.bodiAll > 0) lines.push('> 🎥 Без боди-камеры: ' + r.bodiAll + ' шт.');
+    lines.push('');
+    lines.push('**Итого: ' + r.total + ' / ' + norm.pts + ' баллов**');
+    lines.push('');
+    lines.push(fails.length === 0 ? '# ✅ ОТЧЁТ ОДОБРЕН #' : '# ❌ ОТЧЁТ ОТКЛОНЁН #');
+    if (fails.length) fails.forEach(f => lines.push('• ' + f));
+  }
+
+  const rem = remarks.value.trim();
+  if (rem){
+    lines.push('');
+    lines.push('```Замечания:');
+    lines.push(rem);
+    lines.push('```');
+  }
+
+  out.value = lines.join('\n');
+  renderDashboard(r);
+  saveState();
+};
+
+window.acceptWithRemark = function() {
+  window.generateReport(true);
+  notifyParent('Отчёт принят с замечанием', 'Текст сформирован — скопируйте его в отчётность', 'success');
+  const outEl = document.getElementById('out');
+  if (outEl) outEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+window.copyReport = function(){
+  if (!out.value) generateReport();
+  navigator.clipboard.writeText(out.value).then(() => {
+    copyBtn.classList.add('copy-success');
+    copyBtn.textContent = '✅ Скопировано!';
+    notifyParent('Скопировано', 'Отчёт в буфере обмена', 'success');
+    setTimeout(() => {
+      copyBtn.classList.remove('copy-success');
+      copyBtn.textContent = '📋 Копировать';
+    }, 1200);
+  }).catch(() => {
+    copyBtn.textContent = '❌ Ошибка';
+    setTimeout(() => copyBtn.textContent = '📋 Копировать', 1200);
+  });
+};
+
+window.resetForm = function(){
+  if (!confirm('Сбросить всё и удалить черновик? Действие необратимо.')) return;
+  fullname.value = '';
+  staticId.value = '';
+  seniority.value = '';
+  promo.value    = '5→6';
+  exam.checked   = false;
+  penalty.checked= false;
+  isInstructor.checked = false;
+  showLunch      = false;
+  dutyIntervals.innerHTML = '';
+  addDutyIntervalRow('10:00', '10:30', true);
+  subGosToMp.value = 0;
+  subMpToGos.value = 0;
+  extras = [];
+  renderExtras();
+  remarks.value  = '';
+  out.value      = '';
+  qsa('input.qty').forEach(i => i.value = 0);
+  qsa('input.bodi').forEach(i => i.value = 0);
+  qsa('.remark-btn').forEach(b => b.classList.remove('active'));
+  try { localStorage.removeItem('pses-calc'); } catch(e){}
+  updateAll();
+  window.scrollTo({ top:0, behavior:'smooth' });
+  notifyParent('Форма сброшена', 'Черновик удалён', 'info');
+};
+
+[fullname, staticId, seniority, exam, penalty, isInstructor, subGosToMp, subMpToGos, remarks].forEach(el => {
+  el.addEventListener('input',  updateAll);
+  el.addEventListener('change', updateAll);
+});
+promo.addEventListener('change', updateAll);
+
+remarks.addEventListener('input', () => {
+  qsa('.remark-btn').forEach(b => b.classList.toggle('active', remarks.value.includes(b.dataset.text)));
+});
+
+/* Инициализация */
+attachZeroClearAll(document);
+loadSavedState();
+if (!dutyIntervals.querySelector('.duty-interval-row')) {
+  addDutyIntervalRow('10:00', '10:30', true);
+}
+renderExtras();
+updateAll();
+applyLunchVisibility();
+
+if (saveWeekBtn) {
+  saveWeekBtn.addEventListener("click", saveToWeeklyReport);
+}
+
+fullname.addEventListener("input", updateSaveButtonState);
+
+seniority.addEventListener("input", syncSeniorityToStorage);
+seniority.addEventListener("change", syncSeniorityToStorage);
+fullname.addEventListener("change", () => {
+  fillSeniorityFromStorage(fullname.value.trim());
+});
+
+addDutyIntervalBtn.addEventListener('click', () => {
+  addDutyIntervalRow('10:00', '10:30', true);
+  updateAll();
+  debounceSave();
+});
+
+loadStaff();
+</script>
+</body>
+</html>

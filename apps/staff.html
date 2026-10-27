@@ -691,6 +691,17 @@
     <div class="card-head">
       <h2>Список сотрудников</h2>
       <div class="head-actions">
+        
+        <input type="file" id="aiImagesInput" multiple accept="image/*" style="display:none;">
+        <button class="btn btn-primary hidden" id="aiImportBtn" type="button" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); border: none; color: #fff;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          ИИ-Импорт
+        </button>
+
         <button class="btn hidden" id="importExportBtn" type="button" title="Импорт / экспорт CSV">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -986,14 +997,12 @@
   }
 
   function initTheme() {
-    // 1. Приоритет — ?theme= из URL
     const p = new URLSearchParams(location.search);
     const urlTheme = p.get("theme");
     if (urlTheme && ["light","dark","auto"].includes(urlTheme)) {
       applyThemeMode(urlTheme);
       return;
     }
-    // 2. Из localStorage
     try {
       const saved = localStorage.getItem(THEME_KEY);
       if (saved && ["light","dark","auto"].includes(saved)) {
@@ -1001,11 +1010,9 @@
         return;
       }
     } catch (e) {}
-    // 3. По умолчанию — dark
     applyThemeMode("dark");
   }
 
-  // Слушаем сообщения от родителя (index.html)
   window.addEventListener("message", (e) => {
     if (!e.data || typeof e.data !== "object") return;
     if (e.data.type === "theme" && e.data.mode) {
@@ -1013,7 +1020,6 @@
     }
   });
 
-  // Следим за системной темой, если выбрано auto
   try {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     if (mq && mq.addEventListener) {
@@ -1029,10 +1035,8 @@
     }
   } catch (e) {}
 
-  // Применяем сразу
   initTheme();
 
-  // Сообщаем родителю, что готовы принять тему
   try {
     if (window.parent && window.parent !== window) {
       window.parent.postMessage({ type: "theme-request" }, "*");
@@ -2083,6 +2087,16 @@
     staffRank.appendChild(oLeader);
   }
 
+  // Вспомогательная функция для конвертации файла в Base64
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
   function init() {
     const user = loadSession();
     if (!user) {
@@ -2142,6 +2156,57 @@
     });
     impUploadBtn.addEventListener("click", impUpload);
     impRestoreBtn.addEventListener("click", impRestore);
+
+    // --- ИИ ИМПОРТ ---
+    const aiBtn = document.getElementById("aiImportBtn");
+    const aiInput = document.getElementById("aiImagesInput");
+
+    if (aiBtn) {
+      if (isSuperadmin()) aiBtn.classList.remove("hidden");
+
+      aiBtn.addEventListener("click", () => {
+        if (!confirm("Загрузить скриншоты для ИИ-распознавания?\n\nТекущая таблица будет полностью заменена!")) return;
+        aiInput.click();
+      });
+
+      aiInput.addEventListener("change", async (e) => {
+        const files = e.target.files;
+        if (!files || !files.length) return;
+
+        aiBtn.disabled = true;
+        aiBtn.innerHTML = 'Загрузка...';
+        showToast(`Обработка ${files.length} изображений...`, "info");
+
+        try {
+          const base64Images = await Promise.all(
+            Array.from(files).map(file => fileToBase64(file))
+          );
+
+          const res = await apiPost({
+            action: "syncStaffFromImages",
+            login: state.user.login,
+            hash: state.user.hash,
+            images: base64Images
+          });
+
+          if (!res.success) {
+            showToast(res.message || "Ошибка ИИ", "alert");
+          } else {
+            showToast(res.message, "success");
+            notifyParent("ИИ-Импорт", res.message, "success");
+            await loadStaff();
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("Ошибка: " + err.message, "alert");
+        } finally {
+          aiBtn.disabled = false;
+          aiBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> ИИ-Импорт`;
+          aiInput.value = "";
+        }
+      });
+    }
+    // -----------------
 
     Promise.all([loadStaff(), loadVacations()]).then(() => renderActive());
 

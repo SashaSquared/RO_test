@@ -2237,7 +2237,7 @@
             Array.from(files).map(async file => resizeImageForAI(await fileToBase64(file)))
           );
 
-          const CHUNK = 5;
+          const CHUNK = 8;
           const chunks = [];
           for (let c = 0; c < base64Images.length; c += CHUNK) chunks.push(base64Images.slice(c, c + CHUNK));
           let totalInserted = 0;

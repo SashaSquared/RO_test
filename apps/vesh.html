@@ -203,6 +203,7 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
   .shift-banner{justify-content:center}
 }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -548,20 +549,7 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
     } catch (e) { return ""; }
   }
 
-  function ensureHash(user) {
-    if (!user) return null;
-    if (user.hash) return user;
-    try {
-      const raw = localStorage.getItem("hospital_session");
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (data && data.login === user.login && data.hash) {
-        user.hash = data.hash;
-        return user;
-      }
-    } catch (e) {}
-    return null;
-  }
+  
 
   function myBookingsCount() {
     if (!state.user) return 0;
@@ -980,7 +968,7 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
 
   function init() {
     const user = loadUser();
-    if (!user || !ensureHash(user)) {
+    if (!user) {
       document.querySelector(".wrap").innerHTML =
         '<div class="card" style="text-align:center;padding:40px 20px;">' +
           '<div style="font-size:2rem;margin-bottom:10px;">🔒</div>' +

@@ -2237,20 +2237,40 @@
             Array.from(files).map(async file => resizeImageForAI(await fileToBase64(file)))
           );
 
-          const res = await apiPost({
-            action: "syncStaffFromImages",
-            login: state.user.login,
-            hash: state.user.hash,
-            images: base64Images
-          });
-
-          if (!res.success) {
-            showToast(res.message || "Ошибка ИИ", "alert");
-          } else {
-            showToast(res.message, "success");
-            notifyParent("ИИ-Импорт", res.message, "success");
-            await loadStaff();
+          const CHUNK = 5;
+          const chunks = [];
+          for (let c = 0; c < base64Images.length; c += CHUNK) chunks.push(base64Images.slice(c, c + CHUNK));
+          let totalInserted = 0;
+          let totalErrors = 0;
+          let doneParts = 0;
+          let chunkIdx = 0;
+          const CONCURRENCY = 2;
+          async function runChunk() {
+            while (chunkIdx < chunks.length) {
+              const my = chunkIdx++;
+              const part = chunks[my];
+              showToast(`ИИ-импорт: часть ${my + 1}/${chunks.length} (${part.length} фото)...`, "info");
+              const res = await apiPost({
+                action: "syncStaffFromImages",
+                mode: my === 0 ? "replace" : "append",
+                login: state.user.login,
+                hash: state.user.hash,
+                images: part
+              });
+              if (!res.success) {
+                throw new Error(res.message || "Ошибка ИИ");
+              }
+              totalInserted += (res.inserted || 0);
+              totalErrors += (res.errors && res.errors.length) || 0;
+              doneParts++;
+              showToast(`Часть ${doneParts}/${chunks.length} готова`, "success");
+            }
           }
+          const lanes = Math.min(CONCURRENCY, chunks.length);
+          await Promise.all(Array.from({ length: lanes }, runChunk));
+          showToast(`Распознано: ${totalInserted}` + (totalErrors ? ` (ошибок: ${totalErrors})` : ""), "success");
+          notifyParent("ИИ-Импорт", `Распознано: ${totalInserted}`, "success");
+          await loadStaff();
         } catch (err) {
           console.error(err);
           showToast("Ошибка: " + err.message, "alert");

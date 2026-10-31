@@ -41,6 +41,7 @@
     --hover-bg: rgba(255,255,255,0.06);
   }
 
+  /* СВЕТЛАЯ ТЕМА */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --bg-2: #ffffff;
@@ -79,223 +80,573 @@
   }
 
   html, body { height: 100%; }
-  html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: var(--body-bg); color: var(--text); line-height: 1.5;
-    min-height: 100vh; -webkit-font-smoothing: antialiased;
-    overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;
+    background: var(--body-bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     transition: background 0.25s, color 0.25s;
   }
 
   .tablet {
-    max-width: 1100px; margin: 0 auto; min-height: 100vh;
-    display: flex; flex-direction: column; background: var(--tablet-bg);
-    border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--tablet-bg);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
     transition: background 0.25s;
   }
 
+  /* Статус-бар */
   .status-bar {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 8px 16px; background: var(--status-bg);
-    border-bottom: 1px solid var(--border); font-size: 0.78rem;
-    color: var(--muted); position: sticky; top: 0; z-index: 20;
+    gap: 12px; padding: 8px 16px;
+    background: var(--status-bg); border-bottom: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--muted);
+    position: sticky; top: 0; z-index: 20;
+    transition: background 0.25s;
   }
   .status-left, .status-right { display: flex; align-items: center; gap: 12px; }
   .status-bar .net-indicator { display: inline-flex; align-items: center; gap: 8px; }
-  .status-bar .wifi-icon { width: 18px; height: 18px; color: #2f9e44; animation: wifiPulse 2s infinite; }
+  .status-bar .wifi-icon {
+    width: 18px; height: 18px; color: #2f9e44;
+    transition: color 0.25s;
+    animation: wifiPulse 2s infinite;
+  }
   .status-bar .wifi-icon.offline { color: #ef4444; animation: none; }
   .status-bar .wifi-icon .cross { display: none; stroke: currentColor; }
   .status-bar .wifi-icon.offline .cross { display: block; }
   @keyframes wifiPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-  .status-bar .clock { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
-  .status-bar .battery { display: inline-flex; align-items: center; gap: 6px; }
+  .status-bar .clock {
+    font-variant-numeric: tabular-nums; font-weight: 600;
+    color: var(--text); letter-spacing: 0.04em;
+  }
+  .status-bar .battery {
+    display: inline-flex; align-items: center; gap: 6px; color: var(--muted);
+  }
   .status-bar .battery .bat-body {
-    width: 22px; height: 11px; border: 1.5px solid var(--muted);
-    border-radius: 3px; padding: 1px; position: relative; display: flex; align-items: center;
+    width: 22px; height: 11px;
+    border: 1.5px solid var(--muted);
+    border-radius: 3px; padding: 1px;
+    position: relative; display: flex; align-items: center;
   }
   .status-bar .battery .bat-body::after {
     content: ""; position: absolute; right: -3px; top: 50%;
-    transform: translateY(-50%); width: 2px; height: 4px;
-    border-radius: 0 1px 1px 0; background: var(--muted);
+    transform: translateY(-50%);
+    width: 2px; height: 4px; border-radius: 0 1px 1px 0;
+    background: var(--muted);
   }
-  .status-bar .battery .bat-level { height: 100%; border-radius: 1px; background: #2f9e44; }
+  .status-bar .battery .bat-level {
+    height: 100%; border-radius: 1px;
+    background: #2f9e44;
+    transition: width 0.3s, background 0.25s;
+  }
   .status-bar .battery .bat-level.low { background: #f59e0b; }
   .status-bar .battery .bat-level.critical { background: #ef4444; }
-  .status-bar .shift-indicator {
-    display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px;
-    border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  .status-bar .battery .bat-text {
+    font-variant-numeric: tabular-nums; font-size: 0.72rem;
   }
-  .status-bar .shift-indicator.day { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
-  .status-bar .shift-indicator.night { background: rgba(99, 102, 241, 0.18); color: #c4b5fd; }
-  .status-bar .shift-indicator .shift-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 
+  /* Индикатор смены */
+  .status-bar .shift-indicator {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+    border: 1px solid transparent;
+  }
+  .status-bar .shift-indicator .shift-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+    flex-shrink: 0;
+  }
+  .status-bar .shift-indicator.day {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.45);
+    color: #fcd34d;
+  }
+  :root[data-theme="light"] .status-bar .shift-indicator.day {
+    background: rgba(217, 119, 6, 0.12);
+    border-color: rgba(217, 119, 6, 0.4);
+    color: #b45309;
+  }
+  .status-bar .shift-indicator.night {
+    background: rgba(99, 102, 241, 0.18);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
+  }
+  :root[data-theme="light"] .status-bar .shift-indicator.night {
+    background: rgba(124, 58, 237, 0.12);
+    border-color: rgba(124, 58, 237, 0.4);
+    color: #6d28d9;
+  }
+
+  /* Шапка */
   .tablet-header {
-    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
-    background: var(--header-bg); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
     position: relative; flex-wrap: wrap;
+    transition: background 0.25s;
   }
   .tablet-logo {
     width: 42px; height: 42px; border-radius: 12px;
     background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
-    display: flex; align-items: center; justify-content: center; position: relative;
-    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25), 0 4px 12px rgba(0, 0, 0, 0.4);
+    position: relative;
   }
   .tablet-logo::before, .tablet-logo::after { content: ""; position: absolute; background: #fff; border-radius: 2px; }
   .tablet-logo::before { width: 22px; height: 6px; }
   .tablet-logo::after  { width: 6px; height: 22px; }
 
   .tablet-title { flex: 1; min-width: 0; }
-  .tablet-title h1 { font-size: 1.05rem; font-weight: 700; }
-  .tablet-title .sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
+  .tablet-title h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
+  .tablet-title .sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
 
+  /* Переключатель темы */
   .theme-switcher {
-    display: inline-flex; align-items: center; gap: 2px; padding: 3px;
-    background: var(--panel-3); border: 1px solid var(--border); border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    background: var(--panel-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    flex-shrink: 0;
   }
   .theme-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 32px; height: 28px; background: transparent; border: none;
-    border-radius: 7px; color: var(--muted); cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 28px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .theme-btn.active { background: var(--accent); color: #fff; }
+  .theme-btn:hover { background: var(--hover-bg); color: var(--text); }
+  .theme-btn.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(47, 158, 68, 0.35);
+  }
   .theme-btn svg { width: 15px; height: 15px; }
 
+  #themeSwitcherHeader.hidden { display: none; }
+
   .user-chip {
-    display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px 6px 6px;
     background: var(--panel-3); border: 1px solid var(--border);
-    border-radius: 999px; font-size: 0.8rem; color: var(--text); cursor: pointer;
+    border-radius: 999px; font-size: 0.8rem; color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
   }
+  .user-chip:hover { background: var(--panel-2); border-color: var(--border-strong); }
   .user-chip .avatar {
     width: 26px; height: 26px; border-radius: 50%;
     background-size: cover; background-position: center;
-    background-color: var(--blue); display: flex; align-items: center; justify-content: center;
+    background-color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 0.78rem; color: #fff;
+    text-transform: uppercase;
   }
-  .user-chip .roles-list { display: flex; gap: 4px; }
-  .user-chip .role-badge {
-    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+  .user-chip .role {
+    font-size: 0.62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
     padding: 2px 7px; border-radius: 999px;
   }
+  .user-chip .role.admin { background: #4c1d95; color: #ddd6fe; }
+  .user-chip .role.user  { background: #1e3a8a; color: #bfdbfe; }
+  .user-chip .role.super {
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+    color: #1a1207;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
+  }
+  .user-chip .chip-hint { font-size: 0.68rem; color: var(--muted); margin-right: 2px; }
 
   .desk-switcher { position: relative; display: none; }
   .desk-switcher.visible { display: block; }
   .desk-btn {
-    display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
     background: var(--panel-3); border: 1px solid var(--border);
-    border-radius: 10px; color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    border-radius: 10px; color: var(--text);
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
   }
+  .desk-btn:hover { background: var(--panel-2); }
   .desk-btn svg { width: 12px; height: 12px; }
+  .desk-btn .current-desk { color: #86efac; }
+  :root[data-theme="light"] .desk-btn .current-desk { color: #166534; }
   .desk-list {
-    display: none; position: absolute; top: calc(100% + 6px); right: 0;
-    flex-direction: column; gap: 4px; background: var(--panel);
-    border: 1px solid var(--border); border-radius: 12px; padding: 6px;
-    min-width: 220px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); z-index: 40;
+    display: none;
+    position: absolute; top: calc(100% + 6px); right: 0;
+    flex-direction: column; gap: 4px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 6px;
+    min-width: 220px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    max-height: 420px; overflow-y: auto;
   }
+  :root[data-theme="light"] .desk-list { box-shadow: 0 8px 24px rgba(15,23,42,0.12); }
   .desk-list.open { display: flex; }
   .desk-list button {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 12px; background: transparent; border: none; border-radius: 8px;
-    color: var(--text); font-size: 0.82rem; font-weight: 500; cursor: pointer;
+    padding: 8px 12px;
+    background: transparent; border: none; border-radius: 8px;
+    color: var(--text); font-size: 0.82rem; font-weight: 500;
+    text-align: left; cursor: pointer; font-family: inherit;
+    transition: background 0.12s;
   }
-  .desk-list button.active { background: rgba(47, 158, 68, 0.15); color: #86efac; font-weight: 700; }
+  .desk-list button:hover { background: var(--panel-3); }
+  .desk-list button.active {
+    background: rgba(47, 158, 68, 0.15);
+    color: #86efac; font-weight: 700;
+  }
+  :root[data-theme="light"] .desk-list button.active { color: #166534; }
 
-  .tablet-body { flex: 1; padding: 20px; }
+  .tablet-body { flex: 1; padding: 20px; overflow: visible; }
 
-  .auth-screen { min-height: calc(100vh - 120px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .auth-screen {
+    min-height: calc(100vh - 60px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
   .auth-card {
-    width: 100%; max-width: 420px; background: var(--header-bg);
-    border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px;
-    text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    width: 100%; max-width: 420px;
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    position: relative; overflow: hidden;
+  }
+  :root[data-theme="light"] .auth-card { box-shadow: 0 10px 40px rgba(15,23,42,0.12); }
+  .auth-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #dc2626, #2f9e44, #3b82f6);
   }
   .auth-emblem {
-    width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 18px;
+    width: 64px; height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 18px;
     background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
-    display: flex; align-items: center; justify-content: center; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2), 0 8px 24px rgba(220, 38, 38, 0.35);
   }
   .auth-emblem::before, .auth-emblem::after { content: ""; position: absolute; background: #fff; border-radius: 3px; }
   .auth-emblem::before { width: 34px; height: 9px; }
   .auth-emblem::after  { width: 9px; height: 34px; }
-  .auth-card h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
-  .auth-card .subtitle { color: var(--muted); font-size: 0.84rem; margin-bottom: 24px; }
+  .auth-card h1 { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .auth-card .subtitle { text-align: center; color: var(--muted); font-size: 0.84rem; margin-bottom: 22px; }
 
   .btn-discord {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-    width: 100%; padding: 14px 20px; background: var(--discord); color: #fff;
-    border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700;
+    width: 100%; padding: 13px 20px; background: var(--discord); color: #fff;
+    border: none; border-radius: 12px; font-size: 0.96rem; font-weight: 700;
     cursor: pointer; transition: background 0.15s, transform 0.05s; text-decoration: none;
+    font-family: inherit;
   }
   .btn-discord:hover { background: var(--discord-hover); }
   .btn-discord:active { transform: scale(0.98); }
   .btn-discord svg { width: 22px; height: 22px; }
 
-  .home-screen { padding: 6px 4px; }
-  .home-greeting h2 { font-size: 1.25rem; font-weight: 700; }
-  .home-greeting p { color: var(--muted); font-size: 0.86rem; margin-top: 2px; margin-bottom: 20px; }
-
-  .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
-  .app-tile {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 12px; padding: 22px 14px; background: var(--header-bg); border: 1px solid var(--border);
-    border-radius: 18px; cursor: pointer; text-align: center; position: relative;
-    transition: transform 0.12s, border-color 0.15s;
+  .form-group { margin-bottom: 14px; }
+  label {
+    display: block; font-size: 0.78rem; font-weight: 600;
+    margin-bottom: 6px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em;
   }
-  .app-tile:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+  select, input[type="text"], input[type="password"], textarea {
+    width: 100%; padding: 12px 14px;
+    font-size: 0.96rem; font-family: inherit;
+    color: var(--text); background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  select:focus, input:focus, textarea:focus {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.22);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 11px 16px;
+    font-size: 0.92rem; font-weight: 600;
+    font-family: inherit; color: #fff;
+    background: var(--accent); border: none; border-radius: 10px;
+    cursor: pointer; transition: background 0.15s, transform 0.05s, opacity 0.15s;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn:hover:not(:disabled) { background: var(--accent-2); }
+  .btn:active:not(:disabled) { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .btn-block { width: 100%; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-ghost:hover:not(:disabled) { background: var(--panel-3); }
+  .btn-danger { background: var(--red); padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; }
+  .btn-danger:hover:not(:disabled) { background: var(--red-hover); }
+  .btn-small { padding: 5px 10px; font-size: 0.76rem; border-radius: 8px; }
+
+  .notification {
+    margin-top: 14px; padding: 11px 14px;
+    border-radius: 10px; font-size: 0.86rem; font-weight: 500;
+    display: none;
+  }
+  .notification.show { display: block; animation: fadeIn 0.25s ease; }
+  .notification.success { background: var(--success-bg); color: var(--success-text); }
+  .notification.error { background: var(--error-bg); color: var(--error-text); }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(-4px) } to { opacity:1; transform: translateY(0) } }
+
+  .home-screen { padding: 6px 4px; }
+  .home-greeting { margin-bottom: 22px; }
+  .home-greeting h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+  .home-greeting p { color: var(--muted); font-size: 0.86rem; margin-top: 2px; }
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  .app-tile {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px; padding: 22px 14px;
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.15s, box-shadow 0.15s;
+    text-align: center; user-select: none;
+    position: relative; overflow: hidden;
+  }
+  .app-tile:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: var(--card-shadow); }
+  .app-tile:active { transform: scale(0.98); }
+
   .app-icon {
-    width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #fff;
+    width: 56px; height: 56px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
   }
   .app-icon svg { width: 30px; height: 30px; }
   .app-icon.green { background: linear-gradient(135deg, #2f9e44, #1b6b2e); }
   .app-icon.blue  { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .app-icon.red   { background: linear-gradient(135deg, #ef4444, #991b1b); }
   .app-icon.amber { background: linear-gradient(135deg, #f59e0b, #b45309); }
   .app-icon.purple{ background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
   .app-icon.gray  { background: linear-gradient(135deg, #64748b, #334155); }
   .app-icon.cyan  { background: linear-gradient(135deg, #06b6d4, #0e7490); }
-  .app-icon.red   { background: linear-gradient(135deg, #ef4444, #991b1b); }
+
+  .app-tile .label { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.25; }
+  .app-tile .sub { font-size: 0.72rem; color: var(--muted); margin-top: -6px; }
+
+  .app-tile .counter-badge {
+    position: absolute; top: 10px; right: 10px;
+    min-width: 22px; height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--amber); color: #1a1207;
+    font-size: 0.72rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5);
+  }
 
   .app-screen { animation: fadeIn 0.2s ease; }
-  .app-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .app-bar {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px; flex-wrap: wrap;
+  }
   .app-bar .back-btn {
-    display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--panel-2);
-    border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.84rem; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 0.84rem; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
   }
+  .app-bar .back-btn:hover { background: var(--panel-3); }
+  .app-bar .back-btn svg { width: 14px; height: 14px; }
 
-  .card { background: var(--header-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+  .app-bar .app-bar-title { display: flex; align-items: center; gap: 10px; flex: 1; }
+  .app-bar .app-bar-title h2 { font-size: 1.05rem; font-weight: 700; }
+  .app-bar .app-bar-title .app-icon { width: 34px; height: 34px; border-radius: 10px; }
+  .app-bar .app-bar-title .app-icon svg { width: 18px; height: 18px; }
+
+  .card {
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+  }
   .card + .card { margin-top: 16px; }
-
-  .iframe-wrap { width: 100%; height: calc(100vh - 200px); min-height: 520px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
-  .iframe-wrap iframe { width: 100%; height: 100%; border: 0; background: var(--bg-2); }
-
-  .modal-back {
-    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 10000;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
+  .card h3 { font-size: 0.98rem; font-weight: 600; margin-bottom: 14px; }
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
   }
-  .modal-back.hidden { display: none !important; }
-  .modal { width: 100%; max-width: 460px; background: var(--header-bg); border: 1px solid var(--border); border-radius: 20px; padding: 26px 22px; }
-
-  .role-tag {
-    display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-right: 4px;
-  }
-  .role-tag.superadmin { background: #f59e0b; color: #1a1207; }
-  .role-tag.head { background: #8b5cf6; color: #fff; }
-  .role-tag.deputy { background: #3b82f6; color: #fff; }
-  .role-tag.instructor { background: #22c55e; color: #fff; }
-  .role-tag.hr { background: #f97316; color: #fff; }
-  .role-tag.guest { background: #64748b; color: #fff; }
-
-  .toast-container { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; width: calc(100% - 32px); max-width: 460px; pointer-events: none; }
-  .toast { padding: 12px 14px; background: var(--toast-bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); pointer-events: auto; }
-
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 0.88rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; color: #fff; background: var(--accent); }
-  .btn:hover { background: var(--accent-2); }
-  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-  .btn-ghost:hover { background: var(--panel-3); }
+  .card-head h3 { margin-bottom: 0; }
 
   .staff-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
-  .staff-table th, .staff-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
+  .staff-table th {
+    text-align: left; font-weight: 600; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .staff-table td {
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
 
+  .dept-pill {
+    display: inline-block; padding: 3px 9px;
+    border-radius: 999px; font-size: 0.72rem;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; background: #1e3a8a; color: #bfdbfe;
+  }
+
+  .role-pill {
+    display: inline-block; padding: 3px 9px;
+    border-radius: 999px; font-size: 0.72rem;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .role-pill.superadmin { background: linear-gradient(135deg, #f59e0b, #b45309); color: #1a1207; }
+  .role-pill.head { background: #8b5cf6; color: #fff; }
+  .role-pill.deputy { background: #3b82f6; color: #fff; }
+  .role-pill.instructor { background: #22c55e; color: #fff; }
+  .role-pill.hr { background: #f97316; color: #fff; }
+  .role-pill.guest { background: #64748b; color: #fff; }
+
+  .empty, .loading { color: var(--muted); font-size: 0.86rem; text-align: center; padding: 20px 0; }
   .hidden { display: none !important; }
+
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
+
+  .iframe-wrap {
+    width: 100%; height: calc(100vh - 200px); min-height: 520px;
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; position: relative;
+    box-shadow: var(--card-shadow);
+  }
+  .iframe-wrap iframe { width: 100%; height: 100%; border: 0; display: block; background: var(--bg-2); }
+
+  .toast-container {
+    position: fixed; top: 12px; left: 50%;
+    transform: translateX(-50%); z-index: 9999;
+    display: flex; flex-direction: column; gap: 8px;
+    width: calc(100% - 32px); max-width: 460px; pointer-events: none;
+  }
+  .toast {
+    display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px;
+    background: var(--toast-bg); border: 1px solid var(--toast-border);
+    border-left: 4px solid #2f9e44; border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.55); color: var(--text); pointer-events: auto;
+  }
+  .toast.toast-alert { border-left-color: #ef4444; }
+
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 12px 14px; background: var(--input-bg);
+    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px;
+  }
+  .toggle-switch {
+    width: 44px; height: 24px; border-radius: 999px;
+    background: var(--panel-3); border: 1px solid var(--border);
+    cursor: pointer; position: relative; transition: background 0.15s; flex-shrink: 0;
+  }
+  .toggle-switch::before {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 18px; height: 18px; border-radius: 50%; background: #fff;
+    transition: transform 0.18s;
+  }
+  .toggle-switch.on { background: var(--accent); border-color: var(--accent); }
+  .toggle-switch.on::before { transform: translateX(20px); }
+
+  .theme-seg {
+    display: inline-flex; gap: 4px; padding: 4px;
+    background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px;
+  }
+  .theme-seg button {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 9px 14px; background: transparent; border: 1px solid transparent;
+    border-radius: 9px; color: var(--muted); font-family: inherit; font-size: 0.84rem;
+    font-weight: 600; cursor: pointer; transition: 0.15s; white-space: nowrap;
+  }
+  .theme-seg button.active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  .theme-seg button svg { width: 15px; height: 15px; }
+
+  /* Devlog */
+  .devlog-list { display: flex; flex-direction: column; gap: 10px; }
+  .devlog-item {
+    padding: 12px 14px; background: var(--panel-2);
+    border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 12px;
+  }
+  .devlog-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 6px; font-size: 0.72rem; color: var(--muted);
+  }
+  .devlog-text { font-size: 0.9rem; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+
+  /* Модальное окно */
+  .modal-back {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
+    z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-back.hidden { display: none !important; }
+  .modal {
+    width: 100%; max-width: 460px; background: var(--header-bg);
+    border: 1px solid var(--border); border-radius: 20px; padding: 26px 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.8); position: relative;
+  }
 </style>
 </head>
 <body>
@@ -304,9 +655,10 @@
 
 <div class="tablet">
 
+  <!-- СТАТУС-БАР -->
   <div class="status-bar">
     <div class="status-left">
-      <span class="net-indicator">
+      <span class="net-indicator" title="Связь с сервером">
         <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><circle cx="12" cy="20" r="0.9" fill="currentColor"/>
         </svg>
@@ -327,46 +679,61 @@
     </div>
   </div>
 
+  <!-- ШАПКА -->
   <div class="tablet-header">
     <div class="tablet-logo"></div>
     <div class="tablet-title">
-      <h1>Планшет Больницы</h1>
-      <div class="sub">Единая информационная система</div>
+      <h1 id="tabletTitle">Планшет Больницы</h1>
+      <div class="sub">Россия Онлайн · Служба здравоохранения</div>
     </div>
 
-    <div class="theme-switcher hidden" id="themeSwitcherHeader">
-      <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/></svg>
+    <!-- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (ОРИГИНАЛЬНЫЙ) -->
+    <div class="theme-switcher hidden" id="themeSwitcherHeader" title="Тема оформления">
+      <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая тема" aria-label="Светлая тема">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
       </button>
-      <button class="theme-btn" type="button" data-theme-mode="dark" title="Тёмная">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <button class="theme-btn" type="button" data-theme-mode="dark" title="Тёмная тема" aria-label="Тёмная тема">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="theme-btn" type="button" data-theme-mode="auto" title="Автоматически" aria-label="Автоматически">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
       </button>
     </div>
 
+    <!-- ПЕРЕКЛЮЧАТЕЛЬ СТОЛОВ -->
     <div class="desk-switcher" id="deskSwitcher">
       <button class="desk-btn" id="deskBtn">
-        Рабочий стол: <span id="currentDesk" style="color:var(--accent-2); font-weight:700;">—</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        Рабочий стол: <span class="current-desk" id="currentDesk">—</span>
       </button>
       <div class="desk-list" id="deskList"></div>
     </div>
 
-    <div class="user-chip hidden" id="userChip">
+    <!-- ПОЛЬЗОВАТЕЛЬ -->
+    <div class="user-chip hidden" id="userChip" title="Открыть профиль">
       <div class="avatar" id="userAvatar">?</div>
-      <span id="userLogin" style="font-weight:600;">—</span>
-      <div class="roles-list" id="userRolesHeader"></div>
-      <button class="btn btn-ghost" id="logoutBtn" style="padding:4px 8px;font-size:0.72rem;margin-left:4px;">Выйти</button>
+      <span id="userLogin">—</span>
+      <span class="role user" id="userRole">user</span>
+      <span class="chip-hint">профиль</span>
+      <button class="btn btn-ghost" id="logoutBtn" style="padding:5px 10px;font-size:0.72rem;">Выйти</button>
     </div>
   </div>
 
   <div class="tablet-body">
 
-    <!-- Экран входа через Discord -->
+    <!-- ЭКРАН ВХОДА (DISCORD OAUTH) -->
     <div id="authScreen" class="auth-screen">
       <div class="auth-card">
         <div class="auth-emblem"></div>
-        <h1>Вход в систему</h1>
-        <p class="subtitle">Авторизуйтесь через Discord для доступа к планшету больницы</p>
-        <button class="btn-discord" id="discordLoginBtn">
+        <h1>Вход в планшет</h1>
+        <p class="subtitle">Авторизуйтесь через Discord для доступа к системе</p>
+        <button type="button" class="btn-discord" id="discordLoginBtn">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
           </svg>
@@ -375,51 +742,155 @@
       </div>
     </div>
 
-    <!-- Рабочий стол -->
+    <!-- РАБОЧИЙ СТОЛ -->
     <div id="deskScreen" class="home-screen hidden">
       <div class="home-greeting">
         <h2 id="homeGreeting">Добро пожаловать</h2>
         <p id="homeSub">Выберите приложение</p>
       </div>
       <div class="app-grid" id="appGrid"></div>
-      <div id="gosScheduleWidget" class="hidden" style="margin-top:20px;"></div>
+      <div id="gosScheduleWidget" class="hidden"></div>
     </div>
 
-    <!-- Iframe встроенных модулей -->
+    <!-- IFRAME ПРИЛОЖЕНИЯ -->
     <div id="appFrame" class="app-screen hidden">
       <div class="app-bar">
-        <button class="back-btn" data-back="1">← Назад</button>
-        <h2 id="frameTitle" style="font-size:1.1rem; font-weight:700;">Приложение</h2>
+        <button class="back-btn" data-back="1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Назад
+        </button>
+        <div class="app-bar-title">
+          <div class="app-icon" id="frameIcon"></div>
+          <h2 id="frameTitle">Приложение</h2>
+        </div>
       </div>
       <div class="iframe-wrap">
         <iframe id="appIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"></iframe>
       </div>
     </div>
 
-    <!-- Управление учётными записями -->
+    <!-- УЧЁТНЫЕ ЗАПИСИ (МУЛЬТИРОЛИ) -->
     <div id="appUsers" class="app-screen hidden">
       <div class="app-bar">
-        <button class="back-btn" data-back="1">← Назад</button>
-        <h2 style="font-size:1.1rem; font-weight:700;">Управление пользователями и ролями</h2>
+        <button class="back-btn" data-back="1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Назад
+        </button>
+        <div class="app-bar-title">
+          <div class="app-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h2>Учётные записи</h2>
+        </div>
       </div>
       <div class="card">
-        <div id="usersContainer">Загрузка...</div>
+        <div class="card-head">
+          <h3>Пользователи системы</h3>
+        </div>
+        <div id="usersContainer">
+          <div class="loading">Загрузка…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ПРОФИЛЬ -->
+    <div id="appProfile" class="app-screen hidden">
+      <div class="app-bar">
+        <button class="back-btn" data-back="1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Назад
+        </button>
+        <div class="app-bar-title">
+          <div class="app-icon gray">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h2>Профиль</h2>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Данные профиля</h3>
+        <form id="profileForm">
+          <div class="profile-grid">
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="profileLogin">Имя Фамилия</label>
+              <input type="text" id="profileLogin" autocomplete="off" required>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="profileDiscord">Discord тег</label>
+              <input type="text" id="profileDiscord" disabled>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:10px;">
+            <label>Отделы</label>
+            <input type="text" id="profileDept" disabled>
+          </div>
+          <button type="submit" class="btn btn-block" id="profileBtn">Сохранить имя</button>
+          <div class="notification" id="profileNotification"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- О СИСТЕМЕ -->
+    <div id="appAbout" class="app-screen hidden">
+      <div class="app-bar">
+        <button class="back-btn" data-back="1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Назад
+        </button>
+        <div class="app-bar-title">
+          <div class="app-icon gray">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </div>
+          <h2>О системе</h2>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Оформление</h3>
+        <div class="theme-seg" id="themeSegAbout">
+          <button type="button" data-theme-mode="light">Светлая</button>
+          <button type="button" data-theme-mode="dark">Тёмная</button>
+          <button type="button" data-theme-mode="auto">Авто</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Состояние соединения</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Версия</span>
+            <span style="color:var(--text);font-weight:600">3.0 (Discord OAuth)</span>
+          </div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Сервер</span>
+            <span id="aboutServer" style="color:var(--text);font-weight:600">Проверка…</span>
+          </div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Пользователь</span>
+            <span id="aboutAuth" style="color:var(--text);font-weight:600">—</span>
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- Модальное окно первого ввода имени -->
+<!-- МОДАЛКА ПЕРВОГО ВВОДА ИМЕНИ -->
 <div class="modal-back hidden" id="nameModal">
   <div class="modal">
-    <h2 style="margin-bottom:8px;">Завершение регистрации</h2>
-    <p style="color:var(--muted);font-size:0.86rem;margin-bottom:16px;">
-      Введите ваши реальные <b>Имя и Фамилию</b>. Они будут отображаться в планшете и подставляться в отчёты.
-    </p>
+    <div class="modal-emblem">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <h2>Укажите ваши данные</h2>
+    <p class="modal-sub">Введите ваши настоящие Имя и Фамилию персонажа. Они будут отображаться в планшете и отчётах.</p>
     <form id="nameForm">
-      <input type="text" id="displayNameInput" placeholder="Например: Арсений Быков" required style="margin-bottom:14px;">
-      <button type="submit" class="btn" style="width:100%;">Сохранить и продолжить</button>
+      <div class="form-group">
+        <label for="initialName">Имя Фамилия</label>
+        <input type="text" id="initialName" placeholder="Например: Арсений Быков" required>
+      </div>
+      <button type="submit" class="btn btn-block">Сохранить и войти</button>
+      <div class="notification" id="nameNotification"></div>
     </form>
   </div>
 </div>
@@ -429,59 +900,125 @@
   "use strict";
 
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
+  const THEME_KEY = "pref_theme";
+  const THEME_MODES = ["light", "dark", "auto"];
+
+  const ROLE_NAMES = {
+    superadmin: "Суперпользователь",
+    head: "Заведующий",
+    deputy: "Заместитель",
+    instructor: "Инструктор",
+    hr: "Кадры",
+    guest: "Гость"
+  };
 
   const state = {
     token: null,
     user: null,
     activeDesk: null,
-    availableRoles: [],
-    schedule: []
+    themeMode: "dark",
+    toastsEnabled: true,
+    soundEnabled: true,
+    users: []
   };
 
   const $ = id => document.getElementById(id);
 
+  /* Экраны */
   const authScreen = $("authScreen");
   const deskScreen = $("deskScreen");
   const appFrame = $("appFrame");
   const appUsers = $("appUsers");
+  const appProfile = $("appProfile");
+  const appAbout = $("appAbout");
   const nameModal = $("nameModal");
-  const nameForm = $("nameForm");
-  const displayNameInput = $("displayNameInput");
 
-  const discordLoginBtn = $("discordLoginBtn");
+  const appGrid = $("appGrid");
+  const appIframe = $("appIframe");
+  const frameTitle = $("frameTitle");
+  const frameIcon = $("frameIcon");
+
   const userChip = $("userChip");
   const userAvatar = $("userAvatar");
   const userLogin = $("userLogin");
-  const userRolesHeader = $("userRolesHeader");
+  const userRole = $("userRole");
   const logoutBtn = $("logoutBtn");
   const statusUser = $("statusUser");
   const statusClock = $("statusClock");
+  const wifiIcon = $("wifiIcon");
+  const statusNetwork = $("statusNetwork");
   const deskSwitcher = $("deskSwitcher");
   const deskBtn = $("deskBtn");
   const deskList = $("deskList");
   const currentDesk = $("currentDesk");
-  const appGrid = $("appGrid");
-  const appIframe = $("appIframe");
-  const frameTitle = $("frameTitle");
 
-  async function api(action, payload = {}) {
-    const headers = { "Content-Type": "text/plain;charset=utf-8" };
-    if (state.token) {
-      headers["Authorization"] = "Bearer " + state.token;
+  /* ТЕМА ОФОРМЛЕНИЯ */
+  function systemTheme() {
+    try { return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
+    catch (e) { return "dark"; }
+  }
+
+  function resolveThemeMode(mode) {
+    if (mode === "auto") return systemTheme();
+    return mode === "light" ? "light" : "dark";
+  }
+
+  function applyThemeMode(mode) {
+    if (!THEME_MODES.includes(mode)) mode = "dark";
+    state.themeMode = mode;
+    const resolved = resolveThemeMode(mode);
+    document.documentElement.setAttribute("data-theme", resolved);
+    document.documentElement.setAttribute("data-theme-mode", mode);
+    try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+
+    document.querySelectorAll("[data-theme-mode]").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.themeMode === mode);
+    });
+    broadcastTheme();
+  }
+
+  function broadcastTheme() {
+    if (!appIframe) return;
+    try {
+      if (appIframe.contentWindow) {
+        appIframe.contentWindow.postMessage({ type: "theme", mode: state.themeMode }, "*");
+      }
+    } catch (e) {}
+  }
+
+  function loadThemeMode() {
+    let mode = "dark";
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (THEME_MODES.includes(saved)) mode = saved;
+    } catch (e) {}
+    applyThemeMode(mode);
+
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq && mq.addEventListener) {
+      mq.addEventListener("change", () => {
+        if (state.themeMode === "auto") applyThemeMode("auto");
+      });
     }
+  }
+
+  /* СЕТЬ */
+  async function apiPost(payload) {
+    const headers = { "Content-Type": "text/plain;charset=utf-8" };
+    if (state.token) headers["Authorization"] = "Bearer " + state.token;
     const res = await fetch(API_URL, {
       method: "POST",
       headers,
-      body: JSON.stringify({ action, ...payload })
+      body: JSON.stringify({ token: state.token, ...payload })
     });
+    if (!res.ok) throw new Error("HTTP " + res.status);
     return res.json();
   }
 
-  function showToast(text, type = "success") {
+  function showToast(title, text = "", type = "success") {
     const el = document.createElement("div");
-    el.className = "toast";
-    el.style.borderLeftColor = type === "error" ? "var(--red)" : "var(--accent)";
-    el.textContent = text;
+    el.className = "toast" + (type === "error" ? " toast-alert" : "");
+    el.innerHTML = `<div><b>${title}</b><div>${text}</div></div>`;
     $("toastContainer").appendChild(el);
     setTimeout(() => el.remove(), 4000);
   }
@@ -494,61 +1031,59 @@
     return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
   }
 
-  /* Реестр приложений */
+  /* РЕЕСТР ПРИЛОЖЕНИЙ */
   const APPS = {
     staff: {
-      label: "Персонал больницы", sub: "Штат и кадры", color: "blue",
-      frame: "apps/staff.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>'
+      label: "Персонал больницы", sub: "Список сотрудников", color: "blue", frame: "apps/staff.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
     },
     vacations: {
-      label: "Отпуска", sub: "График отпусков", color: "amber",
-      frame: "apps/vacations.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg>'
-    },
-    booking: {
-      label: "Вещание", sub: "Бронирование госволны", color: "amber",
-      frame: "apps/vesh.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/></svg>'
-    },
-    calculator: {
-      label: "Калькулятор СМП", sub: "Отчёты и баллы", color: "red",
-      frame: "apps/calculator.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>'
-    },
-    weeklyReports: {
-      label: "Недельники СМП", sub: "Сдача норм СМП", color: "blue",
-      frame: "apps/weekly-reports.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>'
-    },
-    examSmp: {
-      label: "Шпаргалка СМП", sub: "Вопросы экзаменов", color: "purple",
-      frame: "apps/exam-smp.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>'
-    },
-    calculatorPses: {
-      label: "Калькулятор ПСЭС", sub: "Отчёты и баллы", color: "green",
-      frame: "apps/calculator-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>'
-    },
-    weeklyReportsPses: {
-      label: "Недельники ПСЭС", sub: "Сдача норм ПСЭС", color: "green",
-      frame: "apps/weekly-reports-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>'
-    },
-    examPses: {
-      label: "Шпаргалка ПСЭС", sub: "Вопросы экзаменов", color: "purple",
-      frame: "apps/exam-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>'
-    },
-    docsPses: {
-      label: "Документы ПСЭС", sub: "Регламенты и макросы", color: "cyan",
-      frame: "apps/docs-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>'
+      label: "Отпуска", sub: "IC · OOC", color: "amber", frame: "apps/vacations.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 15l2 2 4-4"/></svg>'
     },
     users: {
-      label: "Учётные записи", sub: "Управление доступом", color: "purple",
+      label: "Учётные записи", sub: "Управление пользователями", color: "purple",
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+    },
+    profile: {
+      label: "Профиль", sub: "Данные сотрудника", color: "gray",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+    },
+    about: {
+      label: "О системе", sub: "Настройки и тема", color: "gray",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+    },
+    calculator: {
+      label: "Калькулятор СМП", sub: "Баллы · замены · отчёт", color: "red", frame: "apps/calculator.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="14" x2="16" y2="18"/></svg>'
+    },
+    calculatorPses: {
+      label: "Калькулятор ПСЭС", sub: "Баллы · отчёт", color: "green", frame: "apps/calculator-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="14" x2="16" y2="18"/></svg>'
+    },
+    booking: {
+      label: "Бронирование вещания", sub: "Запись госволны", color: "amber", frame: "apps/vesh.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>'
+    },
+    weeklyReports: {
+      label: "Недельные отчёты СМП", sub: "Сдача · топы · должники", color: "blue", frame: "apps/weekly-reports.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+    },
+    weeklyReportsPses: {
+      label: "Недельные отчёты ПСЭС", sub: "Сдача · топы · должники", color: "green", frame: "apps/weekly-reports-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+    },
+    examSmp: {
+      label: "Шпаргалка СМП", sub: "Вопросы · ответы", color: "purple", frame: "apps/exam-smp.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'
+    },
+    examPses: {
+      label: "Шпаргалка ПСЭС", sub: "Вопросы · ответы", color: "purple", frame: "apps/exam-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'
+    },
+    docsPses: {
+      label: "Документация ПСЭС", sub: "Регламенты и макросы", color: "cyan", frame: "apps/docs-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
     }
   };
 
@@ -558,7 +1093,7 @@
     const desks = [];
     if (hasRole("smp") || (state.user.departments && state.user.departments.includes("СМП"))) desks.push("СМП");
     if (hasRole("pses") || (state.user.departments && state.user.departments.includes("ПСЭС"))) desks.push("ПСЭС");
-    if (desks.length === 0) desks.push("Гость");
+    if (!desks.length) desks.push("Общий");
     return desks;
   }
 
@@ -581,7 +1116,7 @@
       });
     } else {
       deskSwitcher.classList.remove("visible");
-      state.activeDesk = desks[0] || "Гость";
+      state.activeDesk = desks[0] || "Общий";
     }
   }
 
@@ -590,18 +1125,17 @@
     $("homeGreeting").textContent = "Рабочий стол: " + state.activeDesk;
     $("homeSub").textContent = (state.user.display_name || state.user.discord_tag);
 
-    const apps = [];
-    if (state.activeDesk === "СМП") {
-      apps.push("staff", "vacations", "calculator", "weeklyReports", "booking", "examSmp");
-    } else if (state.activeDesk === "ПСЭС") {
-      apps.push("staff", "vacations", "calculatorPses", "weeklyReportsPses", "docsPses", "examPses");
-    } else {
-      apps.push("staff", "vacations");
-    }
+    const apps = ["staff", "vacations"];
+    if (canManageUsers()) apps.push("users");
 
-    if (canManageUsers()) {
-      apps.push("users");
+    if (state.activeDesk === "СМП") {
+      apps.push("calculator", "weeklyReports", "booking", "examSmp");
+    } else if (state.activeDesk === "ПСЭС") {
+      apps.push("calculatorPses", "weeklyReportsPses", "docsPses", "examPses");
+    } else if (state.activeDesk === "Руководство") {
+      apps.push("calculator", "calculatorPses", "weeklyReports", "weeklyReportsPses", "booking");
     }
+    apps.push("about");
 
     appGrid.innerHTML = "";
     apps.forEach(k => {
@@ -611,138 +1145,104 @@
       tile.className = "app-tile";
       tile.innerHTML = `
         <div class="app-icon ${a.color}">${a.icon}</div>
-        <div style="font-weight:700;font-size:0.92rem;">${a.label}</div>
-        <div style="font-size:0.75rem;color:var(--muted);">${a.sub}</div>
+        <div class="label">${a.label}</div>
+        <div class="sub">${a.sub}</div>
       `;
       tile.onclick = () => openApp(k);
       appGrid.appendChild(tile);
     });
   }
 
-  function openApp(key) {
-    if (key === "users") {
-      authScreen.classList.add("hidden");
-      deskScreen.classList.add("hidden");
-      appFrame.classList.add("hidden");
-      appUsers.classList.remove("hidden");
-      loadUsersList();
-      return;
-    }
-    const a = APPS[key];
-    if (a && a.frame) {
-      authScreen.classList.add("hidden");
-      deskScreen.classList.add("hidden");
-      appUsers.classList.add("hidden");
-      appFrame.classList.remove("hidden");
-      frameTitle.textContent = a.label;
+  function showScreen(name) {
+    authScreen.classList.toggle("hidden", name !== "auth");
+    deskScreen.classList.toggle("hidden", name !== "desk");
+    appFrame.classList.toggle("hidden", name !== "frame");
+    appUsers.classList.toggle("hidden", name !== "users");
+    appProfile.classList.toggle("hidden", name !== "profile");
+    appAbout.classList.toggle("hidden", name !== "about");
 
-      const p = new URLSearchParams({
+    userChip.classList.toggle("hidden", name === "auth");
+    themeSwitcherHeader.classList.toggle("hidden", name === "auth");
+
+    if (name !== "frame" && appIframe) appIframe.src = "about:blank";
+  }
+
+  function openApp(key) {
+    const a = APPS[key];
+    if (!a) return;
+    if (a.frame) {
+      frameTitle.textContent = a.label;
+      frameIcon.className = "app-icon " + a.color;
+      frameIcon.innerHTML = a.icon;
+
+      const params = new URLSearchParams({
+        v: Date.now(),
         token: state.token || "",
         login: state.user.display_name || state.user.discord_tag,
         dept: state.activeDesk || "",
         role: hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : "user")
       });
-      appIframe.src = a.frame + "?" + p.toString();
+      appIframe.src = a.frame + "?" + params.toString();
+      showScreen("frame");
+      appIframe.onload = () => broadcastTheme();
+      return;
+    }
+    if (key === "users") { showScreen("users"); loadUsersList(); }
+    else if (key === "profile") {
+      showScreen("profile");
+      $("profileLogin").value = state.user.display_name || "";
+      $("profileDiscord").value = state.user.discord_tag || "";
+      $("profileDept").value = (state.user.departments || []).join(", ") || "—";
+    }
+    else if (key === "about") {
+      showScreen("about");
+      $("aboutServer").textContent = "В сети ✓";
+      $("aboutAuth").textContent = (state.user.display_name || state.user.discord_tag);
     }
   }
 
   async function loadUsersList() {
-    $("usersContainer").innerHTML = "Загрузка списка...";
-    const res = await api("getUsers");
-    if (!res.success) {
-      $("usersContainer").innerHTML = "Ошибка: " + res.message;
-      return;
+    $("usersContainer").innerHTML = '<div class="loading">Загрузка…</div>';
+    try {
+      const res = await apiPost({ action: "getUsers" });
+      if (!res.success) throw new Error(res.message);
+
+      let html = `<table class="staff-table"><thead><tr><th>Сотрудник</th><th>Discord</th><th>Роли</th><th>Отделы</th><th>Действие</th></tr></thead><tbody>`;
+      res.users.forEach(u => {
+        const rolesHtml = (u.roles || []).map(r => `<span class="role-pill ${r}">${r}</span>`).join(" ");
+        const deptsHtml = (u.departments || []).map(d => `<span class="dept-pill">${d}</span>`).join(" ");
+        html += `<tr>
+          <td><b>${escapeHtml(u.display_name || "Без имени")}</b></td>
+          <td><code>${escapeHtml(u.discord_tag)}</code></td>
+          <td>${rolesHtml}</td>
+          <td>${deptsHtml || "—"}</td>
+          <td>
+            <button class="btn btn-ghost btn-small" onclick="window.manageRoles(${u.id}, '${escapeHtml(u.display_name || u.discord_tag)}')">Роли</button>
+          </td>
+        </tr>`;
+      });
+      html += `</tbody></table>`;
+      $("usersContainer").innerHTML = html;
+    } catch (e) {
+      $("usersContainer").innerHTML = `<div class="empty">Ошибка: ${e.message}</div>`;
     }
-
-    const rolesRes = await api("getRoles");
-    state.availableRoles = (rolesRes.success && rolesRes.roles) || [];
-
-    let html = `<table class="staff-table">
-      <thead>
-        <tr>
-          <th>Пользователь</th>
-          <th>Discord Tag</th>
-          <th>Роли</th>
-          <th>Действие</th>
-        </tr>
-      </thead>
-      <tbody>`;
-
-    res.users.forEach(u => {
-      const badges = (u.roles || []).map(r => `<span class="role-tag ${r}">${r}</span>`).join(" ");
-      html += `<tr>
-        <td><b>${escapeHtml(u.display_name || "Не указано")}</b></td>
-        <td><code>${escapeHtml(u.discord_tag)}</code></td>
-        <td>${badges}</td>
-        <td>
-          <button class="btn btn-ghost" style="padding:4px 8px;font-size:0.76rem;" onclick="window.editRoles(${u.id}, '${escapeHtml(u.display_name)}')">Управление</button>
-        </td>
-      </tr>`;
-    });
-    html += `</tbody></table>`;
-    $("usersContainer").innerHTML = html;
   }
 
-  window.editRoles = async function(userId, name) {
-    const roleCode = prompt(`Введите код роли для выдачи/снятия пользователю ${name}:\n(superadmin, head, deputy, instructor, hr, smp, pses, guest)`);
+  window.manageRoles = async function (uid, name) {
+    const roleCode = prompt(`Укажите роль для выдачи/снятия пользователю ${name}:\n(head, deputy, instructor, hr, smp, pses, guest)`);
     if (!roleCode) return;
-    const action = confirm(`Нажмите OK для выдачи роли "${roleCode}", или Отмена для её снятия.`) ? "grantRole" : "revokeRole";
-    const res = await api(action, { user_id: userId, role_code: roleCode.trim().toLowerCase() });
-    if (res.success) {
-      showToast(res.message);
-      loadUsersList();
-    } else {
-      showToast(res.message, "error");
-    }
+    const act = confirm(`Нажмите OK для выдачи роли "${roleCode}", или Отмена для её снятия`) ? "grantRole" : "revokeRole";
+    try {
+      const res = await apiPost({ action: act, user_id: uid, role_code: roleCode.trim().toLowerCase() });
+      if (res.success) { showToast(res.message); loadUsersList(); }
+      else showToast(res.message, "", "error");
+    } catch (e) { showToast(e.message, "", "error"); }
   };
 
-  async function initSession() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlToken = urlParams.get("token");
-    const needsName = urlParams.get("needs_name") === "1";
-
-    if (urlToken) {
-      state.token = urlToken;
-      localStorage.setItem("hospital_discord_token", urlToken);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    } else {
-      state.token = localStorage.getItem("hospital_discord_token");
-    }
-
-    if (!state.token) {
-      authScreen.classList.remove("hidden");
-      deskScreen.classList.add("hidden");
-      userChip.classList.add("hidden");
-      return;
-    }
-
-    const res = await api("getMe");
-    if (!res.success) {
-      localStorage.removeItem("hospital_discord_token");
-      state.token = null;
-      authScreen.classList.remove("hidden");
-      deskScreen.classList.add("hidden");
-      return;
-    }
-
-    state.user = res.user;
-
-    if (needsName || res.user.needs_name) {
-      nameModal.classList.remove("hidden");
-      return;
-    }
-
-    applyUserUI();
-  }
-
-  function applyUserUI() {
-    authScreen.classList.add("hidden");
-    deskScreen.classList.remove("hidden");
-    userChip.classList.remove("hidden");
-    $("themeSwitcherHeader").classList.remove("hidden");
-
+  async function applyUserSession() {
     userLogin.textContent = state.user.display_name || state.user.discord_tag;
     statusUser.textContent = state.user.display_name || state.user.discord_tag;
+
     if (state.user.avatar_url) {
       userAvatar.style.backgroundImage = `url('${state.user.avatar_url}')`;
       userAvatar.textContent = "";
@@ -750,66 +1250,150 @@
       userAvatar.textContent = (state.user.display_name || "U")[0].toUpperCase();
     }
 
-    userRolesHeader.innerHTML = (state.user.roles || []).map(r => `<span class="role-tag ${r}">${r}</span>`).join("");
+    if (hasRole("superadmin")) {
+      userRole.textContent = "СУПЕРАДМИН";
+      userRole.className = "role super";
+    } else if (hasRole("head") || hasRole("deputy")) {
+      userRole.textContent = "РУКОВОДСТВО";
+      userRole.className = "role admin";
+    } else {
+      userRole.textContent = "ИНСТРУКТОР";
+      userRole.className = "role user";
+    }
 
     const desks = getAvailableDesks();
-    state.activeDesk = desks[0] || "Гость";
+    state.activeDesk = desks[0] || "Общий";
+    showScreen("desk");
     renderDesk();
   }
 
-  nameForm.onsubmit = async (e) => {
-    e.preventDefault();
-    const name = displayNameInput.value.trim();
-    if (name.length < 2) return;
-    const res = await api("updateProfile", { display_name: name });
-    if (res.success) {
-      nameModal.classList.add("hidden");
-      state.user.display_name = name;
-      state.user.needs_name = false;
-      applyUserUI();
+  async function initAuth() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const needsName = urlParams.get("needs_name") === "1";
+
+    if (token) {
+      state.token = token;
+      localStorage.setItem("hospital_discord_token", token);
+      window.history.replaceState({}, document.title, window.location.pathname);
     } else {
-      alert(res.message);
+      state.token = localStorage.getItem("hospital_discord_token");
     }
-  };
 
-  discordLoginBtn.onclick = () => {
-    const redirect = window.location.origin + window.location.pathname;
-    window.location.href = `${API_URL}/auth/discord?redirect=${encodeURIComponent(redirect)}`;
-  };
+    if (!state.token) {
+      showScreen("auth");
+      return;
+    }
 
-  logoutBtn.onclick = () => {
-    localStorage.removeItem("hospital_discord_token");
-    window.location.reload();
-  };
+    try {
+      const res = await apiPost({ action: "getMe" });
+      if (!res.success) throw new Error(res.message);
+      state.user = res.user;
 
-  document.querySelectorAll("[data-back]").forEach(b => {
-    b.onclick = () => {
-      appFrame.classList.add("hidden");
-      appUsers.classList.add("hidden");
-      deskScreen.classList.remove("hidden");
-      appIframe.src = "about:blank";
-    };
-  });
+      if (needsName || res.user.needs_name) {
+        nameModal.classList.remove("hidden");
+        return;
+      }
+      applyUserSession();
+    } catch (e) {
+      localStorage.removeItem("hospital_discord_token");
+      state.token = null;
+      showScreen("auth");
+    }
+  }
 
-  deskBtn.onclick = (e) => {
-    e.stopPropagation();
-    deskList.classList.toggle("open");
-  };
-  document.addEventListener("click", () => deskList.classList.remove("open"));
+  /* ИНИЦИАЛИЗАЦИЯ */
+  function init() {
+    loadThemeMode();
+    document.querySelectorAll("[data-theme-mode]").forEach(btn => {
+      btn.addEventListener("click", () => applyThemeMode(btn.dataset.themeMode));
+    });
+
+    $("discordLoginBtn").addEventListener("click", () => {
+      const redirect = window.location.origin + window.location.pathname;
+      window.location.href = `${API_URL}/auth/discord?redirect=${encodeURIComponent(redirect)}`;
+    });
+
+    logoutBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      localStorage.removeItem("hospital_discord_token");
+      window.location.reload();
+    });
+
+    $("nameForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const val = $("initialName").value.trim();
+      if (!val) return;
+      try {
+        const res = await apiPost({ action: "updateProfile", display_name: val });
+        if (res.success) {
+          state.user.display_name = val;
+          nameModal.classList.add("hidden");
+          applyUserSession();
+        } else {
+          alert(res.message);
+        }
+      } catch (err) { alert("Ошибка сети"); }
+    });
+
+    $("profileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const val = $("profileLogin").value.trim();
+      if (!val) return;
+      try {
+        const res = await apiPost({ action: "updateProfile", display_name: val });
+        if (res.success) {
+          state.user.display_name = val;
+          userLogin.textContent = val;
+          statusUser.textContent = val;
+          showToast("Профиль обновлён");
+        } else {
+          showToast(res.message, "", "error");
+        }
+      } catch (err) { showToast("Ошибка сети", "", "error"); }
+    });
+
+    userChip.addEventListener("click", (e) => {
+      if (e.target.closest("#logoutBtn")) return;
+      openApp("profile");
+    });
+
+    deskBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deskList.classList.toggle("open");
+    });
+    document.addEventListener("click", () => deskList.classList.remove("open"));
+
+    document.querySelectorAll("[data-back]").forEach(b => {
+      b.addEventListener("click", () => {
+        showScreen("desk");
+        renderDesk();
+      });
+    });
+
+    function tickClock() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      statusClock.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+    }
+    setInterval(tickClock, 1000);
+    tickClock();
+
+    window.addEventListener("message", (e) => {
+      if (!e.data || typeof e.data !== "object") return;
+      if (e.data.type === "toast") showToast(e.data.title || "Сообщение", e.data.text || "", e.data.kind);
+      else if (e.data.type === "go-back") { showScreen("desk"); renderDesk(); }
+      else if (e.data.type === "theme-request") broadcastTheme();
+    });
+
+    initAuth();
+  }
 
   function escapeHtml(s) {
     return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  function tickClock() {
-    const d = new Date();
-    const pad = n => String(n).padStart(2, "0");
-    statusClock.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
-  }
-  setInterval(tickClock, 1000);
-  tickClock();
-
-  initSession();
+  document.addEventListener("DOMContentLoaded", init);
 })();
 </script>
 </body>

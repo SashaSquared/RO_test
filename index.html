@@ -16,6 +16,7 @@
     --text: #e8eef7;
     --muted: #8496ab;
     --border: #26344a;
+    --border-strong: #3a4d6b;
     --accent: #2f9e44;
     --accent-2: #37b24d;
     --blue: #3b82f6;
@@ -80,53 +81,36 @@
   }
 
   html, body { height: 100%; }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    width: 0;
-    display: none;
-  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: var(--body-bg);
-    color: var(--text);
-    line-height: 1.5;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    background: var(--body-bg); color: var(--text); line-height: 1.5;
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;
     transition: background 0.25s, color 0.25s;
   }
 
   .tablet {
-    max-width: 1100px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: var(--tablet-bg);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
+    max-width: 1100px; margin: 0 auto; min-height: 100vh;
+    display: flex; flex-direction: column; background: var(--tablet-bg);
+    border-left: 1px solid var(--border); border-right: 1px solid var(--border);
     transition: background 0.25s;
   }
 
   /* Статус-бар */
   .status-bar {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 8px 16px;
-    background: var(--status-bg); border-bottom: 1px solid var(--border);
-    font-size: 0.78rem; color: var(--muted);
-    position: sticky; top: 0; z-index: 20;
+    gap: 12px; padding: 8px 16px; background: var(--status-bg);
+    border-bottom: 1px solid var(--border); font-size: 0.78rem;
+    color: var(--muted); position: sticky; top: 0; z-index: 20;
     transition: background 0.25s;
   }
   .status-left, .status-right { display: flex; align-items: center; gap: 12px; }
   .status-bar .net-indicator { display: inline-flex; align-items: center; gap: 8px; }
   .status-bar .wifi-icon {
     width: 18px; height: 18px; color: #2f9e44;
-    transition: color 0.25s;
-    animation: wifiPulse 2s infinite;
+    transition: color 0.25s; animation: wifiPulse 2s infinite;
   }
   .status-bar .wifi-icon.offline { color: #ef4444; animation: none; }
   .status-bar .wifi-icon .cross { display: none; stroke: currentColor; }
@@ -136,87 +120,44 @@
     font-variant-numeric: tabular-nums; font-weight: 600;
     color: var(--text); letter-spacing: 0.04em;
   }
-  .status-bar .battery {
-    display: inline-flex; align-items: center; gap: 6px; color: var(--muted);
-  }
+  .status-bar .battery { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
   .status-bar .battery .bat-body {
-    width: 22px; height: 11px;
-    border: 1.5px solid var(--muted);
-    border-radius: 3px; padding: 1px;
-    position: relative; display: flex; align-items: center;
+    width: 22px; height: 11px; border: 1.5px solid var(--muted);
+    border-radius: 3px; padding: 1px; position: relative; display: flex; align-items: center;
   }
   .status-bar .battery .bat-body::after {
     content: ""; position: absolute; right: -3px; top: 50%;
-    transform: translateY(-50%);
-    width: 2px; height: 4px; border-radius: 0 1px 1px 0;
-    background: var(--muted);
+    transform: translateY(-50%); width: 2px; height: 4px;
+    border-radius: 0 1px 1px 0; background: var(--muted);
   }
-  .status-bar .battery .bat-level {
-    height: 100%; border-radius: 1px;
-    background: #2f9e44;
-    transition: width 0.3s, background 0.25s;
-  }
+  .status-bar .battery .bat-level { height: 100%; border-radius: 1px; background: #2f9e44; }
   .status-bar .battery .bat-level.low { background: #f59e0b; }
   .status-bar .battery .bat-level.critical { background: #ef4444; }
-  .status-bar .battery .bat-text {
-    font-variant-numeric: tabular-nums; font-size: 0.72rem;
-  }
+  .status-bar .battery .bat-text { font-variant-numeric: tabular-nums; font-size: 0.72rem; }
 
   /* Индикатор смены */
   .status-bar .shift-indicator {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 2px 9px;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transition: background 0.25s, color 0.25s, border-color 0.25s;
+    display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px;
+    border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
     border: 1px solid transparent;
   }
-  .status-bar .shift-indicator .shift-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 6px currentColor;
-    flex-shrink: 0;
-  }
-  .status-bar .shift-indicator.day {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: rgba(245, 158, 11, 0.45);
-    color: #fcd34d;
-  }
-  :root[data-theme="light"] .status-bar .shift-indicator.day {
-    background: rgba(217, 119, 6, 0.12);
-    border-color: rgba(217, 119, 6, 0.4);
-    color: #b45309;
-  }
-  .status-bar .shift-indicator.night {
-    background: rgba(99, 102, 241, 0.18);
-    border-color: rgba(139, 92, 246, 0.5);
-    color: #c4b5fd;
-  }
-  :root[data-theme="light"] .status-bar .shift-indicator.night {
-    background: rgba(124, 58, 237, 0.12);
-    border-color: rgba(124, 58, 237, 0.4);
-    color: #6d28d9;
-  }
+  .status-bar .shift-indicator .shift-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status-bar .shift-indicator.day { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.45); color: #fcd34d; }
+  :root[data-theme="light"] .status-bar .shift-indicator.day { background: rgba(217, 119, 6, 0.12); border-color: rgba(217, 119, 6, 0.4); color: #b45309; }
+  .status-bar .shift-indicator.night { background: rgba(99, 102, 241, 0.18); border-color: rgba(139, 92, 246, 0.5); color: #c4b5fd; }
+  :root[data-theme="light"] .status-bar .shift-indicator.night { background: rgba(124, 58, 237, 0.12); border-color: rgba(124, 58, 237, 0.4); color: #6d28d9; }
 
   /* Шапка */
   .tablet-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 18px;
-    background: var(--header-bg);
-    border-bottom: 1px solid var(--border);
-    position: relative; flex-wrap: wrap;
-    transition: background 0.25s;
+    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+    background: var(--header-bg); border-bottom: 1px solid var(--border);
+    position: relative; flex-wrap: wrap; transition: background 0.25s;
   }
   .tablet-logo {
     width: 42px; height: 42px; border-radius: 12px;
     background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25), 0 4px 12px rgba(0, 0, 0, 0.4);
     position: relative;
   }
@@ -230,241 +171,167 @@
 
   /* Переключатель темы */
   .theme-switcher {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    padding: 3px;
-    background: var(--panel-3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+    background: var(--panel-3); border: 1px solid var(--border); border-radius: 10px;
     flex-shrink: 0;
   }
   .theme-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px; height: 28px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 7px;
-    color: var(--muted);
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s, color 0.15s;
-    -webkit-tap-highlight-color: transparent;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 28px; padding: 0; background: transparent; border: none;
+    border-radius: 7px; color: var(--muted); cursor: pointer; transition: 0.15s;
   }
   .theme-btn:hover { background: var(--hover-bg); color: var(--text); }
-  .theme-btn.active {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 2px 6px rgba(47, 158, 68, 0.35);
-  }
+  .theme-btn.active { background: var(--accent); color: #fff; box-shadow: 0 2px 6px rgba(47, 158, 68, 0.35); }
   .theme-btn svg { width: 15px; height: 15px; }
-
   #themeSwitcherHeader.hidden { display: none; }
 
   .user-chip {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 10px 6px 6px;
+    display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px;
     background: var(--panel-3); border: 1px solid var(--border);
-    border-radius: 999px; font-size: 0.8rem; color: var(--text);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    user-select: none;
+    border-radius: 999px; font-size: 0.8rem; color: var(--text); cursor: pointer;
+    transition: 0.15s; user-select: none;
   }
   .user-chip:hover { background: var(--panel-2); border-color: var(--border-strong); }
   .user-chip .avatar {
     width: 26px; height: 26px; border-radius: 50%;
-    background-size: cover; background-position: center;
-    background-color: var(--blue);
+    background-size: cover; background-position: center; background-color: var(--blue);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.78rem; color: #fff;
-    text-transform: uppercase;
+    font-weight: 700; font-size: 0.78rem; color: #fff; text-transform: uppercase;
   }
   .user-chip .role {
-    font-size: 0.62rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    padding: 2px 7px; border-radius: 999px;
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 2px 7px; border-radius: 999px;
   }
   .user-chip .role.admin { background: #4c1d95; color: #ddd6fe; }
   .user-chip .role.user  { background: #1e3a8a; color: #bfdbfe; }
   .user-chip .role.super {
     background: linear-gradient(135deg, #f59e0b, #b45309);
-    color: #1a1207;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
+    color: #1a1207; box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
   }
   .user-chip .chip-hint { font-size: 0.68rem; color: var(--muted); margin-right: 2px; }
 
   .desk-switcher { position: relative; display: none; }
   .desk-switcher.visible { display: block; }
   .desk-btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 12px;
-    background: var(--panel-3); border: 1px solid var(--border);
-    border-radius: 10px; color: var(--text);
-    font-size: 0.82rem; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: background 0.15s;
+    display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+    background: var(--panel-3); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer;
   }
-  .desk-btn:hover { background: var(--panel-2); }
   .desk-btn svg { width: 12px; height: 12px; }
   .desk-btn .current-desk { color: #86efac; }
   :root[data-theme="light"] .desk-btn .current-desk { color: #166534; }
   .desk-list {
-    display: none;
-    position: absolute; top: calc(100% + 6px); right: 0;
-    flex-direction: column; gap: 4px;
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 12px; padding: 6px;
-    min-width: 220px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    z-index: 40;
-    max-height: 420px; overflow-y: auto;
+    display: none; position: absolute; top: calc(100% + 6px); right: 0;
+    flex-direction: column; gap: 4px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 6px; min-width: 220px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); z-index: 40;
   }
-  :root[data-theme="light"] .desk-list { box-shadow: 0 8px 24px rgba(15,23,42,0.12); }
   .desk-list.open { display: flex; }
   .desk-list button {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 12px;
-    background: transparent; border: none; border-radius: 8px;
-    color: var(--text); font-size: 0.82rem; font-weight: 500;
-    text-align: left; cursor: pointer; font-family: inherit;
-    transition: background 0.12s;
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
+    background: transparent; border: none; border-radius: 8px; color: var(--text);
+    font-size: 0.82rem; font-weight: 500; cursor: pointer;
   }
-  .desk-list button:hover { background: var(--panel-3); }
-  .desk-list button.active {
-    background: rgba(47, 158, 68, 0.15);
-    color: #86efac; font-weight: 700;
-  }
+  .desk-list button.active { background: rgba(47, 158, 68, 0.15); color: #86efac; font-weight: 700; }
   :root[data-theme="light"] .desk-list button.active { color: #166534; }
 
   .tablet-body { flex: 1; padding: 20px; overflow: visible; }
 
+  /* Экран входа Discord */
   .auth-screen {
     min-height: calc(100vh - 60px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
   }
   .auth-card {
-    width: 100%; max-width: 420px;
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 28px 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    position: relative; overflow: hidden;
+    width: 100%; max-width: 420px; background: var(--header-bg);
+    border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;
+    text-align: center;
   }
-  :root[data-theme="light"] .auth-card { box-shadow: 0 10px 40px rgba(15,23,42,0.12); }
   .auth-card::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 3px;
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: linear-gradient(90deg, #dc2626, #2f9e44, #3b82f6);
   }
   .auth-emblem {
-    width: 64px; height: 64px;
-    margin: 0 auto 14px;
-    border-radius: 18px;
+    width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 18px;
     background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
+    display: flex; align-items: center; justify-content: center; position: relative;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2), 0 8px 24px rgba(220, 38, 38, 0.35);
   }
   .auth-emblem::before, .auth-emblem::after { content: ""; position: absolute; background: #fff; border-radius: 3px; }
   .auth-emblem::before { width: 34px; height: 9px; }
   .auth-emblem::after  { width: 9px; height: 34px; }
-  .auth-card h1 { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
-  .auth-card .subtitle { text-align: center; color: var(--muted); font-size: 0.84rem; margin-bottom: 22px; }
+  .auth-card h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
+  .auth-card .subtitle { color: var(--muted); font-size: 0.86rem; margin-bottom: 24px; }
 
   .btn-discord {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     width: 100%; padding: 13px 20px; background: var(--discord); color: #fff;
     border: none; border-radius: 12px; font-size: 0.96rem; font-weight: 700;
-    cursor: pointer; transition: background 0.15s, transform 0.05s; text-decoration: none;
-    font-family: inherit;
+    cursor: pointer; transition: background 0.15s, transform 0.05s; font-family: inherit;
   }
   .btn-discord:hover { background: var(--discord-hover); }
   .btn-discord:active { transform: scale(0.98); }
   .btn-discord svg { width: 22px; height: 22px; }
 
-  .form-group { margin-bottom: 14px; }
+  /* Формы и кнопки */
+  .form-group { margin-bottom: 14px; text-align: left; }
   label {
-    display: block; font-size: 0.78rem; font-weight: 600;
-    margin-bottom: 6px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.05em;
+    display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 6px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
   }
-  select, input[type="text"], input[type="password"], textarea {
-    width: 100%; padding: 12px 14px;
-    font-size: 0.96rem; font-family: inherit;
-    color: var(--text); background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px; outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    -webkit-appearance: none; appearance: none;
+  input[type="text"], input[type="password"], textarea {
+    width: 100%; padding: 12px 14px; font-size: 0.96rem; font-family: inherit;
+    color: var(--text); background: var(--input-bg); border: 1px solid var(--border);
+    border-radius: 10px; outline: none; transition: 0.15s;
   }
-  select:focus, input:focus, textarea:focus {
-    border-color: var(--accent-2);
-    box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.22);
+  input:focus, textarea:focus {
+    border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.22);
   }
 
   .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 11px 16px;
-    font-size: 0.92rem; font-weight: 600;
-    font-family: inherit; color: #fff;
-    background: var(--accent); border: none; border-radius: 10px;
-    cursor: pointer; transition: background 0.15s, transform 0.05s, opacity 0.15s;
-    text-decoration: none; white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 16px; font-size: 0.92rem; font-weight: 600; font-family: inherit;
+    color: #fff; background: var(--accent); border: none; border-radius: 10px;
+    cursor: pointer; transition: 0.15s; white-space: nowrap;
   }
   .btn:hover:not(:disabled) { background: var(--accent-2); }
   .btn:active:not(:disabled) { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
   .btn-block { width: 100%; }
   .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-  .btn-ghost:hover:not(:disabled) { background: var(--panel-3); }
-  .btn-danger { background: var(--red); padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; }
-  .btn-danger:hover:not(:disabled) { background: var(--red-hover); }
+  .btn-ghost:hover { background: var(--panel-3); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: var(--red-hover); }
   .btn-small { padding: 5px 10px; font-size: 0.76rem; border-radius: 8px; }
 
-  .notification {
-    margin-top: 14px; padding: 11px 14px;
-    border-radius: 10px; font-size: 0.86rem; font-weight: 500;
-    display: none;
+  /* Иконка-кнопка (корзина) */
+  .icon-btn-action {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; padding: 0; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--panel-3);
+    color: var(--text-soft); cursor: pointer; transition: 0.15s;
   }
-  .notification.show { display: block; animation: fadeIn 0.25s ease; }
-  .notification.success { background: var(--success-bg); color: var(--success-text); }
-  .notification.error { background: var(--error-bg); color: var(--error-text); }
-  @keyframes fadeIn { from { opacity:0; transform: translateY(-4px) } to { opacity:1; transform: translateY(0) } }
+  .icon-btn-action.del { border-color: rgba(239,68,68,0.3); color: #fca5a5; background: rgba(239,68,68,0.1); }
+  .icon-btn-action.del:hover { background: var(--red); color: #fff; border-color: var(--red); }
+  .icon-btn-action svg { width: 16px; height: 16px; }
 
+  /* Плитки приложений */
   .home-screen { padding: 6px 4px; }
   .home-greeting { margin-bottom: 22px; }
-  .home-greeting h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+  .home-greeting h2 { font-size: 1.25rem; font-weight: 700; }
   .home-greeting p { color: var(--muted); font-size: 0.86rem; margin-top: 2px; }
 
-  .app-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
-  }
+  .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
   .app-tile {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 12px; padding: 22px 14px;
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    cursor: pointer;
-    transition: transform 0.12s ease, border-color 0.15s, box-shadow 0.15s;
-    text-align: center; user-select: none;
-    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 22px 14px; background: var(--header-bg); border: 1px solid var(--border);
+    border-radius: 18px; cursor: pointer; transition: transform 0.12s ease, border-color 0.15s;
+    text-align: center; user-select: none; position: relative; overflow: hidden;
   }
   .app-tile:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: var(--card-shadow); }
-  .app-tile:active { transform: scale(0.98); }
-
   .app-icon {
     width: 56px; height: 56px; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
+    display: flex; align-items: center; justify-content: center; color: #fff;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
   }
   .app-icon svg { width: 30px; height: 30px; }
@@ -475,112 +342,87 @@
   .app-icon.purple{ background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
   .app-icon.gray  { background: linear-gradient(135deg, #64748b, #334155); }
   .app-icon.cyan  { background: linear-gradient(135deg, #06b6d4, #0e7490); }
-
-  .app-tile .label { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.25; }
+  .app-tile .label { font-size: 0.88rem; font-weight: 600; color: var(--text); }
   .app-tile .sub { font-size: 0.72rem; color: var(--muted); margin-top: -6px; }
 
-  .app-tile .counter-badge {
-    position: absolute; top: 10px; right: 10px;
-    min-width: 22px; height: 22px;
-    padding: 0 6px;
-    border-radius: 999px;
-    background: var(--amber); color: #1a1207;
-    font-size: 0.72rem; font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5);
-  }
-
   .app-screen { animation: fadeIn 0.2s ease; }
-  .app-bar {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 18px; flex-wrap: wrap;
-  }
+  .app-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .app-bar .back-btn {
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 12px;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-size: 0.84rem; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: background 0.15s;
+    display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); font-size: 0.84rem; font-weight: 600; cursor: pointer;
   }
-  .app-bar .back-btn:hover { background: var(--panel-3); }
-  .app-bar .back-btn svg { width: 14px; height: 14px; }
-
   .app-bar .app-bar-title { display: flex; align-items: center; gap: 10px; flex: 1; }
   .app-bar .app-bar-title h2 { font-size: 1.05rem; font-weight: 700; }
   .app-bar .app-bar-title .app-icon { width: 34px; height: 34px; border-radius: 10px; }
   .app-bar .app-bar-title .app-icon svg { width: 18px; height: 18px; }
 
   .card {
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: var(--card-shadow);
+    background: var(--header-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow);
   }
   .card + .card { margin-top: 16px; }
   .card h3 { font-size: 0.98rem; font-weight: 600; margin-bottom: 14px; }
-  .card-head {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
-  }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   .card-head h3 { margin-bottom: 0; }
 
   .staff-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
   .staff-table th {
-    text-align: left; font-weight: 600; font-size: 0.7rem;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--muted); padding: 8px 10px;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
+    text-align: left; font-weight: 600; font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border);
   }
-  .staff-table td {
-    padding: 10px 10px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
+  .staff-table td { padding: 10px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+
+  /* Чипы ролей с крестиком */
+  .role-chip-interactive {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px;
+    border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin: 2px;
   }
+  .role-chip-interactive .role-del-btn {
+    cursor: pointer; font-size: 0.95rem; line-height: 1; opacity: 0.7;
+    background: transparent; border: none; color: inherit; padding: 0;
+    transition: 0.15s; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .role-chip-interactive .role-del-btn:hover { opacity: 1; transform: scale(1.2); }
+
+  .role-chip-interactive.superadmin { background: #f59e0b; color: #1a1207; }
+  .role-chip-interactive.head { background: #8b5cf6; color: #fff; }
+  .role-chip-interactive.deputy { background: #3b82f6; color: #fff; }
+  .role-chip-interactive.instructor { background: #22c55e; color: #fff; }
+  .role-chip-interactive.hr { background: #f97316; color: #fff; }
+  .role-chip-interactive.guest { background: #64748b; color: #fff; }
+  .role-chip-interactive.smp { background: #ef4444; color: #fff; }
+  .role-chip-interactive.pses { background: #0891b2; color: #fff; }
 
   .dept-pill {
-    display: inline-block; padding: 3px 9px;
-    border-radius: 999px; font-size: 0.72rem;
-    font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; background: #1e3a8a; color: #bfdbfe;
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    background: #1e3a8a; color: #bfdbfe; margin-right: 4px;
   }
 
-  .role-pill {
-    display: inline-block; padding: 3px 9px;
-    border-radius: 999px; font-size: 0.72rem;
-    font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em;
+  .roles-selector-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; }
+  .role-toggle-btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+    border-radius: 9px; font-size: 0.82rem; font-weight: 600; font-family: inherit;
+    cursor: pointer; background: var(--panel-3); border: 1px solid var(--border);
+    color: var(--text-soft); transition: 0.15s;
   }
-  .role-pill.superadmin { background: linear-gradient(135deg, #f59e0b, #b45309); color: #1a1207; }
-  .role-pill.head { background: #8b5cf6; color: #fff; }
-  .role-pill.deputy { background: #3b82f6; color: #fff; }
-  .role-pill.instructor { background: #22c55e; color: #fff; }
-  .role-pill.hr { background: #f97316; color: #fff; }
-  .role-pill.guest { background: #64748b; color: #fff; }
-
-  .empty, .loading { color: var(--muted); font-size: 0.86rem; text-align: center; padding: 20px 0; }
-  .hidden { display: none !important; }
-
-  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
+  .role-toggle-btn:hover { background: var(--panel-2); color: var(--text); border-color: var(--border-strong); }
+  .role-toggle-btn.active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+    box-shadow: 0 2px 8px rgba(47, 158, 68, 0.35);
+  }
 
   .iframe-wrap {
     width: 100%; height: calc(100vh - 200px); min-height: 520px;
     background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden; position: relative;
-    box-shadow: var(--card-shadow);
+    border-radius: 16px; overflow: hidden;
   }
-  .iframe-wrap iframe { width: 100%; height: 100%; border: 0; display: block; background: var(--bg-2); }
+  .iframe-wrap iframe { width: 100%; height: 100%; border: 0; background: var(--bg-2); }
 
   .toast-container {
-    position: fixed; top: 12px; left: 50%;
-    transform: translateX(-50%); z-index: 9999;
-    display: flex; flex-direction: column; gap: 8px;
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; flex-direction: column; gap: 8px;
     width: calc(100% - 32px); max-width: 460px; pointer-events: none;
   }
   .toast {
@@ -591,52 +433,19 @@
   }
   .toast.toast-alert { border-left-color: #ef4444; }
 
-  .toggle-row {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 12px 14px; background: var(--input-bg);
-    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px;
-  }
-  .toggle-switch {
-    width: 44px; height: 24px; border-radius: 999px;
-    background: var(--panel-3); border: 1px solid var(--border);
-    cursor: pointer; position: relative; transition: background 0.15s; flex-shrink: 0;
-  }
-  .toggle-switch::before {
-    content: ""; position: absolute; top: 2px; left: 2px;
-    width: 18px; height: 18px; border-radius: 50%; background: #fff;
-    transition: transform 0.18s;
-  }
-  .toggle-switch.on { background: var(--accent); border-color: var(--accent); }
-  .toggle-switch.on::before { transform: translateX(20px); }
-
   .theme-seg {
     display: inline-flex; gap: 4px; padding: 4px;
     background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px;
   }
   .theme-seg button {
     flex: 1; display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 9px 14px; background: transparent; border: 1px solid transparent;
+    padding: 9px 14px; background: transparent; border: 1px solid transparent;
     border-radius: 9px; color: var(--muted); font-family: inherit; font-size: 0.84rem;
-    font-weight: 600; cursor: pointer; transition: 0.15s; white-space: nowrap;
+    font-weight: 600; cursor: pointer; transition: 0.15s;
   }
-  .theme-seg button.active {
-    background: var(--accent); border-color: var(--accent); color: #fff;
-  }
-  .theme-seg button svg { width: 15px; height: 15px; }
+  .theme-seg button.active { background: var(--accent); color: #fff; }
 
-  /* Devlog */
-  .devlog-list { display: flex; flex-direction: column; gap: 10px; }
-  .devlog-item {
-    padding: 12px 14px; background: var(--panel-2);
-    border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 12px;
-  }
-  .devlog-meta {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; margin-bottom: 6px; font-size: 0.72rem; color: var(--muted);
-  }
-  .devlog-text { font-size: 0.9rem; color: var(--text); white-space: pre-wrap; word-break: break-word; }
-
-  /* Модальное окно */
+  /* Фирменные модалки */
   .modal-back {
     position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
     z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;
@@ -645,8 +454,24 @@
   .modal {
     width: 100%; max-width: 460px; background: var(--header-bg);
     border: 1px solid var(--border); border-radius: 20px; padding: 26px 22px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.8); position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,.8); position: relative; overflow: hidden;
   }
+  .modal::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #dc2626, #2f9e44, #3b82f6);
+  }
+  .modal-emblem {
+    width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.1), 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .modal-emblem svg { width: 28px; height: 28px; color: #fff; }
+  .modal h2 { text-align: center; font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+  .modal .modal-sub { text-align: center; color: var(--muted); font-size: 0.84rem; margin-bottom: 20px; }
+
+  .hidden { display: none !important; }
+  .loading, .empty { text-align: center; color: var(--muted); padding: 20px; font-size: 0.88rem; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -687,26 +512,26 @@
       <div class="sub">Россия Онлайн · Служба здравоохранения</div>
     </div>
 
-    <!-- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (ОРИГИНАЛЬНЫЙ) -->
-    <div class="theme-switcher hidden" id="themeSwitcherHeader" title="Тема оформления">
-      <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая тема" aria-label="Светлая тема">
+    <!-- ТЕМА -->
+    <div class="theme-switcher hidden" id="themeSwitcherHeader">
+      <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
         </svg>
       </button>
-      <button class="theme-btn" type="button" data-theme-mode="dark" title="Тёмная тема" aria-label="Тёмная тема">
+      <button class="theme-btn" type="button" data-theme-mode="dark" title="Тёмная">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
-      <button class="theme-btn" type="button" data-theme-mode="auto" title="Автоматически" aria-label="Автоматически">
+      <button class="theme-btn" type="button" data-theme-mode="auto" title="Авто">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
         </svg>
       </button>
     </div>
 
-    <!-- ПЕРЕКЛЮЧАТЕЛЬ СТОЛОВ -->
+    <!-- СТОЛЫ -->
     <div class="desk-switcher" id="deskSwitcher">
       <button class="desk-btn" id="deskBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -716,23 +541,22 @@
     </div>
 
     <!-- ПОЛЬЗОВАТЕЛЬ -->
-    <div class="user-chip hidden" id="userChip" title="Открыть профиль">
+    <div class="user-chip hidden" id="userChip">
       <div class="avatar" id="userAvatar">?</div>
       <span id="userLogin">—</span>
       <span class="role user" id="userRole">user</span>
-      <span class="chip-hint">профиль</span>
-      <button class="btn btn-ghost" id="logoutBtn" style="padding:5px 10px;font-size:0.72rem;">Выйти</button>
+      <button class="btn btn-ghost" id="logoutBtn" style="padding:4px 8px;font-size:0.72rem;margin-left:4px;">Выйти</button>
     </div>
   </div>
 
   <div class="tablet-body">
 
-    <!-- ЭКРАН ВХОДА (DISCORD OAUTH) -->
+    <!-- ВХОД DISCORD -->
     <div id="authScreen" class="auth-screen">
       <div class="auth-card">
         <div class="auth-emblem"></div>
         <h1>Вход в планшет</h1>
-        <p class="subtitle">Авторизуйтесь через Discord для доступа к системе</p>
+        <p class="subtitle">Авторизуйтесь через Discord для доступа к защищенной системе</p>
         <button type="button" class="btn-discord" id="discordLoginBtn">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
@@ -749,10 +573,9 @@
         <p id="homeSub">Выберите приложение</p>
       </div>
       <div class="app-grid" id="appGrid"></div>
-      <div id="gosScheduleWidget" class="hidden"></div>
     </div>
 
-    <!-- IFRAME ПРИЛОЖЕНИЯ -->
+    <!-- IFRAME МОДУЛЬ -->
     <div id="appFrame" class="app-screen hidden">
       <div class="app-bar">
         <button class="back-btn" data-back="1">
@@ -769,7 +592,7 @@
       </div>
     </div>
 
-    <!-- УЧЁТНЫЕ ЗАПИСИ (МУЛЬТИРОЛИ) -->
+    <!-- УЧЁТНЫЕ ЗАПИСИ -->
     <div id="appUsers" class="app-screen hidden">
       <div class="app-bar">
         <button class="back-btn" data-back="1">
@@ -825,7 +648,6 @@
             <input type="text" id="profileDept" disabled>
           </div>
           <button type="submit" class="btn btn-block" id="profileBtn">Сохранить имя</button>
-          <div class="notification" id="profileNotification"></div>
         </form>
       </div>
     </div>
@@ -853,20 +675,11 @@
         </div>
       </div>
       <div class="card">
-        <h3>Состояние соединения</h3>
+        <h3>Состояние системы</h3>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Версия</span>
-            <span style="color:var(--text);font-weight:600">3.0 (Discord OAuth)</span>
-          </div>
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Сервер</span>
-            <span id="aboutServer" style="color:var(--text);font-weight:600">Проверка…</span>
-          </div>
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Пользователь</span>
-            <span id="aboutAuth" style="color:var(--text);font-weight:600">—</span>
-          </div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Версия</span><span style="font-weight:600">3.0 (Discord Multi-Role)</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Сервер</span><span id="aboutServer" style="font-weight:600;color:var(--accent);">В сети ✓</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Пользователь</span><span id="aboutAuth" style="font-weight:600">—</span></div>
         </div>
       </div>
     </div>
@@ -877,21 +690,60 @@
 <!-- МОДАЛКА ПЕРВОГО ВВОДА ИМЕНИ -->
 <div class="modal-back hidden" id="nameModal">
   <div class="modal">
-    <div class="modal-emblem">
+    <div class="modal-emblem" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
       </svg>
     </div>
     <h2>Укажите ваши данные</h2>
-    <p class="modal-sub">Введите ваши настоящие Имя и Фамилию персонажа. Они будут отображаться в планшете и отчётах.</p>
+    <p class="modal-sub">Введите настоящие Имя и Фамилию персонажа. Они будут автоматически подставляться во все отчёты и калькуляторы.</p>
     <form id="nameForm">
       <div class="form-group">
         <label for="initialName">Имя Фамилия</label>
-        <input type="text" id="initialName" placeholder="Например: Арсений Быков" required>
+        <input type="text" id="initialName" placeholder="Например: Арсений Быков" required autocomplete="off">
       </div>
-      <button type="submit" class="btn btn-block">Сохранить и войти</button>
-      <div class="notification" id="nameNotification"></div>
+      <button type="submit" class="btn btn-block">Сохранить и продолжить</button>
     </form>
+  </div>
+</div>
+
+<!-- МОДАЛКА УПРАВЛЕНИЯ РОЛЯМИ -->
+<div class="modal-back hidden" id="manageRolesModal">
+  <div class="modal">
+    <div class="modal-emblem" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <h2 id="manageRolesUserName">Управление ролями</h2>
+    <p class="modal-sub">Нажимайте на кнопки ролей для моментального добавления или снятия.</p>
+
+    <div style="font-size:0.75rem; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:4px;">Системные роли:</div>
+    <div class="roles-selector-grid" id="systemRolesGrid"></div>
+
+    <div style="font-size:0.75rem; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:4px;">Отделы (Рабочие столы):</div>
+    <div class="roles-selector-grid" id="deptRolesGrid"></div>
+
+    <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+      <button type="button" class="btn btn-ghost" id="closeManageRolesBtn">Готово</button>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ -->
+<div class="modal-back hidden" id="deleteUserModal">
+  <div class="modal">
+    <div class="modal-emblem" style="background: linear-gradient(135deg, #ef4444, #991b1b);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
+      </svg>
+    </div>
+    <h2>Удалить пользователя?</h2>
+    <p class="modal-sub" id="deleteUserModalSub">Вы действительно хотите удалить пользователя? Это действие необратимо.</p>
+    <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <button type="button" class="btn btn-ghost" id="cancelDeleteUserBtn">Отмена</button>
+      <button type="button" class="btn btn-danger" id="confirmDeleteUserBtn">Удалить</button>
+    </div>
   </div>
 </div>
 
@@ -909,22 +761,33 @@
     deputy: "Заместитель",
     instructor: "Инструктор",
     hr: "Кадры",
-    guest: "Гость"
+    guest: "Гость",
+    smp: "СМП",
+    pses: "ПСЭС"
   };
+
+  const ROLES_LIST_DEF = [
+    { code: "head", label: "Заведующий", type: "system" },
+    { code: "deputy", label: "Заместитель", type: "system" },
+    { code: "instructor", label: "Инструктор", type: "system" },
+    { code: "hr", label: "Кадры", type: "system" },
+    { code: "guest", label: "Гость", type: "system" },
+    { code: "smp", label: "СМП", type: "dept" },
+    { code: "pses", label: "ПСЭС", type: "dept" }
+  ];
 
   const state = {
     token: null,
     user: null,
     activeDesk: null,
     themeMode: "dark",
-    toastsEnabled: true,
-    soundEnabled: true,
-    users: []
+    users: [],
+    targetUserIdToDelete: null,
+    targetUserForRoles: null
   };
 
   const $ = id => document.getElementById(id);
 
-  /* Экраны */
   const authScreen = $("authScreen");
   const deskScreen = $("deskScreen");
   const appFrame = $("appFrame");
@@ -932,6 +795,8 @@
   const appProfile = $("appProfile");
   const appAbout = $("appAbout");
   const nameModal = $("nameModal");
+  const manageRolesModal = $("manageRolesModal");
+  const deleteUserModal = $("deleteUserModal");
 
   const appGrid = $("appGrid");
   const appIframe = $("appIframe");
@@ -945,8 +810,6 @@
   const logoutBtn = $("logoutBtn");
   const statusUser = $("statusUser");
   const statusClock = $("statusClock");
-  const wifiIcon = $("wifiIcon");
-  const statusNetwork = $("statusNetwork");
   const deskSwitcher = $("deskSwitcher");
   const deskBtn = $("deskBtn");
   const deskList = $("deskList");
@@ -1018,7 +881,7 @@
   function showToast(title, text = "", type = "success") {
     const el = document.createElement("div");
     el.className = "toast" + (type === "error" ? " toast-alert" : "");
-    el.innerHTML = `<div><b>${title}</b><div>${text}</div></div>`;
+    el.innerHTML = `<div><b>${escapeHtml(title)}</b><div>${escapeHtml(text)}</div></div>`;
     $("toastContainer").appendChild(el);
     setTimeout(() => el.remove(), 4000);
   }
@@ -1031,7 +894,7 @@
     return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
   }
 
-  /* РЕЕСТР ПРИЛОЖЕНИЙ */
+  /* ПРИЛОЖЕНИЯ */
   const APPS = {
     staff: {
       label: "Персонал больницы", sub: "Список сотрудников", color: "blue", frame: "apps/staff.html",
@@ -1042,7 +905,7 @@
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 15l2 2 4-4"/></svg>'
     },
     users: {
-      label: "Учётные записи", sub: "Управление пользователями", color: "purple",
+      label: "Учётные записи", sub: "Управление доступом", color: "purple",
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
     },
     profile: {
@@ -1201,44 +1064,178 @@
     }
   }
 
+  /* СПИСОК ПОЛЬЗОВАТЕЛЕЙ И ДЕЙСТВИЯ */
   async function loadUsersList() {
     $("usersContainer").innerHTML = '<div class="loading">Загрузка…</div>';
     try {
       const res = await apiPost({ action: "getUsers" });
       if (!res.success) throw new Error(res.message);
+      state.users = res.users || [];
 
-      let html = `<table class="staff-table"><thead><tr><th>Сотрудник</th><th>Discord</th><th>Роли</th><th>Отделы</th><th>Действие</th></tr></thead><tbody>`;
+      let html = `<table class="staff-table">
+        <thead>
+          <tr>
+            <th>Сотрудник</th>
+            <th>Discord Tag</th>
+            <th>Роли</th>
+            <th>Отделы</th>
+            <th style="text-align:right;">Действия</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
       res.users.forEach(u => {
-        const rolesHtml = (u.roles || []).map(r => `<span class="role-pill ${r}">${r}</span>`).join(" ");
+        const rolesHtml = (u.roles || []).map(r => {
+          return `<span class="role-chip-interactive ${r}">
+            ${ROLE_NAMES[r] || r}
+            <button class="role-del-btn" title="Снять роль" onclick="window.quickRemoveRole(${u.id}, '${r}')">×</button>
+          </span>`;
+        }).join(" ");
+
         const deptsHtml = (u.departments || []).map(d => `<span class="dept-pill">${d}</span>`).join(" ");
+        const isMe = state.user && state.user.id === u.id;
+
+        const deleteBtnHtml = isMe ? "" : `
+          <button class="icon-btn-action del" title="Удалить пользователя" onclick="window.openDeleteModal(${u.id}, '${escapeHtml(u.display_name || u.discord_tag)}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
+            </svg>
+          </button>`;
+
         html += `<tr>
-          <td><b>${escapeHtml(u.display_name || "Без имени")}</b></td>
+          <td><b>${escapeHtml(u.display_name || "Без имени")}</b> ${isMe ? '<span style="color:var(--muted);font-size:0.75rem;">(вы)</span>' : ''}</td>
           <td><code>${escapeHtml(u.discord_tag)}</code></td>
-          <td>${rolesHtml}</td>
+          <td>${rolesHtml || '<span style="color:var(--muted);">нет ролей</span>'}</td>
           <td>${deptsHtml || "—"}</td>
-          <td>
-            <button class="btn btn-ghost btn-small" onclick="window.manageRoles(${u.id}, '${escapeHtml(u.display_name || u.discord_tag)}')">Роли</button>
+          <td style="text-align:right; white-space:nowrap;">
+            <button class="btn btn-ghost btn-small" style="margin-right:6px;" onclick="window.openRolesModal(${u.id})">
+              + Роли
+            </button>
+            ${deleteBtnHtml}
           </td>
         </tr>`;
       });
       html += `</tbody></table>`;
       $("usersContainer").innerHTML = html;
     } catch (e) {
-      $("usersContainer").innerHTML = `<div class="empty">Ошибка: ${e.message}</div>`;
+      $("usersContainer").innerHTML = `<div class="empty">Ошибка: ${escapeHtml(e.message)}</div>`;
     }
   }
 
-  window.manageRoles = async function (uid, name) {
-    const roleCode = prompt(`Укажите роль для выдачи/снятия пользователю ${name}:\n(head, deputy, instructor, hr, smp, pses, guest)`);
-    if (!roleCode) return;
-    const act = confirm(`Нажмите OK для выдачи роли "${roleCode}", или Отмена для её снятия`) ? "grantRole" : "revokeRole";
+  /* Быстрое удаление роли крестиком */
+  window.quickRemoveRole = async function (userId, roleCode) {
     try {
-      const res = await apiPost({ action: act, user_id: uid, role_code: roleCode.trim().toLowerCase() });
-      if (res.success) { showToast(res.message); loadUsersList(); }
-      else showToast(res.message, "", "error");
-    } catch (e) { showToast(e.message, "", "error"); }
+      const res = await apiPost({ action: "revokeRole", user_id: userId, role_code: roleCode });
+      if (res.success) {
+        showToast("Роль снята");
+        await loadUsersList();
+      } else {
+        showToast(res.message, "", "error");
+      }
+    } catch (e) {
+      showToast(e.message, "", "error");
+    }
   };
 
+  /* Окно выдачи ролей кнопками */
+  window.openRolesModal = function (userId) {
+    const target = state.users.find(u => u.id === userId);
+    if (!target) return;
+    state.targetUserForRoles = target;
+
+    $("manageRolesUserName").textContent = target.display_name || target.discord_tag;
+    renderRolesButtonsModal();
+    manageRolesModal.classList.remove("hidden");
+  };
+
+  function renderRolesButtonsModal() {
+    if (!state.targetUserForRoles) return;
+    const userRoles = state.targetUserForRoles.roles || [];
+
+    const sysGrid = $("systemRolesGrid");
+    const deptGrid = $("deptRolesGrid");
+    sysGrid.innerHTML = "";
+    deptGrid.innerHTML = "";
+
+    ROLES_LIST_DEF.forEach(r => {
+      const has = userRoles.includes(r.code);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "role-toggle-btn" + (has ? " active" : "");
+      btn.innerHTML = `<span>${has ? "✓" : "+"}</span> ${r.label}`;
+
+      btn.onclick = async () => {
+        btn.disabled = true;
+        const act = has ? "revokeRole" : "grantRole";
+        try {
+          const res = await apiPost({
+            action: act,
+            user_id: state.targetUserForRoles.id,
+            role_code: r.code
+          });
+          if (res.success) {
+            showToast(res.message);
+            if (has) {
+              state.targetUserForRoles.roles = state.targetUserForRoles.roles.filter(c => c !== r.code);
+            } else {
+              state.targetUserForRoles.roles.push(r.code);
+            }
+            renderRolesButtonsModal();
+            loadUsersList();
+          } else {
+            showToast(res.message, "", "error");
+            btn.disabled = false;
+          }
+        } catch (e) {
+          showToast(e.message, "", "error");
+          btn.disabled = false;
+        }
+      };
+
+      if (r.type === "dept") deptGrid.appendChild(btn);
+      else sysGrid.appendChild(btn);
+    });
+  }
+
+  $("closeManageRolesBtn").onclick = () => {
+    manageRolesModal.classList.add("hidden");
+    state.targetUserForRoles = null;
+  };
+
+  /* Удаление пользователя через модалку подтверждения */
+  window.openDeleteModal = function (userId, name) {
+    state.targetUserIdToDelete = userId;
+    $("deleteUserModalSub").innerHTML = `Вы действительно хотите навсегда удалить пользователя <b>«${escapeHtml(name)}»</b> из системы?`;
+    deleteUserModal.classList.remove("hidden");
+  };
+
+  $("cancelDeleteUserBtn").onclick = () => {
+    deleteUserModal.classList.add("hidden");
+    state.targetUserIdToDelete = null;
+  };
+
+  $("confirmDeleteUserBtn").onclick = async () => {
+    if (!state.targetUserIdToDelete) return;
+    const btn = $("confirmDeleteUserBtn");
+    btn.disabled = true;
+    try {
+      const res = await apiPost({ action: "deleteAccount", user_id: state.targetUserIdToDelete });
+      if (res.success) {
+        showToast("Пользователь удалён");
+        deleteUserModal.classList.add("hidden");
+        state.targetUserIdToDelete = null;
+        await loadUsersList();
+      } else {
+        showToast(res.message, "", "error");
+      }
+    } catch (e) {
+      showToast(e.message, "", "error");
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  /* АВТОРИЗАЦИЯ И СЕССИЯ */
   async function applyUserSession() {
     userLogin.textContent = state.user.display_name || state.user.discord_tag;
     statusUser.textContent = state.user.display_name || state.user.discord_tag;
@@ -1269,8 +1266,14 @@
 
   async function initAuth() {
     const urlParams = new URLSearchParams(window.location.search);
+    const authError = urlParams.get("auth_error");
     const token = urlParams.get("token");
     const needsName = urlParams.get("needs_name") === "1";
+
+    if (authError) {
+      showToast("Ошибка авторизации: " + authError, "", "error");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
     if (token) {
       state.token = token;
@@ -1346,7 +1349,7 @@
           state.user.display_name = val;
           userLogin.textContent = val;
           statusUser.textContent = val;
-          showToast("Профиль обновлён");
+          showToast("Имя сохранено");
         } else {
           showToast(res.message, "", "error");
         }

@@ -677,7 +677,7 @@
     <div class="user-chip hidden" id="userChip" title="Открыть профиль">
       <div class="avatar" id="userAvatar">?</div>
       <span id="userLogin">—</span>
-      <span class="role user" id="userRole">user</span>
+      <span id="userRoles" style="display:inline-flex;gap:4px;flex-wrap:wrap;align-items:center;"></span>
       <span class="chip-hint">профиль</span>
       <button class="btn btn-ghost" id="logoutBtn" style="padding:4px 8px;font-size:0.72rem;margin-left:4px;">Выйти</button>
     </div>
@@ -1015,7 +1015,7 @@
     },
     about: {
       label: "О системе", sub: "Настройки и тема", color: "gray",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+      icon: '<svg viewBox="0 0 24 24" fill="currentColor"><text x="12" y="18" text-anchor="middle" font-size="19" font-weight="700" font-family="Georgia, 'Times New Roman', serif">i</text></svg>'
     },
     calculator: {
       label: "Калькулятор СМП", sub: "Баллы · замены · отчёт", color: "red", frame: "apps/calculator.html",
@@ -1112,7 +1112,7 @@
   const userChip = $("userChip");
   const userAvatar = $("userAvatar");
   const userLogin = $("userLogin");
-  const userRole = $("userRole");
+  // (userRole заменён на userRoles — чипы ролей)
   const logoutBtn = $("logoutBtn");
   const statusUser = $("statusUser");
   const statusClock = $("statusClock");
@@ -1766,6 +1766,9 @@
       // Роль superadmin видна для выдачи ИСКЛЮЧИТЕЛЬНО Root аккаунту
       if (r.code === "superadmin" && !isRoot()) return;
 
+      // Роль Кадры (hr) может выдавать ТОЛЬКО суперадмин
+      if (r.code === "hr" && !isRoot() && !hasRole("superadmin")) return;
+
       const has = userRoles.includes(r.code);
       const btn = document.createElement("button");
       btn.type = "button";
@@ -1982,23 +1985,18 @@
       userAvatar.textContent = (state.user.display_name || "U")[0].toUpperCase();
     }
 
-    // Бейдж роли
-    if (isRoot() || hasRole("superadmin")) {
-      userRole.textContent = "СУПЕРАДМИН";
-      userRole.className = "role super";
-    } else if (hasRole("head") || hasRole("deputy")) {
-      userRole.textContent = "РУКОВОДСТВО";
-      userRole.className = "role admin";
-    } else if (hasRole("instructor")) {
-      userRole.textContent = "ИНСТРУКТОР";
-      userRole.className = "role user";
-    } else if (hasRole("hr")) {
-      userRole.textContent = "КАДРЫ";
-      userRole.className = "role admin";
-    } else {
-      userRole.textContent = "ГОСТЬ";
-      userRole.className = "role guest";
-    }
+    // Роли в шапке — чипами, как в «Учётных записях»
+    const rolesWrap = $("userRoles");
+    rolesWrap.innerHTML = "";
+    const roleList = isRoot()
+      ? ["superadmin"]
+      : ((state.user.roles && state.user.roles.length) ? state.user.roles.slice() : ["guest"]);
+    roleList.forEach(r => {
+      const chip = document.createElement("span");
+      chip.className = "role-chip-interactive " + r;
+      chip.textContent = ROLE_NAMES[r] || r;
+      rolesWrap.appendChild(chip);
+    });
 
     const desks = getAvailableDesks();
     state.activeDesk = desks[0] || null;

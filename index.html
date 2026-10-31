@@ -594,7 +594,14 @@
   .hidden { display: none !important; }
   .loading, .empty { text-align: center; color: var(--muted); padding: 20px; font-size: 0.88rem; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* === FIX: размеры иконок и сетка профиля === */
+  .app-bar .back-btn svg { width: 14px; height: 14px; }
+  .modal-emblem svg { width: 28px; height: 28px; color: #fff; }
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -1637,6 +1644,8 @@
         token: state.token || "",
         login: state.user.display_name || state.user.discord_tag,
         dept: state.activeDesk || "",
+        roles: (state.user.roles || []).join(","),
+        departments: (state.user.departments || []).join(","),
         role: isRoot() || hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : (hasRole("instructor") ? "user" : "guest"))
       });
       appIframe.src = a.frame + "?" + params.toString();
@@ -1790,8 +1799,14 @@
     });
   }
 
-  $("closeManageRolesBtn").onclick = () => {
+  $("closeManageRolesBtn").onclick = async () => {
     manageRolesModal.classList.add("hidden");
+    if (state.targetUserForRoles && state.user && state.targetUserForRoles.id === state.user.id) {
+      try {
+        const res = await apiPost({ action: "getMe" });
+        if (res.success) { state.user = res.user; applyUserSession(); }
+      } catch (e) {}
+    }
     state.targetUserForRoles = null;
   };
 

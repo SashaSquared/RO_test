@@ -2242,33 +2242,39 @@
           for (let c = 0; c < base64Images.length; c += CHUNK) chunks.push(base64Images.slice(c, c + CHUNK));
           let totalInserted = 0;
           let totalErrors = 0;
-          let doneParts = 0;
-          let chunkIdx = 0;
-          const CONCURRENCY = 2;
-          async function runChunk() {
-            while (chunkIdx < chunks.length) {
-              const my = chunkIdx++;
-              const part = chunks[my];
-              showToast(`ИИ-импорт: часть ${my + 1}/${chunks.length} (${part.length} фото)...`, "info");
-              const res = await apiPost({
-                action: "syncStaffFromImages",
-                mode: my === 0 ? "replace" : "append",
-                login: state.user.login,
-                hash: state.user.hash,
-                images: part
-              });
-              if (!res.success) {
-                throw new Error(res.message || "Ошибка ИИ");
-              }
-              totalInserted += (res.inserted || 0);
-              totalErrors += (res.errors && res.errors.length) || 0;
-              doneParts++;
-              showToast(`Часть ${doneParts}/${chunks.length} готова`, "success");
+          let totalDupes = 0;
+
+          const sendChunk = async (my) => {
+            const part = chunks[my];
+            showToast(`ИИ-импорт: часть ${my + 1}/${chunks.length} (${part.length} фото)...`, "info");
+            const res = await apiPost({
+              action: "syncStaffFromImages",
+              mode: my === 0 ? "replace" : "append",
+              login: state.user.login,
+              hash: state.user.hash,
+              images: part
+            });
+            if (!res.success) {
+              throw new Error(res.message || "Ошибка ИИ");
             }
-          }
-          const lanes = Math.min(CONCURRENCY, chunks.length);
-          await Promise.all(Array.from({ length: lanes }, runChunk));
-          showToast(`Распознано: ${totalInserted}` + (totalErrors ? ` (ошибок: ${totalErrors})` : ""), "success");
+            totalInserted += (res.inserted || 0);
+            totalErrors += (res.errors && res.errors.length) || 0;
+            totalDupes += (res.duplicates || 0);
+            showToast(`Часть ${my + 1}/${chunks.length} готова`, "success");
+          };
+
+          await sendChunk(0);
+          let nextIdx = 1;
+          const CONCURRENCY = 2;
+          const lane = async () => {
+            while (nextIdx < chunks.length) {
+              const my = nextIdx++;
+              await sendChunk(my);
+            }
+          };
+          await Promise.all(Array.from({ length: Math.min(CONCURRENCY, Math.max(0, chunks.length - 1)) }, lane));
+
+          showToast(`Распознано: ${totalInserted}` + (totalDupes ? `, задвоений пропущено: ${totalDupes}` : "") + (totalErrors ? ` (ошибок: ${totalErrors})` : ""), "success");
           notifyParent("ИИ-Импорт", `Распознано: ${totalInserted}`, "success");
           await loadStaff();
         } catch (err) {

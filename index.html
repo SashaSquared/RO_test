@@ -42,6 +42,7 @@
     --hover-bg: rgba(255,255,255,0.06);
   }
 
+  /* СВЕТЛАЯ ТЕМА */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --bg-2: #ffffff;
@@ -225,7 +226,9 @@
     flex-direction: column; gap: 4px; background: var(--panel); border: 1px solid var(--border);
     border-radius: 12px; padding: 6px; min-width: 220px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); z-index: 40;
+    max-height: 420px; overflow-y: auto;
   }
+  :root[data-theme="light"] .desk-list { box-shadow: 0 8px 24px rgba(15,23,42,0.12); }
   .desk-list.open { display: flex; }
   .desk-list button {
     display: flex; align-items: center; justify-content: space-between; padding: 8px 12px;
@@ -438,7 +441,8 @@
   .iframe-wrap {
     width: 100%; height: calc(100vh - 200px); min-height: 520px;
     background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden;
+    border-radius: 16px; overflow: hidden; position: relative;
+    box-shadow: var(--card-shadow);
   }
   .iframe-wrap iframe { width: 100%; height: 100%; border: 0; background: var(--bg-2); }
 
@@ -481,7 +485,7 @@
     flex: 1; display: inline-flex; align-items: center; justify-content: center;
     padding: 9px 14px; background: transparent; border: 1px solid transparent;
     border-radius: 9px; color: var(--muted); font-family: inherit; font-size: 0.84rem;
-    font-weight: 600; cursor: pointer; transition: 0.15s;
+    font-weight: 600; cursor: pointer; transition: 0.15s; white-space: nowrap;
   }
   .theme-seg button.active { background: var(--accent); color: #fff; }
 
@@ -577,10 +581,13 @@
   }
   .modal-emblem {
     width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.1), 0 8px 24px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+    display: flex; align-items: center; justify-content: center; position: relative;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2), 0 8px 24px rgba(220, 38, 38, 0.35);
   }
-  .modal-emblem svg { width: 28px; height: 28px; color: #fff; }
+  .modal-emblem::before, .modal-emblem::after { content: ""; position: absolute; background: #fff; border-radius: 2px; }
+  .modal-emblem::before { width: 30px; height: 8px; }
+  .modal-emblem::after  { width: 8px; height: 30px; }
   .modal h2 { text-align: center; font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
   .modal .modal-sub { text-align: center; color: var(--muted); font-size: 0.84rem; margin-bottom: 20px; }
 
@@ -599,7 +606,7 @@
   <div class="status-bar">
     <div class="status-left">
       <span class="net-indicator" title="Связь с сервером">
-        <!-- ОРИГИНАЛЬНЫЙ SVG WI-FI -->
+        <!-- ОРИГИНАЛЬНЫЙ SVG ЗНАЧКА WI-FI ИЗ ИСХОДНИКА -->
         <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
           <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
@@ -616,7 +623,7 @@
         <span id="shiftIndicatorText">Дневная смена</span>
       </span>
       <span id="statusUser">—</span>
-      <span class="battery" title="Заряд батареи">
+      <span class="battery">
         <span class="bat-body"><span class="bat-level" id="batLevel" style="width:100%"></span></span>
         <span class="bat-text" id="batText">—</span>
       </span>
@@ -694,7 +701,7 @@
         <p id="homeSub">Выберите приложение</p>
       </div>
 
-      <!-- Блок для роли Гость -->
+      <!-- Блок «Доступ ограничен» для Гостя -->
       <div id="guestAccessBlock" class="guest-box hidden">
         <div class="guest-box-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -787,7 +794,7 @@
       </div>
     </div>
 
-    <!-- О СИСТЕМЕ (С ПОЛНЫМ ФУНКЦИОНАЛОМ И DEVLOG ИЗ ИСХОДНИКА) -->
+    <!-- О СИСТЕМЕ (С DEVLOG И НАСТРОЙКАМИ) -->
     <div id="appAbout" class="app-screen hidden">
       <div class="app-bar">
         <button class="back-btn" data-back="1">
@@ -796,7 +803,9 @@
         </button>
         <div class="app-bar-title">
           <div class="app-icon gray">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
           </div>
           <h2>О системе</h2>
         </div>
@@ -874,11 +883,7 @@
 <!-- МОДАЛКА ПЕРВОГО ВВОДА ИМЕНИ -->
 <div class="modal-back hidden" id="nameModal">
   <div class="modal">
-    <div class="modal-emblem" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-      </svg>
-    </div>
+    <div class="modal-emblem"></div>
     <h2>Укажите ваши данные</h2>
     <p class="modal-sub">Введите настоящие Имя и Фамилию персонажа. Они будут автоматически подставляться во все отчёты и калькуляторы.</p>
     <form id="nameForm">
@@ -960,6 +965,8 @@
   const THEME_KEY = "pref_theme";
   const THEME_MODES = ["light", "dark", "auto"];
 
+  const ROOT_DISCORD_ID = "401064184386682883";
+
   const ROLE_NAMES = {
     superadmin: "Суперпользователь",
     head: "Заведующий",
@@ -972,6 +979,7 @@
   };
 
   const ROLES_LIST_DEF = [
+    { code: "superadmin", label: "Суперпользователь", type: "system" },
     { code: "head", label: "Заведующий", type: "system" },
     { code: "deputy", label: "Заместитель", type: "system" },
     { code: "instructor", label: "Инструктор", type: "system" },
@@ -1178,16 +1186,20 @@
     return el;
   }
 
+  function isRoot() {
+    return state.user && String(state.user.discord_id) === ROOT_DISCORD_ID;
+  }
+
   function hasRole(code) {
     return state.user && Array.isArray(state.user.roles) && state.user.roles.includes(code);
   }
 
   function canManageUsers() {
-    return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
+    return isRoot() || hasRole("superadmin") || hasRole("head") || hasRole("deputy");
   }
 
   function isAdmin() {
-    return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
+    return isRoot() || hasRole("superadmin") || hasRole("head") || hasRole("deputy");
   }
 
   /* РАСПИСАНИЕ И УВЕДОМЛЕНИЯ ПСЭС */
@@ -1456,65 +1468,9 @@
     }
   }
 
-  /* ПРИЛОЖЕНИЯ */
-  const APPS = {
-    staff: {
-      label: "Персонал больницы", sub: "Список сотрудников", color: "blue", frame: "apps/staff.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
-    },
-    vacations: {
-      label: "Отпуска", sub: "IC · OOC", color: "amber", frame: "apps/vacations.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 15l2 2 4-4"/></svg>'
-    },
-    users: {
-      label: "Учётные записи", sub: "Управление доступом", color: "purple",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
-    },
-    profile: {
-      label: "Профиль", sub: "Данные сотрудника", color: "gray",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
-    },
-    about: {
-      label: "О системе", sub: "Настройки и тема", color: "gray",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
-    },
-    calculator: {
-      label: "Калькулятор СМП", sub: "Баллы · замены · отчёт", color: "red", frame: "apps/calculator.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="14" x2="16" y2="18"/></svg>'
-    },
-    calculatorPses: {
-      label: "Калькулятор ПСЭС", sub: "Баллы · отчёт", color: "green", frame: "apps/calculator-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="14" x2="16" y2="18"/></svg>'
-    },
-    booking: {
-      label: "Бронирование вещания", sub: "Запись госволны", color: "amber", frame: "apps/vesh.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>'
-    },
-    weeklyReports: {
-      label: "Недельные отчёты СМП", sub: "Сдача · топы · должники", color: "blue", frame: "apps/weekly-reports.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
-    },
-    weeklyReportsPses: {
-      label: "Недельные отчёты ПСЭС", sub: "Сдача · топы · должники", color: "green", frame: "apps/weekly-reports-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
-    },
-    examSmp: {
-      label: "Шпаргалка СМП", sub: "Вопросы · ответы", color: "purple", frame: "apps/exam-smp.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'
-    },
-    examPses: {
-      label: "Шпаргалка ПСЭС", sub: "Вопросы · ответы", color: "purple", frame: "apps/exam-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'
-    },
-    docsPses: {
-      label: "Документация ПСЭС", sub: "Регламенты и макросы", color: "cyan", frame: "apps/docs-pses.html",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
-    }
-  };
-
   function isGuestUser() {
     if (!state.user) return true;
-    if (hasRole("superadmin") || hasRole("head") || hasRole("deputy")) return false;
+    if (isRoot() || hasRole("superadmin") || hasRole("head") || hasRole("deputy")) return false;
     const hasDeptRole = hasRole("smp") || hasRole("pses");
     const hasDeptList = Array.isArray(state.user.departments) && state.user.departments.length > 0;
     return !hasDeptRole && !hasDeptList;
@@ -1522,7 +1478,7 @@
 
   function getAvailableDesks() {
     if (!state.user) return [];
-    if (hasRole("superadmin")) return ["СМП", "ПСЭС", "Руководство"];
+    if (isRoot() || hasRole("superadmin")) return ["СМП", "ПСЭС", "Руководство"];
     const desks = [];
     if (hasRole("smp") || (state.user.departments && state.user.departments.includes("СМП"))) desks.push("СМП");
     if (hasRole("pses") || (state.user.departments && state.user.departments.includes("ПСЭС"))) desks.push("ПСЭС");
@@ -1628,7 +1584,7 @@
         token: state.token || "",
         login: state.user.display_name || state.user.discord_tag,
         dept: state.activeDesk || "",
-        role: hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : (hasRole("instructor") ? "user" : "guest"))
+        role: isRoot() || hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : (hasRole("instructor") ? "user" : "guest"))
       });
       appIframe.src = a.frame + "?" + params.toString();
       showScreen("frame");
@@ -1682,8 +1638,10 @@
 
         const deptsHtml = (u.departments || []).map(d => `<span class="dept-pill">${d}</span>`).join(" ");
         const isMe = state.user && state.user.id === u.id;
+        const isUserRoot = String(u.discord_id) === ROOT_DISCORD_ID;
 
-        const deleteBtnHtml = isMe ? "" : `
+        // Нельзя удалить себя или Root аккаунт
+        const deleteBtnHtml = (isMe || isUserRoot) ? "" : `
           <button class="icon-btn-action del" title="Удалить пользователя" onclick="window.openDeleteModal(${u.id}, '${escapeHtml(u.display_name || u.discord_tag)}')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
@@ -1711,6 +1669,10 @@
   }
 
   window.quickRemoveRole = async function (userId, roleCode) {
+    if (roleCode === "superadmin" && !isRoot()) {
+      showToast("Только владелец может снимать роль суперадмина", "", "error");
+      return;
+    }
     try {
       const res = await apiPost({ action: "revokeRole", user_id: userId, role_code: roleCode });
       if (res.success) {
@@ -1740,6 +1702,9 @@
     deptGrid.innerHTML = "";
 
     ROLES_LIST_DEF.forEach(r => {
+      // Роль superadmin видна для выдачи ИСКЛЮЧИТЕЛЬНО Root аккаунту
+      if (r.code === "superadmin" && !isRoot()) return;
+
       const has = userRoles.includes(r.code);
       const btn = document.createElement("button");
       btn.type = "button";
@@ -1838,14 +1803,14 @@
 
   function renderDevlog() {
     if (!devlogList) return;
-    if (devlogAddBtn) devlogAddBtn.classList.toggle("hidden", !hasRole("superadmin"));
+    if (devlogAddBtn) devlogAddBtn.classList.toggle("hidden", !hasRole("superadmin") && !isRoot());
 
     if (!state.devlog.length) {
       devlogList.innerHTML = '<div class="empty">Пока нет записей</div>';
       return;
     }
 
-    const canEdit = hasRole("superadmin");
+    const canEdit = isRoot() || hasRole("superadmin");
     const wrap = document.createElement("div");
     wrap.className = "devlog-list";
 
@@ -1890,7 +1855,7 @@
   }
 
   function openDevlogEditor(entry) {
-    if (!hasRole("superadmin")) return;
+    if (!isRoot() && !hasRole("superadmin")) return;
     state.devlogEditingRow = entry && entry.rowIndex != null ? entry.rowIndex : null;
     $("devlogModalTitle").textContent = state.devlogEditingRow ? "Редактирование записи" : "Новое изменение";
     $("devlogModalSub").textContent = state.devlogEditingRow
@@ -1910,7 +1875,7 @@
 
   async function handleDevlogSubmit(e) {
     e.preventDefault();
-    if (!hasRole("superadmin")) return;
+    if (!isRoot() && !hasRole("superadmin")) return;
     const text = $("devlogText").value.trim();
     if (!text) { showToast("Введите текст", "", "alert"); return; }
 
@@ -1951,7 +1916,7 @@
     }
 
     // Бейдж роли
-    if (hasRole("superadmin")) {
+    if (isRoot() || hasRole("superadmin")) {
       userRole.textContent = "СУПЕРАДМИН";
       userRole.className = "role super";
     } else if (hasRole("head") || hasRole("deputy")) {

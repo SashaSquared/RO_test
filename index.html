@@ -208,6 +208,7 @@
     background: linear-gradient(135deg, #f59e0b, #b45309);
     color: #1a1207; box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
   }
+  .user-chip .chip-hint { font-size: 0.68rem; color: var(--muted); margin-right: 2px; }
 
   .desk-switcher { position: relative; display: none; }
   .desk-switcher.visible { display: block; }
@@ -273,7 +274,7 @@
   .btn-discord:active { transform: scale(0.98); }
   .btn-discord svg { width: 22px; height: 22px; }
 
-  /* Карточка «Доступ закрыт» для роли Гость */
+  /* Карточка «Доступ ограничен» для Гостя */
   .guest-box {
     text-align: center; padding: 48px 20px; background: var(--header-bg);
     border: 1px dashed var(--border-strong); border-radius: 20px; margin-top: 10px;
@@ -494,7 +495,16 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 10px; margin-bottom: 6px; font-size: 0.72rem; color: var(--muted);
   }
+  .devlog-meta .devlog-date { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+  .devlog-meta .devlog-author { color: var(--blue); font-weight: 600; }
   .devlog-text { font-size: 0.9rem; color: var(--text); white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+  .devlog-actions { margin-top: 8px; display: flex; gap: 6px; justify-content: flex-end; }
+  .devlog-edit-btn {
+    padding: 4px 10px; font-size: 0.72rem; font-weight: 600; background: transparent;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+  }
+  .devlog-edit-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .devlog-updated { font-size: 0.68rem; color: var(--muted); font-style: italic; }
 
   /* Расписание проверок госструктур (ПСЭС) */
   .sched-list { display: flex; flex-direction: column; gap: 8px; }
@@ -589,7 +599,7 @@
   <div class="status-bar">
     <div class="status-left">
       <span class="net-indicator" title="Связь с сервером">
-        <!-- ОРИГИНАЛЬНЫЙ ЗНАЧОК WI-FI СО ВСЕМИ 3 ДУГАМИ -->
+        <!-- ОРИГИНАЛЬНЫЙ SVG WI-FI -->
         <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
           <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
@@ -606,7 +616,7 @@
         <span id="shiftIndicatorText">Дневная смена</span>
       </span>
       <span id="statusUser">—</span>
-      <span class="battery">
+      <span class="battery" title="Заряд батареи">
         <span class="bat-body"><span class="bat-level" id="batLevel" style="width:100%"></span></span>
         <span class="bat-text" id="batText">—</span>
       </span>
@@ -684,7 +694,7 @@
         <p id="homeSub">Выберите приложение</p>
       </div>
 
-      <!-- Блок для роли Гость (если нет отделов) -->
+      <!-- Блок для роли Гость -->
       <div id="guestAccessBlock" class="guest-box hidden">
         <div class="guest-box-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -692,10 +702,10 @@
           </svg>
         </div>
         <h3>Доступ ограничен</h3>
-        <p>Ваша учётная запись находится в статусе <b>«Гость»</b>[cite: 17]. Для получения доступа к модулям больницы обратитесь к руководству своего отделения для выдачи ролей.</p>
+        <p>Ваша учётная запись находится в статусе <b>«Гость»</b>. Для получения доступа к модулям больницы обратитесь к руководству своего отделения для выдачи ролей.</p>
       </div>
 
-      <!-- Сетка приложений (скрыта для гостя) -->
+      <!-- Сетка приложений -->
       <div class="app-grid" id="appGrid"></div>
       <div id="gosScheduleWidget" class="hidden"></div>
     </div>
@@ -777,7 +787,7 @@
       </div>
     </div>
 
-    <!-- О СИСТЕМЕ -->
+    <!-- О СИСТЕМЕ (С ПОЛНЫМ ФУНКЦИОНАЛОМ И DEVLOG ИЗ ИСХОДНИКА) -->
     <div id="appAbout" class="app-screen hidden">
       <div class="app-bar">
         <button class="back-btn" data-back="1">
@@ -791,6 +801,7 @@
           <h2>О системе</h2>
         </div>
       </div>
+
       <div class="card">
         <h3>Оформление</h3>
         <div class="theme-seg" id="themeSegAbout">
@@ -799,6 +810,7 @@
           <button type="button" data-theme-mode="auto">Авто</button>
         </div>
       </div>
+
       <div class="card">
         <h3>Состояние соединения</h3>
         <div style="display:flex;flex-direction:column;gap:10px;">
@@ -824,6 +836,7 @@
           </div>
         </div>
       </div>
+
       <div class="card">
         <h3>Уведомления</h3>
         <div class="toggle-row">
@@ -841,6 +854,17 @@
           <div class="toggle-switch" id="soundToggle"></div>
         </div>
         <button class="btn btn-ghost btn-block" id="testToastBtn" style="margin-top:8px;">Показать тестовое уведомление</button>
+      </div>
+
+      <!-- КАРТОЧКА DEVLOG -->
+      <div class="card" id="devlogCard">
+        <div class="card-head">
+          <h3>📝 Devlog — журнал изменений</h3>
+          <button class="btn btn-small hidden" id="devlogAddBtn">+ Добавить изменение</button>
+        </div>
+        <div id="devlogList">
+          <div class="loading">Загрузка…</div>
+        </div>
       </div>
     </div>
 
@@ -863,6 +887,27 @@
         <input type="text" id="initialName" placeholder="Например: Арсений Быков" required autocomplete="off">
       </div>
       <button type="submit" class="btn btn-block">Сохранить и продолжить</button>
+    </form>
+  </div>
+</div>
+
+<!-- МОДАЛКА DEVLOG -->
+<div class="modal-back hidden" id="devlogModal">
+  <div class="modal">
+    <div class="modal-emblem" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 0 0 3px rgba(59,130,246,0.25),0 8px 24px rgba(59,130,246,0.35);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+    </div>
+    <h2 id="devlogModalTitle">Новое изменение</h2>
+    <p class="modal-sub" id="devlogModalSub">Опишите, что изменилось. Запись увидят все пользователи.</p>
+    <form id="devlogForm">
+      <div class="form-group">
+        <label for="devlogText">Текст записи</label>
+        <textarea id="devlogText" rows="6" required maxlength="4000" style="width:100%;min-height:120px;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-block" id="devlogSubmit">Опубликовать</button>
+      <button type="button" class="btn btn-ghost btn-block" id="devlogCancel" style="margin-top:8px;">Отмена</button>
     </form>
   </div>
 </div>
@@ -968,6 +1013,9 @@
     myBookings: [],
     reminderTimers: {},
     reminderDone: {},
+    devlog: [],
+    devlogLoading: false,
+    devlogEditingRow: null,
     targetUserIdToDelete: null,
     targetUserForRoles: null
   };
@@ -984,6 +1032,9 @@
   const manageRolesModal = $("manageRolesModal");
   const deleteUserModal = $("deleteUserModal");
   const guestAccessBlock = $("guestAccessBlock");
+  const devlogModal = $("devlogModal");
+  const devlogList = $("devlogList");
+  const devlogAddBtn = $("devlogAddBtn");
 
   const appGrid = $("appGrid");
   const appIframe = $("appIframe");
@@ -1597,6 +1648,7 @@
       $("aboutAuth").textContent = (state.user.display_name || state.user.discord_tag);
       $("aboutDept").textContent = state.activeDesk || "Гость";
       renderPrefs();
+      loadDevlog();
     }
   }
 
@@ -1757,6 +1809,135 @@
     }
   };
 
+  /* DEVLOG — ЖУРНАЛ ИЗМЕНЕНИЙ */
+  function fmtDevlogDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    const pad = n => String(n).padStart(2, "0");
+    const msk = new Date(d.getTime() + 3 * 60 * 60 * 1000);
+    return pad(msk.getUTCDate()) + "." + pad(msk.getUTCMonth() + 1) + "." + msk.getUTCFullYear() +
+           " " + pad(msk.getUTCHours()) + ":" + pad(msk.getUTCMinutes());
+  }
+
+  async function loadDevlog() {
+    if (!devlogList || state.devlogLoading) return;
+    state.devlogLoading = true;
+    if (!state.devlog.length) devlogList.innerHTML = '<div class="loading">Загрузка…</div>';
+    try {
+      const data = await apiPost({ action: "getDevlog" });
+      if (!data || !data.success) throw new Error((data && data.message) || "Ошибка загрузки");
+      state.devlog = Array.isArray(data.entries) ? data.entries : [];
+      renderDevlog();
+    } catch (err) {
+      devlogList.innerHTML = '<div class="empty">Не удалось загрузить devlog</div>';
+    } finally {
+      state.devlogLoading = false;
+    }
+  }
+
+  function renderDevlog() {
+    if (!devlogList) return;
+    if (devlogAddBtn) devlogAddBtn.classList.toggle("hidden", !hasRole("superadmin"));
+
+    if (!state.devlog.length) {
+      devlogList.innerHTML = '<div class="empty">Пока нет записей</div>';
+      return;
+    }
+
+    const canEdit = hasRole("superadmin");
+    const wrap = document.createElement("div");
+    wrap.className = "devlog-list";
+
+    state.devlog.forEach(entry => {
+      const item = document.createElement("div");
+      item.className = "devlog-item";
+
+      const meta = document.createElement("div");
+      meta.className = "devlog-meta";
+      const dateStr = fmtDevlogDate(entry.date);
+      const updatedStr = entry.updatedAt
+        ? '<span class="devlog-updated" title="Отредактировано">изм. ' + fmtDevlogDate(entry.updatedAt) + '</span>'
+        : '';
+      meta.innerHTML =
+        '<span class="devlog-date">' + escapeHtml(dateStr) + ' ' + updatedStr + '</span>' +
+        (entry.author ? '<span class="devlog-author">' + escapeHtml(entry.author) + '</span>' : '');
+
+      const text = document.createElement("div");
+      text.className = "devlog-text";
+      text.textContent = entry.text || "";
+
+      item.appendChild(meta);
+      item.appendChild(text);
+
+      if (canEdit) {
+        const actions = document.createElement("div");
+        actions.className = "devlog-actions";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "devlog-edit-btn";
+        btn.textContent = "Редактировать";
+        btn.onclick = () => openDevlogEditor(entry);
+        actions.appendChild(btn);
+        item.appendChild(actions);
+      }
+
+      wrap.appendChild(item);
+    });
+
+    devlogList.innerHTML = "";
+    devlogList.appendChild(wrap);
+  }
+
+  function openDevlogEditor(entry) {
+    if (!hasRole("superadmin")) return;
+    state.devlogEditingRow = entry && entry.rowIndex != null ? entry.rowIndex : null;
+    $("devlogModalTitle").textContent = state.devlogEditingRow ? "Редактирование записи" : "Новое изменение";
+    $("devlogModalSub").textContent = state.devlogEditingRow
+      ? "Измените текст записи. Дата публикации останется прежней."
+      : "Опишите, что изменилось. Запись увидят все пользователи.";
+    $("devlogSubmit").textContent = state.devlogEditingRow ? "Сохранить" : "Опубликовать";
+    $("devlogText").value = entry ? (entry.text || "") : "";
+    devlogModal.classList.remove("hidden");
+    setTimeout(() => $("devlogText").focus(), 100);
+  }
+
+  function closeDevlogEditor() {
+    state.devlogEditingRow = null;
+    devlogModal.classList.add("hidden");
+    $("devlogForm").reset();
+  }
+
+  async function handleDevlogSubmit(e) {
+    e.preventDefault();
+    if (!hasRole("superadmin")) return;
+    const text = $("devlogText").value.trim();
+    if (!text) { showToast("Введите текст", "", "alert"); return; }
+
+    const submitBtn = $("devlogSubmit");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Отправка…";
+
+    try {
+      let data;
+      if (state.devlogEditingRow) {
+        data = await apiPost({ action: "updateDevlog", rowIndex: state.devlogEditingRow, text });
+      } else {
+        data = await apiPost({ action: "addDevlog", text });
+      }
+      if (!data.success) throw new Error(data.message);
+
+      showToast(state.devlogEditingRow ? "Запись обновлена" : "Запись опубликована");
+      closeDevlogEditor();
+      await loadDevlog();
+    } catch (err) {
+      showToast(err.message, "", "error");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Опубликовать";
+    }
+  }
+
   /* СЕССИЯ И ПРАВА */
   async function applyUserSession() {
     userLogin.textContent = state.user.display_name || state.user.discord_tag;
@@ -1769,7 +1950,7 @@
       userAvatar.textContent = (state.user.display_name || "U")[0].toUpperCase();
     }
 
-    // Определение бейджа роли в шапке
+    // Бейдж роли
     if (hasRole("superadmin")) {
       userRole.textContent = "СУПЕРАДМИН";
       userRole.className = "role super";
@@ -1939,6 +2120,10 @@
       ensureAudioCtx();
       showToast({ title: "Тестовое уведомление", text: "Проверка работы всплывающего оповещения", playSound: true });
     });
+
+    if (devlogAddBtn) devlogAddBtn.onclick = () => openDevlogEditor(null);
+    if ($("devlogCancel")) $("devlogCancel").onclick = closeDevlogEditor;
+    if ($("devlogForm")) $("devlogForm").onsubmit = handleDevlogSubmit;
 
     function tickClock() {
       const d = new Date();

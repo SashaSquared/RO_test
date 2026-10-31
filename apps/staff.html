@@ -638,6 +638,7 @@
     .col-hide-sm { display: none; }
   }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -2122,6 +2123,35 @@
     });
   }
 
+  function resizeImageForAI(dataUrl, maxDim = 1600) {
+    return new Promise((resolve) => {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+            const w = Math.max(1, Math.round(img.width * scale));
+            const h = Math.max(1, Math.round(img.height * scale));
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL("image/jpeg", 0.85));
+          } catch (e) {
+            resolve(dataUrl);
+          }
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      } catch (e) {
+        resolve(dataUrl);
+      }
+    });
+  }
+
   function init() {
     const user = loadSession();
     if (!user) {
@@ -2200,11 +2230,11 @@
 
         aiBtn.disabled = true;
         aiBtn.innerHTML = 'Загрузка...';
-        showToast(`Обработка ${files.length} изображений...`, "info");
+        showToast(`Сжатие и отправка ${files.length} изображений...`, "info");
 
         try {
           const base64Images = await Promise.all(
-            Array.from(files).map(file => fileToBase64(file))
+            Array.from(files).map(async file => resizeImageForAI(await fileToBase64(file)))
           );
 
           const res = await apiPost({

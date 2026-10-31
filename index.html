@@ -42,7 +42,6 @@
     --hover-bg: rgba(255,255,255,0.06);
   }
 
-  /* СВЕТЛАЯ ТЕМА */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --bg-2: #ffffff;
@@ -208,7 +207,6 @@
     background: linear-gradient(135deg, #f59e0b, #b45309);
     color: #1a1207; box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
   }
-  .user-chip .chip-hint { font-size: 0.68rem; color: var(--muted); margin-right: 2px; }
 
   .desk-switcher { position: relative; display: none; }
   .desk-switcher.visible { display: block; }
@@ -304,7 +302,7 @@
   .btn-danger:hover { background: var(--red-hover); }
   .btn-small { padding: 5px 10px; font-size: 0.76rem; border-radius: 8px; }
 
-  /* Иконка-кнопка (корзина) */
+  /* Иконка корзины */
   .icon-btn-action {
     display: inline-flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; padding: 0; border-radius: 8px;
@@ -445,6 +443,60 @@
   }
   .theme-seg button.active { background: var(--accent); color: #fff; }
 
+  /* Расписание проверок госструктур (ПСЭС) */
+  .sched-list { display: flex; flex-direction: column; gap: 8px; }
+  .sched-item {
+    display: grid; grid-template-columns: 130px 1fr 170px 60px 60px;
+    gap: 14px; align-items: center; padding: 12px 16px;
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-left: 4px solid var(--border); border-radius: 12px; opacity: 0.45;
+  }
+  .sched-item.today {
+    opacity: 1; border-left-color: var(--accent);
+    background: linear-gradient(180deg, rgba(47,158,68,0.22) 0%, rgba(47,158,68,0.08) 100%);
+    box-shadow: 0 0 0 1px rgba(47,158,68,0.45), 0 6px 24px rgba(47,158,68,0.25);
+  }
+  :root[data-theme="light"] .sched-item.today {
+    background: linear-gradient(180deg, rgba(47,158,68,0.14) 0%, rgba(47,158,68,0.04) 100%);
+  }
+  .sched-day { font-size: 0.76rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+  .sched-item.today .sched-day { color: #86efac; }
+  :root[data-theme="light"] .sched-item.today .sched-day { color: #166534; }
+  .sched-name { font-size: 0.96rem; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .sched-time-cell { display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+  .sched-time {
+    font-size: 1rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums;
+    padding: 5px 12px; background: var(--panel-3); border-radius: 8px; border: 1px solid var(--border);
+  }
+  .sched-item.today .sched-time { color: #bbf7d0; border-color: rgba(47,158,68,0.5); background: rgba(47,158,68,0.15); }
+  :root[data-theme="light"] .sched-item.today .sched-time { color: #166534; }
+  .sched-time-edit {
+    display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px;
+    border-radius: 7px; background: transparent; border: 1px solid var(--border);
+    color: var(--muted); cursor: pointer; font-size: 0.82rem;
+  }
+  .sched-time-edit:hover { color: var(--accent-2); border-color: var(--accent-2); }
+  .sched-time-input {
+    width: 70px; padding: 4px 6px; font-size: 0.9rem; font-weight: 700; text-align: center;
+    background: var(--input-bg); color: var(--text); border: 1px solid var(--accent-2); border-radius: 8px;
+  }
+  .sched-badge {
+    display: inline-block; font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff;
+  }
+  .sched-icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; padding: 0; border-radius: 10px; cursor: pointer;
+  }
+  .sched-icon-btn svg { width: 18px; height: 18px; }
+  .sched-dep-link { color: var(--blue); background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); }
+  .sched-dep-link:hover { color: #93c5fd; background: rgba(59, 130, 246, 0.2); }
+  .sched-dep-link.copied { color: #86efac; background: rgba(47, 158, 68, 0.15); border-color: rgba(47, 158, 68, 0.5); }
+  .sched-ds-link { color: var(--discord); background: rgba(88, 101, 242, 0.12); border: 1px solid rgba(88, 101, 242, 0.35); }
+  .sched-ds-link:hover { color: #a5b4fc; background: rgba(88, 101, 242, 0.22); }
+  .sched-ds-link.copied { color: #86efac; background: rgba(47, 158, 68, 0.15); border-color: rgba(47, 158, 68, 0.5); }
+  .sched-dep-empty { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: var(--muted); }
+
   /* Фирменные модалки */
   .modal-back {
     position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
@@ -513,7 +565,7 @@
     </div>
 
     <!-- ТЕМА -->
-    <div class="theme-switcher hidden" id="themeSwitcherHeader">
+    <div class="theme-switcher hidden" id="themeSwitcherHeader" title="Тема оформления">
       <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
@@ -556,7 +608,7 @@
       <div class="auth-card">
         <div class="auth-emblem"></div>
         <h1>Вход в планшет</h1>
-        <p class="subtitle">Авторизуйтесь через Discord для доступа к защищенной системе</p>
+        <p class="subtitle">Авторизуйтесь через Discord для доступа к системе</p>
         <button type="button" class="btn-discord" id="discordLoginBtn">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
@@ -573,6 +625,7 @@
         <p id="homeSub">Выберите приложение</p>
       </div>
       <div class="app-grid" id="appGrid"></div>
+      <div id="gosScheduleWidget" class="hidden"></div>
     </div>
 
     <!-- IFRAME МОДУЛЬ -->
@@ -739,7 +792,7 @@
       </svg>
     </div>
     <h2>Удалить пользователя?</h2>
-    <p class="modal-sub" id="deleteUserModalSub">Вы действительно хотите удалить пользователя? Это действие необратимо.</p>
+    <p class="modal-sub" id="deleteUserModalSub">Вы действительно хотите навсегда удалить пользователя? Это действие необратимо.</p>
     <div style="display:flex; justify-content:flex-end; gap:8px;">
       <button type="button" class="btn btn-ghost" id="cancelDeleteUserBtn">Отмена</button>
       <button type="button" class="btn btn-danger" id="confirmDeleteUserBtn">Удалить</button>
@@ -776,12 +829,40 @@
     { code: "pses", label: "ПСЭС", type: "dept" }
   ];
 
+  const DAY_NAMES = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
+
+  const HOUR_MESSAGES = {
+    "10:00": "Доброе утро. Не забывайте включить бодикамеру. Скриншоты без включенной бодикамеры в отчетность не принимаются.",
+    "11:00": "Дежурство в больницах также является важной частью нашей работы, пожалуйста распределитесь по больницам.",
+    "12:00": "По всем интересующим вас вопросам вы можете обратиться к инструкторам или заместителям отдела в личные сообщения спецсвязи.",
+    "13:00": "Пожалуйста, проверяйте свои укладки на количество и комплектность медикаментов. В случае если у вас не оказалось эпинефрина на месте вызова - вызовите 103 с телефона и дождитесь сотрудника больницы.",
+    "14:00": "Настало время обеденного перерыва. Напоминаю, что работа в обеденный перерыв с 14:00 до 15:00 учитывается в двойном размере по системе баллов.",
+    "15:00": "Обед завершен. Продолжаем работу. Не забывайте парковать АСМП в отведенных для этого местах.",
+    "16:00": "Будьте осторожны на ПМП. При угрозе жизни или при перестрелке на месте происшествия немедленно уезжаем.",
+    "17:00": "По прибытию на ПМП в первую очередь оказываем медицинскую помощь государственным служащим силовых структур на месте происшествия.",
+    "18:00": "Не забывайте включать бодикамеры, находясь на рабочем месте. Скриншоты с выключенной бодикамерой в отчетность не принимаются.",
+    "19:00": "По приезду на место вызова, где осуществляется перекрытие военной поставки и при наличии активной перестрелки категорически запрещено оказывать ПМП, в случае окончания перестрелки в первую очередь необходимо оказывать помощь исключительно государственным служащим.",
+    "20:00": "Напоминаю, для сотрудников 7 ранга и выше введена активность - практика для сотрудников с должностью \"Санитар\", в рацию будут поступать запросы, вы на них реагируете, встречаетесь и вместе едете на ПМП, параллельно отвечаете на вопросы. Подробная информация имеется в спецсвязи.",
+    "21:00": "Дежурство в больницах также является важной частью нашей работы, пожалуйста распределитесь по больницам.",
+    "22:00": "Дневная смена завершена. Напоминаю, что в ночную смену вы получаете увеличенное количество баллов за ПМП. Ночная смена не является обязательной."
+  };
+
+  const REMIND_KEY = "vesh_reminder_done_v1";
+  const REMIND_DELAY_MS = 5 * 60 * 1000;
+
   const state = {
     token: null,
     user: null,
     activeDesk: null,
     themeMode: "dark",
+    toastsEnabled: true,
+    soundEnabled: true,
     users: [],
+    schedule: [],
+    notifiedKeys: {},
+    myBookings: [],
+    reminderTimers: {},
+    reminderDone: {},
     targetUserIdToDelete: null,
     targetUserForRoles: null
   };
@@ -802,6 +883,7 @@
   const appIframe = $("appIframe");
   const frameTitle = $("frameTitle");
   const frameIcon = $("frameIcon");
+  const gosScheduleWidget = $("gosScheduleWidget");
 
   const userChip = $("userChip");
   const userAvatar = $("userAvatar");
@@ -815,7 +897,7 @@
   const deskList = $("deskList");
   const currentDesk = $("currentDesk");
 
-  /* ТЕМА ОФОРМЛЕНИЯ */
+  /* ТЕМА */
   function systemTheme() {
     try { return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
     catch (e) { return "dark"; }
@@ -878,12 +960,45 @@
     return res.json();
   }
 
-  function showToast(title, text = "", type = "success") {
+  /* ЗВУК И ТОСТЫ */
+  let audioCtx = null;
+  function ensureAudioCtx() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    return audioCtx;
+  }
+  function playAlertSound() {
+    if (!state.soundEnabled) return;
+    const ctx = ensureAudioCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    [{ f: 880, t: 0 }, { f: 1175, t: 0.12 }, { f: 880, t: 0.24 }].forEach(({ f, t }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.0001, now + t);
+      gain.gain.exponentialRampToValueAtTime(0.12, now + t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.14);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now + t); osc.stop(now + t + 0.16);
+    });
+  }
+
+  function showToast(opts) {
+    if (!state.toastsEnabled || !toastContainer) return null;
+    if (typeof opts === "string") opts = { title: opts, type: "success" };
+    if (opts.playSound) { try { playAlertSound(); } catch (e) {} }
+
+    const type = opts.type || "success";
     const el = document.createElement("div");
-    el.className = "toast" + (type === "error" ? " toast-alert" : "");
-    el.innerHTML = `<div><b>${escapeHtml(title)}</b><div>${escapeHtml(text)}</div></div>`;
-    $("toastContainer").appendChild(el);
-    setTimeout(() => el.remove(), 4000);
+    el.className = "toast" + (type === "error" || type === "alert" ? " toast-alert" : "");
+    el.innerHTML = `<div><b>${escapeHtml(opts.title || "")}</b><div>${opts.text || ""}</div></div>`;
+    toastContainer.appendChild(el);
+    setTimeout(() => el.remove(), opts.duration || 4500);
+    return el;
   }
 
   function hasRole(code) {
@@ -892,6 +1007,234 @@
 
   function canManageUsers() {
     return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
+  }
+
+  function isAdmin() {
+    return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
+  }
+
+  /* РАСПИСАНИЕ И УВЕДОМЛЕНИЯ ПСЭС */
+  const CHAT_ICON_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>' +
+    '</svg>';
+
+  const DISCORD_ICON_SVG =
+    '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none">' +
+      '<path d="M20.32 4.37A19.79 19.79 0 0 0 15.39 3a13.9 13.9 0 0 0-.62 1.27 18.27 18.27 0 0 0-5.53 0A13.4 13.4 0 0 0 8.6 3a19.74 19.74 0 0 0-4.94 1.37C.55 9.02-.3 13.55.13 18.01a19.9 19.9 0 0 0 6.03 3.05 14.7 14.7 0 0 0 1.29-2.1 12.86 12.86 0 0 1-2.03-.98c.17-.13.34-.26.5-.4a14.2 14.2 0 0 0 12.16 0c.16.14.33.27.5.4-.65.39-1.33.71-2.04.98a14.6 14.6 0 0 0 1.29 2.1 19.83 19.83 0 0 0 6.04-3.05c.5-5.18-.85-9.67-3.55-13.64zM8.02 15.33c-1.18 0-2.15-1.08-2.15-2.41 0-1.32.95-2.41 2.15-2.41 1.2 0 2.17 1.09 2.15 2.41 0 1.33-.95 2.41-2.15 2.41zm7.96 0c-1.18 0-2.15-1.08-2.15-2.41 0-1.32.95-2.41 2.15-2.41 1.2 0 2.17 1.09 2.15 2.41 0 1.33-.95 2.41-2.15 2.41z"/>' +
+    '</svg>';
+
+  function buildDepMessage(item) {
+    return "/dep к " + item.name + ": Уведомляю Вас о том что, сегодня у вас в " + item.time +
+      " будет проведена проверка медицинскиx справок согласно закону города Москвы " +
+      "«О Здравоохранении» Глава IV,ст.8,ч.1,п.Г. Просим собрать и построить состав к этому времени.";
+  }
+
+  function shiftTimeBack(time, minutes) {
+    const m = String(time || "").match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return time || "";
+    let h = parseInt(m[1], 10);
+    let mm = parseInt(m[2], 10);
+    mm -= minutes;
+    while (mm < 0) { mm += 60; h -= 1; }
+    while (h < 0) h += 24;
+    return String(h).padStart(2, "0") + ":" + String(mm).padStart(2, "0");
+  }
+
+  function buildDsMessage(item) {
+    const gatherTime = shiftTimeBack(item.time, 20);
+    return [
+      "@ПСЭС @Ст.ПСЭС", "",
+      "## Дорогие Пэпсики!",
+      "** Уведомляю Вас о сборе на проверку, на наличие действующих мед.карт , у сотрудников \"" + item.name + "\". **",
+      "*Сбор состоится в " + gatherTime + ", на задней парковке.*",
+      "*Проверка организации \"" + item.name + "\" состоится в " + item.time + "*",
+      "**Присутствие в голосовом канале нашего отдела ОБЯЗАТЕЛЬНО! **",
+      "*Ждём тут https://discord.com/channels/1538939092929216603/1538939110469931134 *"
+    ].join("\n");
+  }
+
+  async function loadSchedule() {
+    try {
+      const data = await apiPost({ action: "getSchedule" });
+      state.schedule = (data && data.success && Array.isArray(data.schedule)) ? data.schedule : [];
+    } catch (err) { state.schedule = []; }
+  }
+
+  function renderGosScheduleWidget() {
+    if (!gosScheduleWidget) return;
+    const shouldShow = (state.activeDesk === "ПСЭС");
+    gosScheduleWidget.classList.toggle("hidden", !shouldShow);
+    if (!shouldShow) { gosScheduleWidget.innerHTML = ""; return; }
+
+    const todayName = DAY_NAMES[new Date().getDay()];
+    const canEdit = isAdmin();
+
+    if (!state.schedule.length) {
+      gosScheduleWidget.innerHTML = `
+        <div class="card" style="margin-top:16px;">
+          <div class="card-head">
+            <h3>🏛 Проверки гос. структур — расписание</h3>
+            <span style="font-size:0.78rem;color:var(--muted);">Сегодня: ${todayName}</span>
+          </div>
+          <div class="empty">Расписание пустое или не загрузилось</div>
+        </div>`;
+      return;
+    }
+
+    let rowsHtml = "";
+    state.schedule.forEach((item, idx) => {
+      const isToday = item.day === todayName;
+      let depCell = item.noDepMessage ? '<span class="sched-dep-empty">—</span>' :
+        `<button type="button" class="sched-icon-btn sched-dep-link" data-idx="${idx}" title="Скопировать в dep">${CHAT_ICON_SVG}</button>`;
+      const dsCell = `<button type="button" class="sched-icon-btn sched-ds-link" data-idx="${idx}" title="Скопировать в DS">${DISCORD_ICON_SVG}</button>`;
+      const editBtn = canEdit ? `<button type="button" class="sched-time-edit" data-idx="${idx}" title="Изменить время">✏️</button>` : '';
+
+      rowsHtml += `
+        <div class="sched-item${isToday ? ' today' : ''}" data-idx="${idx}">
+          <div class="sched-day">${item.day}</div>
+          <div class="sched-name">${escapeHtml(item.name)} ${isToday ? '<span class="sched-badge">Сегодня</span>' : ''}</div>
+          <div class="sched-time-cell"><span class="sched-time">${item.time}</span> ${editBtn}</div>
+          <div class="sched-dep-cell">${depCell}</div>
+          <div class="sched-ds-cell">${dsCell}</div>
+        </div>`;
+    });
+
+    gosScheduleWidget.innerHTML = `
+      <div class="card" style="margin-top:16px;">
+        <div class="card-head">
+          <h3>🏛 Проверки гос. структур — расписание</h3>
+          <span style="font-size:0.78rem;color:var(--muted);">Сегодня: ${todayName}</span>
+        </div>
+        <div class="sched-list">${rowsHtml}</div>
+      </div>`;
+
+    gosScheduleWidget.querySelectorAll(".sched-dep-link").forEach(btn => {
+      btn.onclick = async () => {
+        const item = state.schedule[parseInt(btn.dataset.idx, 10)];
+        if (!item) return;
+        await copyAnyText(buildDepMessage(item));
+        btn.classList.add("copied");
+        showToast("Скопировано в буфер (dep)", "/dep к " + item.name);
+        setTimeout(() => btn.classList.remove("copied"), 1500);
+      };
+    });
+
+    gosScheduleWidget.querySelectorAll(".sched-ds-link").forEach(btn => {
+      btn.onclick = async () => {
+        const item = state.schedule[parseInt(btn.dataset.idx, 10)];
+        if (!item) return;
+        await copyAnyText(buildDsMessage(item));
+        btn.classList.add("copied");
+        showToast("Скопировано в буфер (DS)", "Проверка «" + item.name + "»");
+        setTimeout(() => btn.classList.remove("copied"), 1500);
+      };
+    });
+
+    gosScheduleWidget.querySelectorAll(".sched-time-edit").forEach(btn => {
+      btn.onclick = () => openScheduleTimeEditor(parseInt(btn.dataset.idx, 10));
+    });
+  }
+
+  function openScheduleTimeEditor(idx) {
+    const item = state.schedule[idx];
+    if (!item) return;
+    const row = gosScheduleWidget.querySelector(`.sched-item[data-idx="${idx}"]`);
+    if (!row) return;
+    const cell = row.querySelector(".sched-time-cell");
+    const oldHtml = cell.innerHTML;
+    cell.innerHTML = `
+      <input type="text" class="sched-time-input" value="${item.time}" maxlength="5" placeholder="HH:MM">
+      <button type="button" class="sched-time-edit" data-save="1">💾</button>
+      <button type="button" class="sched-time-edit" data-cancel="1">✕</button>`;
+    const input = cell.querySelector(".sched-time-input");
+    input.focus(); input.select();
+
+    const save = async () => {
+      const raw = input.value.trim();
+      const m = raw.match(/^(\d{1,2}):(\d{2})$/);
+      if (!m) { showToast("Неверный формат", "Введите HH:MM", "alert"); return; }
+      const newTime = String(m[1]).padStart(2, "0") + ":" + m[2];
+      try {
+        const data = await apiPost({ action: "updateScheduleTime", targetRowIndex: item.rowIndex, newTime: newTime });
+        if (!data.success) throw new Error(data.message);
+        item.time = data.time || newTime;
+        showToast("Время обновлено", item.name + " · " + item.time);
+        renderGosScheduleWidget();
+      } catch (err) { cell.innerHTML = oldHtml; showToast("Ошибка обновления", err.message, "alert"); }
+    };
+    cell.querySelector("[data-save]").onclick = save;
+    cell.querySelector("[data-cancel]").onclick = () => { cell.innerHTML = oldHtml; renderGosScheduleWidget(); };
+  }
+
+  function scheduleCheckTick() {
+    if (!state.user || state.activeDesk !== "ПСЭС" || !state.schedule.length) return;
+    const now = new Date();
+    const todayName = DAY_NAMES[now.getDay()];
+    const todayKey = now.toISOString().slice(0, 10);
+
+    state.schedule.forEach(item => {
+      if (item.day !== todayName || !item.time || !/^\d{2}:\d{2}$/.test(item.time)) return;
+      const parts = item.time.split(":");
+      const target = new Date(now);
+      target.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+      const diffMin = (target - now) / 60000;
+      if (diffMin < 0) return;
+
+      const fire = (minutesBefore, suffix, customText) => {
+        if (diffMin > minutesBefore || diffMin < minutesBefore - 1.5) return;
+        const key = todayKey + "|" + item.name + "|" + item.time + "|" + suffix;
+        if (state.notifiedKeys[key]) return;
+        state.notifiedKeys[key] = true;
+        playAlertSound();
+        showToast({
+          title: "⏰ Напоминание о проверке",
+          text: customText ? customText + ` (${item.name}, ${item.time})` : `Через ${minutesBefore} мин — ${item.name} (${item.time})`,
+          duration: 12000,
+          playSound: true
+        });
+      };
+
+      const isHospitalCheck = String(item.name || "").trim().toLowerCase() === "больница";
+      if (!isHospitalCheck) fire(110, "1h50", "Отправь новость о проверке в Дискорд");
+      fire(65, "1h05", null);
+      fire(35, "35m", null);
+    });
+  }
+
+  /* НАПОМИНАНИЯ О ВЕЩАНИИ */
+  function scheduleCheckTickBookings() {
+    if (!state.user || !state.myBookings.length) return;
+    const now = new Date();
+    state.myBookings.forEach(b => {
+      if (!/^\d{2}:\d{2}$/.test(b.time)) return;
+      const [h, m] = b.time.split(":").map(Number);
+      const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
+      const diffMin = (now.getTime() - t.getTime()) / 60000;
+      if (diffMin < 0 || diffMin > 5) return;
+      const key = now.toISOString().slice(0,10) + "|" + b.time;
+      if (state.reminderDone[key] || state.reminderTimers[key]) return;
+
+      const base = HOUR_MESSAGES[b.time] || "";
+      const fullText = "/fb " + (base || "Вещание на " + b.time);
+      showToast({
+        title: "⏰ Время вещания: " + b.time,
+        text: `Забронировано время <b>${b.time}</b>. Нажмите кнопку в приложении для копирования текста.<br><code>${escapeHtml(fullText)}</code>`,
+        duration: 10000,
+        playSound: true
+      });
+      state.reminderDone[key] = true;
+    });
+  }
+
+  async function refreshMyBookings() {
+    if (!state.user) return;
+    try {
+      const data = await apiPost({ action: "getReservations" });
+      if (!data || !data.success) return;
+      const me = (state.user.display_name || state.user.discord_tag || "").toLowerCase();
+      state.myBookings = (data.reservations || []).filter(b => String(b.employee).trim().toLowerCase() === me);
+    } catch (e) {}
   }
 
   /* ПРИЛОЖЕНИЯ */
@@ -1014,6 +1357,8 @@
       tile.onclick = () => openApp(k);
       appGrid.appendChild(tile);
     });
+
+    renderGosScheduleWidget();
   }
 
   function showScreen(name) {
@@ -1064,7 +1409,7 @@
     }
   }
 
-  /* СПИСОК ПОЛЬЗОВАТЕЛЕЙ И ДЕЙСТВИЯ */
+  /* СПИСОК ПОЛЬЗОВАТЕЛЕЙ И РОЛИ */
   async function loadUsersList() {
     $("usersContainer").innerHTML = '<div class="loading">Загрузка…</div>';
     try {
@@ -1122,7 +1467,6 @@
     }
   }
 
-  /* Быстрое удаление роли крестиком */
   window.quickRemoveRole = async function (userId, roleCode) {
     try {
       const res = await apiPost({ action: "revokeRole", user_id: userId, role_code: roleCode });
@@ -1130,19 +1474,15 @@
         showToast("Роль снята");
         await loadUsersList();
       } else {
-        showToast(res.message, "", "error");
+        showToast("Ошибка: " + res.message, "", "error");
       }
-    } catch (e) {
-      showToast(e.message, "", "error");
-    }
+    } catch (e) { showToast(e.message, "", "error"); }
   };
 
-  /* Окно выдачи ролей кнопками */
   window.openRolesModal = function (userId) {
     const target = state.users.find(u => u.id === userId);
     if (!target) return;
     state.targetUserForRoles = target;
-
     $("manageRolesUserName").textContent = target.display_name || target.discord_tag;
     renderRolesButtonsModal();
     manageRolesModal.classList.remove("hidden");
@@ -1151,7 +1491,6 @@
   function renderRolesButtonsModal() {
     if (!state.targetUserForRoles) return;
     const userRoles = state.targetUserForRoles.roles || [];
-
     const sysGrid = $("systemRolesGrid");
     const deptGrid = $("deptRolesGrid");
     sysGrid.innerHTML = "";
@@ -1168,22 +1507,15 @@
         btn.disabled = true;
         const act = has ? "revokeRole" : "grantRole";
         try {
-          const res = await apiPost({
-            action: act,
-            user_id: state.targetUserForRoles.id,
-            role_code: r.code
-          });
+          const res = await apiPost({ action: act, user_id: state.targetUserForRoles.id, role_code: r.code });
           if (res.success) {
             showToast(res.message);
-            if (has) {
-              state.targetUserForRoles.roles = state.targetUserForRoles.roles.filter(c => c !== r.code);
-            } else {
-              state.targetUserForRoles.roles.push(r.code);
-            }
+            if (has) state.targetUserForRoles.roles = state.targetUserForRoles.roles.filter(c => c !== r.code);
+            else state.targetUserForRoles.roles.push(r.code);
             renderRolesButtonsModal();
             loadUsersList();
           } else {
-            showToast(res.message, "", "error");
+            showToast("Ошибка: " + res.message, "", "error");
             btn.disabled = false;
           }
         } catch (e) {
@@ -1202,7 +1534,6 @@
     state.targetUserForRoles = null;
   };
 
-  /* Удаление пользователя через модалку подтверждения */
   window.openDeleteModal = function (userId, name) {
     state.targetUserIdToDelete = userId;
     $("deleteUserModalSub").innerHTML = `Вы действительно хотите навсегда удалить пользователя <b>«${escapeHtml(name)}»</b> из системы?`;
@@ -1235,7 +1566,7 @@
     }
   };
 
-  /* АВТОРИЗАЦИЯ И СЕССИЯ */
+  /* СЕССИЯ */
   async function applyUserSession() {
     userLogin.textContent = state.user.display_name || state.user.discord_tag;
     statusUser.textContent = state.user.display_name || state.user.discord_tag;
@@ -1261,7 +1592,10 @@
     const desks = getAvailableDesks();
     state.activeDesk = desks[0] || "Общий";
     showScreen("desk");
+    await loadSchedule();
+    await refreshMyBookings();
     renderDesk();
+    scheduleCheckTickBookings();
   }
 
   async function initAuth() {
@@ -1378,13 +1712,22 @@
       const d = new Date();
       const pad = n => String(n).padStart(2, "0");
       statusClock.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+      const h = d.getHours();
+      const day = d.getDay();
+      const isWeekend = (day === 0 || day === 6);
+      const isDay = isWeekend ? (h >= 11 && h < 22) : (h >= 10 && h < 22);
+      $("shiftIndicator").className = "shift-indicator " + (isDay ? "day" : "night");
+      $("shiftIndicatorText").textContent = isDay ? "Дневная смена" : "Ночная смена";
     }
     setInterval(tickClock, 1000);
     tickClock();
 
+    setInterval(scheduleCheckTick, 60000);
+    setInterval(scheduleCheckTickBookings, 30000);
+
     window.addEventListener("message", (e) => {
       if (!e.data || typeof e.data !== "object") return;
-      if (e.data.type === "toast") showToast(e.data.title || "Сообщение", e.data.text || "", e.data.kind);
+      if (e.data.type === "toast") showToast({ title: e.data.title || "Сообщение", text: e.data.text || "", type: e.data.kind });
       else if (e.data.type === "go-back") { showScreen("desk"); renderDesk(); }
       else if (e.data.type === "theme-request") broadcastTheme();
     });
@@ -1394,6 +1737,20 @@
 
   function escapeHtml(s) {
     return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  async function copyAnyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (e) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e2) { return false; }
+    }
   }
 
   document.addEventListener("DOMContentLoaded", init);

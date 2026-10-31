@@ -203,6 +203,7 @@
   }
   .user-chip .role.admin { background: #4c1d95; color: #ddd6fe; }
   .user-chip .role.user  { background: #1e3a8a; color: #bfdbfe; }
+  .user-chip .role.guest { background: #475569; color: #cbd5e1; }
   .user-chip .role.super {
     background: linear-gradient(135deg, #f59e0b, #b45309);
     color: #1a1207; box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
@@ -271,6 +272,20 @@
   .btn-discord:hover { background: var(--discord-hover); }
   .btn-discord:active { transform: scale(0.98); }
   .btn-discord svg { width: 22px; height: 22px; }
+
+  /* Карточка «Доступ закрыт» для роли Гость */
+  .guest-box {
+    text-align: center; padding: 48px 20px; background: var(--header-bg);
+    border: 1px dashed var(--border-strong); border-radius: 20px; margin-top: 10px;
+  }
+  .guest-box-icon {
+    width: 64px; height: 64px; border-radius: 20px; background: var(--panel-3);
+    margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;
+    color: var(--amber); box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .guest-box-icon svg { width: 32px; height: 32px; }
+  .guest-box h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+  .guest-box p { color: var(--muted); font-size: 0.9rem; max-width: 480px; margin: 0 auto; line-height: 1.5; }
 
   /* Формы и кнопки */
   .form-group { margin-bottom: 14px; text-align: left; }
@@ -342,6 +357,14 @@
   .app-icon.cyan  { background: linear-gradient(135deg, #06b6d4, #0e7490); }
   .app-tile .label { font-size: 0.88rem; font-weight: 600; color: var(--text); }
   .app-tile .sub { font-size: 0.72rem; color: var(--muted); margin-top: -6px; }
+
+  .app-tile .counter-badge {
+    position: absolute; top: 10px; right: 10px;
+    min-width: 22px; height: 22px; padding: 0 6px;
+    border-radius: 999px; background: var(--amber); color: #1a1207;
+    font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5);
+  }
 
   .app-screen { animation: fadeIn 0.2s ease; }
   .app-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -431,6 +454,24 @@
   }
   .toast.toast-alert { border-left-color: #ef4444; }
 
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 12px 14px; background: var(--input-bg);
+    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px;
+  }
+  .toggle-switch {
+    width: 44px; height: 24px; border-radius: 999px;
+    background: var(--panel-3); border: 1px solid var(--border);
+    cursor: pointer; position: relative; transition: background 0.15s; flex-shrink: 0;
+  }
+  .toggle-switch::before {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 18px; height: 18px; border-radius: 50%; background: #fff;
+    transition: transform 0.18s;
+  }
+  .toggle-switch.on { background: var(--accent); border-color: var(--accent); }
+  .toggle-switch.on::before { transform: translateX(20px); }
+
   .theme-seg {
     display: inline-flex; gap: 4px; padding: 4px;
     background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px;
@@ -442,6 +483,18 @@
     font-weight: 600; cursor: pointer; transition: 0.15s;
   }
   .theme-seg button.active { background: var(--accent); color: #fff; }
+
+  /* Devlog */
+  .devlog-list { display: flex; flex-direction: column; gap: 10px; }
+  .devlog-item {
+    padding: 12px 14px; background: var(--panel-2);
+    border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 12px;
+  }
+  .devlog-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 6px; font-size: 0.72rem; color: var(--muted);
+  }
+  .devlog-text { font-size: 0.9rem; color: var(--text); white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
 
   /* Расписание проверок госструктур (ПСЭС) */
   .sched-list { display: flex; flex-direction: column; gap: 8px; }
@@ -536,14 +589,19 @@
   <div class="status-bar">
     <div class="status-left">
       <span class="net-indicator" title="Связь с сервером">
-        <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><circle cx="12" cy="20" r="0.9" fill="currentColor"/>
+        <!-- ОРИГИНАЛЬНЫЙ ЗНАЧОК WI-FI СО ВСЕМИ 3 ДУГАМИ -->
+        <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+          <circle cx="12" cy="20" r="0.9" fill="currentColor" stroke="none"/>
+          <line class="cross" x1="3" y1="3" x2="21" y2="21"/>
         </svg>
         <span id="statusNetwork">Планшет в сети</span>
       </span>
     </div>
     <div class="status-right">
-      <span class="shift-indicator day" id="shiftIndicator">
+      <span class="shift-indicator day" id="shiftIndicator" title="Текущая смена">
         <span class="shift-dot"></span>
         <span id="shiftIndicatorText">Дневная смена</span>
       </span>
@@ -593,10 +651,11 @@
     </div>
 
     <!-- ПОЛЬЗОВАТЕЛЬ -->
-    <div class="user-chip hidden" id="userChip">
+    <div class="user-chip hidden" id="userChip" title="Открыть профиль">
       <div class="avatar" id="userAvatar">?</div>
       <span id="userLogin">—</span>
       <span class="role user" id="userRole">user</span>
+      <span class="chip-hint">профиль</span>
       <button class="btn btn-ghost" id="logoutBtn" style="padding:4px 8px;font-size:0.72rem;margin-left:4px;">Выйти</button>
     </div>
   </div>
@@ -624,6 +683,19 @@
         <h2 id="homeGreeting">Добро пожаловать</h2>
         <p id="homeSub">Выберите приложение</p>
       </div>
+
+      <!-- Блок для роли Гость (если нет отделов) -->
+      <div id="guestAccessBlock" class="guest-box hidden">
+        <div class="guest-box-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3>Доступ ограничен</h3>
+        <p>Ваша учётная запись находится в статусе <b>«Гость»</b>[cite: 17]. Для получения доступа к модулям больницы обратитесь к руководству своего отделения для выдачи ролей.</p>
+      </div>
+
+      <!-- Сетка приложений (скрыта для гостя) -->
       <div class="app-grid" id="appGrid"></div>
       <div id="gosScheduleWidget" class="hidden"></div>
     </div>
@@ -728,12 +800,47 @@
         </div>
       </div>
       <div class="card">
-        <h3>Состояние системы</h3>
+        <h3>Состояние соединения</h3>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Версия</span><span style="font-weight:600">3.0 (Discord Multi-Role)</span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Сервер</span><span id="aboutServer" style="font-weight:600;color:var(--accent);">В сети ✓</span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">Пользователь</span><span id="aboutAuth" style="font-weight:600">—</span></div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Версия</span>
+            <span style="font-weight:600">3.0 (Discord Multi-Role)</span>
+          </div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Сервер (Worker)</span>
+            <span id="aboutServer" style="font-weight:600;color:var(--accent);">В сети ✓</span>
+          </div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Пользователь</span>
+            <span id="aboutAuth" style="font-weight:600">—</span>
+          </div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Рабочий стол</span>
+            <span id="aboutDept" style="font-weight:600">—</span>
+          </div>
+          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
+            <span style="color:var(--muted)">Сотрудников в отпуске</span>
+            <span id="aboutVacations" style="font-weight:600">—</span>
+          </div>
         </div>
+      </div>
+      <div class="card">
+        <h3>Уведомления</h3>
+        <div class="toggle-row">
+          <div>
+            <div class="label">Всплывающие уведомления</div>
+            <div class="hint">Показывать всплывающие подсказки вверху экрана</div>
+          </div>
+          <div class="toggle-switch" id="toastsToggle"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="label">Звук</div>
+            <div class="hint">Проигрывать звук при проверках и бронях</div>
+          </div>
+          <div class="toggle-switch" id="soundToggle"></div>
+        </div>
+        <button class="btn btn-ghost btn-block" id="testToastBtn" style="margin-top:8px;">Показать тестовое уведомление</button>
       </div>
     </div>
 
@@ -847,9 +954,6 @@
     "22:00": "Дневная смена завершена. Напоминаю, что в ночную смену вы получаете увеличенное количество баллов за ПМП. Ночная смена не является обязательной."
   };
 
-  const REMIND_KEY = "vesh_reminder_done_v1";
-  const REMIND_DELAY_MS = 5 * 60 * 1000;
-
   const state = {
     token: null,
     user: null,
@@ -858,6 +962,7 @@
     toastsEnabled: true,
     soundEnabled: true,
     users: [],
+    vacations: [],
     schedule: [],
     notifiedKeys: {},
     myBookings: [],
@@ -878,6 +983,7 @@
   const nameModal = $("nameModal");
   const manageRolesModal = $("manageRolesModal");
   const deleteUserModal = $("deleteUserModal");
+  const guestAccessBlock = $("guestAccessBlock");
 
   const appGrid = $("appGrid");
   const appIframe = $("appIframe");
@@ -892,6 +998,8 @@
   const logoutBtn = $("logoutBtn");
   const statusUser = $("statusUser");
   const statusClock = $("statusClock");
+  const batLevel = $("batLevel");
+  const batText = $("batText");
   const deskSwitcher = $("deskSwitcher");
   const deskBtn = $("deskBtn");
   const deskList = $("deskList");
@@ -945,6 +1053,24 @@
         if (state.themeMode === "auto") applyThemeMode("auto");
       });
     }
+  }
+
+  /* БАТАРЕЯ */
+  function initBattery() {
+    if (!navigator.getBattery) { batText.textContent = "—"; return; }
+    navigator.getBattery().then(battery => {
+      const render = () => {
+        const pct = Math.round(battery.level * 100);
+        batText.textContent = pct + "%";
+        batLevel.style.width = Math.max(2, pct) + "%";
+        batLevel.classList.remove("low", "critical");
+        if (battery.level <= 0.15) batLevel.classList.add("critical");
+        else if (battery.level <= 0.4) batLevel.classList.add("low");
+      };
+      render();
+      battery.addEventListener("levelchange", render);
+      battery.addEventListener("chargingchange", render);
+    }).catch(() => { batText.textContent = "—"; });
   }
 
   /* СЕТЬ */
@@ -1219,7 +1345,7 @@
       const fullText = "/fb " + (base || "Вещание на " + b.time);
       showToast({
         title: "⏰ Время вещания: " + b.time,
-        text: `Забронировано время <b>${b.time}</b>. Нажмите кнопку в приложении для копирования текста.<br><code>${escapeHtml(fullText)}</code>`,
+        text: `Забронировано время <b>${b.time}</b>.<br><code>${escapeHtml(fullText)}</code>`,
         duration: 10000,
         playSound: true
       });
@@ -1235,6 +1361,48 @@
       const me = (state.user.display_name || state.user.discord_tag || "").toLowerCase();
       state.myBookings = (data.reservations || []).filter(b => String(b.employee).trim().toLowerCase() === me);
     } catch (e) {}
+  }
+
+  /* ОТПУСКА */
+  function todayStrLocal() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function isOnVacation(v) {
+    if (v.returned) return false;
+    const today = todayStrLocal();
+    return v.start <= today && today <= v.end;
+  }
+  function getActiveVacations() {
+    return state.vacations.filter(isOnVacation);
+  }
+  async function loadVacations() {
+    try {
+      const data = await apiPost({ action: "getVacations" });
+      if (data && data.success) {
+        state.vacations = data.vacations || [];
+        renderVacationsBadge();
+        if ($("aboutVacations")) {
+          const act = getActiveVacations().length;
+          $("aboutVacations").textContent = act + " чел.";
+        }
+      }
+    } catch (e) {}
+  }
+  function renderVacationsBadge() {
+    const active = getActiveVacations().length;
+    const tile = appGrid.querySelector('[data-app="vacations"]');
+    if (tile) {
+      let b = tile.querySelector(".counter-badge");
+      if (active > 0) {
+        if (!b) {
+          b = document.createElement("div");
+          b.className = "counter-badge";
+          tile.appendChild(b);
+        }
+        b.textContent = active;
+      } else if (b) b.remove();
+    }
   }
 
   /* ПРИЛОЖЕНИЯ */
@@ -1293,13 +1461,20 @@
     }
   };
 
+  function isGuestUser() {
+    if (!state.user) return true;
+    if (hasRole("superadmin") || hasRole("head") || hasRole("deputy")) return false;
+    const hasDeptRole = hasRole("smp") || hasRole("pses");
+    const hasDeptList = Array.isArray(state.user.departments) && state.user.departments.length > 0;
+    return !hasDeptRole && !hasDeptList;
+  }
+
   function getAvailableDesks() {
     if (!state.user) return [];
     if (hasRole("superadmin")) return ["СМП", "ПСЭС", "Руководство"];
     const desks = [];
     if (hasRole("smp") || (state.user.departments && state.user.departments.includes("СМП"))) desks.push("СМП");
     if (hasRole("pses") || (state.user.departments && state.user.departments.includes("ПСЭС"))) desks.push("ПСЭС");
-    if (!desks.length) desks.push("Общий");
     return desks;
   }
 
@@ -1322,14 +1497,26 @@
       });
     } else {
       deskSwitcher.classList.remove("visible");
-      state.activeDesk = desks[0] || "Общий";
+      state.activeDesk = desks[0] || null;
     }
   }
 
   function renderDesk() {
     renderDeskSwitcher();
-    $("homeGreeting").textContent = "Рабочий стол: " + state.activeDesk;
+    const guest = isGuestUser();
+
+    $("homeGreeting").textContent = guest ? "Добро пожаловать в систему" : ("Рабочий стол: " + (state.activeDesk || "Общий"));
     $("homeSub").textContent = (state.user.display_name || state.user.discord_tag);
+
+    if (guest) {
+      guestAccessBlock.classList.remove("hidden");
+      appGrid.innerHTML = "";
+      gosScheduleWidget.innerHTML = "";
+      gosScheduleWidget.classList.add("hidden");
+      return;
+    }
+
+    guestAccessBlock.classList.add("hidden");
 
     const apps = ["staff", "vacations"];
     if (canManageUsers()) apps.push("users");
@@ -1349,6 +1536,7 @@
       if (!a) return;
       const tile = document.createElement("div");
       tile.className = "app-tile";
+      tile.dataset.app = k;
       tile.innerHTML = `
         <div class="app-icon ${a.color}">${a.icon}</div>
         <div class="label">${a.label}</div>
@@ -1358,6 +1546,7 @@
       appGrid.appendChild(tile);
     });
 
+    renderVacationsBadge();
     renderGosScheduleWidget();
   }
 
@@ -1388,7 +1577,7 @@
         token: state.token || "",
         login: state.user.display_name || state.user.discord_tag,
         dept: state.activeDesk || "",
-        role: hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : "user")
+        role: hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : (hasRole("instructor") ? "user" : "guest"))
       });
       appIframe.src = a.frame + "?" + params.toString();
       showScreen("frame");
@@ -1406,6 +1595,8 @@
       showScreen("about");
       $("aboutServer").textContent = "В сети ✓";
       $("aboutAuth").textContent = (state.user.display_name || state.user.discord_tag);
+      $("aboutDept").textContent = state.activeDesk || "Гость";
+      renderPrefs();
     }
   }
 
@@ -1474,7 +1665,7 @@
         showToast("Роль снята");
         await loadUsersList();
       } else {
-        showToast("Ошибка: " + res.message, "", "error");
+        showToast(res.message, "", "error");
       }
     } catch (e) { showToast(e.message, "", "error"); }
   };
@@ -1515,7 +1706,7 @@
             renderRolesButtonsModal();
             loadUsersList();
           } else {
-            showToast("Ошибка: " + res.message, "", "error");
+            showToast(res.message, "", "error");
             btn.disabled = false;
           }
         } catch (e) {
@@ -1566,7 +1757,7 @@
     }
   };
 
-  /* СЕССИЯ */
+  /* СЕССИЯ И ПРАВА */
   async function applyUserSession() {
     userLogin.textContent = state.user.display_name || state.user.discord_tag;
     statusUser.textContent = state.user.display_name || state.user.discord_tag;
@@ -1578,24 +1769,45 @@
       userAvatar.textContent = (state.user.display_name || "U")[0].toUpperCase();
     }
 
+    // Определение бейджа роли в шапке
     if (hasRole("superadmin")) {
       userRole.textContent = "СУПЕРАДМИН";
       userRole.className = "role super";
     } else if (hasRole("head") || hasRole("deputy")) {
       userRole.textContent = "РУКОВОДСТВО";
       userRole.className = "role admin";
-    } else {
+    } else if (hasRole("instructor")) {
       userRole.textContent = "ИНСТРУКТОР";
       userRole.className = "role user";
+    } else if (hasRole("hr")) {
+      userRole.textContent = "КАДРЫ";
+      userRole.className = "role admin";
+    } else {
+      userRole.textContent = "ГОСТЬ";
+      userRole.className = "role guest";
     }
 
     const desks = getAvailableDesks();
-    state.activeDesk = desks[0] || "Общий";
+    state.activeDesk = desks[0] || null;
     showScreen("desk");
     await loadSchedule();
+    await loadVacations();
     await refreshMyBookings();
     renderDesk();
     scheduleCheckTickBookings();
+  }
+
+  function loadPrefs() {
+    state.toastsEnabled = localStorage.getItem("pref_toasts") !== "0";
+    state.soundEnabled = localStorage.getItem("pref_sound") !== "0";
+  }
+  function savePrefs() {
+    localStorage.setItem("pref_toasts", state.toastsEnabled ? "1" : "0");
+    localStorage.setItem("pref_sound", state.soundEnabled ? "1" : "0");
+  }
+  function renderPrefs() {
+    if ($("toastsToggle")) $("toastsToggle").classList.toggle("on", state.toastsEnabled);
+    if ($("soundToggle")) $("soundToggle").classList.toggle("on", state.soundEnabled);
   }
 
   async function initAuth() {
@@ -1641,7 +1853,10 @@
 
   /* ИНИЦИАЛИЗАЦИЯ */
   function init() {
+    loadPrefs();
     loadThemeMode();
+    initBattery();
+
     document.querySelectorAll("[data-theme-mode]").forEach(btn => {
       btn.addEventListener("click", () => applyThemeMode(btn.dataset.themeMode));
     });
@@ -1708,6 +1923,23 @@
       });
     });
 
+    $("toastsToggle").addEventListener("click", () => {
+      state.toastsEnabled = !state.toastsEnabled;
+      savePrefs();
+      renderPrefs();
+      if (state.toastsEnabled) showToast("Уведомления включены");
+    });
+    $("soundToggle").addEventListener("click", () => {
+      state.soundEnabled = !state.soundEnabled;
+      savePrefs();
+      renderPrefs();
+      if (state.soundEnabled) playAlertSound();
+    });
+    $("testToastBtn").addEventListener("click", () => {
+      ensureAudioCtx();
+      showToast({ title: "Тестовое уведомление", text: "Проверка работы всплывающего оповещения", playSound: true });
+    });
+
     function tickClock() {
       const d = new Date();
       const pad = n => String(n).padStart(2, "0");
@@ -1729,6 +1961,8 @@
       if (!e.data || typeof e.data !== "object") return;
       if (e.data.type === "toast") showToast({ title: e.data.title || "Сообщение", text: e.data.text || "", type: e.data.kind });
       else if (e.data.type === "go-back") { showScreen("desk"); renderDesk(); }
+      else if (e.data.type === "vacations-changed") loadVacations();
+      else if (e.data.type === "reservations-changed") refreshMyBookings();
       else if (e.data.type === "theme-request") broadcastTheme();
     });
 

@@ -1127,8 +1127,11 @@
   async function apiPost(payload) {
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+        "Authorization": getAppToken() ? "Bearer " + getAppToken() : ""
+      },
+      body: JSON.stringify(Object.assign({ token: getAppToken() }, payload))
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
     return res.json();
@@ -1136,31 +1139,44 @@
 
   function loadSession() {
     const p = new URLSearchParams(location.search);
-    const pLogin = p.get("login");
-    const pRole  = p.get("role");
-    const pDept  = p.get("dept");
-    if (pLogin && pRole) {
-      const raw = localStorage.getItem("hospital_session");
-      let hash = null;
-      try { hash = raw ? (JSON.parse(raw).hash || null) : null; } catch (e) {}
-      return { login: pLogin, role: pRole, department: pDept || "", hash: hash };
-    }
-    try {
-      const raw = localStorage.getItem("hospital_session");
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (data && data.login && data.role && data.hash) return data;
-    } catch (e) {}
-    return null;
+    let token = p.get("token") || "";
+    try { if (!token) token = sessionStorage.getItem("hospital_app_token") || ""; } catch (e) {}
+    if (!token) return null;
+    try { sessionStorage.setItem("hospital_app_token", token); } catch (e) {}
+    const roles = (p.get("roles") || "").split(",").filter(Boolean);
+    const departments = (p.get("departments") || "").split(",").filter(Boolean);
+    return {
+      login: p.get("login") || "",
+      role: p.get("role") || "guest",
+      department: p.get("dept") || "",
+      hash: null,
+      discord: p.get("discord") || "",
+      token, roles, departments
+    };
   }
 
-  function isAdmin() { return state.user && (state.user.role === "admin" || state.user.role === "superadmin"); }
-  function isSuperadmin() { return state.user && state.user.role === "superadmin"; }
+  function getAppToken() {
+    try {
+      const p = new URLSearchParams(location.search);
+      return p.get("token") || sessionStorage.getItem("hospital_app_token") || "";
+    } catch (e) { return ""; }
+  }
 
-  function esc(s) {
-    return String(s == null ? "" : s)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function isAdmin() {
+    if (!state.user) return false;
+    if (state.user.role === "admin" || state.user.role === "superadmin") return true;
+    return (state.user.roles || []).some(r => ["superadmin", "head", "deputy", "hr"].includes(r));
+  }
+
+  function isSuperadmin() {
+    if (!state.user) return false;
+    if (state.user.role === "superadmin") return true;
+    return (state.user.roles || []).includes("superadmin");
+  }
+  function canStaffManage() {
+    if (!state.user) return false;
+    if (state.user.role === "superadmin") return true;
+    return (state.user.roles || []).some(r => ["superadmin", "head", "hr"].includes(r));
   }
 
   function formatDateTime(iso) {
@@ -1281,7 +1297,7 @@
       state.staff = data.staff || [];
       renderActive();
       addStaffBtn.classList.toggle("hidden", !isAdmin());
-      importExportBtn.classList.toggle("hidden", !isSuperadmin());
+      importExportBtn.classList.toggle("hidden", !canStaffManage());
     } catch (err) {
       console.error(err);
       staffContainer.innerHTML = '<div class="empty">Не удалось загрузить: ' + esc(err.message) + '</div>';
@@ -1821,7 +1837,7 @@
      ИМПОРТ / ЭКСПОРТ CSV
      ============================================================ */
   function openImpModal() {
-    if (!isSuperadmin()) return;
+    if (!canStaffManage()) return;
     impStatus.textContent = '';
     impStatus.className = 'imp-status';
     impFile.value = '';
@@ -2162,7 +2178,7 @@
     const aiInput = document.getElementById("aiImagesInput");
 
     if (aiBtn) {
-      if (isSuperadmin()) aiBtn.classList.remove("hidden");
+      if (canStaffManage()) aiBtn.classList.remove("hidden");
 
       aiBtn.addEventListener("click", () => {
         if (!confirm("Загрузить скриншоты для ИИ-распознавания?\n\nТекущая таблица будет полностью заменена!")) return;

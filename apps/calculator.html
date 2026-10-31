@@ -1506,32 +1506,27 @@
   }
 
   function getCalcSession() {
-    try {
-      const raw = localStorage.getItem("hospital_session");
-      if (!raw) return null;
-      const d = JSON.parse(raw);
-      if (d && d.login && d.hash) return d;
-    } catch (e) {}
     const p = new URLSearchParams(location.search);
-    const pLogin = p.get("login");
-    const pRole = p.get("role");
-    if (!pLogin || !pRole) return null;
-    let hash = null;
-    try {
-      const raw = localStorage.getItem("hospital_session");
-      if (raw) {
-        const d = JSON.parse(raw);
-        if (d && d.login === pLogin) hash = d.hash;
-      }
-    } catch (e) {}
-    if (!hash) return null;
-    return { login: pLogin, role: pRole, hash: hash };
+    let token = p.get("token") || "";
+    try { if (!token) token = sessionStorage.getItem("hospital_app_token") || ""; } catch (e) {}
+    if (!token) return null;
+    try { sessionStorage.setItem("hospital_app_token", token); } catch (e) {}
+    const roles = (p.get("roles") || "").split(",").filter(Boolean);
+    const departments = (p.get("departments") || "").split(",").filter(Boolean);
+    return {
+      login: p.get("login") || "",
+      role: p.get("role") || "guest",
+      department: p.get("dept") || "",
+      hash: null,
+      token, roles, departments
+    };
   }
 
   function isCalcAdmin() {
     const s = getCalcSession();
     if (!s) return false;
-    return s.role === "admin" || s.role === "superadmin";
+    if (s.role === "admin" || s.role === "superadmin") return true;
+    return (s.roles || []).some(r => ["superadmin", "head", "deputy", "hr"].includes(r));
   }
 
   function isCalcUser() {

@@ -507,6 +507,7 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
         const xhr = new XMLHttpRequest();
         xhr.open("POST", API_URL, true);
         xhr.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+        xhr.setRequestHeader("Authorization", getAppToken() ? "Bearer " + getAppToken() : "");
         xhr.onload = function() {
           if (xhr.status >= 200 && xhr.status < 300) {
             try { resolve(JSON.parse(xhr.responseText)); }
@@ -518,26 +519,33 @@ select:disabled,input:disabled{background:var(--panel-2);color:var(--muted);curs
         xhr.onerror = function() { reject(new Error("Сеть: не удалось связаться с сервером")); };
         xhr.timeout = 20000;
         xhr.ontimeout = function() { reject(new Error("Таймаут запроса")); };
-        xhr.send(JSON.stringify(payload));
+        xhr.send(JSON.stringify(Object.assign({ token: getAppToken() }, payload)));
       } catch (e) { reject(e); }
     });
   }
 
   function loadUser() {
-    const params = new URLSearchParams(location.search);
-    const pLogin = params.get("login");
-    const pRole = params.get("role");
-    const pDept = params.get("dept");
-    if (pLogin && pRole) {
-      return { login: pLogin, role: pRole, department: pDept || "", hash: null };
-    }
+    const p = new URLSearchParams(location.search);
+    let token = p.get("token") || "";
+    try { if (!token) token = sessionStorage.getItem("hospital_app_token") || ""; } catch (e) {}
+    if (!token) return null;
+    try { sessionStorage.setItem("hospital_app_token", token); } catch (e) {}
+    const roles = (p.get("roles") || "").split(",").filter(Boolean);
+    const departments = (p.get("departments") || "").split(",").filter(Boolean);
+    return {
+      login: p.get("login") || "",
+      role: p.get("role") || "guest",
+      department: p.get("dept") || "",
+      hash: null,
+      token, roles, departments
+    };
+  }
+
+  function getAppToken() {
     try {
-      const raw = localStorage.getItem("hospital_session");
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (data && data.login && data.role && data.hash) return data;
-    } catch (e) {}
-    return null;
+      const p = new URLSearchParams(location.search);
+      return p.get("token") || sessionStorage.getItem("hospital_app_token") || "";
+    } catch (e) { return ""; }
   }
 
   function ensureHash(user) {

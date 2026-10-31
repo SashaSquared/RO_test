@@ -960,8 +960,11 @@ select option { background: #0c1420; color: var(--text); }
   function apiPost(payload) {
     return fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+        "Authorization": getAppToken() ? "Bearer " + getAppToken() : ""
+      },
+      body: JSON.stringify(Object.assign({ token: getAppToken() }, payload))
     }).then(r => {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
@@ -970,38 +973,33 @@ select option { background: #0c1420; color: var(--text); }
 
   function loadSession() {
     const p = new URLSearchParams(location.search);
-    const pLogin = p.get("login");
-    const pRole = p.get("role");
-    const pDept = p.get("dept");
-    const pDiscord = p.get("discord") || "";
+    let token = p.get("token") || "";
+    try { if (!token) token = sessionStorage.getItem("hospital_app_token") || ""; } catch (e) {}
+    if (!token) return null;
+    try { sessionStorage.setItem("hospital_app_token", token); } catch (e) {}
+    const roles = (p.get("roles") || "").split(",").filter(Boolean);
+    const departments = (p.get("departments") || "").split(",").filter(Boolean);
+    return {
+      login: p.get("login") || "",
+      role: p.get("role") || "guest",
+      department: p.get("dept") || "",
+      hash: null,
+      discord: p.get("discord") || "",
+      token, roles, departments
+    };
+  }
 
-    if (pLogin && pRole) {
-      const raw = localStorage.getItem("hospital_session");
-      let hash = null;
-      let discord = pDiscord;
-      try {
-        if (raw) {
-          const d = JSON.parse(raw);
-          hash = d.hash || null;
-          if (!discord) discord = d.discord || "";
-        }
-      } catch (e) {}
-      return { login: pLogin, role: pRole, department: pDept || "", hash: hash, discord: discord };
-    }
+  function getAppToken() {
     try {
-      const raw = localStorage.getItem("hospital_session");
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (data && data.login && data.role && data.hash) {
-        if (!data.discord && pDiscord) data.discord = pDiscord;
-        return data;
-      }
-    } catch (e) {}
-    return null;
+      const p = new URLSearchParams(location.search);
+      return p.get("token") || sessionStorage.getItem("hospital_app_token") || "";
+    } catch (e) { return ""; }
   }
 
   function isAdmin() {
-    return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
+    if (!state.user) return false;
+    if (state.user.role === "admin" || state.user.role === "superadmin") return true;
+    return (state.user.roles || []).some(r => ["superadmin", "head", "deputy", "hr"].includes(r));
   }
 
   /* ===== Утилиты выслуги ===== */

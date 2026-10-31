@@ -2282,7 +2282,10 @@ function getCalcSession() {
 
 function getCalcRole() {
   const s = getCalcSession();
-  return s ? s.role : null;
+  if (!s) return null;
+  if (s.role === "admin" || s.role === "superadmin") return s.role;
+  if ((s.roles || []).some(r => ["superadmin", "head", "deputy", "hr"].includes(r))) return "admin";
+  return s.role;
 }
 
 let _weekIdCache = null;

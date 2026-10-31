@@ -24,6 +24,7 @@
     --amber: #f59e0b;
     --purple: #8b5cf6;
     --discord: #5865F2;
+    --discord-hover: #4752c4;
     --success-bg: #14532d;
     --success-text: #bbf7d0;
     --error-bg: #4c1d1d;
@@ -40,9 +41,6 @@
     --hover-bg: rgba(255,255,255,0.06);
   }
 
-  /* ============================================================
-     СВЕТЛАЯ ТЕМА (мягкая)
-     ============================================================ */
   :root[data-theme="light"] {
     --bg: #f5f7fa;
     --bg-2: #ffffff;
@@ -62,7 +60,8 @@
     --red-hover: #ef4444;
     --amber: #d97706;
     --purple: #7c3aed;
-    --discord: #4752c4;
+    --discord: #5865F2;
+    --discord-hover: #4752c4;
     --success-bg: #dcfce7;
     --success-text: #166534;
     --error-bg: #fee2e2;
@@ -80,965 +79,223 @@
   }
 
   html, body { height: 100%; }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    width: 0;
-    display: none;
-  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; display: none; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: var(--body-bg);
-    color: var(--text);
-    line-height: 1.5;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    background: var(--body-bg); color: var(--text); line-height: 1.5;
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none;
     transition: background 0.25s, color 0.25s;
   }
 
   .tablet {
-    max-width: 1100px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: var(--tablet-bg);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
+    max-width: 1100px; margin: 0 auto; min-height: 100vh;
+    display: flex; flex-direction: column; background: var(--tablet-bg);
+    border-left: 1px solid var(--border); border-right: 1px solid var(--border);
     transition: background 0.25s;
   }
 
-  /* Статус-бар */
   .status-bar {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 8px 16px;
-    background: var(--status-bg); border-bottom: 1px solid var(--border);
-    font-size: 0.78rem; color: var(--muted);
-    position: sticky; top: 0; z-index: 20;
-    transition: background 0.25s;
+    gap: 12px; padding: 8px 16px; background: var(--status-bg);
+    border-bottom: 1px solid var(--border); font-size: 0.78rem;
+    color: var(--muted); position: sticky; top: 0; z-index: 20;
   }
   .status-left, .status-right { display: flex; align-items: center; gap: 12px; }
   .status-bar .net-indicator { display: inline-flex; align-items: center; gap: 8px; }
-  .status-bar .wifi-icon {
-    width: 18px; height: 18px; color: #2f9e44;
-    transition: color 0.25s;
-    animation: wifiPulse 2s infinite;
-  }
+  .status-bar .wifi-icon { width: 18px; height: 18px; color: #2f9e44; animation: wifiPulse 2s infinite; }
   .status-bar .wifi-icon.offline { color: #ef4444; animation: none; }
   .status-bar .wifi-icon .cross { display: none; stroke: currentColor; }
   .status-bar .wifi-icon.offline .cross { display: block; }
   @keyframes wifiPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-  .status-bar .clock {
-    font-variant-numeric: tabular-nums; font-weight: 600;
-    color: var(--text); letter-spacing: 0.04em;
-  }
-  .status-bar .battery {
-    display: inline-flex; align-items: center; gap: 6px; color: var(--muted);
-  }
+  .status-bar .clock { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+  .status-bar .battery { display: inline-flex; align-items: center; gap: 6px; }
   .status-bar .battery .bat-body {
-    width: 22px; height: 11px;
-    border: 1.5px solid var(--muted);
-    border-radius: 3px; padding: 1px;
-    position: relative; display: flex; align-items: center;
+    width: 22px; height: 11px; border: 1.5px solid var(--muted);
+    border-radius: 3px; padding: 1px; position: relative; display: flex; align-items: center;
   }
   .status-bar .battery .bat-body::after {
     content: ""; position: absolute; right: -3px; top: 50%;
-    transform: translateY(-50%);
-    width: 2px; height: 4px; border-radius: 0 1px 1px 0;
-    background: var(--muted);
+    transform: translateY(-50%); width: 2px; height: 4px;
+    border-radius: 0 1px 1px 0; background: var(--muted);
   }
-  .status-bar .battery .bat-level {
-    height: 100%; border-radius: 1px;
-    background: #2f9e44;
-    transition: width 0.3s, background 0.25s;
-  }
+  .status-bar .battery .bat-level { height: 100%; border-radius: 1px; background: #2f9e44; }
   .status-bar .battery .bat-level.low { background: #f59e0b; }
   .status-bar .battery .bat-level.critical { background: #ef4444; }
-  .status-bar .battery .bat-text {
-    font-variant-numeric: tabular-nums; font-size: 0.72rem;
-  }
-
-  /* Индикатор смены */
   .status-bar .shift-indicator {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 2px 9px;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transition: background 0.25s, color 0.25s, border-color 0.25s;
-    border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px;
+    border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
   }
-  .status-bar .shift-indicator .shift-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 6px currentColor;
-    flex-shrink: 0;
-  }
-  .status-bar .shift-indicator.day {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: rgba(245, 158, 11, 0.45);
-    color: #fcd34d;
-  }
-  :root[data-theme="light"] .status-bar .shift-indicator.day {
-    background: rgba(217, 119, 6, 0.12);
-    border-color: rgba(217, 119, 6, 0.4);
-    color: #b45309;
-  }
-  .status-bar .shift-indicator.night {
-    background: rgba(99, 102, 241, 0.18);
-    border-color: rgba(139, 92, 246, 0.5);
-    color: #c4b5fd;
-  }
-  :root[data-theme="light"] .status-bar .shift-indicator.night {
-    background: rgba(124, 58, 237, 0.12);
-    border-color: rgba(124, 58, 237, 0.4);
-    color: #6d28d9;
-  }
+  .status-bar .shift-indicator.day { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+  .status-bar .shift-indicator.night { background: rgba(99, 102, 241, 0.18); color: #c4b5fd; }
+  .status-bar .shift-indicator .shift-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 
-  /* Шапка */
   .tablet-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 18px;
-    background: var(--header-bg);
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+    background: var(--header-bg); border-bottom: 1px solid var(--border);
     position: relative; flex-wrap: wrap;
-    transition: background 0.25s;
   }
   .tablet-logo {
     width: 42px; height: 42px; border-radius: 12px;
     background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25), 0 4px 12px rgba(0, 0, 0, 0.4);
-    position: relative;
+    display: flex; align-items: center; justify-content: center; position: relative;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
   }
   .tablet-logo::before, .tablet-logo::after { content: ""; position: absolute; background: #fff; border-radius: 2px; }
   .tablet-logo::before { width: 22px; height: 6px; }
   .tablet-logo::after  { width: 6px; height: 22px; }
 
   .tablet-title { flex: 1; min-width: 0; }
-  .tablet-title h1 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
-  .tablet-title .sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .tablet-title h1 { font-size: 1.05rem; font-weight: 700; }
+  .tablet-title .sub { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
 
-  /* ============================================================
-     ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ (в шапке)
-     ============================================================ */
   .theme-switcher {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    padding: 3px;
-    background: var(--panel-3);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+    background: var(--panel-3); border: 1px solid var(--border); border-radius: 10px;
   }
   .theme-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px; height: 28px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 7px;
-    color: var(--muted);
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s, color 0.15s;
-    -webkit-tap-highlight-color: transparent;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 28px; background: transparent; border: none;
+    border-radius: 7px; color: var(--muted); cursor: pointer;
   }
-  .theme-btn:hover { background: var(--hover-bg); color: var(--text); }
-  .theme-btn.active {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 2px 6px rgba(47, 158, 68, 0.35);
-  }
+  .theme-btn.active { background: var(--accent); color: #fff; }
   .theme-btn svg { width: 15px; height: 15px; }
 
-  /* Скрываем переключатель в шапке, пока не залогинен */
-  #themeSwitcherHeader.hidden { display: none; }
-
   .user-chip {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 10px 6px 6px;
+    display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px;
     background: var(--panel-3); border: 1px solid var(--border);
-    border-radius: 999px; font-size: 0.8rem; color: var(--text);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    user-select: none;
+    border-radius: 999px; font-size: 0.8rem; color: var(--text); cursor: pointer;
   }
-  .user-chip:hover { background: var(--panel-2); border-color: var(--border-strong); }
   .user-chip .avatar {
     width: 26px; height: 26px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--blue), #1d4ed8);
-    display: flex; align-items: center; justify-content: center;
+    background-size: cover; background-position: center;
+    background-color: var(--blue); display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 0.78rem; color: #fff;
-    text-transform: uppercase;
   }
-  .user-chip .role {
-    font-size: 0.62rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em;
+  .user-chip .roles-list { display: flex; gap: 4px; }
+  .user-chip .role-badge {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
     padding: 2px 7px; border-radius: 999px;
   }
-  .user-chip .role.admin { background: #4c1d95; color: #ddd6fe; }
-  .user-chip .role.user  { background: #1e3a8a; color: #bfdbfe; }
-  .user-chip .role.super {
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    color: #1a1207;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
-  }
-  .user-chip .chip-hint { font-size: 0.68rem; color: var(--muted); margin-right: 2px; }
 
   .desk-switcher { position: relative; display: none; }
   .desk-switcher.visible { display: block; }
   .desk-btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 12px;
+    display: flex; align-items: center; gap: 8px; padding: 8px 12px;
     background: var(--panel-3); border: 1px solid var(--border);
-    border-radius: 10px; color: var(--text);
-    font-size: 0.82rem; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: background 0.15s;
+    border-radius: 10px; color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer;
   }
-  .desk-btn:hover { background: var(--panel-2); }
   .desk-btn svg { width: 12px; height: 12px; }
-  .desk-btn .current-desk { color: #86efac; }
-  :root[data-theme="light"] .desk-btn .current-desk { color: #166534; }
   .desk-list {
-    display: none;
-    position: absolute; top: calc(100% + 6px); right: 0;
-    flex-direction: column; gap: 4px;
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 12px; padding: 6px;
-    min-width: 220px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    z-index: 40;
-    max-height: 420px; overflow-y: auto;
+    display: none; position: absolute; top: calc(100% + 6px); right: 0;
+    flex-direction: column; gap: 4px; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 12px; padding: 6px;
+    min-width: 220px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); z-index: 40;
   }
-  :root[data-theme="light"] .desk-list { box-shadow: 0 8px 24px rgba(15,23,42,0.12); }
   .desk-list.open { display: flex; }
   .desk-list button {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 12px;
-    background: transparent; border: none; border-radius: 8px;
-    color: var(--text); font-size: 0.82rem; font-weight: 500;
-    text-align: left; cursor: pointer; font-family: inherit;
-    transition: background 0.12s;
+    padding: 8px 12px; background: transparent; border: none; border-radius: 8px;
+    color: var(--text); font-size: 0.82rem; font-weight: 500; cursor: pointer;
   }
-  .desk-list button:hover { background: var(--panel-3); }
-  .desk-list button.active {
-    background: rgba(47, 158, 68, 0.15);
-    color: #86efac; font-weight: 700;
-  }
-  :root[data-theme="light"] .desk-list button.active { color: #166534; }
+  .desk-list button.active { background: rgba(47, 158, 68, 0.15); color: #86efac; font-weight: 700; }
 
-  .tablet-body { flex: 1; padding: 20px; overflow: visible; }
+  .tablet-body { flex: 1; padding: 20px; }
 
-  .auth-screen {
-    min-height: calc(100vh - 60px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-  }
+  .auth-screen { min-height: calc(100vh - 120px); display: flex; align-items: center; justify-content: center; padding: 20px; }
   .auth-card {
-    width: 100%; max-width: 420px;
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 28px 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    position: relative; overflow: hidden;
-  }
-  :root[data-theme="light"] .auth-card { box-shadow: 0 10px 40px rgba(15,23,42,0.12); }
-  .auth-card::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #dc2626, #2f9e44, #3b82f6);
+    width: 100%; max-width: 420px; background: var(--header-bg);
+    border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px;
+    text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   }
   .auth-emblem {
-    width: 64px; height: 64px;
-    margin: 0 auto 14px;
-    border-radius: 18px;
+    width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 18px;
     background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2), 0 8px 24px rgba(220, 38, 38, 0.35);
+    display: flex; align-items: center; justify-content: center; position: relative;
   }
   .auth-emblem::before, .auth-emblem::after { content: ""; position: absolute; background: #fff; border-radius: 3px; }
   .auth-emblem::before { width: 34px; height: 9px; }
   .auth-emblem::after  { width: 9px; height: 34px; }
-  .auth-card h1 { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
-  .auth-card .subtitle { text-align: center; color: var(--muted); font-size: 0.84rem; margin-bottom: 22px; }
+  .auth-card h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
+  .auth-card .subtitle { color: var(--muted); font-size: 0.84rem; margin-bottom: 24px; }
 
-  .form-group { margin-bottom: 14px; }
-  label {
-    display: block; font-size: 0.78rem; font-weight: 600;
-    margin-bottom: 6px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.05em;
+  .btn-discord {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 14px 20px; background: var(--discord); color: #fff;
+    border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: background 0.15s, transform 0.05s; text-decoration: none;
   }
-  select, input[type="text"], input[type="password"], textarea {
-    width: 100%; padding: 12px 14px;
-    font-size: 0.96rem; font-family: inherit;
-    color: var(--text); background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px; outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    -webkit-appearance: none; appearance: none;
-  }
-  select {
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238496ab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 18px;
-    padding-right: 40px;
-  }
-  select:focus, input:focus, textarea:focus {
-    border-color: var(--accent-2);
-    box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.22);
-  }
-  select:disabled, input:disabled { background: var(--panel-2); color: var(--muted); cursor: not-allowed; }
-
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 11px 16px;
-    font-size: 0.92rem; font-weight: 600;
-    font-family: inherit; color: #fff;
-    background: var(--accent); border: none; border-radius: 10px;
-    cursor: pointer; transition: background 0.15s, transform 0.05s, opacity 0.15s;
-    text-decoration: none; white-space: nowrap;
-  }
-  .btn:hover:not(:disabled) { background: var(--accent-2); }
-  .btn:active:not(:disabled) { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-  .btn-block { width: 100%; }
-  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-  .btn-ghost:hover:not(:disabled) { background: var(--panel-3); }
-  .btn-danger { background: var(--red); padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; }
-  .btn-danger:hover:not(:disabled) { background: var(--red-hover); }
-  .btn-small { padding: 5px 10px; font-size: 0.76rem; border-radius: 8px; }
-
-  .notification {
-    margin-top: 14px; padding: 11px 14px;
-    border-radius: 10px; font-size: 0.86rem; font-weight: 500;
-    display: none;
-  }
-  .notification.show { display: block; animation: fadeIn 0.25s ease; }
-  .notification.success { background: var(--success-bg); color: var(--success-text); }
-  .notification.error { background: var(--error-bg); color: var(--error-text); }
-  @keyframes fadeIn { from { opacity:0; transform: translateY(-4px) } to { opacity:1; transform: translateY(0) } }
+  .btn-discord:hover { background: var(--discord-hover); }
+  .btn-discord:active { transform: scale(0.98); }
+  .btn-discord svg { width: 22px; height: 22px; }
 
   .home-screen { padding: 6px 4px; }
-  .home-greeting { margin-bottom: 22px; }
-  .home-greeting h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
-  .home-greeting p { color: var(--muted); font-size: 0.86rem; margin-top: 2px; }
+  .home-greeting h2 { font-size: 1.25rem; font-weight: 700; }
+  .home-greeting p { color: var(--muted); font-size: 0.86rem; margin-top: 2px; margin-bottom: 20px; }
 
-  .app-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
-  }
+  .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
   .app-tile {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 12px; padding: 22px 14px;
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    cursor: pointer;
-    transition: transform 0.12s ease, border-color 0.15s, box-shadow 0.15s;
-    text-align: center; user-select: none;
-    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 22px 14px; background: var(--header-bg); border: 1px solid var(--border);
+    border-radius: 18px; cursor: pointer; text-align: center; position: relative;
+    transition: transform 0.12s, border-color 0.15s;
   }
-  .app-tile:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: var(--card-shadow); }
-  .app-tile:active { transform: scale(0.98); }
-
+  .app-tile:hover { transform: translateY(-2px); border-color: var(--border-strong); }
   .app-icon {
-    width: 56px; height: 56px; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #fff;
   }
   .app-icon svg { width: 30px; height: 30px; }
   .app-icon.green { background: linear-gradient(135deg, #2f9e44, #1b6b2e); }
   .app-icon.blue  { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-  .app-icon.red   { background: linear-gradient(135deg, #ef4444, #991b1b); }
   .app-icon.amber { background: linear-gradient(135deg, #f59e0b, #b45309); }
   .app-icon.purple{ background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
   .app-icon.gray  { background: linear-gradient(135deg, #64748b, #334155); }
   .app-icon.cyan  { background: linear-gradient(135deg, #06b6d4, #0e7490); }
-
-  .app-tile .label { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.25; }
-  .app-tile .sub { font-size: 0.72rem; color: var(--muted); margin-top: -6px; }
-
-  .app-tile .counter-badge {
-    position: absolute; top: 10px; right: 10px;
-    min-width: 22px; height: 22px;
-    padding: 0 6px;
-    border-radius: 999px;
-    background: var(--amber); color: #1a1207;
-    font-size: 0.72rem; font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5);
-  }
+  .app-icon.red   { background: linear-gradient(135deg, #ef4444, #991b1b); }
 
   .app-screen { animation: fadeIn 0.2s ease; }
-  .app-bar {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 18px; flex-wrap: wrap;
-  }
+  .app-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .app-bar .back-btn {
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 12px;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-size: 0.84rem; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: background 0.15s;
+    display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--panel-2);
+    border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.84rem; cursor: pointer;
   }
-  .app-bar .back-btn:hover { background: var(--panel-3); }
-  .app-bar .back-btn svg { width: 14px; height: 14px; }
 
-  .app-bar .app-bar-title { display: flex; align-items: center; gap: 10px; flex: 1; }
-  .app-bar .app-bar-title h2 { font-size: 1.05rem; font-weight: 700; }
-  .app-bar .app-bar-title .app-icon { width: 34px; height: 34px; border-radius: 10px; }
-  .app-bar .app-bar-title .app-icon svg { width: 18px; height: 18px; }
-
-  .card {
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: var(--card-shadow);
-  }
+  .card { background: var(--header-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
   .card + .card { margin-top: 16px; }
-  .card h3 { font-size: 0.98rem; font-weight: 600; margin-bottom: 14px; }
-  .card-head {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
-  }
-  .card-head h3 { margin-bottom: 0; }
 
-  .staff-toolbar {
-    display: grid; grid-template-columns: 1fr 220px 180px;
-    gap: 10px; margin-bottom: 14px;
+  .iframe-wrap { width: 100%; height: calc(100vh - 200px); min-height: 520px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+  .iframe-wrap iframe { width: 100%; height: 100%; border: 0; background: var(--bg-2); }
+
+  .modal-back {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 10000;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
   }
-  @media (max-width: 700px) { .staff-toolbar { grid-template-columns: 1fr; } }
-  .staff-toolbar input,
-  .staff-toolbar select { padding: 10px 12px; font-size: 0.86rem; }
+  .modal-back.hidden { display: none !important; }
+  .modal { width: 100%; max-width: 460px; background: var(--header-bg); border: 1px solid var(--border); border-radius: 20px; padding: 26px 22px; }
+
+  .role-tag {
+    display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-right: 4px;
+  }
+  .role-tag.superadmin { background: #f59e0b; color: #1a1207; }
+  .role-tag.head { background: #8b5cf6; color: #fff; }
+  .role-tag.deputy { background: #3b82f6; color: #fff; }
+  .role-tag.instructor { background: #22c55e; color: #fff; }
+  .role-tag.hr { background: #f97316; color: #fff; }
+  .role-tag.guest { background: #64748b; color: #fff; }
+
+  .toast-container { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; width: calc(100% - 32px); max-width: 460px; pointer-events: none; }
+  .toast { padding: 12px 14px; background: var(--toast-bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); pointer-events: auto; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; font-size: 0.88rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; color: #fff; background: var(--accent); }
+  .btn:hover { background: var(--accent-2); }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-ghost:hover { background: var(--panel-3); }
 
   .staff-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
-  .staff-table th {
-    text-align: left; font-weight: 600; font-size: 0.7rem;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--muted);
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .staff-table td {
-    padding: 10px 10px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  .staff-table tr:last-child td { border-bottom: none; }
-  .staff-table tr:hover { background: rgba(47, 158, 68, 0.05); }
-  .staff-table .num { color: var(--muted); font-variant-numeric: tabular-nums; width: 40px; }
-  .staff-table .uid { color: var(--accent-2); font-weight: 700; font-variant-numeric: tabular-nums; }
-  .staff-table .discord { color: var(--blue); font-weight: 600; white-space: nowrap; }
-
-  .staff-table tr.staff-on-vacation { background: rgba(245, 185, 74, 0.08); }
-  .staff-table tr.staff-on-vacation:hover { background: rgba(245, 185, 74, 0.14); }
-  .staff-table tr.staff-on-vacation td b { color: #fcd97e; }
-  :root[data-theme="light"] .staff-table tr.staff-on-vacation td b { color: #b45309; }
-  .vacation-badge {
-    display: inline-block;
-    margin-left: 6px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    background: linear-gradient(135deg, #f5b94a, #b45309);
-    color: #1a1207;
-    box-shadow: 0 0 8px rgba(245, 185, 74, 0.35);
-    vertical-align: middle;
-  }
-
-  .dept-pill {
-    display: inline-block;
-    padding: 3px 9px;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    background: #1e3a8a;
-    color: #bfdbfe;
-  }
-  .dept-pill.dept-руководство { background: #4c1d95; color: #ddd6fe; }
-  .dept-pill.dept-аб { background: #7c2d12; color: #fed7aa; }
-  .dept-pill.dept-ок { background: #78350f; color: #fde68a; }
-  .dept-pill.dept-смп { background: #991b1b; color: #fecaca; }
-  .dept-pill.dept-ит { background: #14532d; color: #bbf7d0; }
-  .dept-pill.dept-псэс { background: #1e40af; color: #bfdbfe; }
-  .dept-pill.dept-инст-псэс { background: #0891b2; color: #cffafe; }
-  .dept-pill.dept-инст-смп  { background: #b45309; color: #fde68a; }
-  .dept-pill.dept-инст-ит   { background: #065f46; color: #a7f3d0; }
-  .dept-pill.dept-инст-ок   { background: #6d28d9; color: #ddd6fe; }
-
-  .empty, .loading { color: var(--muted); font-size: 0.86rem; text-align: center; padding: 20px 0; }
-
-  .role-pill {
-    display: inline-block;
-    padding: 3px 9px;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .role-pill.superadmin {
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    color: #1a1207;
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
-  }
-  .role-pill.admin { background: #4c1d95; color: #ddd6fe; }
-  .role-pill.user  { background: #1e3a8a; color: #bfdbfe; }
+  .staff-table th, .staff-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
 
   .hidden { display: none !important; }
-
-  .profile-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 16px; margin-bottom: 16px;
-  }
-  @media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
-
-  .iframe-wrap {
-    width: 100%;
-    height: calc(100vh - 200px);
-    min-height: 520px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: var(--card-shadow);
-  }
-  .iframe-wrap iframe {
-    width: 100%; height: 100%;
-    border: 0; display: block;
-    background: var(--bg-2);
-  }
-
-  .toast-container {
-    position: fixed; top: 12px; left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    display: flex; flex-direction: column; gap: 8px;
-    width: calc(100% - 32px);
-    max-width: 460px;
-    pointer-events: none;
-  }
-  .toast {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 14px;
-    background: var(--toast-bg);
-    border: 1px solid var(--toast-border);
-    border-left: 4px solid #2f9e44;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04) inset;
-    color: var(--text);
-    pointer-events: auto;
-    transform: translateY(-120%);
-    opacity: 0;
-    animation: toastIn .35s cubic-bezier(.22,1,.36,1) forwards;
-    position: relative; overflow: hidden;
-  }
-  :root[data-theme="light"] .toast { box-shadow: 0 10px 30px rgba(15,23,42,.15); }
-  .toast::after {
-    content: ""; position: absolute; bottom: 0; left: 0;
-    height: 2px; background: linear-gradient(90deg, #2f9e44, #37b24d);
-    animation: toastTimer 4.5s linear forwards;
-    width: 100%;
-  }
-  .toast.no-timer::after { display: none; }
-  .toast.leaving { animation: toastOut .3s ease forwards; }
-  .toast .toast-icon {
-    width: 38px; height: 38px; border-radius: 10px;
-    background: linear-gradient(135deg, #2f9e44, #1b6b2e);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(47, 158, 68, 0.35);
-  }
-  .toast .toast-icon svg { width: 22px; height: 22px; color: #fff; }
-  .toast .toast-body { flex: 1; min-width: 0; }
-  .toast .toast-title { font-size: 0.86rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-  .toast .toast-text { font-size: 0.8rem; color: var(--text-soft, var(--muted)); line-height: 1.4; word-break: break-word; }
-  .toast .toast-time { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
-  .toast .toast-close {
-    background: transparent; border: none; color: var(--muted);
-    font-size: 1.1rem; line-height: 1; padding: 2px 4px;
-    cursor: pointer; border-radius: 6px;
-    transition: background .15s, color .15s;
-  }
-  .toast .toast-close:hover { background: var(--hover-bg); color: var(--text); }
-  .toast.toast-alert { border-left-color: #ef4444; }
-  .toast.toast-alert .toast-icon { background: linear-gradient(135deg, #ef4444, #991b1b); box-shadow: 0 4px 12px rgba(239,68,68,.35); }
-  .toast.toast-alert::after { background: linear-gradient(90deg, #ef4444, #f56565); }
-  .toast.toast-info { border-left-color: #3b82f6; }
-  .toast.toast-info .toast-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59,130,246,.35); }
-  .toast.toast-info::after { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-
-  .toast .toast-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-  .toast .toast-action-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 10px;
-    font-size: 0.76rem; font-weight: 600; font-family: inherit;
-    color: var(--text);
-    background: var(--hover-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background .15s, border-color .15s;
-    white-space: nowrap;
-  }
-  .toast .toast-action-btn:hover {
-    background: var(--panel-3);
-    border-color: var(--border-strong);
-  }
-  .toast .toast-action-btn.primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-  .toast .toast-action-btn.primary:hover {
-    background: var(--accent-2);
-    border-color: var(--accent-2);
-  }
-
-  @keyframes toastIn { 0% { transform: translateY(-120%); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
-  @keyframes toastOut { 0% { transform: translateY(0); opacity: 1 } 100% { transform: translateY(-120%); opacity: 0 } }
-  @keyframes toastTimer { 0% { width: 100% } 100% { width: 0% } }
-
-  .toggle-row {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  .toggle-row .label { font-size: 0.9rem; color: var(--text); font-weight: 500; }
-  .toggle-row .hint { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-  .toggle-switch {
-    width: 44px; height: 24px;
-    border-radius: 999px;
-    background: var(--panel-3);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    position: relative;
-    transition: background 0.15s;
-    flex-shrink: 0;
-  }
-  .toggle-switch::before {
-    content: "";
-    position: absolute;
-    top: 2px; left: 2px;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    transition: transform 0.18s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  }
-  .toggle-switch.on { background: var(--accent); border-color: var(--accent); }
-  .toggle-switch.on::before { transform: translateX(20px); }
-
-  .inline-select {
-    padding: 5px 26px 5px 8px;
-    font-size: 0.78rem;
-    border-radius: 8px;
-    background-position: right 6px center;
-    background-size: 14px;
-    min-width: 140px;
-  }
-  .inline-select.role-select { min-width: 140px; }
-  .inline-select.dept-select { min-width: 160px; }
-
-  /* Переключатель темы в «О системе» */
-  .theme-seg {
-    display: inline-flex;
-    gap: 4px;
-    padding: 4px;
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-  }
-  .theme-seg button {
-    flex: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 9px 14px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 9px;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 0.84rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-    white-space: nowrap;
-  }
-  .theme-seg button:hover { background: var(--hover-bg); color: var(--text); }
-  .theme-seg button.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(47, 158, 68, 0.35);
-  }
-  .theme-seg button svg { width: 15px; height: 15px; }
-
-  /* Расписание проверок (ПСЭС) */
-  .sched-list { display: flex; flex-direction: column; gap: 8px; }
-  .sched-item {
-    display: grid;
-    grid-template-columns: 130px 1fr 170px 60px 60px;
-    gap: 14px; align-items: center;
-    padding: 12px 16px;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--border);
-    border-radius: 12px;
-    opacity: 0.45;
-  }
-  .sched-item.today {
-    opacity: 1;
-    border-left-color: var(--accent);
-    background: linear-gradient(180deg, rgba(47,158,68,0.22) 0%, rgba(47,158,68,0.08) 100%);
-    box-shadow: 0 0 0 1px rgba(47,158,68,0.45), 0 6px 24px rgba(47,158,68,0.25);
-  }
-  :root[data-theme="light"] .sched-item.today {
-    background: linear-gradient(180deg, rgba(47,158,68,0.14) 0%, rgba(47,158,68,0.04) 100%);
-    box-shadow: 0 0 0 1px rgba(47,158,68,0.3), 0 6px 24px rgba(47,158,68,0.12);
-  }
-  .sched-day {
-    font-size: 0.76rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--muted);
-  }
-  .sched-item.today .sched-day { color: #86efac; }
-  :root[data-theme="light"] .sched-item.today .sched-day { color: #166534; }
-  .sched-name {
-    font-size: 0.96rem; font-weight: 600; color: var(--text);
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  }
-  .sched-item.today .sched-name { color: var(--text); font-weight: 700; }
-  .sched-time-cell { display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
-  .sched-time {
-    font-size: 1rem; font-weight: 800; color: var(--text);
-    font-variant-numeric: tabular-nums;
-    padding: 5px 12px; background: var(--panel-3);
-    border-radius: 8px; border: 1px solid var(--border);
-    white-space: nowrap; text-align: center; min-width: 84px;
-  }
-  .sched-item.today .sched-time {
-    color: #bbf7d0;
-    border-color: rgba(47,158,68,0.5);
-    background: rgba(47,158,68,0.15);
-  }
-  :root[data-theme="light"] .sched-item.today .sched-time {
-    color: #166534;
-    background: rgba(47,158,68,0.12);
-  }
-  .sched-time-edit {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 26px; height: 26px;
-    border-radius: 7px; background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted); cursor: pointer; font-family: inherit;
-    font-size: 0.82rem; flex-shrink: 0;
-  }
-  .sched-time-edit:hover { color: var(--accent-2); border-color: var(--accent-2); }
-  .sched-time-input {
-    width: 70px; padding: 4px 6px;
-    font-size: 0.9rem; font-weight: 700; text-align: center;
-    background: var(--input-bg); color: var(--text);
-    border: 1px solid var(--accent-2);
-    border-radius: 8px; outline: none; font-family: inherit;
-  }
-  .sched-time-input:focus { box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.22); }
-  .sched-badge {
-    display: inline-block; font-size: 0.62rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    padding: 2px 8px; border-radius: 999px;
-    background: var(--accent); color: #fff;
-  }
-  .sched-icon-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px; padding: 0;
-    border-radius: 10px; cursor: pointer; font-family: inherit; flex-shrink: 0;
-  }
-  .sched-icon-btn svg { width: 18px; height: 18px; }
-  .sched-dep-cell { display: flex; justify-content: center; align-items: center; }
-  .sched-dep-link {
-    color: var(--blue);
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-  }
-  .sched-dep-link:hover {
-    color: #93c5fd;
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.55);
-  }
-  .sched-dep-link.copied {
-    color: #86efac;
-    background: rgba(47, 158, 68, 0.15);
-    border-color: rgba(47, 158, 68, 0.5);
-  }
-  :root[data-theme="light"] .sched-dep-link.copied { color: #166534; }
-  .sched-ds-cell { display: flex; justify-content: center; align-items: center; }
-  .sched-ds-link {
-    color: var(--discord);
-    background: rgba(88, 101, 242, 0.12);
-    border: 1px solid rgba(88, 101, 242, 0.35);
-  }
-  .sched-ds-link:hover {
-    color: #a5b4fc;
-    background: rgba(88, 101, 242, 0.22);
-    border-color: rgba(88, 101, 242, 0.6);
-  }
-  .sched-ds-link.copied {
-    color: #86efac;
-    background: rgba(47, 158, 68, 0.15);
-    border-color: rgba(47, 158, 68, 0.5);
-  }
-  :root[data-theme="light"] .sched-ds-link.copied { color: #166534; }
-  .sched-dep-empty {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px;
-    font-size: 0.9rem; color: var(--muted); font-style: italic;
-  }
-
-  /* ============ DEVLOG ============ */
-  .devlog-list { display: flex; flex-direction: column; gap: 10px; }
-  .devlog-item {
-    padding: 12px 14px;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--blue);
-    border-radius: 12px;
-  }
-  .devlog-meta {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; margin-bottom: 6px;
-    font-size: 0.72rem; color: var(--muted);
-  }
-  .devlog-meta .devlog-date {
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .devlog-meta .devlog-author { color: var(--blue); font-weight: 600; }
-  .devlog-text {
-    font-size: 0.9rem; color: var(--text);
-    white-space: pre-wrap; word-break: break-word;
-    line-height: 1.5;
-  }
-  .devlog-actions { margin-top: 8px; display: flex; gap: 6px; justify-content: flex-end; }
-  .devlog-edit-btn {
-    padding: 4px 10px; font-size: 0.72rem; font-weight: 600;
-    background: transparent; color: var(--muted);
-    border: 1px solid var(--border); border-radius: 8px;
-    cursor: pointer; font-family: inherit;
-    transition: background .15s, color .15s, border-color .15s;
-  }
-  .devlog-edit-btn:hover { color: var(--text); border-color: var(--border-strong); background: var(--hover-bg); }
-  .devlog-updated {
-    font-size: 0.68rem; color: var(--muted); font-style: italic;
-  }
-
-  /* ============ МОДАЛКА ПРИНУДИТЕЛЬНОЙ СМЕНЫ ПАРОЛЯ ============ */
-  .modal-back {
-    position: fixed; inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    z-index: 10000;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    animation: fadeIn .18s ease;
-  }
-  :root[data-theme="light"] .modal-back { background: rgba(15, 23, 42, 0.55); }
-  .modal-back.hidden { display: none !important; }
-  .modal {
-    width: 100%; max-width: 460px;
-    background: var(--header-bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 26px 22px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.8);
-    position: relative;
-  }
-  :root[data-theme="light"] .modal { box-shadow: 0 20px 60px rgba(15,23,42,.25); }
-  .modal .modal-emblem {
-    width: 56px; height: 56px;
-    margin: 0 auto 14px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), 0 8px 24px rgba(245, 158, 11, 0.35);
-  }
-  .modal .modal-emblem svg { width: 28px; height: 28px; color: #fff; }
-  .modal h2 {
-    text-align: center; font-size: 1.15rem; font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .modal .modal-sub {
-    text-align: center; color: var(--muted);
-    font-size: 0.84rem; margin-bottom: 20px; line-height: 1.5;
-  }
-  .modal .form-group { margin-bottom: 12px; }
-
-  @media (max-width: 600px) {
-    .tablet-body { padding: 14px; }
-    .app-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .app-tile { padding: 16px 8px; border-radius: 14px; }
-    .app-icon { width: 46px; height: 46px; }
-    .app-icon svg { width: 24px; height: 24px; }
-    .app-tile .label { font-size: 0.8rem; }
-    .tablet-header { padding: 12px 14px; }
-    .tablet-title h1 { font-size: 0.95rem; }
-    .user-chip { padding: 4px 8px 4px 4px; font-size: 0.74rem; }
-    .user-chip .avatar { width: 22px; height: 22px; font-size: 0.7rem; }
-    .card { padding: 14px; border-radius: 14px; }
-    .staff-table th, .staff-table td { padding: 8px 6px; font-size: 0.78rem; }
-    .btn-danger, .btn-small { padding: 4px 8px; font-size: 0.72rem; }
-    .toast-container { top: 8px; width: calc(100% - 16px); gap: 6px; }
-    .toast { padding: 10px 12px; border-radius: 12px; }
-    .toast .toast-icon { width: 32px; height: 32px; }
-    .toast .toast-icon svg { width: 18px; height: 18px; }
-    .toast .toast-title { font-size: 0.8rem; }
-    .toast .toast-text { font-size: 0.75rem; }
-    .iframe-wrap { height: calc(100vh - 260px); min-height: 400px; }
-    .sched-item { grid-template-columns: 1fr auto; gap: 8px; padding: 10px 12px; }
-    .sched-day { grid-column: 1 / -1; font-size: 0.7rem; }
-    .sched-dep-cell, .sched-ds-cell { grid-column: auto; justify-content: center; }
-    .theme-btn { width: 28px; height: 26px; }
-    .status-bar .shift-indicator { font-size: 0.64rem; padding: 2px 7px; }
-    .status-bar .shift-indicator #shiftIndicatorText { display: none; }
-    .status-bar .shift-indicator .shift-dot { width: 6px; height: 6px; }
-  }
 </style>
 </head>
 <body>
@@ -1047,27 +304,22 @@
 
 <div class="tablet">
 
-  <!-- СТАТУС-БАР -->
   <div class="status-bar">
     <div class="status-left">
-      <span class="net-indicator" title="Связь с сервером">
-        <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-          <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
-          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-          <circle cx="12" cy="20" r="0.9" fill="currentColor" stroke="none"/>
-          <line class="cross" x1="3" y1="3" x2="21" y2="21"/>
+      <span class="net-indicator">
+        <svg class="wifi-icon" id="wifiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><circle cx="12" cy="20" r="0.9" fill="currentColor"/>
         </svg>
         <span id="statusNetwork">Планшет в сети</span>
       </span>
     </div>
     <div class="status-right">
-      <span class="shift-indicator day" id="shiftIndicator" title="Текущая смена">
+      <span class="shift-indicator day" id="shiftIndicator">
         <span class="shift-dot"></span>
         <span id="shiftIndicatorText">Дневная смена</span>
       </span>
       <span id="statusUser">—</span>
-      <span class="battery" title="Заряд батареи">
+      <span class="battery">
         <span class="bat-body"><span class="bat-level" id="batLevel" style="width:100%"></span></span>
         <span class="bat-text" id="batText">—</span>
       </span>
@@ -1075,416 +327,99 @@
     </div>
   </div>
 
-  <!-- ШАПКА -->
   <div class="tablet-header">
     <div class="tablet-logo"></div>
     <div class="tablet-title">
-      <h1 id="tabletTitle">Планшет Больницы</h1>
-      <div class="sub">Россия Онлайн · Служба здравоохранения</div>
+      <h1>Планшет Больницы</h1>
+      <div class="sub">Единая информационная система</div>
     </div>
 
-    <!-- ================= ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ================= -->
-    <div class="theme-switcher hidden" id="themeSwitcherHeader" title="Тема оформления">
-      <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая тема" aria-label="Светлая тема">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="4"/>
-          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-        </svg>
+    <div class="theme-switcher hidden" id="themeSwitcherHeader">
+      <button class="theme-btn" type="button" data-theme-mode="light" title="Светлая">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/></svg>
       </button>
-      <button class="theme-btn" type="button" data-theme-mode="dark" title="Тёмная тема" aria-label="Тёмная тема">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-      </button>
-      <button class="theme-btn" type="button" data-theme-mode="auto" title="Автоматически" aria-label="Автоматически">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-          <line x1="8" y1="21" x2="16" y2="21"/>
-          <line x1="12" y1="17" x2="12" y2="21"/>
-        </svg>
+      <button class="theme-btn" type="button" data-theme-mode="dark" title="Тёмная">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
     </div>
 
     <div class="desk-switcher" id="deskSwitcher">
       <button class="desk-btn" id="deskBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-        Рабочий стол: <span class="current-desk" id="currentDesk">—</span>
+        Рабочий стол: <span id="currentDesk" style="color:var(--accent-2); font-weight:700;">—</span>
       </button>
       <div class="desk-list" id="deskList"></div>
     </div>
 
-    <div class="user-chip hidden" id="userChip" title="Открыть профиль">
+    <div class="user-chip hidden" id="userChip">
       <div class="avatar" id="userAvatar">?</div>
-      <span id="userLogin">—</span>
-      <span class="role user" id="userRole">user</span>
-      <span class="chip-hint" id="chipHint">профиль</span>
-      <button class="btn btn-ghost" id="logoutBtn" style="padding:5px 10px;font-size:0.72rem;">Выйти</button>
+      <span id="userLogin" style="font-weight:600;">—</span>
+      <div class="roles-list" id="userRolesHeader"></div>
+      <button class="btn btn-ghost" id="logoutBtn" style="padding:4px 8px;font-size:0.72rem;margin-left:4px;">Выйти</button>
     </div>
   </div>
 
   <div class="tablet-body">
 
-    <!-- АВТОРИЗАЦИЯ -->
+    <!-- Экран входа через Discord -->
     <div id="authScreen" class="auth-screen">
       <div class="auth-card">
         <div class="auth-emblem"></div>
-        <h1>Вход в планшет</h1>
-        <p class="subtitle">Авторизуйтесь для доступа к системе</p>
-
-        <form id="authForm">
-          <div class="form-group">
-            <label for="authLogin">Логин</label>
-            <input type="text" id="authLogin" required autocomplete="username">
-          </div>
-          <div class="form-group">
-            <label for="authPassword">Пароль</label>
-            <input type="password" id="authPassword" required autocomplete="current-password">
-          </div>
-          <button type="submit" class="btn btn-block" id="authSubmit">Войти</button>
-          <div class="notification" id="authNotification"></div>
-        </form>
+        <h1>Вход в систему</h1>
+        <p class="subtitle">Авторизуйтесь через Discord для доступа к планшету больницы</p>
+        <button class="btn-discord" id="discordLoginBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          Войти через Discord
+        </button>
       </div>
     </div>
 
-    <!-- РАБОЧИЙ СТОЛ -->
+    <!-- Рабочий стол -->
     <div id="deskScreen" class="home-screen hidden">
       <div class="home-greeting">
         <h2 id="homeGreeting">Добро пожаловать</h2>
         <p id="homeSub">Выберите приложение</p>
       </div>
-
       <div class="app-grid" id="appGrid"></div>
-
-      <div id="gosScheduleWidget" class="hidden"></div>
+      <div id="gosScheduleWidget" class="hidden" style="margin-top:20px;"></div>
     </div>
 
-    <!-- УНИВЕРСАЛЬНЫЙ ЭКРАН ДЛЯ ВСТРОЕННЫХ IFRAME-ПРИЛОЖЕНИЙ -->
+    <!-- Iframe встроенных модулей -->
     <div id="appFrame" class="app-screen hidden">
       <div class="app-bar">
-        <button class="back-btn" data-back="1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Назад
-        </button>
-        <div class="app-bar-title">
-          <div class="app-icon" id="frameIcon"></div>
-          <h2 id="frameTitle">Приложение</h2>
-        </div>
+        <button class="back-btn" data-back="1">← Назад</button>
+        <h2 id="frameTitle" style="font-size:1.1rem; font-weight:700;">Приложение</h2>
       </div>
       <div class="iframe-wrap">
         <iframe id="appIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads"></iframe>
       </div>
     </div>
 
-    <!-- УЧЁТНЫЕ ЗАПИСИ -->
+    <!-- Управление учётными записями -->
     <div id="appUsers" class="app-screen hidden">
       <div class="app-bar">
-        <button class="back-btn" data-back="1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Назад
-        </button>
-        <div class="app-bar-title">
-          <div class="app-icon purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <h2>Учётные записи</h2>
-        </div>
+        <button class="back-btn" data-back="1">← Назад</button>
+        <h2 style="font-size:1.1rem; font-weight:700;">Управление пользователями и ролями</h2>
       </div>
-
       <div class="card">
-        <div class="card-head">
-          <h3>Пользователи сайта</h3>
-          <button class="btn btn-small" id="showAddUserBtn">+ Добавить</button>
-        </div>
-        <div id="usersContainer">
-          <div class="loading">Загрузка…</div>
-        </div>
-      </div>
-
-      <div class="card hidden" id="addUserCard">
-        <div class="card-head">
-          <h3 id="addUserTitle">Новый пользователь</h3>
-          <button class="btn btn-ghost btn-small" id="cancelAddUserBtn">Отмена</button>
-        </div>
-        <form id="registerForm">
-          <input type="hidden" id="editingLogin">
-          <div class="form-group">
-            <label for="newLogin">Логин</label>
-            <input type="text" id="newLogin" required autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label for="newPassword">Пароль</label>
-            <input type="password" id="newPassword" autocomplete="new-password">
-            <div class="hint" style="font-size:0.72rem;color:var(--muted);margin-top:4px;">
-              При создании пароль обязателен. При редактировании — оставьте пустым, чтобы не менять.
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="newRole">Роль</label>
-            <select id="newRole">
-              <option value="user">Инструктор</option>
-              <option value="admin">Старший состав</option>
-              <option value="superadmin">Суперпользователь</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="newDepartment">Отдел</label>
-            <select id="newDepartment">
-              <option value="Руководство">Руководство</option>
-              <option value="АБ">АБ — Администрация больницы</option>
-              <option value="ОК">ОК — Отдел кадров</option>
-              <option value="СМП" selected>СМП — Скорая медицинская помощь</option>
-              <option value="ИТ">ИТ — Интенсивная терапия</option>
-              <option value="ПСЭС">ПСЭС</option>
-              <option value="Инст ПСЭС">Инст ПСЭС — Инструктор ПСЭС</option>
-              <option value="Инст СМП">Инст СМП — Инструктор СМП</option>
-              <option value="Инст ИТ">Инст ИТ — Инструктор ИТ</option>
-              <option value="Инст ОК">Инст ОК — Инструктор ОК</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="newDiscord">Discord тег</label>
-            <input type="text" id="newDiscord" placeholder="@username" autocomplete="off">
-          </div>
-          <button type="submit" class="btn btn-block" id="registerBtn">Создать пользователя</button>
-          <div class="notification" id="registerNotification"></div>
-        </form>
-      </div>
-    </div>
-
-    <!-- ПРОФИЛЬ -->
-    <div id="appProfile" class="app-screen hidden">
-      <div class="app-bar">
-        <button class="back-btn" data-back="1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Назад
-        </button>
-        <div class="app-bar-title">
-          <div class="app-icon gray">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-          </div>
-          <h2>Профиль</h2>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Данные профиля</h3>
-        <form id="profileForm">
-          <div class="profile-grid">
-            <div class="form-group" style="margin-bottom:0;">
-              <label for="profileLogin">Логин (Имя)</label>
-              <input type="text" id="profileLogin" autocomplete="off">
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <label for="profileDiscord">Discord тег</label>
-              <input type="text" id="profileDiscord" placeholder="@username" autocomplete="off">
-            </div>
-          </div>
-          <div class="form-group" style="margin-top:10px;">
-            <label>Отдел (изменить нельзя)</label>
-            <input type="text" id="profileDept" disabled>
-          </div>
-          <button type="submit" class="btn btn-block" id="profileBtn">Сохранить профиль</button>
-          <div class="notification" id="profileNotification"></div>
-        </form>
-      </div>
-
-      <div class="card">
-        <h3>Смена пароля</h3>
-        <form id="passwordForm">
-          <div class="form-group">
-            <label for="oldPassword">Текущий пароль</label>
-            <input type="password" id="oldPassword" required autocomplete="current-password">
-          </div>
-          <div class="form-group">
-            <label for="newPassword1">Новый пароль</label>
-            <input type="password" id="newPassword1" required autocomplete="new-password">
-          </div>
-          <div class="form-group">
-            <label for="newPassword2">Повторите новый пароль</label>
-            <input type="password" id="newPassword2" required autocomplete="new-password">
-          </div>
-          <button type="submit" class="btn btn-block" id="passwordBtn">Изменить пароль</button>
-          <div class="notification" id="passwordNotification"></div>
-        </form>
-      </div>
-    </div>
-
-    <!-- О СИСТЕМЕ -->
-    <div id="appAbout" class="app-screen hidden">
-      <div class="app-bar">
-        <button class="back-btn" data-back="1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Назад
-        </button>
-        <div class="app-bar-title">
-          <div class="app-icon gray">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="16" x2="12" y2="12"/>
-              <line x1="12" y1="8" x2="12.01" y2="8"/>
-            </svg>
-          </div>
-          <h2>О системе</h2>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Оформление</h3>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div class="theme-seg" id="themeSegAbout">
-            <button type="button" data-theme-mode="light">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-              </svg>
-              Светлая
-            </button>
-            <button type="button" data-theme-mode="dark">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-              </svg>
-              Тёмная
-            </button>
-            <button type="button" data-theme-mode="auto">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                <line x1="8" y1="21" x2="16" y2="21"/>
-                <line x1="12" y1="17" x2="12" y2="21"/>
-              </svg>
-              Авто
-            </button>
-          </div>
-          <div style="font-size:0.78rem;color:var(--muted);line-height:1.5;">
-            «Авто» подстраивается под системную тему вашего устройства.
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Состояние соединения</h3>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Версия планшета</span>
-            <span style="color:var(--text);font-weight:600">2.4</span>
-          </div>
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Сервер (Worker)</span>
-            <span id="aboutServer" style="color:var(--text);font-weight:600">Проверка…</span>
-          </div>
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Авторизация</span>
-            <span id="aboutAuth" style="color:var(--text);font-weight:600">—</span>
-          </div>
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Рабочий стол</span>
-            <span id="aboutDept" style="color:var(--text);font-weight:600">—</span>
-          </div>
-          <div class="toggle-row" style="border:none;background:transparent;padding:0;">
-            <span style="color:var(--muted)">Сотрудников в отпуске</span>
-            <span id="aboutVacations" style="color:var(--text);font-weight:600">—</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Уведомления</h3>
-        <div class="toggle-row">
-          <div>
-            <div class="label">Всплывающие уведомления</div>
-            <div class="hint">Показывать всплывающие подсказки вверху экрана</div>
-          </div>
-          <div class="toggle-switch" id="toastsToggle"></div>
-        </div>
-        <div class="toggle-row">
-          <div>
-            <div class="label">Звук</div>
-            <div class="hint">Проигрывать звук при новых бронях</div>
-          </div>
-          <div class="toggle-switch" id="soundToggle"></div>
-        </div>
-        <button class="btn btn-ghost btn-block" id="testToastBtn" style="margin-top:8px;">Показать тестовое уведомление</button>
-      </div>
-
-      <div class="card" id="devlogCard">
-        <div class="card-head">
-          <h3>📝 Devlog — журнал изменений</h3>
-          <button class="btn btn-small hidden" id="devlogAddBtn">+ Добавить изменение</button>
-        </div>
-        <div id="devlogList">
-          <div class="loading">Загрузка…</div>
-        </div>
+        <div id="usersContainer">Загрузка...</div>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- ============ МОДАЛКА ПРИНУДИТЕЛЬНОЙ СМЕНЫ ПАРОЛЯ ============ -->
-<div class="modal-back hidden" id="forcePasswordModal">
+<!-- Модальное окно первого ввода имени -->
+<div class="modal-back hidden" id="nameModal">
   <div class="modal">
-    <div class="modal-emblem">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/>
-        <line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-    </div>
-    <h2>Смените пароль</h2>
-    <p class="modal-sub">
-      Вы вошли с временным паролем. Пока вы его не смените, доступ к планшету закрыт.
+    <h2 style="margin-bottom:8px;">Завершение регистрации</h2>
+    <p style="color:var(--muted);font-size:0.86rem;margin-bottom:16px;">
+      Введите ваши реальные <b>Имя и Фамилию</b>. Они будут отображаться в планшете и подставляться в отчёты.
     </p>
-
-    <form id="forcePasswordForm">
-      <div class="form-group">
-        <label for="fpNew1">Новый пароль</label>
-        <input type="password" id="fpNew1" required autocomplete="new-password">
-      </div>
-      <div class="form-group">
-        <label for="fpNew2">Повторите новый пароль</label>
-        <input type="password" id="fpNew2" required autocomplete="new-password">
-      </div>
-      <button type="submit" class="btn btn-block" id="fpSubmit">Сменить пароль и продолжить</button>
-      <div class="notification" id="fpNotification"></div>
-    </form>
-  </div>
-</div>
-
-<!-- ============ МОДАЛКА DEVLOG ============ -->
-<div class="modal-back hidden" id="devlogModal">
-  <div class="modal">
-    <div class="modal-emblem" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 0 0 3px rgba(59,130,246,0.25),0 8px 24px rgba(59,130,246,0.35);">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 20h9"/>
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-      </svg>
-    </div>
-    <h2 id="devlogModalTitle">Новое изменение</h2>
-    <p class="modal-sub" id="devlogModalSub">Опишите, что изменилось. Запись увидят все пользователи.</p>
-    <form id="devlogForm">
-      <div class="form-group">
-        <label for="devlogText">Текст записи</label>
-        <textarea id="devlogText" rows="6" required maxlength="4000"
-          style="width:100%;padding:12px 14px;font-size:0.92rem;font-family:inherit;color:var(--text);background:var(--input-bg);border:1px solid var(--border);border-radius:10px;outline:none;resize:vertical;min-height:120px;"></textarea>
-      </div>
-      <button type="submit" class="btn btn-block" id="devlogSubmit">Опубликовать</button>
-      <button type="button" class="btn btn-ghost btn-block" id="devlogCancel" style="margin-top:8px;">Отмена</button>
-      <div class="notification" id="devlogNotification"></div>
+    <form id="nameForm">
+      <input type="text" id="displayNameInput" placeholder="Например: Арсений Быков" required style="margin-bottom:14px;">
+      <button type="submit" class="btn" style="width:100%;">Сохранить и продолжить</button>
     </form>
   </div>
 </div>
@@ -1494,2127 +429,387 @@
   "use strict";
 
   const API_URL = "https://hospital-api.asdulgok.workers.dev";
-  const API_URL_ACTUAL = "https://hospital-api.asdulgok.workers.dev";
-
-  // Хэш SHA-256 от "12345"
-  const TEMP_PASSWORD_HASH = "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5";
-
-  const DEPARTMENTS = [
-    "Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС",
-    "Инст ПСЭС", "Инст СМП", "Инст ИТ", "Инст ОК"
-  ];
-
-  const DEPT_LABEL = {
-    "Руководство": "Руководство",
-    "АБ": "Администрация больницы",
-    "ОК": "Отдел кадров",
-    "СМП": "Скорая медицинская помощь",
-    "ИТ": "Интенсивная терапия",
-    "ПСЭС": "ПСЭС",
-    "Инст ПСЭС": "Инструктор ПСЭС",
-    "Инст СМП":  "Инструктор СМП",
-    "Инст ИТ":   "Инструктор ИТ",
-    "Инст ОК":   "Инструктор ОК"
-  };
-
-  const DESK_DEPARTMENTS = [
-    "Руководство", "АБ", "ОК", "СМП", "ИТ", "ПСЭС"
-  ];
-
-  const ROLE_LABEL = {
-    superadmin: "Суперпользователь",
-    admin: "Старший состав",
-    user: "Инструктор"
-  };
-
-  const DAY_NAMES = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
-
-  const HOUR_MESSAGES = {
-    "10:00": "Доброе утро. Не забывайте включить бодикамеру. Скриншоты без включенной бодикамеры в отчетность не принимаются.",
-    "11:00": "Дежурство в больницах также является важной частью нашей работы, пожалуйста распределитесь по больницам.",
-    "12:00": "По всем интересующим вас вопросам вы можете обратиться к инструкторам или заместителям отдела в личные сообщения спецсвязи.",
-    "13:00": "Пожалуйста, проверяйте свои укладки на количество и комплектность медикаментов. В случае если у вас не оказалось эпинефрина на месте вызова - вызовите 103 с телефона и дождитесь сотрудника больницы.",
-    "14:00": "Настало время обеденного перерыва. Напоминаю, что работа в обеденный перерыв с 14:00 до 15:00 учитывается в двойном размере по системе баллов.",
-    "15:00": "Обед завершен. Продолжаем работу. Не забывайте парковать АСМП в отведенных для этого местах.",
-    "16:00": "Будьте осторожны на ПМП. При угрозе жизни или при перестрелке на месте происшествия немедленно уезжаем.",
-    "17:00": "По прибытию на ПМП в первую очередь оказываем медицинскую помощь государственным служащим силовых структур на месте происшествия.",
-    "18:00": "Не забывайте включать бодикамеры, находясь на рабочем месте. Скриншоты с выключенной бодикамерой в отчетность не принимаются.",
-    "19:00": "По приезду на место вызова, где осуществляется перекрытие военной поставки и при наличии активной перестрелки категорически запрещено оказывать ПМП, в случае окончания перестрелки в первую очередь необходимо оказывать помощь исключительно государственным служащим.",
-    "20:00": "Напоминаю, для сотрудников 7 ранга и выше введена активность - практика для сотрудников с должностью \"Санитар\", в рацию будут поступать запросы, вы на них реагируете, встречаетесь и вместе едете на ПМП, параллельно отвечаете на вопросы. Подробная информация имеется в спецсвязи.",
-    "21:00": "Дежурство в больницах также является важной частью нашей работы, пожалуйста распределитесь по больницам.",
-    "22:00": "Дневная смена завершена. Напоминаю, что в ночную смену вы получаете увеличенное количество баллов за ПМП. Ночная смена не является обязательной."
-  };
-
-  const REMIND_KEY = "vesh_reminder_done_v1";
-  const REMIND_DELAY_MS = 5 * 60 * 1000;
-
-  /* ============================================================
-     ТЕМА
-     ============================================================ */
-  const THEME_KEY = "pref_theme";
-  const THEME_MODES = ["light", "dark", "auto"];
 
   const state = {
+    token: null,
     user: null,
     activeDesk: null,
-    users: [],
-    schedule: [],
-    vacations: [],
-    notifiedKeys: {},
-    serverOk: null,
-    toastsEnabled: true,
-    soundEnabled: true,
-    editingUserRow: null,
-    myBookings: [],
-    reminderTimers: {},
-    reminderDone: {},
-    forcePasswordChange: false,
-    themeMode: "dark",
-    devlog: [],
-    devlogLoading: false,
-    devlogEditingRow: null
+    availableRoles: [],
+    schedule: []
   };
 
-  const $ = (id) => document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
-  const toastContainer = $("toastContainer");
   const authScreen = $("authScreen");
   const deskScreen = $("deskScreen");
   const appFrame = $("appFrame");
   const appUsers = $("appUsers");
-  const appProfile = $("appProfile");
-  const appAbout = $("appAbout");
+  const nameModal = $("nameModal");
+  const nameForm = $("nameForm");
+  const displayNameInput = $("displayNameInput");
 
-  const frameTitle = $("frameTitle");
-  const frameIcon = $("frameIcon");
-  const appIframe = $("appIframe");
-
-  const authForm = $("authForm");
-  const authLogin = $("authLogin");
-  const authPassword = $("authPassword");
-  const authSubmit = $("authSubmit");
-  const authNotification = $("authNotification");
-
+  const discordLoginBtn = $("discordLoginBtn");
   const userChip = $("userChip");
   const userAvatar = $("userAvatar");
   const userLogin = $("userLogin");
-  const userRole = $("userRole");
+  const userRolesHeader = $("userRolesHeader");
   const logoutBtn = $("logoutBtn");
   const statusUser = $("statusUser");
   const statusClock = $("statusClock");
-  const wifiIcon = $("wifiIcon");
-  const statusNetwork = $("statusNetwork");
-  const batLevel = $("batLevel");
-  const batText = $("batText");
-  const shiftIndicator = $("shiftIndicator");
-  const shiftIndicatorText = $("shiftIndicatorText");
-
   const deskSwitcher = $("deskSwitcher");
   const deskBtn = $("deskBtn");
   const deskList = $("deskList");
   const currentDesk = $("currentDesk");
-
-  const homeGreeting = $("homeGreeting");
-  const homeSub = $("homeSub");
   const appGrid = $("appGrid");
-  const gosScheduleWidget = $("gosScheduleWidget");
+  const appIframe = $("appIframe");
+  const frameTitle = $("frameTitle");
 
-  const usersContainer = $("usersContainer");
-  const addUserCard = $("addUserCard");
-  const addUserTitle = $("addUserTitle");
-  const showAddUserBtn = $("showAddUserBtn");
-  const cancelAddUserBtn = $("cancelAddUserBtn");
-  const registerForm = $("registerForm");
-  const editingLogin = $("editingLogin");
-  const newLogin = $("newLogin");
-  const newPassword = $("newPassword");
-  const newRole = $("newRole");
-  const newDepartment = $("newDepartment");
-  const newDiscord = $("newDiscord");
-  const registerBtn = $("registerBtn");
-  const registerNotification = $("registerNotification");
-
-  const profileForm = $("profileForm");
-  const profileLogin = $("profileLogin");
-  const profileDiscord = $("profileDiscord");
-  const profileDept = $("profileDept");
-  const profileBtn = $("profileBtn");
-  const profileNotification = $("profileNotification");
-
-  const passwordForm = $("passwordForm");
-  const oldPassword = $("oldPassword");
-  const newPassword1 = $("newPassword1");
-  const newPassword2 = $("newPassword2");
-  const passwordBtn = $("passwordBtn");
-  const passwordNotification = $("passwordNotification");
-
-  const aboutServer = $("aboutServer");
-  const aboutAuth = $("aboutAuth");
-  const aboutDept = $("aboutDept");
-  const aboutVacations = $("aboutVacations");
-  const toastsToggle = $("toastsToggle");
-  const soundToggle = $("soundToggle");
-  const testToastBtn = $("testToastBtn");
-
-  const forcePasswordModal = $("forcePasswordModal");
-  const forcePasswordForm = $("forcePasswordForm");
-  const fpNew1 = $("fpNew1");
-  const fpNew2 = $("fpNew2");
-  const fpSubmit = $("fpSubmit");
-  const fpNotification = $("fpNotification");
-
-  const themeSwitcherHeader = $("themeSwitcherHeader");
-  const themeSegAbout = $("themeSegAbout");
-
-  const devlogList = $("devlogList");
-  const devlogAddBtn = $("devlogAddBtn");
-  const devlogModal = $("devlogModal");
-  const devlogModalTitle = $("devlogModalTitle");
-  const devlogModalSub = $("devlogModalSub");
-  const devlogForm = $("devlogForm");
-  const devlogText = $("devlogText");
-  const devlogSubmit = $("devlogSubmit");
-  const devlogCancel = $("devlogCancel");
-  const devlogNotification = $("devlogNotification");
-
-  /* ============================================================
-     ЛОГИКА ТЕМЫ
-     ============================================================ */
-  function systemTheme() {
-    try {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    } catch (e) {
-      return "dark";
+  async function api(action, payload = {}) {
+    const headers = { "Content-Type": "text/plain;charset=utf-8" };
+    if (state.token) {
+      headers["Authorization"] = "Bearer " + state.token;
     }
-  }
-
-  function resolveThemeMode(mode) {
-    if (mode === "auto") return systemTheme();
-    return mode === "light" ? "light" : "dark";
-  }
-
-  function applyThemeMode(mode) {
-    if (!THEME_MODES.includes(mode)) mode = "dark";
-    state.themeMode = mode;
-    const resolved = resolveThemeMode(mode);
-    document.documentElement.setAttribute("data-theme", resolved);
-    document.documentElement.setAttribute("data-theme-mode", mode);
-
-    try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
-
-    document.querySelectorAll("[data-theme-mode]").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.themeMode === mode);
-    });
-
-    broadcastTheme();
-  }
-
-  function broadcastTheme() {
-    if (!appIframe) return;
-    try {
-      if (appIframe.contentWindow) {
-        appIframe.contentWindow.postMessage({
-          type: "theme",
-          mode: state.themeMode
-        }, "*");
-      }
-    } catch (e) {}
-  }
-
-  function loadThemeMode() {
-    let mode = "dark";
-    try {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (THEME_MODES.includes(saved)) mode = saved;
-    } catch (e) {}
-    applyThemeMode(mode);
-
-    try {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      if (mq && mq.addEventListener) {
-        mq.addEventListener("change", () => {
-          if (state.themeMode === "auto") {
-            applyThemeMode("auto");
-          }
-        });
-      } else if (mq && mq.addListener) {
-        mq.addListener(() => {
-          if (state.themeMode === "auto") applyThemeMode("auto");
-        });
-      }
-    } catch (e) {}
-  }
-
-  function bindThemeSwitchers() {
-    document.querySelectorAll("[data-theme-mode]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const mode = btn.dataset.themeMode;
-        applyThemeMode(mode);
-      });
-    });
-  }
-
-  /* Часы + индикатор смены */
-  function getCurrentShift(date) {
-    const d = date || new Date();
-    const day = d.getDay();
-    const isWeekend = (day === 0 || day === 6);
-    const h = d.getHours();
-
-    if (isWeekend) {
-      if (h >= 11 && h < 22) return "day";
-    } else {
-      if (h >= 10 && h < 22) return "day";
-    }
-    return "night";
-  }
-
-  function renderShiftIndicator() {
-    if (!shiftIndicator || !shiftIndicatorText) return;
-    const shift = getCurrentShift(new Date());
-    shiftIndicator.classList.toggle("day", shift === "day");
-    shiftIndicator.classList.toggle("night", shift === "night");
-    shiftIndicatorText.textContent = shift === "day" ? "Дневная смена" : "Ночная смена";
-  }
-
-  function tickClock() {
-    const d = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
-    statusClock.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
-    renderShiftIndicator();
-  }
-  setInterval(tickClock, 1000);
-  tickClock();
-
-  /* Батарея */
-  function initBattery() {
-    if (!navigator.getBattery) { batText.textContent = "—"; return; }
-    navigator.getBattery().then((battery) => {
-      const render = () => {
-        const pct = Math.round(battery.level * 100);
-        batText.textContent = pct + "%";
-        batLevel.style.width = Math.max(2, pct) + "%";
-        batLevel.classList.remove("low", "critical");
-        if (battery.level <= 0.15) batLevel.classList.add("critical");
-        else if (battery.level <= 0.4) batLevel.classList.add("low");
-      };
-      render();
-      battery.addEventListener("levelchange", render);
-      battery.addEventListener("chargingchange", render);
-    }).catch(() => { batText.textContent = "—"; });
-  }
-  initBattery();
-
-  /* Настройки */
-  function loadPrefs() {
-    state.toastsEnabled = localStorage.getItem("pref_toasts") !== "0";
-    state.soundEnabled = localStorage.getItem("pref_sound") !== "0";
-  }
-  function savePrefs() {
-    localStorage.setItem("pref_toasts", state.toastsEnabled ? "1" : "0");
-    localStorage.setItem("pref_sound", state.soundEnabled ? "1" : "0");
-  }
-  function renderPrefs() {
-    if (toastsToggle) toastsToggle.classList.toggle("on", state.toastsEnabled);
-    if (soundToggle) soundToggle.classList.toggle("on", state.soundEnabled);
-  }
-
-  /* Звук */
-  let audioCtx = null;
-  function ensureAudioCtx() {
-    if (!audioCtx) {
-      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audioCtx = null; }
-    }
-    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
-    return audioCtx;
-  }
-  function playAlertSound() {
-    if (!state.soundEnabled) return;
-    const ctx = ensureAudioCtx();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    [{ f: 880, t: 0 }, { f: 1175, t: 0.12 }, { f: 880, t: 0.24 }].forEach(({ f, t }) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "square";
-      osc.frequency.value = f;
-      gain.gain.setValueAtTime(0.0001, now + t);
-      gain.gain.exponentialRampToValueAtTime(0.12, now + t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.14);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(now + t); osc.stop(now + t + 0.16);
-    });
-  }
-
-  /* Тосты */
-  function showToast(opts) {
-    if (!state.toastsEnabled) return null;
-    if (!toastContainer) return null;
-    if (opts.playSound) { try { playAlertSound(); } catch (e) {} }
-
-    const existing = toastContainer.querySelectorAll(".toast:not(.leaving)");
-    if (existing.length >= 3) dismissToast(existing[0]);
-
-    const type = opts.type || "success";
-    const iconSvg = (
-      type === "alert"
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
-        : type === "info"
-          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
-          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-    );
-
-    const el = document.createElement("div");
-    el.className = "toast toast-" + type;
-
-    let actionsHtml = "";
-    if (Array.isArray(opts.buttons) && opts.buttons.length) {
-      actionsHtml = '<div class="toast-actions">' +
-        opts.buttons.map((b, i) =>
-          '<button class="toast-action-btn' + (b.primary ? " primary" : "") +
-            '" data-btn="' + i + '">' +
-            (b.icon || "") + '<span>' + (b.label || "OK") + '</span>' +
-          '</button>'
-        ).join("") + '</div>';
-    }
-
-    el.innerHTML =
-      '<div class="toast-icon">' + iconSvg + '</div>' +
-      '<div class="toast-body">' +
-        '<div class="toast-title">' + (opts.title || "Уведомление") + '</div>' +
-        '<div class="toast-text">' + (opts.text || "") + '</div>' +
-        actionsHtml +
-        '<div class="toast-time">' + new Date().toLocaleTimeString("ru-RU") + '</div>' +
-      '</div>' +
-      '<button class="toast-close" type="button" aria-label="Закрыть">×</button>';
-
-    const dur = opts.duration || 4500;
-    if (!dur || dur <= 0) el.classList.add("no-timer");
-
-    el.querySelector(".toast-close").addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (typeof opts.onClose === "function") opts.onClose();
-      dismissToast(el);
-    });
-
-    if (Array.isArray(opts.buttons)) {
-      el.querySelectorAll(".toast-action-btn").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const i = parseInt(btn.dataset.btn, 10);
-          const def = opts.buttons[i];
-          if (def && typeof def.onClick === "function") def.onClick();
-          if (!def || def.closeOnClick !== false) dismissToast(el);
-        });
-      });
-    }
-
-    toastContainer.appendChild(el);
-    if (dur > 0) {
-      const timer = setTimeout(() => {
-        if (typeof opts.onTimeout === "function") opts.onTimeout();
-        dismissToast(el);
-      }, dur);
-      el._timer = timer;
-    }
-    return el;
-  }
-  function dismissToast(el) {
-    if (!el || el.classList.contains("leaving")) return;
-    clearTimeout(el._timer);
-    el.classList.add("leaving");
-    setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
-  }
-
-  function notify(el, message, type) {
-    el.textContent = message;
-    el.className = "notification show " + type;
-    clearTimeout(el._timer);
-    el._timer = setTimeout(() => el.classList.remove("show"), 4500);
-  }
-
-  /* Сеть */
-  async function apiPost(payload) {
-    const res = await fetch(API_URL_ACTUAL, {
+    const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+      headers,
+      body: JSON.stringify({ action, ...payload })
     });
-    if (!res.ok) throw new Error("HTTP " + res.status);
     return res.json();
   }
 
-  function setNetworkStatus(ok) {
-    if (ok) {
-      wifiIcon.classList.remove("offline");
-      statusNetwork.textContent = "Планшет в сети";
-      state.serverOk = true;
-    } else {
-      wifiIcon.classList.add("offline");
-      statusNetwork.textContent = "Нет связи с сервером";
-      state.serverOk = false;
-    }
+  function showToast(text, type = "success") {
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.style.borderLeftColor = type === "error" ? "var(--red)" : "var(--accent)";
+    el.textContent = text;
+    $("toastContainer").appendChild(el);
+    setTimeout(() => el.remove(), 4000);
   }
 
-  /* Крипто: SHA-256 с fallback для Opera GX / HTTP / file:// */
-  var _sha256H = [], _sha256K = [];
-  (function () {
-    var n = 2, c = 0, isComp = {};
-    while (c < 64) {
-      if (!isComp[n]) {
-        for (var i = 0; i < 313; i += n) isComp[i] = n;
-        _sha256H[c] = (Math.pow(n, .5) * 4294967296) | 0;
-        _sha256K[c++] = (Math.pow(n, 1 / 3) * 4294967296) | 0;
-      }
-      n++;
-    }
-  })();
-
-  function _sha256Raw(ascii) {
-    function rr(v, a) { return (v >>> a) | (v << (32 - a)); }
-    var result = "", words = [], len = ascii.length * 8;
-    var hash = _sha256H.slice(0, 8), k = _sha256K;
-    ascii += "\x80";
-    while (ascii.length % 64 - 56) ascii += "\x00";
-    for (var i = 0; i < ascii.length; i++) {
-      var j = ascii.charCodeAt(i);
-      if (j >> 8) return "";
-      words[i >> 2] |= j << ((3 - i) % 4) * 8;
-    }
-    words[words.length] = (len / 4294967296) | 0;
-    words[words.length] = len | 0;
-    for (var jj = 0; jj < words.length;) {
-      var w = words.slice(jj, jj += 16), old = hash;
-      hash = hash.slice(0, 8);
-      for (i = 0; i < 64; i++) {
-        var w15 = w[i - 15], w2 = w[i - 2];
-        var t1 = hash[7] + (rr(hash[4], 6) ^ rr(hash[4], 11) ^ rr(hash[4], 25))
-          + ((hash[4] & hash[5]) ^ (~hash[4] & hash[6])) + k[i]
-          + (w[i] = (i < 16) ? w[i] : (w[i - 16]
-            + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7]
-            + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);
-        var t2 = (rr(hash[0], 2) ^ rr(hash[0], 13) ^ rr(hash[0], 22))
-          + ((hash[0] & hash[1]) ^ (hash[0] & hash[2]) ^ (hash[1] & hash[2]));
-        hash = [(t1 + t2) | 0].concat(hash);
-        hash[4] = (hash[4] + t1) | 0;
-      }
-      for (i = 0; i < 8; i++) hash[i] = (hash[i] + old[i]) | 0;
-    }
-    for (i = 0; i < 8; i++) {
-      for (j = 3; j + 1; j--) {
-        var b = (hash[i] >> (j * 8)) & 255;
-        result += (b < 16 ? "0" : "") + b.toString(16);
-      }
-    }
-    return result;
+  function hasRole(code) {
+    return state.user && Array.isArray(state.user.roles) && state.user.roles.includes(code);
   }
 
-  function _toUtf8(s) {
-    try { return unescape(encodeURIComponent(String(s))); }
-    catch (e) { return String(s); }
+  function canManageUsers() {
+    return hasRole("superadmin") || hasRole("head") || hasRole("deputy");
   }
 
-  async function sha256Hex(text) {
-    if (window.crypto && window.crypto.subtle) {
-      try {
-        var enc = new TextEncoder();
-        var buf = await crypto.subtle.digest("SHA-256", enc.encode(text));
-        return Array.from(new Uint8Array(buf))
-          .map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
-      } catch (e) { /* fallback ниже */ }
-    }
-    var out = _sha256Raw(_toUtf8(text));
-    if (out) return out;
-    throw new Error("SHA-256 недоступен");
-  }
-  /* Сессия */
-  function saveSession(user) {
-    state.user = user;
-    localStorage.setItem("hospital_session", JSON.stringify(user));
-  }
-  function clearSession() {
-    state.user = null;
-    localStorage.removeItem("hospital_session");
-  }
-  function loadSession() {
-    try {
-      const raw = localStorage.getItem("hospital_session");
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (data && data.login && data.role && data.hash) return data;
-    } catch (e) {}
-    return null;
-  }
-
-  /* Права */
-  function canSwitchDesks() {
-    if (!state.user) return false;
-    if (state.user.role === "superadmin") return true;
-    if (state.user.department === "Руководство") return true;
-    return false;
-  }
-  function isAdmin() {
-    return state.user && (state.user.role === "admin" || state.user.role === "superadmin");
-  }
-  function isSuperadmin() {
-    return state.user && state.user.role === "superadmin";
-  }
-
-  /* Экраны */
-  function showScreen(name) {
-    authScreen.classList.toggle("hidden", name !== "auth");
-    deskScreen.classList.toggle("hidden", name !== "desk");
-    appFrame.classList.toggle("hidden", name !== "frame");
-    appUsers.classList.toggle("hidden", name !== "users");
-    appProfile.classList.toggle("hidden", name !== "profile");
-    appAbout.classList.toggle("hidden", name !== "about");
-
-    userChip.classList.toggle("hidden", name === "auth");
-    deskSwitcher.classList.toggle("visible", name !== "auth" && canSwitchDesks());
-
-    themeSwitcherHeader.classList.toggle("hidden", name === "auth");
-
-    if (name !== "frame" && appIframe) {
-      appIframe.src = "about:blank";
-    }
-  }
-
-  /* Плитки приложений */
+  /* Реестр приложений */
   const APPS = {
     staff: {
-      label: "Персонал больницы",
-      sub: "Список сотрудников",
-      color: "blue",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-      frame: "apps/staff.html"
+      label: "Персонал больницы", sub: "Штат и кадры", color: "blue",
+      frame: "apps/staff.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>'
     },
     vacations: {
-      label: "Отпуска",
-      sub: "IC · OOC",
-      color: "amber",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 15l2 2 4-4"/></svg>',
-      frame: "apps/vacations.html"
-    },
-    users: {
-      label: "Учётные записи",
-      sub: "Управление пользователями",
-      color: "purple",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
-    },
-    profile: {
-      label: "Профиль",
-      sub: "Данные · пароль",
-      color: "gray",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
-    },
-    about: {
-      label: "О системе",
-      sub: "Настройки · уведомления",
-      color: "gray",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
-    },
-    calculator: {
-      label: "Калькулятор отчётов СМП",
-      sub: "Баллы · замены · отчёт",
-      color: "red",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="14" x2="16" y2="18"/></svg>',
-      frame: "apps/calculator.html"
-    },
-    calculatorPses: {
-      label: "Калькулятор отчётов ПСЭС",
-      sub: "Баллы · отчёт",
-      color: "green",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/><line x1="16" y1="14" x2="16" y2="18"/></svg>',
-      frame: "apps/calculator-pses.html"
-    },
-    examPses: {
-      label: "Шпаргалка экзаменов ПСЭС",
-      sub: "Вопросы · ответы",
-      color: "purple",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
-      frame: "apps/exam-pses.html"
-    },
-    docsPses: {
-      label: "Документация ПСЭС",
-      sub: "Регламенты · инструкции",
-      color: "cyan",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg>',
-      frame: "apps/docs-pses.html"
+      label: "Отпуска", sub: "График отпусков", color: "amber",
+      frame: "apps/vacations.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg>'
     },
     booking: {
-      label: "Бронирование вещания",
-      sub: "Запись и список",
-      color: "amber",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
-      frame: "apps/vesh.html"
+      label: "Вещание", sub: "Бронирование госволны", color: "amber",
+      frame: "apps/vesh.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/></svg>'
     },
-    examSmp: {
-      label: "Шпаргалка экзаменов СМП",
-      sub: "Вопросы · ответы",
-      color: "purple",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
-      frame: "apps/exam-smp.html"
+    calculator: {
+      label: "Калькулятор СМП", sub: "Отчёты и баллы", color: "red",
+      frame: "apps/calculator.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>'
     },
     weeklyReports: {
-      label: "Недельные отчёты СМП",
-      sub: "Сдача · освобождения · топ",
-      color: "blue",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="19" x2="13" y2="19"/></svg>',
-      frame: "apps/weekly-reports.html"
+      label: "Недельники СМП", sub: "Сдача норм СМП", color: "blue",
+      frame: "apps/weekly-reports.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>'
+    },
+    examSmp: {
+      label: "Шпаргалка СМП", sub: "Вопросы экзаменов", color: "purple",
+      frame: "apps/exam-smp.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>'
+    },
+    calculatorPses: {
+      label: "Калькулятор ПСЭС", sub: "Отчёты и баллы", color: "green",
+      frame: "apps/calculator-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>'
     },
     weeklyReportsPses: {
-      label: "Недельные отчёты ПСЭС",
-      sub: "Сдача · топ · должники",
-      color: "green",
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="19" x2="13" y2="19"/></svg>',
-      frame: "apps/weekly-reports-pses.html"
+      label: "Недельники ПСЭС", sub: "Сдача норм ПСЭС", color: "green",
+      frame: "apps/weekly-reports-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>'
+    },
+    examPses: {
+      label: "Шпаргалка ПСЭС", sub: "Вопросы экзаменов", color: "purple",
+      frame: "apps/exam-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>'
+    },
+    docsPses: {
+      label: "Документы ПСЭС", sub: "Регламенты и макросы", color: "cyan",
+      frame: "apps/docs-pses.html",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>'
+    },
+    users: {
+      label: "Учётные записи", sub: "Управление доступом", color: "purple",
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
     }
   };
 
-  function getAppsForDesk() {
-    const rawDept = state.activeDesk || (state.user && state.user.department) || "—";
+  function getAvailableDesks() {
+    if (!state.user) return [];
+    if (hasRole("superadmin")) return ["СМП", "ПСЭС", "Руководство"];
+    const desks = [];
+    if (hasRole("smp") || (state.user.departments && state.user.departments.includes("СМП"))) desks.push("СМП");
+    if (hasRole("pses") || (state.user.departments && state.user.departments.includes("ПСЭС"))) desks.push("ПСЭС");
+    if (desks.length === 0) desks.push("Гость");
+    return desks;
+  }
 
-    const dept =
-      rawDept === "Инст СМП"  ? "СМП"  :
-      rawDept === "Инст ПСЭС" ? "ПСЭС" :
-      rawDept === "Инст ИТ"   ? "ИТ"   :
-      rawDept === "Инст ОК"   ? "ОК"   :
-      rawDept;
-
-    const base = ["staff", "vacations", "about"];
-
-    if (isAdmin()) base.splice(2, 0, "users");
-
-    if (dept === "СМП") {
-      base.splice(base.length - 1, 0, "calculator", "weeklyReports", "booking", "examSmp");
+  function renderDeskSwitcher() {
+    const desks = getAvailableDesks();
+    if (desks.length > 1) {
+      deskSwitcher.classList.add("visible");
+      currentDesk.textContent = state.activeDesk || desks[0];
+      deskList.innerHTML = "";
+      desks.forEach(d => {
+        const b = document.createElement("button");
+        b.textContent = d;
+        if (d === state.activeDesk) b.classList.add("active");
+        b.onclick = () => {
+          state.activeDesk = d;
+          deskList.classList.remove("open");
+          renderDesk();
+        };
+        deskList.appendChild(b);
+      });
+    } else {
+      deskSwitcher.classList.remove("visible");
+      state.activeDesk = desks[0] || "Гость";
     }
-
-    if (dept === "ПСЭС") {
-      base.splice(base.length - 1, 0, "calculatorPses", "examPses", "weeklyReportsPses", "docsPses");
-    }
-
-    if (dept === "Руководство") {
-      base.splice(base.length - 1, 0, "weeklyReports");
-    }
-
-    return base;
   }
 
   function renderDesk() {
-    const dept = state.activeDesk || state.user.department || "—";
-    homeGreeting.textContent = "Рабочий стол: " + (DEPT_LABEL[dept] || dept);
-    homeSub.textContent = state.user.login + " · " + (ROLE_LABEL[state.user.role] || state.user.role);
+    renderDeskSwitcher();
+    $("homeGreeting").textContent = "Рабочий стол: " + state.activeDesk;
+    $("homeSub").textContent = (state.user.display_name || state.user.discord_tag);
 
-    const apps = getAppsForDesk();
+    const apps = [];
+    if (state.activeDesk === "СМП") {
+      apps.push("staff", "vacations", "calculator", "weeklyReports", "booking", "examSmp");
+    } else if (state.activeDesk === "ПСЭС") {
+      apps.push("staff", "vacations", "calculatorPses", "weeklyReportsPses", "docsPses", "examPses");
+    } else {
+      apps.push("staff", "vacations");
+    }
+
+    if (canManageUsers()) {
+      apps.push("users");
+    }
+
     appGrid.innerHTML = "";
-    apps.forEach((key) => {
-      const a = APPS[key];
+    apps.forEach(k => {
+      const a = APPS[k];
       if (!a) return;
       const tile = document.createElement("div");
       tile.className = "app-tile";
-      tile.dataset.app = key;
-      tile.innerHTML =
-        '<div class="app-icon ' + a.color + '">' + a.icon + '</div>' +
-        '<div class="label">' + a.label + '</div>' +
-        '<div class="sub">' + a.sub + '</div>';
-
-      if (key === "vacations") {
-        const active = getActiveVacations().length;
-        if (active > 0) {
-          const b = document.createElement("div");
-          b.className = "counter-badge";
-          b.textContent = active;
-          tile.appendChild(b);
-        }
-      }
-
-      tile.addEventListener("click", () => openApp(key));
+      tile.innerHTML = `
+        <div class="app-icon ${a.color}">${a.icon}</div>
+        <div style="font-weight:700;font-size:0.92rem;">${a.label}</div>
+        <div style="font-size:0.75rem;color:var(--muted);">${a.sub}</div>
+      `;
+      tile.onclick = () => openApp(k);
       appGrid.appendChild(tile);
-    });
-
-    renderDeskSwitcher();
-    renderGosScheduleWidget();
-  }
-
-  /* dep / ds сообщения */
-  function buildDepMessage(item) {
-    return "/dep к " + item.name + ": Уведомляю Вас о том что, сегодня у вас в " + item.time +
-      " будет проведена проверка медицинскиx справок согласно закону города Москвы " +
-      "«О Здравоохранении» Глава IV,ст.8,ч.1,п.Г. Просим собрать и построить состав к этому времени.";
-  }
-
-  function shiftTimeBack(time, minutes) {
-    const m = String(time || "").match(/^(\d{1,2}):(\d{2})$/);
-    if (!m) return time || "";
-    let h = parseInt(m[1], 10);
-    let mm = parseInt(m[2], 10);
-    mm -= minutes;
-    while (mm < 0) { mm += 60; h -= 1; }
-    while (h < 0) h += 24;
-    return String(h).padStart(2, "0") + ":" + String(mm).padStart(2, "0");
-  }
-
-  function buildDsMessage(item) {
-    const gatherTime = shiftTimeBack(item.time, 20);
-    return [
-      "@ПСЭС @Ст.ПСЭС",
-      "",
-      "## Дорогие Пэпсики!",
-      "** Уведомляю Вас о сборе на проверку, на наличие действующих мед.карт , у сотрудников \"" + item.name + "\". **",
-      "*Сбор состоится в " + gatherTime + ", на задней парковке.*",
-      "*Проверка организации \"" + item.name + "\" состоится в " + item.time + "*",
-      "**Присутствие в голосовом канале нашего отдела ОБЯЗАТЕЛЬНО! **",
-      "*Ждём тут https://discord.com/channels/1538939092929216603/1538939110469931134 *"
-    ].join("\n");
-  }
-
-  function copyTextToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
-    return new Promise((resolve, reject) => {
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        const ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-        ok ? resolve() : reject(new Error("execCommand failed"));
-      } catch (e) { reject(e); }
-    });
-  }
-
-  async function loadSchedule() {
-    try {
-      const data = await apiPost({ action: "getSchedule" });
-      state.schedule = (data && data.success && Array.isArray(data.schedule)) ? data.schedule : [];
-    } catch (err) {
-      console.error("Не удалось загрузить расписание:", err);
-      state.schedule = [];
-    }
-  }
-
-  /* ============ ОТПУСКА ============ */
-  function todayStrLocal() {
-    const d = new Date();
-    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-  }
-  function isOnVacation(v) {
-    if (v.returned) return false;
-    const today = todayStrLocal();
-    return v.start <= today && today <= v.end;
-  }
-  function getActiveVacations() {
-    return state.vacations.filter(isOnVacation);
-  }
-  async function loadVacations() {
-    try {
-      const data = await apiPost({ action: "getVacations" });
-      if (data && data.success) {
-        state.vacations = data.vacations || [];
-        renderVacationsBadge();
-        if (!appAbout.classList.contains("hidden")) renderAbout();
-      }
-    } catch (e) {
-      console.error("loadVacations:", e);
-    }
-  }
-  function renderVacationsBadge() {
-    const active = getActiveVacations().length;
-    if (!deskScreen.classList.contains("hidden")) {
-      const tile = appGrid.querySelector('[data-app="vacations"]');
-      if (tile) {
-        let b = tile.querySelector(".counter-badge");
-        if (active > 0) {
-          if (!b) {
-            b = document.createElement("div");
-            b.className = "counter-badge";
-            tile.appendChild(b);
-          }
-          b.textContent = active;
-        } else if (b) {
-          b.remove();
-        }
-      }
-    }
-  }
-
-  const CHAT_ICON_SVG =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-      '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>' +
-    '</svg>';
-
-  const DISCORD_ICON_SVG =
-    '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none">' +
-      '<path d="M20.32 4.37A19.79 19.79 0 0 0 15.39 3a13.9 13.9 0 0 0-.62 1.27 18.27 18.27 0 0 0-5.53 0A13.4 13.4 0 0 0 8.6 3a19.74 19.74 0 0 0-4.94 1.37C.55 9.02-.3 13.55.13 18.01a19.9 19.9 0 0 0 6.03 3.05 14.7 14.7 0 0 0 1.29-2.1 12.86 12.86 0 0 1-2.03-.98c.17-.13.34-.26.5-.4a14.2 14.2 0 0 0 12.16 0c.16.14.33.27.5.4-.65.39-1.33.71-2.04.98a14.6 14.6 0 0 0 1.29 2.1 19.83 19.83 0 0 0 6.04-3.05c.5-5.18-.85-9.67-3.55-13.64zM8.02 15.33c-1.18 0-2.15-1.08-2.15-2.41 0-1.32.95-2.41 2.15-2.41 1.2 0 2.17 1.09 2.15 2.41 0 1.33-.95 2.41-2.15 2.41zm7.96 0c-1.18 0-2.15-1.08-2.15-2.41 0-1.32.95-2.41 2.15-2.41 1.2 0 2.17 1.09 2.15 2.41 0 1.33-.95 2.41-2.15 2.41z"/>' +
-    '</svg>';
-
-  function renderGosScheduleWidget() {
-    if (!gosScheduleWidget) return;
-
-    const dept = state.activeDesk || (state.user && state.user.department) || "—";
-    const shouldShow = dept === "ПСЭС" || dept === "Инст ПСЭС";
-
-    gosScheduleWidget.classList.toggle("hidden", !shouldShow);
-    if (!shouldShow) { gosScheduleWidget.innerHTML = ""; return; }
-
-    const todayName = DAY_NAMES[new Date().getDay()];
-    const canEdit = isAdmin();
-
-    if (!state.schedule.length) {
-      gosScheduleWidget.innerHTML =
-        '<div class="card" style="margin-top:16px;">' +
-          '<div class="card-head">' +
-            '<h3>🏛 Проверки гос. структур — расписание</h3>' +
-            '<span style="font-size:0.78rem;color:var(--muted);">Сегодня: ' + todayName + '</span>' +
-          '</div>' +
-          '<div class="empty">Расписание пустое или не загрузилось</div>' +
-        '</div>';
-      return;
-    }
-
-    let rowsHtml = "";
-    state.schedule.forEach((item, idx) => {
-      const isToday = item.day === todayName;
-
-      let depCell;
-      if (item.noDepMessage) {
-        depCell = '<span class="sched-dep-empty">—</span>';
-      } else {
-        depCell =
-          '<button type="button" class="sched-icon-btn sched-dep-link" data-idx="' + idx + '" ' +
-                  'title="Скопировать сообщение в dep">' + CHAT_ICON_SVG + '</button>';
-      }
-
-      const dsCell =
-        '<button type="button" class="sched-icon-btn sched-ds-link" data-idx="' + idx + '" ' +
-                'title="Скопировать сообщение в DS">' + DISCORD_ICON_SVG + '</button>';
-
-      const editBtn = canEdit
-        ? '<button type="button" class="sched-time-edit" data-idx="' + idx + '" title="Изменить время">✏️</button>'
-        : '';
-
-      rowsHtml +=
-        '<div class="sched-item' + (isToday ? ' today' : '') + '" data-idx="' + idx + '">' +
-          '<div class="sched-day">' + item.day + '</div>' +
-          '<div class="sched-name">' + escapeHtml(item.name) +
-            (isToday ? '<span class="sched-badge">Сегодня</span>' : '') +
-          '</div>' +
-          '<div class="sched-time-cell">' +
-            '<span class="sched-time">' + item.time + '</span>' + editBtn +
-          '</div>' +
-          '<div class="sched-dep-cell">' + depCell + '</div>' +
-          '<div class="sched-ds-cell">' + dsCell + '</div>' +
-        '</div>';
-    });
-
-    gosScheduleWidget.innerHTML =
-      '<div class="card" style="margin-top:16px;">' +
-        '<div class="card-head">' +
-          '<h3>🏛 Проверки гос. структур — расписание</h3>' +
-          '<span style="font-size:0.78rem;color:var(--muted);">Сегодня: ' + todayName + '</span>' +
-        '</div>' +
-        '<div class="sched-list">' + rowsHtml + '</div>' +
-      '</div>';
-
-    gosScheduleWidget.querySelectorAll(".sched-dep-link").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const idx = parseInt(btn.dataset.idx, 10);
-        const item = state.schedule[idx];
-        if (!item) return;
-        const message = buildDepMessage(item);
-        try {
-          await copyTextToClipboard(message);
-          btn.classList.add("copied");
-          showToast({ type: "success", title: "Скопировано в буфер (dep)", text: "/dep к " + item.name });
-          setTimeout(() => btn.classList.remove("copied"), 1500);
-        } catch (err) {
-          console.error(err);
-          showToast({ type: "alert", title: "Не удалось скопировать", text: "Разрешите доступ к буферу обмена" });
-        }
-      });
-    });
-
-    gosScheduleWidget.querySelectorAll(".sched-ds-link").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const idx = parseInt(btn.dataset.idx, 10);
-        const item = state.schedule[idx];
-        if (!item) return;
-        const message = buildDsMessage(item);
-        try {
-          await copyTextToClipboard(message);
-          btn.classList.add("copied");
-          showToast({ type: "success", title: "Скопировано в буфер (DS)", text: "Проверка «" + item.name + "» в " + item.time });
-          setTimeout(() => btn.classList.remove("copied"), 1500);
-        } catch (err) {
-          console.error(err);
-          showToast({ type: "alert", title: "Не удалось скопировать", text: "Разрешите доступ к буферу обмена" });
-        }
-      });
-    });
-
-    gosScheduleWidget.querySelectorAll(".sched-time-edit").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const idx = parseInt(btn.dataset.idx, 10);
-        openScheduleTimeEditor(idx);
-      });
-    });
-  }
-
-  function openScheduleTimeEditor(idx) {
-    const item = state.schedule[idx];
-    if (!item) return;
-
-    const row = gosScheduleWidget.querySelector('.sched-item[data-idx="' + idx + '"]');
-    if (!row) return;
-    const cell = row.querySelector(".sched-time-cell");
-    if (!cell) return;
-
-    const oldHtml = cell.innerHTML;
-    cell.innerHTML =
-      '<input type="text" class="sched-time-input" value="' + item.time +
-      '" maxlength="5" placeholder="HH:MM">' +
-      '<button type="button" class="sched-time-edit" data-save="1" title="Сохранить">💾</button>' +
-      '<button type="button" class="sched-time-edit" data-cancel="1" title="Отмена">✕</button>';
-
-    const input = cell.querySelector(".sched-time-input");
-    input.focus(); input.select();
-
-    const save = async () => {
-      const raw = input.value.trim();
-      const m = raw.match(/^(\d{1,2}):(\d{2})$/);
-      if (!m) {
-        showToast({ type: "alert", title: "Неверный формат", text: "Введите HH:MM" });
-        input.focus();
-        return;
-      }
-      const newTime = String(m[1]).padStart(2, "0") + ":" + m[2];
-      try {
-        const data = await apiPost({
-          action: "updateScheduleTime",
-          login: state.user.login,
-          hash: state.user.hash,
-          targetRowIndex: item.rowIndex,
-          newTime: newTime
-        });
-        if (!data.success) { showToast({ type: "alert", title: "Ошибка", text: data.message || "" }); return; }
-        item.time = data.time || newTime;
-        showToast({ type: "success", title: "Время обновлено", text: item.name + " · " + item.time });
-        renderGosScheduleWidget();
-      } catch (err) {
-        console.error(err);
-        showToast({ type: "alert", title: "Ошибка сети", text: "" });
-        cell.innerHTML = oldHtml;
-      }
-    };
-
-    const cancel = () => { cell.innerHTML = oldHtml; renderGosScheduleWidget(); };
-
-    cell.querySelector("[data-save]").addEventListener("click", save);
-    cell.querySelector("[data-cancel]").addEventListener("click", cancel);
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") { e.preventDefault(); save(); }
-      if (e.key === "Escape") { e.preventDefault(); cancel(); }
-    });
-  }
-
-  /* Проверка расписания ПСЭС */
-  function scheduleCheckTick() {
-    if (!state.user) return;
-    const dept = state.activeDesk || state.user.department;
-    if (dept !== "ПСЭС" && dept !== "Инст ПСЭС") return;
-    if (!state.schedule.length) return;
-
-    const now = new Date();
-    const todayName = DAY_NAMES[now.getDay()];
-    const todayKey = now.toISOString().slice(0, 10);
-
-    state.schedule.forEach((item) => {
-      if (item.day !== todayName) return;
-      if (!item.time || !/^\d{2}:\d{2}$/.test(item.time)) return;
-
-      const parts = item.time.split(":");
-      const target = new Date(now);
-      target.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
-
-      const diffMin = (target - now) / 60000;
-      if (diffMin < 0) return;
-
-      const fire = (minutesBefore, suffix, customText) => {
-        if (diffMin > minutesBefore) return;
-        if (diffMin < minutesBefore - 1.5) return;
-        const key = todayKey + "|" + item.name + "|" + item.time + "|" + suffix;
-        if (state.notifiedKeys[key]) return;
-        state.notifiedKeys[key] = true;
-        playAlertSound();
-        showToast({
-          type: "info",
-          title: "⏰ Напоминание о проверке",
-          text: customText
-                ? customText + " (" + item.name + ", " + item.time + ")"
-                : "Через " + minutesBefore + " мин — " + item.name +
-                  " (" + item.time + "). Отправить уведомление гос. структурам.",
-          duration: 12000
-        });
-      };
-
-      const isHospitalCheck = String(item.name || "").trim().toLowerCase() === "больница";
-      if (!isHospitalCheck) {
-        fire(110, "1h50", "Отправь новость о проверке в Дискорд");
-      }
-      fire(65, "1h05", null);
-      fire(35, "35m", null);
-    });
-  }
-
-  /* ============ НАПОМИНАНИЯ О БРОНЯХ ============ */
-  function todayStr() {
-    const d = new Date();
-    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-  }
-  function loadReminderDone() {
-    try {
-      const raw = localStorage.getItem(REMIND_KEY);
-      state.reminderDone = raw ? JSON.parse(raw) : {};
-    } catch (e) { state.reminderDone = {}; }
-  }
-  function saveReminderDone() {
-    try { localStorage.setItem(REMIND_KEY, JSON.stringify(state.reminderDone)); } catch (e) {}
-  }
-  function reminderKey(b, date) {
-    return (date || todayStr()) + "|" + b.time + "|" + b.employee;
-  }
-  function minutesSince(timeStr) {
-    if (!/^\d{2}:\d{2}$/.test(timeStr)) return -1;
-    const now = new Date();
-    const [h, m] = timeStr.split(":").map(Number);
-    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
-    return (now.getTime() - t.getTime()) / 60000;
-  }
-  async function refreshMyBookings() {
-    if (!state.user) return;
-    try {
-      const data = await apiPost({ action: "getReservations" });
-      if (!data || !data.success) return;
-      const me = state.user.login.toLowerCase();
-      state.myBookings = (data.reservations || []).filter(
-        b => String(b.employee).trim().toLowerCase() === me
-      );
-    } catch (e) { console.error("refreshMyBookings:", e); }
-  }
-  function scheduleCheckTickBookings() {
-    if (!state.user) return;
-    if (!state.myBookings.length) return;
-    const today = todayStr();
-    state.myBookings.forEach(b => {
-      const key = reminderKey(b, today);
-      if (state.reminderDone[key]) return;
-      const diff = minutesSince(b.time);
-      if (diff < 0 || diff > 5) return;
-      if (state.reminderTimers[key]) return;
-      fireBookingReminder(b, key, 1);
-    });
-  }
-  function escapeHtml(s) {
-    return String(s == null ? "" : s)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
-  async function copyAnyText(text) {
-    try { await navigator.clipboard.writeText(text); return true; }
-    catch (e) {
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-        document.body.appendChild(ta); ta.select();
-        const ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-        return ok;
-      } catch (e2) { return false; }
-    }
-  }
-  function fireBookingReminder(booking, key, attempt) {
-    const base = HOUR_MESSAGES[booking.time] || "";
-    const fullText = base ? "/fb " + base : "/fb (текст вещания на " + booking.time + ")";
-
-    const title = attempt > 1 ? "⏰ Повторное напоминание: " + booking.time : "⏰ Время вещания: " + booking.time;
-
-    const textHtml =
-      "Забронировано время <b>" + booking.time + "</b>.<br>" +
-      "Отправь агитацию в чат командой <b>/fb</b>.<br>" +
-      "<code style='display:block;margin-top:6px;padding:6px 8px;background:var(--input-bg);border-radius:6px;font-size:0.74rem;color:var(--accent-2);white-space:pre-wrap;word-break:break-word;'>" +
-        escapeHtml(fullText) +
-      "</code>";
-
-    const scheduleRepeat = () => {
-      if (state.reminderTimers[key]) clearTimeout(state.reminderTimers[key]);
-      state.reminderTimers[key] = setTimeout(() => {
-        delete state.reminderTimers[key];
-        if (state.reminderDone[key]) return;
-        fireBookingReminder(booking, key, attempt + 1);
-      }, REMIND_DELAY_MS);
-    };
-
-    showToast({
-      type: "info",
-      title: title,
-      text: textHtml,
-      duration: 0,
-      playSound: true,
-      buttons: [
-        {
-          label: "Скопировать в чат",
-          primary: true,
-          icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
-          onClick: async () => {
-            const ok = await copyAnyText(fullText);
-            state.reminderDone[key] = Date.now();
-            saveReminderDone();
-            if (state.reminderTimers[key]) {
-              clearTimeout(state.reminderTimers[key]);
-              delete state.reminderTimers[key];
-            }
-            showToast({
-              type: ok ? "success" : "alert",
-              title: ok ? "Скопировано" : "Не удалось скопировать",
-              text: ok ? "Текст для " + booking.time + " в буфере. Вставь в чат командой /fb."
-                       : "Разреши доступ к буферу обмена.",
-              duration: 3500
-            });
-          }
-        },
-        {
-          label: "Напомнить через 5 мин",
-          onClick: () => {
-            scheduleRepeat();
-            showToast({ type: "info", title: "Ок", text: "Напомню снова через 5 минут.", duration: 3000 });
-          }
-        }
-      ],
-      onClose: () => {
-        if (!state.reminderDone[key]) scheduleRepeat();
-      }
-    });
-
-    if (!state.toastsEnabled && !state.reminderDone[key]) scheduleRepeat();
-  }
-
-  /* Переключатель рабочих столов */
-  function renderDeskSwitcher() {
-    currentDesk.textContent = DEPT_LABEL[state.activeDesk] || state.activeDesk;
-    deskList.innerHTML = "";
-    DESK_DEPARTMENTS.forEach((dept) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.classList.toggle("active", dept === state.activeDesk);
-      b.innerHTML = '<span>' + DEPT_LABEL[dept] + '</span>';
-      b.addEventListener("click", () => {
-        state.activeDesk = dept;
-        deskList.classList.remove("open");
-        showScreen("desk");
-        loadSchedule().then(() => renderDesk());
-        showToast({ type: "info", title: "Рабочий стол", text: DEPT_LABEL[dept] });
-      });
-      deskList.appendChild(b);
     });
   }
 
   function openApp(key) {
+    if (key === "users") {
+      authScreen.classList.add("hidden");
+      deskScreen.classList.add("hidden");
+      appFrame.classList.add("hidden");
+      appUsers.classList.remove("hidden");
+      loadUsersList();
+      return;
+    }
     const a = APPS[key];
-    if (!a) return;
-    if (a.frame) { openFrame(key); return; }
-    if (key === "users") { showScreen("users"); loadUsers(); }
-    else if (key === "profile") { showScreen("profile"); renderProfile(); }
-    else if (key === "about") { showScreen("about"); renderAbout(); loadDevlog(); }
+    if (a && a.frame) {
+      authScreen.classList.add("hidden");
+      deskScreen.classList.add("hidden");
+      appUsers.classList.add("hidden");
+      appFrame.classList.remove("hidden");
+      frameTitle.textContent = a.label;
+
+      const p = new URLSearchParams({
+        token: state.token || "",
+        login: state.user.display_name || state.user.discord_tag,
+        dept: state.activeDesk || "",
+        role: hasRole("superadmin") ? "superadmin" : (hasRole("head") || hasRole("deputy") ? "admin" : "user")
+      });
+      appIframe.src = a.frame + "?" + p.toString();
+    }
   }
 
-  function openFrame(key) {
-    const a = APPS[key];
-    if (!a || !a.frame) return;
-    frameTitle.textContent = a.label;
-    frameIcon.className = "app-icon " + a.color;
-    frameIcon.innerHTML = a.icon;
+  async function loadUsersList() {
+    $("usersContainer").innerHTML = "Загрузка списка...";
+    const res = await api("getUsers");
+    if (!res.success) {
+      $("usersContainer").innerHTML = "Ошибка: " + res.message;
+      return;
+    }
 
-    const params = new URLSearchParams({
-      v: Date.now(),
-      login: state.user ? state.user.login : "",
-      role: state.user ? state.user.role : "",
-      dept: state.user ? state.user.department : "",
-      desk: state.activeDesk || "",
-      discord: state.user ? (state.user.discord || "") : ""
+    const rolesRes = await api("getRoles");
+    state.availableRoles = (rolesRes.success && rolesRes.roles) || [];
+
+    let html = `<table class="staff-table">
+      <thead>
+        <tr>
+          <th>Пользователь</th>
+          <th>Discord Tag</th>
+          <th>Роли</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    res.users.forEach(u => {
+      const badges = (u.roles || []).map(r => `<span class="role-tag ${r}">${r}</span>`).join(" ");
+      html += `<tr>
+        <td><b>${escapeHtml(u.display_name || "Не указано")}</b></td>
+        <td><code>${escapeHtml(u.discord_tag)}</code></td>
+        <td>${badges}</td>
+        <td>
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:0.76rem;" onclick="window.editRoles(${u.id}, '${escapeHtml(u.display_name)}')">Управление</button>
+        </td>
+      </tr>`;
     });
-    appIframe.src = a.frame + "?" + params.toString();
-    showScreen("frame");
-
-    appIframe.onload = () => {
-      broadcastTheme();
-    };
+    html += `</tbody></table>`;
+    $("usersContainer").innerHTML = html;
   }
 
-  /* Авторизация */
-  async function handleAuthSubmit(e) {
-    e.preventDefault();
-    const login = authLogin.value.trim();
-    const password = authPassword.value;
-    if (!login || !password) return;
-
-    authSubmit.disabled = true;
-    const original = authSubmit.textContent;
-    authSubmit.textContent = "Проверка…";
-
-    try {
-      const hash = await sha256Hex(password);
-      const data = await apiPost({ action: "login", login, hash });
-
-      if (!data.success) {
-        notify(authNotification, data.message || "Ошибка входа", "error");
-        return;
-      }
-
-      saveSession({
-        login: data.login,
-        role: data.role,
-        department: data.department,
-        discord: data.discord || "",
-        hash: hash
-      });
-      state.activeDesk = data.department || "Руководство";
-
-      authForm.reset();
-      applySessionToUI();
-      setNetworkStatus(true);
-      ensureAudioCtx();
-
-      if (hash === TEMP_PASSWORD_HASH) {
-        state.forcePasswordChange = true;
-        forcePasswordModal.classList.remove("hidden");
-        setTimeout(() => fpNew1.focus(), 100);
-        return;
-      }
-
-      await loadSchedule();
-      await loadVacations();
-      await refreshMyBookings();
-      showScreen("desk");
-      renderDesk();
-      scheduleCheckTickBookings();
-
-      showToast({
-        type: "info",
-        title: "Добро пожаловать",
-        text: data.login + " · " + (ROLE_LABEL[data.role] || data.role)
-      });
-    } catch (err) {
-      console.error(err);
-      setNetworkStatus(false);
-      notify(authNotification, "Ошибка сети. Попробуйте позже.", "error");
-    } finally {
-      authSubmit.disabled = false;
-      authSubmit.textContent = original;
-    }
-  }
-
-  /* Принудительная смена пароля */
-  async function handleForcePasswordChange(e) {
-    e.preventDefault();
-    if (!state.user) return;
-
-    const newPass1 = fpNew1.value;
-    const newPass2 = fpNew2.value;
-
-    if (!newPass1 || !newPass2) { notify(fpNotification, "Заполните все поля", "error"); return; }
-    if (newPass1.length < 4) { notify(fpNotification, "Пароль слишком короткий (мин. 4)", "error"); return; }
-    if (newPass1 !== newPass2) { notify(fpNotification, "Пароли не совпадают", "error"); return; }
-    if (newPass1 === "12345") { notify(fpNotification, "Нельзя оставить пароль 12345", "error"); return; }
-
-    fpSubmit.disabled = true;
-    const original = fpSubmit.textContent;
-    fpSubmit.textContent = "Меняем…";
-
-    try {
-      const oldHash = state.user.hash;
-      const newHash = await sha256Hex(newPass1);
-      const data = await apiPost({
-        action: "changePassword",
-        login: state.user.login,
-        hash: state.user.hash,
-        oldHash: oldHash,
-        newHash: newHash
-      });
-
-      if (!data.success) {
-        notify(fpNotification, data.message || "Не удалось сменить пароль", "error");
-        return;
-      }
-
-      state.user.hash = newHash;
-      saveSession(state.user);
-      state.forcePasswordChange = false;
-
-      notify(fpNotification, "Пароль изменён", "success");
-
-      await loadSchedule();
-      await loadVacations();
-      await refreshMyBookings();
-      forcePasswordModal.classList.add("hidden");
-      fpNew1.value = "";
-      fpNew2.value = "";
-      showScreen("desk");
-      renderDesk();
-      scheduleCheckTickBookings();
-
-      showToast({
-        type: "success",
-        title: "Пароль изменён",
-        text: "Добро пожаловать, " + state.user.login
-      });
-    } catch (err) {
-      console.error(err);
-      notify(fpNotification, "Ошибка сети", "error");
-    } finally {
-      fpSubmit.disabled = false;
-      fpSubmit.textContent = original;
-    }
-  }
-
-  function applySessionToUI() {
-    if (!state.user) return;
-    userLogin.textContent = state.user.login;
-    if (state.user.role === "superadmin") {
-      userRole.textContent = "СУПЕРПОЛЬЗОВАТЕЛЬ";
-      userRole.className = "role super";
+  window.editRoles = async function(userId, name) {
+    const roleCode = prompt(`Введите код роли для выдачи/снятия пользователю ${name}:\n(superadmin, head, deputy, instructor, hr, smp, pses, guest)`);
+    if (!roleCode) return;
+    const action = confirm(`Нажмите OK для выдачи роли "${roleCode}", или Отмена для её снятия.`) ? "grantRole" : "revokeRole";
+    const res = await api(action, { user_id: userId, role_code: roleCode.trim().toLowerCase() });
+    if (res.success) {
+      showToast(res.message);
+      loadUsersList();
     } else {
-      userRole.textContent = ROLE_LABEL[state.user.role] || state.user.role;
-      userRole.className = "role " + (state.user.role === "admin" ? "admin" : "user");
+      showToast(res.message, "error");
     }
-    userAvatar.textContent = state.user.login.charAt(0).toUpperCase();
-    statusUser.textContent = state.user.login + " · " + (DEPT_LABEL[state.user.department] || state.user.department || "—");
-  }
+  };
 
-  /* Учётные записи */
-  async function loadUsers() {
-    usersContainer.innerHTML = '<div class="loading">Загрузка…</div>';
-    try {
-      const data = await apiPost({
-        action: "listUsers",
-        login: state.user.login,
-        hash: state.user.hash
-      });
-      if (!data.success) throw new Error(data.message || "Ошибка загрузки");
-      state.users = data.users || [];
-      renderUsers();
-    } catch (err) {
-      console.error(err);
-      usersContainer.innerHTML = '<div class="empty">Не удалось загрузить: ' + String(err.message || err) + '</div>';
+  async function initSession() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get("token");
+    const needsName = urlParams.get("needs_name") === "1";
+
+    if (urlToken) {
+      state.token = urlToken;
+      localStorage.setItem("hospital_discord_token", urlToken);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      state.token = localStorage.getItem("hospital_discord_token");
     }
-  }
 
-  function renderUsers() {
-    if (!state.users.length) {
-      usersContainer.innerHTML = '<div class="empty">Пока нет пользователей</div>';
+    if (!state.token) {
+      authScreen.classList.remove("hidden");
+      deskScreen.classList.add("hidden");
+      userChip.classList.add("hidden");
       return;
     }
 
-    const iAmSuper = isSuperadmin();
-
-    const table = document.createElement("table");
-    table.className = "staff-table";
-    table.innerHTML =
-      '<thead><tr>' +
-        '<th>Логин</th>' +
-        '<th>Роль</th>' +
-        '<th>Отдел</th>' +
-        '<th>Discord</th>' +
-        '<th></th>' +
-      '</tr></thead>';
-
-    const tbody = document.createElement("tbody");
-    state.users.forEach((u) => {
-      const isRoot = String(u.login).toLowerCase() === "root";
-      const isMe = u.login.toLowerCase() === state.user.login.toLowerCase();
-      const targetIsSuper = u.role === "superadmin";
-
-      let canManage = true;
-      if (isRoot && !iAmSuper) canManage = false;
-      if (targetIsSuper && !iAmSuper) canManage = false;
-
-      const tr = document.createElement("tr");
-
-      const tdLogin = document.createElement("td");
-      tdLogin.innerHTML = escapeHtml(u.login) +
-        (isMe ? ' <span style="color:var(--muted)">(вы)</span>' : '') +
-        (isRoot ? ' <span style="color:#f59e0b">★</span>' : '');
-
-      const tdRole = document.createElement("td");
-      if (canManage && !isRoot) {
-        const sel = document.createElement("select");
-        sel.className = "inline-select role-select";
-        const available = iAmSuper ? ["user", "admin", "superadmin"] : ["user", "admin"];
-        available.forEach((r) => {
-          const o = document.createElement("option");
-          o.value = r;
-          o.textContent = ROLE_LABEL[r];
-          if (u.role === r) o.selected = true;
-          sel.appendChild(o);
-        });
-        sel.addEventListener("change", () => updateUserField(u, { newRole: sel.value }));
-        tdRole.appendChild(sel);
-      } else {
-        const pill = document.createElement("span");
-        pill.className = "role-pill " + u.role;
-        pill.textContent = ROLE_LABEL[u.role] || u.role;
-        tdRole.appendChild(pill);
-      }
-
-      const tdDept = document.createElement("td");
-      if (canManage) {
-        const sel = document.createElement("select");
-        sel.className = "inline-select dept-select";
-        DEPARTMENTS.forEach((d) => {
-          const o = document.createElement("option");
-          o.value = d;
-          o.textContent = DEPT_LABEL[d];
-          if (u.department === d) o.selected = true;
-          sel.appendChild(o);
-        });
-        sel.addEventListener("change", () => updateUserField(u, { newDepartment: sel.value }));
-        tdDept.appendChild(sel);
-      } else {
-        const deptCls = "dept-" + String(u.department || "").toLowerCase().replace(/\s+/g, "-");
-        tdDept.innerHTML = '<span class="dept-pill ' + deptCls + '">' + escapeHtml(u.department || "—") + '</span>';
-      }
-
-      const tdDiscord = document.createElement("td");
-      tdDiscord.className = "discord";
-      tdDiscord.textContent = u.discord || "—";
-
-      const tdActions = document.createElement("td");
-      tdActions.style.textAlign = "right";
-      tdActions.style.whiteSpace = "nowrap";
-
-      if (canManage) {
-        const editBtn = document.createElement("button");
-        editBtn.className = "btn btn-ghost btn-small";
-        editBtn.style.marginRight = "6px";
-        editBtn.textContent = "Изменить";
-        editBtn.addEventListener("click", () => openUserEditor(u));
-        tdActions.appendChild(editBtn);
-
-        const passBtn = document.createElement("button");
-        passBtn.className = "btn btn-ghost btn-small";
-        passBtn.style.marginRight = "6px";
-        passBtn.textContent = "Пароль";
-        passBtn.addEventListener("click", () => resetUserPassword(u));
-        tdActions.appendChild(passBtn);
-
-        if (!isRoot && !isMe) {
-          const delBtn = document.createElement("button");
-          delBtn.className = "btn btn-danger btn-small";
-          delBtn.textContent = "Удалить";
-          delBtn.addEventListener("click", () => deleteUser(u));
-          tdActions.appendChild(delBtn);
-        }
-      } else {
-        tdActions.innerHTML = '<span style="color:var(--muted);font-size:0.78rem;">🔒 защищено</span>';
-      }
-
-      tr.appendChild(tdLogin);
-      tr.appendChild(tdRole);
-      tr.appendChild(tdDept);
-      tr.appendChild(tdDiscord);
-      tr.appendChild(tdActions);
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    usersContainer.innerHTML = "";
-    usersContainer.appendChild(table);
-  }
-
-  async function updateUserField(u, fields) {
-    try {
-      const payload = Object.assign({
-        action: "updateUser",
-        login: state.user.login,
-        hash: state.user.hash,
-        targetRowIndex: u.rowIndex
-      }, fields);
-      const data = await apiPost(payload);
-      if (!data.success) {
-        alert(data.message || "Не удалось обновить");
-        await loadUsers();
-      } else {
-        showToast({ type: "success", title: "Обновлено", text: u.login });
-        await loadUsers();
-      }
-    } catch (e) { console.error(e); alert("Ошибка сети"); }
-  }
-
-  async function resetUserPassword(u) {
-    const newPass = prompt("Новый пароль для " + u.login + ":");
-    if (!newPass) return;
-    if (newPass.length < 4) { alert("Пароль слишком короткий"); return; }
-    try {
-      const newHash = await sha256Hex(newPass);
-      const data = await apiPost({
-        action: "updateUser",
-        login: state.user.login,
-        hash: state.user.hash,
-        targetRowIndex: u.rowIndex,
-        newPasswordHash: newHash
-      });
-      if (!data.success) alert(data.message || "Не удалось сбросить пароль");
-      else showToast({ type: "success", title: "Пароль обновлён", text: u.login });
-    } catch (e) { console.error(e); alert("Ошибка сети"); }
-  }
-
-  async function deleteUser(u) {
-    if (!confirm("Удалить пользователя «" + u.login + "»?")) return;
-    try {
-      const data = await apiPost({
-        action: "deleteUser",
-        login: state.user.login,
-        hash: state.user.hash,
-        targetRowIndex: u.rowIndex
-      });
-      if (!data.success) alert(data.message || "Не удалось удалить");
-      else {
-        showToast({ type: "success", title: "Пользователь удалён", text: u.login });
-        await loadUsers();
-      }
-    } catch (e) { console.error(e); alert("Ошибка сети"); }
-  }
-
-  function refreshRoleOptions() {
-    const iAmSuper = isSuperadmin();
-    const opts = Array.from(newRole.options);
-    opts.forEach((o) => {
-      if (o.value === "superadmin" && !iAmSuper) {
-        o.disabled = true;
-        o.style.display = "none";
-        if (o.selected) newRole.value = "admin";
-      } else {
-        o.disabled = false;
-        o.style.display = "";
-      }
-    });
-  }
-
-  function openUserEditor(u) {
-    state.editingUserRow = u.rowIndex;
-    addUserTitle.textContent = "Редактирование: " + u.login;
-    newLogin.value = u.login;
-    newLogin.disabled = true;
-    newPassword.value = "";
-    newRole.value = u.role;
-    newDepartment.value = u.department || "СМП";
-    newDiscord.value = u.discord || "";
-    registerBtn.textContent = "Сохранить изменения";
-    addUserCard.classList.remove("hidden");
-    refreshRoleOptions();
-  }
-
-  function closeUserEditor() {
-    state.editingUserRow = null;
-    addUserTitle.textContent = "Новый пользователь";
-    registerForm.reset();
-    newLogin.disabled = false;
-    newRole.value = "user";
-    newDepartment.value = "СМП";
-    registerBtn.textContent = "Создать пользователя";
-    addUserCard.classList.add("hidden");
-  }
-
-  async function handleRegisterUser(e) {
-    e.preventDefault();
-    if (!isAdmin()) return;
-
-    const login = newLogin.value.trim();
-    const password = newPassword.value;
-    const role = newRole.value;
-    const department = newDepartment.value;
-    const discord = newDiscord.value.trim();
-
-    if (!login) { notify(registerNotification, "Введите логин", "error"); return; }
-    if (login.toLowerCase() === "root" && !isSuperadmin()) {
-      notify(registerNotification, "Логин 'root' зарезервирован", "error"); return;
-    }
-
-    registerBtn.disabled = true;
-    const original = registerBtn.textContent;
-    registerBtn.textContent = "Отправка…";
-
-    try {
-      if (state.editingUserRow) {
-        const payload = {
-          action: "updateUser",
-          login: state.user.login,
-          hash: state.user.hash,
-          targetRowIndex: state.editingUserRow,
-          newRole: role,
-          newDepartment: department,
-          newDiscord: discord
-        };
-        if (password) {
-          if (password.length < 4) { notify(registerNotification, "Пароль слишком короткий", "error"); return; }
-          payload.newPasswordHash = await sha256Hex(password);
-        }
-        const data = await apiPost(payload);
-        if (!data.success) {
-          notify(registerNotification, data.message || "Ошибка", "error");
-        } else {
-          notify(registerNotification, "Сохранено", "success");
-          showToast({ type: "success", title: "Пользователь обновлён", text: login });
-          closeUserEditor();
-          await loadUsers();
-        }
-      } else {
-        if (!password) { notify(registerNotification, "Введите пароль", "error"); return; }
-        if (password.length < 4) { notify(registerNotification, "Пароль слишком короткий", "error"); return; }
-        const hash = await sha256Hex(password);
-        const data = await apiPost({
-          action: "registerUser",
-          login: state.user.login,
-          hash: state.user.hash,
-          newLogin: login,
-          newHash: hash,
-          newRole: role,
-          newDepartment: department,
-          newDiscord: discord
-        });
-        if (!data.success) {
-          notify(registerNotification, data.message || "Ошибка", "error");
-          showToast({ type: "alert", title: "Ошибка", text: data.message || "" });
-        } else {
-          notify(registerNotification, "Пользователь создан", "success");
-          showToast({ type: "success", title: "Пользователь создан", text: login });
-          closeUserEditor();
-          await loadUsers();
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      notify(registerNotification, "Ошибка сети", "error");
-    } finally {
-      registerBtn.disabled = false;
-      registerBtn.textContent = original;
-    }
-  }
-
-  /* Профиль */
-  function renderProfile() {
-    if (!state.user) return;
-    profileLogin.value = state.user.login;
-    profileDiscord.value = state.user.discord || "";
-    profileDept.value = DEPT_LABEL[state.user.department] || state.user.department || "—";
-  }
-
-  async function handleProfileSave(e) {
-    e.preventDefault();
-    if (!state.user) return;
-
-    const newLoginValue = profileLogin.value.trim();
-    const newDiscordValue = profileDiscord.value.trim();
-
-    if (!newLoginValue) { notify(profileNotification, "Логин не может быть пустым", "error"); return; }
-
-    profileBtn.disabled = true;
-    profileBtn.textContent = "Сохранение…";
-    try {
-      const data = await apiPost({
-        action: "updateSelf",
-        login: state.user.login,
-        hash: state.user.hash,
-        newLogin: newLoginValue,
-        newDiscord: newDiscordValue
-      });
-      if (!data.success) {
-        notify(profileNotification, data.message || "Не удалось сохранить", "error");
-        showToast({ type: "alert", title: "Ошибка", text: data.message || "" });
-      } else {
-        state.user.login = data.login || state.user.login;
-        state.user.discord = data.discord || "";
-        saveSession(state.user);
-        applySessionToUI();
-        notify(profileNotification, "Профиль обновлён", "success");
-        showToast({ type: "success", title: "Профиль обновлён", text: state.user.login });
-      }
-    } catch (err) {
-      console.error(err);
-      notify(profileNotification, "Ошибка сети", "error");
-    } finally {
-      profileBtn.disabled = false;
-      profileBtn.textContent = "Сохранить профиль";
-    }
-  }
-
-  async function handleChangePassword(e) {
-    e.preventDefault();
-    if (!state.user) return;
-
-    const oldPass = oldPassword.value;
-    const newPass1 = newPassword1.value;
-    const newPass2 = newPassword2.value;
-
-    if (!oldPass || !newPass1 || !newPass2) { notify(passwordNotification, "Заполните все поля", "error"); return; }
-    if (newPass1.length < 4) { notify(passwordNotification, "Пароль слишком короткий", "error"); return; }
-    if (newPass1 !== newPass2) { notify(passwordNotification, "Пароли не совпадают", "error"); return; }
-
-    passwordBtn.disabled = true;
-    passwordBtn.textContent = "Отправка…";
-    try {
-      const oldHash = await sha256Hex(oldPass);
-      const newHash = await sha256Hex(newPass1);
-      const data = await apiPost({
-        action: "changePassword",
-        login: state.user.login,
-        hash: state.user.hash,
-        oldHash, newHash
-      });
-      if (!data.success) {
-        notify(passwordNotification, data.message || "Не удалось сменить пароль", "error");
-      } else {
-        state.user.hash = newHash;
-        saveSession(state.user);
-        notify(passwordNotification, "Пароль изменён", "success");
-        passwordForm.reset();
-        showToast({ type: "success", title: "Пароль изменён", text: "Используйте новый при следующем входе" });
-      }
-    } catch (err) {
-      console.error(err);
-      notify(passwordNotification, "Ошибка сети", "error");
-    } finally {
-      passwordBtn.disabled = false;
-      passwordBtn.textContent = "Изменить пароль";
-    }
-  }
-
-  /* О системе */
-  function renderAbout() {
-    if (state.serverOk === true) { aboutServer.textContent = "Доступен ✓"; aboutServer.style.color = "var(--accent)"; }
-    else if (state.serverOk === false) { aboutServer.textContent = "Недоступен ✗"; aboutServer.style.color = "var(--red)"; }
-    else { aboutServer.textContent = "Проверка…"; aboutServer.style.color = "var(--text)"; }
-    aboutAuth.textContent = state.user ? state.user.login + " (" + (ROLE_LABEL[state.user.role] || state.user.role) + ")" : "—";
-    aboutDept.textContent = DEPT_LABEL[state.activeDesk] || state.activeDesk || "—";
-    if (aboutVacations) {
-      const active = getActiveVacations().length;
-      aboutVacations.textContent = active + " чел.";
-      aboutVacations.style.color = active > 0 ? "var(--amber)" : "var(--text)";
-    }
-    renderPrefs();
-    if (devlogAddBtn) devlogAddBtn.classList.toggle("hidden", !isSuperadmin());
-  }
-
-  /* ================= DEVLOG ================= */
-
-  function fmtDevlogDate(iso) {
-    if (!iso) return "—";
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return iso;
-    const pad = n => String(n).padStart(2, "0");
-    const msk = new Date(d.getTime() + 3 * 60 * 60 * 1000);
-    return pad(msk.getUTCDate()) + "." + pad(msk.getUTCMonth() + 1) + "." + msk.getUTCFullYear() +
-           " " + pad(msk.getUTCHours()) + ":" + pad(msk.getUTCMinutes());
-  }
-
-  async function loadDevlog() {
-    if (!devlogList) return;
-    if (state.devlogLoading) return;
-    state.devlogLoading = true;
-    if (!state.devlog.length) devlogList.innerHTML = '<div class="loading">Загрузка…</div>';
-    try {
-      const data = await apiPost({ action: "getDevlog" });
-      if (!data || !data.success) throw new Error((data && data.message) || "Ошибка загрузки");
-      state.devlog = Array.isArray(data.entries) ? data.entries : [];
-      renderDevlog();
-    } catch (err) {
-      console.error("loadDevlog:", err);
-      devlogList.innerHTML = '<div class="empty">Не удалось загрузить devlog</div>';
-    } finally {
-      state.devlogLoading = false;
-    }
-  }
-
-  function renderDevlog() {
-    if (!devlogList) return;
-    if (devlogAddBtn) devlogAddBtn.classList.toggle("hidden", !isSuperadmin());
-
-    if (!state.devlog.length) {
-      devlogList.innerHTML = '<div class="empty">Пока нет записей</div>';
+    const res = await api("getMe");
+    if (!res.success) {
+      localStorage.removeItem("hospital_discord_token");
+      state.token = null;
+      authScreen.classList.remove("hidden");
+      deskScreen.classList.add("hidden");
       return;
     }
 
-    const canEdit = isSuperadmin();
-    const wrap = document.createElement("div");
-    wrap.className = "devlog-list";
+    state.user = res.user;
 
-    state.devlog.forEach((entry) => {
-      const item = document.createElement("div");
-      item.className = "devlog-item";
+    if (needsName || res.user.needs_name) {
+      nameModal.classList.remove("hidden");
+      return;
+    }
 
-      const meta = document.createElement("div");
-      meta.className = "devlog-meta";
-      const dateStr = fmtDevlogDate(entry.date);
-      const updatedStr = entry.updatedAt
-        ? '<span class="devlog-updated" title="Отредактировано">изм. ' + fmtDevlogDate(entry.updatedAt) + '</span>'
-        : '';
-      meta.innerHTML =
-        '<span class="devlog-date">' + escapeHtml(dateStr) + ' ' + updatedStr + '</span>' +
-        (entry.author ? '<span class="devlog-author">' + escapeHtml(entry.author) + '</span>' : '');
-
-      const text = document.createElement("div");
-      text.className = "devlog-text";
-      text.textContent = entry.text || "";
-
-      item.appendChild(meta);
-      item.appendChild(text);
-
-      if (canEdit) {
-        const actions = document.createElement("div");
-        actions.className = "devlog-actions";
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "devlog-edit-btn";
-        btn.textContent = "Редактировать";
-        btn.addEventListener("click", () => openDevlogEditor(entry));
-        actions.appendChild(btn);
-        item.appendChild(actions);
-      }
-
-      wrap.appendChild(item);
-    });
-
-    devlogList.innerHTML = "";
-    devlogList.appendChild(wrap);
+    applyUserUI();
   }
 
-  function openDevlogEditor(entry) {
-    if (!isSuperadmin()) return;
-    state.devlogEditingRow = entry && entry.rowIndex != null ? entry.rowIndex : null;
-    devlogModalTitle.textContent = state.devlogEditingRow ? "Редактирование записи" : "Новое изменение";
-    devlogModalSub.textContent = state.devlogEditingRow
-      ? "Измените текст записи. Дата публикации останется прежней."
-      : "Опишите, что изменилось. Запись увидят все пользователи.";
-    devlogSubmit.textContent = state.devlogEditingRow ? "Сохранить" : "Опубликовать";
-    devlogText.value = entry ? (entry.text || "") : "";
-    devlogNotification.classList.remove("show");
-    devlogModal.classList.remove("hidden");
-    setTimeout(() => devlogText.focus(), 100);
+  function applyUserUI() {
+    authScreen.classList.add("hidden");
+    deskScreen.classList.remove("hidden");
+    userChip.classList.remove("hidden");
+    $("themeSwitcherHeader").classList.remove("hidden");
+
+    userLogin.textContent = state.user.display_name || state.user.discord_tag;
+    statusUser.textContent = state.user.display_name || state.user.discord_tag;
+    if (state.user.avatar_url) {
+      userAvatar.style.backgroundImage = `url('${state.user.avatar_url}')`;
+      userAvatar.textContent = "";
+    } else {
+      userAvatar.textContent = (state.user.display_name || "U")[0].toUpperCase();
+    }
+
+    userRolesHeader.innerHTML = (state.user.roles || []).map(r => `<span class="role-tag ${r}">${r}</span>`).join("");
+
+    const desks = getAvailableDesks();
+    state.activeDesk = desks[0] || "Гость";
+    renderDesk();
   }
 
-  function closeDevlogEditor() {
-    state.devlogEditingRow = null;
-    devlogModal.classList.add("hidden");
-    devlogForm.reset();
-    devlogNotification.classList.remove("show");
-  }
-
-  async function handleDevlogSubmit(e) {
+  nameForm.onsubmit = async (e) => {
     e.preventDefault();
-    if (!isSuperadmin()) return;
-    const text = devlogText.value.trim();
-    if (!text) { notify(devlogNotification, "Введите текст", "error"); return; }
-
-    devlogSubmit.disabled = true;
-    const original = devlogSubmit.textContent;
-    devlogSubmit.textContent = "Отправка…";
-
-    try {
-      let data;
-      if (state.devlogEditingRow) {
-        data = await apiPost({
-          action: "updateDevlog",
-          login: state.user.login,
-          hash: state.user.hash,
-          rowIndex: state.devlogEditingRow,
-          text
-        });
-      } else {
-        data = await apiPost({
-          action: "addDevlog",
-          login: state.user.login,
-          hash: state.user.hash,
-          text
-        });
-      }
-
-      if (!data.success) {
-        notify(devlogNotification, data.message || "Ошибка", "error");
-        return;
-      }
-
-      notify(devlogNotification, state.devlogEditingRow ? "Запись обновлена" : "Запись опубликована", "success");
-      showToast({
-        type: "success",
-        title: state.devlogEditingRow ? "Devlog обновлён" : "Devlog опубликован",
-        text: text.length > 60 ? text.slice(0, 60) + "…" : text
-      });
-      closeDevlogEditor();
-      await loadDevlog();
-    } catch (err) {
-      console.error(err);
-      notify(devlogNotification, "Ошибка сети", "error");
-    } finally {
-      devlogSubmit.disabled = false;
-      devlogSubmit.textContent = original;
+    const name = displayNameInput.value.trim();
+    if (name.length < 2) return;
+    const res = await api("updateProfile", { display_name: name });
+    if (res.success) {
+      nameModal.classList.add("hidden");
+      state.user.display_name = name;
+      state.user.needs_name = false;
+      applyUserUI();
+    } else {
+      alert(res.message);
     }
-  }
+  };
 
-  /* Мост для iframe-приложений */
-  window.addEventListener("message", (e) => {
-    if (!e.data || typeof e.data !== "object") return;
-    if (e.data.type === "toast") {
-      showToast({
-        type: e.data.kind || "success",
-        title: e.data.title || "Сообщение",
-        text: e.data.text || "",
-        playSound: !!e.data.playSound,
-        duration: e.data.duration || 4500
-      });
-    } else if (e.data.type === "go-back") {
-      showScreen("desk");
-      renderDesk();
-    } else if (e.data.type === "reservations-changed") {
-      refreshMyBookings().then(() => scheduleCheckTickBookings());
-    } else if (e.data.type === "vacations-changed") {
-      loadVacations();
-    } else if (e.data.type === "staff-changed") {
-      // Ничего не нужно
-    } else if (e.data.type === "theme-request") {
-      broadcastTheme();
-    }
+  discordLoginBtn.onclick = () => {
+    const redirect = window.location.origin + window.location.pathname;
+    window.location.href = `${API_URL}/auth/discord?redirect=${encodeURIComponent(redirect)}`;
+  };
+
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("hospital_discord_token");
+    window.location.reload();
+  };
+
+  document.querySelectorAll("[data-back]").forEach(b => {
+    b.onclick = () => {
+      appFrame.classList.add("hidden");
+      appUsers.classList.add("hidden");
+      deskScreen.classList.remove("hidden");
+      appIframe.src = "about:blank";
+    };
   });
 
-  /* Инициализация */
-  function init() {
-    loadPrefs();
-    loadReminderDone();
-    loadThemeMode();
-    bindThemeSwitchers();
+  deskBtn.onclick = (e) => {
+    e.stopPropagation();
+    deskList.classList.toggle("open");
+  };
+  document.addEventListener("click", () => deskList.classList.remove("open"));
 
-    authForm.addEventListener("submit", handleAuthSubmit);
-    passwordForm.addEventListener("submit", handleChangePassword);
-    profileForm.addEventListener("submit", handleProfileSave);
-    registerForm.addEventListener("submit", handleRegisterUser);
-    forcePasswordForm.addEventListener("submit", handleForcePasswordChange);
-
-    document.querySelectorAll("[data-back]").forEach((b) => {
-      b.addEventListener("click", () => { showScreen("desk"); renderDesk(); });
-    });
-
-    deskBtn.addEventListener("click", (e) => { e.stopPropagation(); deskList.classList.toggle("open"); });
-    document.addEventListener("click", () => deskList.classList.remove("open"));
-    deskList.addEventListener("click", (e) => e.stopPropagation());
-
-    showAddUserBtn.addEventListener("click", () => {
-      state.editingUserRow = null;
-      addUserTitle.textContent = "Новый пользователь";
-      registerForm.reset();
-      newLogin.disabled = false;
-      newRole.value = "user";
-      newDepartment.value = "СМП";
-      registerBtn.textContent = "Создать пользователя";
-      addUserCard.classList.remove("hidden");
-      refreshRoleOptions();
-    });
-    cancelAddUserBtn.addEventListener("click", closeUserEditor);
-
-    toastsToggle.addEventListener("click", () => {
-      state.toastsEnabled = !state.toastsEnabled;
-      savePrefs();
-      renderPrefs();
-      if (state.toastsEnabled) showToast({ type: "info", title: "Уведомления включены", text: "" });
-    });
-    soundToggle.addEventListener("click", () => {
-      state.soundEnabled = !state.soundEnabled;
-      savePrefs();
-      renderPrefs();
-      if (state.soundEnabled) playAlertSound();
-    });
-    testToastBtn.addEventListener("click", () => {
-      ensureAudioCtx();
-      showToast({ type: "success", title: "Тестовое уведомление", text: "Так выглядит всплывающее оповещение" });
-    });
-
-    if (devlogAddBtn) devlogAddBtn.addEventListener("click", () => openDevlogEditor(null));
-    if (devlogCancel) devlogCancel.addEventListener("click", closeDevlogEditor);
-    if (devlogForm) devlogForm.addEventListener("submit", handleDevlogSubmit);
-
-    userChip.addEventListener("click", (e) => {
-      if (e.target.closest("#logoutBtn")) return;
-      if (!state.user) return;
-      openApp("profile");
-    });
-
-    logoutBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      clearSession();
-      state.users = [];
-      state.schedule = [];
-      state.vacations = [];
-      state.notifiedKeys = {};
-      state.myBookings = [];
-      state.reminderTimers = {};
-      state.forcePasswordChange = false;
-      state.devlog = [];
-      state.devlogEditingRow = null;
-      applySessionToUI();
-      userChip.classList.add("hidden");
-      deskSwitcher.classList.remove("visible");
-      showScreen("auth");
-      authForm.reset();
-      forcePasswordModal.classList.add("hidden");
-      devlogModal.classList.add("hidden");
-    });
-
-    const session = loadSession();
-    if (session) {
-      if (session.hash === TEMP_PASSWORD_HASH) {
-        state.user = session;
-        state.activeDesk = session.department || "Руководство";
-        applySessionToUI();
-        showScreen("auth");
-        forcePasswordModal.classList.remove("hidden");
-        setTimeout(() => fpNew1.focus(), 100);
-      } else {
-        state.user = session;
-        state.activeDesk = session.department || "Руководство";
-        applySessionToUI();
-        showScreen("desk");
-        setNetworkStatus(true);
-        loadSchedule()
-          .then(() => loadVacations())
-          .then(() => refreshMyBookings())
-          .then(() => {
-            renderDesk();
-            scheduleCheckTickBookings();
-          });
-      }
-    } else {
-      showScreen("auth");
-    }
-
-    setInterval(scheduleCheckTick, 60000);
-    setTimeout(scheduleCheckTick, 5000);
-
-    setInterval(() => {
-      if (document.hidden) return;
-      scheduleCheckTickBookings();
-    }, 30000);
-
-    setInterval(() => {
-      if (document.hidden) return;
-      refreshMyBookings();
-    }, 5 * 60 * 1000);
-
-    setInterval(() => {
-      if (document.hidden) return;
-      if (state.user) loadVacations();
-    }, 60 * 1000);
+  function escapeHtml(s) {
+    return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  document.addEventListener("DOMContentLoaded", init);
+  function tickClock() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, "0");
+    statusClock.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+  }
+  setInterval(tickClock, 1000);
+  tickClock();
+
+  initSession();
 })();
 </script>
 </body>

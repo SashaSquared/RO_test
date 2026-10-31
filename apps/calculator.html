@@ -529,6 +529,7 @@
   }
   input[type="number"] { -moz-appearance: textfield; }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -1522,6 +1523,11 @@
     };
   }
 
+  function getAppToken() {
+    const s = getCalcSession();
+    return s ? (s.token || "") : "";
+  }
+
   function isCalcAdmin() {
     const s = getCalcSession();
     if (!s) return false;
@@ -1541,7 +1547,7 @@
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "text/plain;charset=utf-8", "Authorization": getAppToken() ? "Bearer " + getAppToken() : "" },
         body: JSON.stringify({ action: "getWeekList" })
       });
       const data = await res.json();
@@ -1614,9 +1620,10 @@
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "text/plain;charset=utf-8", "Authorization": getAppToken() ? "Bearer " + getAppToken() : "" },
         body: JSON.stringify({
           action: "saveWeeklyPoints",
+          token: getAppToken(),
           login: session.login,
           hash: session.hash,
           weekId: weekId,
@@ -1665,7 +1672,7 @@
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "text/plain;charset=utf-8", "Authorization": getAppToken() ? "Bearer " + getAppToken() : "" },
         body: JSON.stringify({ action: "getStaff" })
       });
       if (!res.ok) throw new Error("HTTP " + res.status);
